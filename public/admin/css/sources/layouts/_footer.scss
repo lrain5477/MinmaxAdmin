@@ -1,0 +1,22 @@
+/* -----------------------------------------
+   Footer
+----------------------------------------- */
+
+.page-footer {
+    margin-left: $left-width;
+    color: $footer;
+    transition: all 0.4s ease;
+    background-color:$footer-bg;
+    text-transform:capitalize;
+    .slide-nav-close & {
+        margin-left: 44px;
+        .max-lg-size & {
+            margin-left: 0;
+        }
+    }
+    a{
+        color: #fff;
+        margin-left: 5px;
+        text-transform:uppercase;
+    }
+}

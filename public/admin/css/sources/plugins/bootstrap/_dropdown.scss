@@ -1,0 +1,17 @@
+
+// dropdown --------------------------------------------------------------------
+.dropdown,
+.dropup {
+    &.open>.dropdown-toggle {
+        border-color: #ddd
+    }
+}
+
+.dropdown-menu {
+    box-shadow: 5px 5px rgba(102, 102, 102, .1);
+    border-radius: 0;
+}
+
+.dropdown-header {
+    padding: .45rem 1.5rem;
+}

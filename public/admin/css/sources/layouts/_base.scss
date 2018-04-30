@@ -1,0 +1,46 @@
+/* -----------------------------------------
+   Base styles
+----------------------------------------- */
+html body {
+    background-color: #eef1f5;
+}
+
+a,
+button {
+    outline: none;
+}
+
+.border-box {
+    box-sizing: border-box!important;
+}
+body {
+    color:#212529;
+}
+
+// 自訂
+.o-h {
+    overflow: hidden;
+}
+
+.line-b {
+    border-bottom: 1px solid $input-border-color;
+}
+
+.i-o {
+    opacity: 0.3;
+}
+
+.min-w-select {
+    min-width: 110px;
+}
+
+.left-width {
+    width: $left-width;
+    .max-md-size .page-header & {
+        width: inherit;
+    }
+}
+
+.page-wrapper {
+    overflow: hidden;
+}

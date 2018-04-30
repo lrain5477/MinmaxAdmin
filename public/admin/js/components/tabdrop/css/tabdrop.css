@@ -1,0 +1,17 @@
+/*!
+ * Tab drop for Bootstrap
+ *
+ * Copyright 2012 Stefan Petre
+ * Licensed under the Apache License v2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ */
+ .nav-pills,.nav-tabs{position:relative}
+.tabdrop{
+     right: 0;
+     position: absolute!important;
+     top:0;
+ }
+.nav-tabs{
+    padding-right: 50px;
+}

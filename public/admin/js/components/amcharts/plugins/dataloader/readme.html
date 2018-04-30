@@ -1,0 +1,459 @@
+<html>
+      <head>
+        <meta charset="UTF-8">
+        <title>readme.md</title>
+      </head>
+      <body>
+        <h1 id="amcharts-data-loader">amCharts Data Loader</h1>
+<p>Version: 1.0.16</p>
+<h2 id="description">Description</h2>
+<p>By default all amCharts libraries accept data in JSON format. It needs to be 
+there when the web page loads, defined in-line or loaded via custom code.</p>
+<p>This plugin introduces are native wrapper that enables automatic loading of data
+from external data data sources in CSV and JSON formats.</p>
+<p>Most of the times you will just need to provide a URL of the external data 
+source - static file or dynamically generated - and it will do the rest.</p>
+<h2 id="important-notice">Important notice</h2>
+<p>Due to security measures implemented in most of the browsers, the external data 
+loader will work only when the page with the chart or map is loaded via web 
+server.</p>
+<p>So, any of the examples loaded locally (file:///) will not work.</p>
+<p>The page needs to be loaded via web server (http://) in order to work properly.</p>
+<p>Loading data from another domain than the web page is loaded is possible but is 
+a subject for <code>Access-Control-Allow-Origin</code> policies defined by the web server 
+you are loading data from.</p>
+<p>For more about loading data across domains use the following thread:
+<a href="http://stackoverflow.com/questions/1653308/access-control-allow-origin-multiple-origin-domains">http://stackoverflow.com/questions/1653308/access-control-allow-origin-multiple-origin-domains</a></p>
+<h2 id="usage">Usage</h2>
+<h3 id="1-include-the-minified-version-of-file-of-this-plugin-i-e-">1) Include the minified version of file of this plugin. I.e.:</h3>
+<pre><code>&lt;script src=&quot;amcharts/plugins/dataloader/dataloader.min.js&quot; type=&quot;text/javascript&quot;&gt;&lt;/script&gt;
+</code></pre><p>(this needs to go after all the other amCharts includes)</p>
+<h3 id="2-add-data-source-properties-to-your-chart-configuration-">2) Add data source properties to your chart configuration.</h3>
+<p>Regular (Serial, Pie, etc.) charts:</p>
+<pre><code>AmCharts.makeChart( &quot;chartdiv&quot;, {
+  ...,
+  &quot;dataLoader&quot;: {
+    &quot;url&quot;: &quot;data.json&quot;,
+    &quot;format&quot;: &quot;json&quot;
+  }
+} );
+</code></pre><p>Stock chart:</p>
+<pre><code>AmCharts.makeChart( &quot;chartdiv&quot;, {
+  ...,
+  &quot;dataSets&quot;: [{
+    ...,
+    &quot;dataLoader&quot;: {
+      &quot;url&quot;: &quot;data.csv&quot;,
+      &quot;format&quot;: &quot;csv&quot;,
+      &quot;delimiter&quot;: &quot;,&quot;,       // column separator
+      &quot;useColumnNames&quot;: true, // use first row for column names
+      &quot;skip&quot;: 1               // skip header row
+    }
+  }]
+} );
+</code></pre><p>That&#39;s it. The plugin will make sure the files are loaded and dataProvider is 
+populated with their content <em>before</em> the chart is built.</p>
+<p>Some formats, like CSV, will require additional parameters needed to parse the 
+data, such as &quot;separator&quot;.</p>
+<p>If the &quot;format&quot; is omitted, the plugin will assume JSON.</p>
+<h3 id="using-in-object-based-chart-setup">Using in object-based chart setup</h3>
+<p>If you’re still using object-based chart setup, assign dataLoader-related config object to chart object’s <code>dataLoader</code> property:</p>
+<pre><code>var chart = new AmCharts.AmSerialChart();
+...
+chart[&quot;dataLoader&quot;] = {
+  &quot;url&quot;: &quot;data.csv&quot;,
+  &quot;format&quot;: &quot;csv&quot;,
+  &quot;delimiter&quot;: &quot;,&quot;,
+  &quot;useColumnNames&quot;: true,
+  &quot;skip&quot;: 1
+};
+</code></pre><h2 id="complete-list-of-available-dataloader-settings">Complete list of available dataLoader settings</h2>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>async</td>
+<td>true</td>
+<td>If set to false (not recommended) everything will wait until data is fully loaded</td>
+</tr>
+<tr>
+<td>complete</td>
+<td></td>
+<td>Callback function to execute when loader is done</td>
+</tr>
+<tr>
+<td>delimiter</td>
+<td>,</td>
+<td>[CSV only] a delimiter for columns (use \t for tab delimiters)</td>
+</tr>
+<tr>
+<td>emptyAs</td>
+<td>undefined</td>
+<td>[CSV only] replace empty columns with whatever is set here</td>
+</tr>
+<tr>
+<td>error</td>
+<td></td>
+<td>Callback function to execute if file load fails</td>
+</tr>
+<tr>
+<td>init</td>
+<td></td>
+<td>Callback function to execute when Data Loader is initialized, before any loading starts</td>
+</tr>
+<tr>
+<td>format</td>
+<td>json</td>
+<td>Type of data: json, csv</td>
+</tr>
+<tr>
+<td>headers</td>
+<td></td>
+<td>An array of objects with two properties (key and value) to attach to HTTP request</td>
+</tr>
+<tr>
+<td>load</td>
+<td></td>
+<td>Callback function to execute when file is successfully loaded (might be invoked multiple times)</td>
+</tr>
+<tr>
+<td>noStyles</td>
+<td>false</td>
+<td>If set to true no styles will be applied to &quot;Data loading&quot; curtain</td>
+</tr>
+<tr>
+<td>numberFields</td>
+<td></td>
+<td>[CSV only] An array of fields in data to treat as numbers</td>
+</tr>
+<tr>
+<td>postProcess</td>
+<td></td>
+<td>If set to function reference, that function will be called to &quot;post-process&quot; loaded data before passing it on to chart. The handler function will receive two parameters: loaded data, Data Loader options</td>
+</tr>
+<tr>
+<td>progress</td>
+<td></td>
+<td>Set this to function reference to track progress of the load. The function will be passed in three parameters: global progress, individual file progress, file URL.</td>
+</tr>
+<tr>
+<td>showErrors</td>
+<td>true</td>
+<td>Show loading errors in a chart curtain</td>
+</tr>
+<tr>
+<td>showCurtain</td>
+<td>true</td>
+<td>Show curtain over the chart area when loading data</td>
+</tr>
+<tr>
+<td>reload</td>
+<td>0</td>
+<td>Reload data every X seconds</td>
+</tr>
+<tr>
+<td>reverse</td>
+<td>false</td>
+<td>[CSV only] add data points in revers order</td>
+</tr>
+<tr>
+<td>skip</td>
+<td>0</td>
+<td>[CSV only] skip X first rows in data (includes first row if useColumnNames is used)</td>
+</tr>
+<tr>
+<td>skipEmpty</td>
+<td>true</td>
+<td>[CSV only] Ignore empty lines in data</td>
+</tr>
+<tr>
+<td>timestamp</td>
+<td>false</td>
+<td>Add current timestamp to data URLs (to avoid caching)</td>
+</tr>
+<tr>
+<td>useColumnNames</td>
+<td>false</td>
+<td>[CSV only] Use first row in data as column names when parsing</td>
+</tr>
+</tbody>
+</table>
+<h2 id="using-in-javascript-stock-chart">Using in JavaScript Stock Chart</h2>
+<p>In JavaScript Stock Chart it works exactly the same as in other chart types, 
+with the exception that <code>dataLoader</code> is set as a property to the data set 
+definition. I.e.:</p>
+<pre><code>var chart = AmCharts.makeChart(&quot;chartdiv&quot;, {
+  &quot;type&quot;: &quot;stock&quot;,
+  ...
+  &quot;dataSets&quot;: [{
+    &quot;title&quot;: &quot;MSFT&quot;,
+      &quot;fieldMappings&quot;: [{
+        &quot;fromField&quot;: &quot;Open&quot;,
+        &quot;toField&quot;: &quot;open&quot;
+      }, {
+        &quot;fromField&quot;: &quot;High&quot;,
+        &quot;toField&quot;: &quot;high&quot;
+      }, {
+        &quot;fromField&quot;: &quot;Low&quot;,
+        &quot;toField&quot;: &quot;low&quot;
+      }, {
+        &quot;fromField&quot;: &quot;Close&quot;,
+        &quot;toField&quot;: &quot;close&quot;
+      }, {
+        &quot;fromField&quot;: &quot;Volume&quot;,
+        &quot;toField&quot;: &quot;volume&quot;
+      }],
+      &quot;compared&quot;: false,
+      &quot;categoryField&quot;: &quot;Date&quot;,
+      &quot;dataLoader&quot;: {
+        &quot;url&quot;: &quot;data/MSFT.csv&quot;,
+        &quot;format&quot;: &quot;csv&quot;,
+        &quot;showCurtain&quot;: true,
+        &quot;showErrors&quot;: true,
+        &quot;async&quot;: true,
+        &quot;reverse&quot;: true,
+        &quot;delimiter&quot;: &quot;,&quot;,
+        &quot;useColumnNames&quot;: true
+      }
+    }
+  }]
+});
+</code></pre><h3 id="can-i-also-load-event-data-the-same-way-">Can I also load event data the same way?</h3>
+<p>Sure. You just add a <code>eventDataLoader</code> object to your data set. All the same 
+settings apply.</p>
+<h2 id="adding-custom-headers-to-http-requests">Adding custom headers to HTTP requests</h2>
+<p>If you want to add additional headers to your data load HTTP requests, use
+&quot;headers&quot; array. Each header is an object with two keys: &quot;key&quot; and &quot;value&quot;:</p>
+<pre><code>&quot;dataLoader&quot;: {
+  &quot;url&quot;: &quot;data/serial.json&quot;,
+  &quot;format&quot;: &quot;json&quot;,
+  &quot;headers&quot;: [{
+    &quot;key&quot;: &quot;x-access-token&quot;,
+    &quot;value&quot;: &quot;123456789&quot;
+  }]
+}
+</code></pre><h2 id="manually-triggering-a-reload-of-all-data">Manually triggering a reload of all data</h2>
+<p>Once chart is initialized, you can trigger the reload of all data manually by
+calling <code>chart.dataLoader.loadData()</code> function. (replace &quot;chart&quot; with the actual
+variable that holds reference to your chart object)</p>
+<h2 id="using-callback-functions">Using callback functions</h2>
+<p>Data Loader can call your own function when certain event happens, like data
+loading is complete, error occurs, etc.</p>
+<p>To set custom event handlers, use these config options:</p>
+<ul>
+<li>&quot;complete&quot;</li>
+<li>&quot;init&quot;</li>
+<li>&quot;load&quot;</li>
+<li>&quot;error&quot;</li>
+<li>&quot;progress&quot;</li>
+</ul>
+<p>Example:</p>
+<pre><code>AmCharts.makeChart( &quot;chartdiv&quot;, {
+  ...,
+  &quot;dataSets&quot;: [{
+    ...,
+    &quot;dataLoader&quot;: {
+      &quot;url&quot;: &quot;data.json&quot;,
+      &quot;init&quot;: function ( options, chart ) {
+        console.log( &#39;Loading started&#39; );
+      },
+      &quot;load&quot;: function ( options, chart ) {
+        console.log( &#39;Loaded file: &#39; + options.url );
+      },
+      &quot;complete&quot;: function ( chart ) {
+        console.log( &#39;Woohoo! Finished loading&#39; );
+      },
+      &quot;error&quot;: function ( options, chart ) {
+        console.log( &#39;Ummm something went wrong loading this file: &#39; + options.url );
+      },
+      &quot;progress&quot;: function( totalPercent, filePercent, url ) {
+        console.log( &#39;Total percent loaded: &#39; + Math.round( totalPercent ) );
+      }
+    }
+  }]
+} );
+</code></pre><h2 id="using-data-loader-s-standalone-functions">Using Data Loader&#39;s standalone functions</h2>
+<p>Data Loader&#39;s load and parsing functions are available for external standalone use.</p>
+<p>The three available functions are as follows:</p>
+<table>
+<thead>
+<tr>
+<th>Function</th>
+<th>Parameters</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>AmCharts.loadFile()</td>
+<td>url, options, callback</td>
+<td>Loads the file and passes it into callback function (unparsed)</td>
+</tr>
+<tr>
+<td>AmCharts.parseCSV()</td>
+<td>data, options</td>
+<td>Parses data in string CSV format and returns JavaScript Array</td>
+</tr>
+<tr>
+<td>AmCharts.parseJSON()</td>
+<td>data</td>
+<td>Parses data in string JSON format and returns JavaScript Array</td>
+</tr>
+</tbody>
+</table>
+<p>The options passed into standalone functions are the same as discussed in <a href="#complete-list-of-available-dataloader-settings">Complete list of available dataLoader settings</a> chapter.</p>
+<h3 id="json-example">JSON Example</h3>
+<pre><code>AmCharts.loadFile(dataset_url, {}, function(data) {
+  var chartData = AmCharts.parseJSON(data);
+  console.log(chartData); // this will output an array
+});
+</code></pre><h3 id="csv-example">CSV Example</h3>
+<pre><code>AmCharts.loadFile(dataset_url, {}, function(data) {
+  var chartData = AmCharts.parseCSV(data, {
+    &quot;delimiter&quot;: &quot;,&quot;,
+    &quot;useColumnNames&quot;: true
+  });
+  console.log(chartData); // this will output an array
+});
+</code></pre><h2 id="translating-into-other-languages">Translating into other languages</h2>
+<p>Depending on configuration options the plugin will display a small number of 
+text prompts, like &#39;Data loading...&#39;.</p>
+<p>Plugin will try matching chart&#39;s <code>language</code> property and display text prompts in 
+a corresponding language. For that the plugin needs to have the translations.</p>
+<p>Some of the plugin translations are in <strong>lang</strong> subdirectory. Simply include the 
+one you need.</p>
+<p>If there is no translation to your language readily available, just grab en.js, 
+copy it and translate.</p>
+<p>The structure is simple:</p>
+<pre><code>&#39;The phrase in English&#39;: &#39;Translation&#39;
+</code></pre><p>The phrase in English must be left intact.</p>
+<p>When you&#39;re done, you can include your language as a JavaScript file.</p>
+<p>P.S. send us your translation so we can include it for the benefits of other 
+users. Thanks!</p>
+<h2 id="requirements">Requirements</h2>
+<p>This plugin requires at least 3.13 version of JavaScript Charts, JavaScript
+Stock Chart or JavaScript Maps.</p>
+<h2 id="demos">Demos</h2>
+<p>They&#39;re all in subdirectory /examples.</p>
+<h2 id="extending-this-plugin">Extending this plugin</h2>
+<p>You&#39;re encouraged to modify, extend and make derivative plugins out of this
+plugin.</p>
+<p>You can modify files, included in this archive or, better yet, fork this project
+on GitHub:</p>
+<p><a href="https://github.com/amcharts/dataloader">https://github.com/amcharts/dataloader</a></p>
+<p>We&#39;re curious types. Please let us know (contact@amcharts.com) if you do create
+something new out of this plugin.</p>
+<h2 id="license">License</h2>
+<p>This plugin is licensed under Apache License 2.0.</p>
+<p>This basically means you&#39;re free to use or modify this plugin, even make your
+own versions or completely different products out of it.</p>
+<p>Please see attached file &quot;license.txt&quot; for the complete license or online here:</p>
+<p><a href="http://www.apache.org/licenses/LICENSE-2.0">http://www.apache.org/licenses/LICENSE-2.0</a></p>
+<h2 id="contact-us">Contact us</h2>
+<ul>
+<li>Email:contact@amcharts.com</li>
+<li>Web: <a href="http://www.amcharts.com/">http://www.amcharts.com/</a></li>
+<li>Facebook: <a href="https://www.facebook.com/amcharts">https://www.facebook.com/amcharts</a></li>
+<li>Twitter: <a href="https://twitter.com/amcharts">https://twitter.com/amcharts</a></li>
+</ul>
+<h2 id="changelog">Changelog</h2>
+<h3 id="1-0-16">1.0.16</h3>
+<ul>
+<li>Added &quot;numberFields&quot; config array</li>
+</ul>
+<h3 id="1-0-15">1.0.15</h3>
+<ul>
+<li>Added &quot;emptyAs&quot; config property. Empty CSV values will be set to this (default <code>undefined</code>)</li>
+</ul>
+<h3 id="1-0-14">1.0.14</h3>
+<ul>
+<li>Added &quot;init&quot; event handler, which is called <strong>before</strong> loading starts</li>
+</ul>
+<h3 id="1-0-13">1.0.13</h3>
+<ul>
+<li>Added &quot;progress&quot; handler, which can be used to monitor data load progress</li>
+</ul>
+<h3 id="1-0-12">1.0.12</h3>
+<ul>
+<li>Better default options handling in external calls to AmCharts.loadFile</li>
+<li>Fixed the latest version of Stock Chart not resetting to default pre-defined period</li>
+<li>New example: Using Data Loader functions externally (map_json_external_function.html)</li>
+</ul>
+<h3 id="1-0-11">1.0.11</h3>
+<ul>
+<li>New translation: Added French translation. Thanks Remy!</li>
+<li>Tweaks to allow better animation after data load on Pie chart</li>
+</ul>
+<h3 id="1-0-10">1.0.10</h3>
+<ul>
+<li>Fixed error related to headers not being set when using standalone data load functions</li>
+</ul>
+<h3 id="1-0-9">1.0.9</h3>
+<ul>
+<li>Plugin will now ignore empty CSV lines by default (configurable with <code>skipEmpty</code> property)</li>
+</ul>
+<h3 id="1-0-8">1.0.8</h3>
+<ul>
+<li>Added <code>headers</code> config variable which allows adding custom headers to HTTP requests</li>
+</ul>
+<h3 id="1-0-7">1.0.7</h3>
+<ul>
+<li>Fixed an issue with the Pie chart when it is being loaded in inactive tab</li>
+</ul>
+<h3 id="1-0-6">1.0.6</h3>
+<ul>
+<li>Added support for Gauge chart (loads <code>arrows</code> array)</li>
+</ul>
+<h3 id="1-0-5">1.0.5</h3>
+<ul>
+<li>Fixed JS error if periodSelector was not defined in chart config</li>
+<li>Now all callback functions (complete, error, load) receive additional parameter: chart</li>
+<li>postProcess function will now have &quot;this&quot; context set to Data Loader object as well as receive chart reference as third paramater</li>
+</ul>
+<h3 id="1-0-4">1.0.4</h3>
+<ul>
+<li>Added <code>chart.dataLoader.loadData()</code> function which can be used to manually trigger all data reload</li>
+</ul>
+<h3 id="1-0-3">1.0.3</h3>
+<ul>
+<li>Fixed the bug where defaults were not being applied properly</li>
+<li>Fixed the bug with translations not being applied properly</li>
+<li>Cleaned up the code (to pass JSHint validation)</li>
+</ul>
+<h3 id="1-0-2">1.0.2</h3>
+<ul>
+<li>Fixed the issue with modified Array prototypes</li>
+</ul>
+<h3 id="1-0-1">1.0.1</h3>
+<ul>
+<li>Added <code>complete</code>, <code>load</code> and <code>error</code> properties that can be set with function handlers to be invoked on load completion, successful file load or failed load respectively</li>
+<li>Fixed language container initialization bug</li>
+<li>Fixed bug that was causing parse errors not be displayed</li>
+</ul>
+<h3 id="1-0">1.0</h3>
+<ul>
+<li>Added GANTT chart support</li>
+</ul>
+<h3 id="0-9-2">0.9.2</h3>
+<ul>
+<li>Added global data load methods that can be used to load and parse data by code outside plugin</li>
+<li>Trim CSV column names</li>
+<li>Translation added: Lithuanian</li>
+</ul>
+<h3 id="0-9-1">0.9.1</h3>
+<ul>
+<li>Fix chart animations not playing after asynchronous load</li>
+</ul>
+<h3 id="0-9">0.9</h3>
+<ul>
+<li>Initial release</li>
+</ul>
+
+      </body>
+    </html>

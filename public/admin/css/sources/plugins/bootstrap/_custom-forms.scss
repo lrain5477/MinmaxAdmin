@@ -1,0 +1,58 @@
+.custom-control-label::before{
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    transition: all .2s;
+}
+.custom-checkbox .custom-control-input:checked ~ .custom-control-label::before,
+.custom-radio .custom-control-input:checked ~ .custom-control-label::before{
+    border: none;
+}
+
+.custom-checkbox .custom-control-input ~ .custom-control-label::after,
+.custom-radio .custom-control-input ~ .custom-control-label::after{
+    transform: scale(3);
+    transition: all .2s;
+    opacity: 0;
+    
+    
+}
+.custom-control-input:disabled ~ .custom-control-label::before {
+    border: 1px solid rgba(0, 0, 0,0.05);
+}
+.custom-control-input:checked ~ .custom-control-label::after {
+    opacity: 1;
+    transform: scale(1.2);
+}
+
+
+
+@each $color, $value in $theme-colors {
+    .custom-checkbox.theme-#{$color} {
+        .custom-control-input:checked ~ .custom-control-label {
+            &::before {
+                @include gradient-bg($value);
+              }
+          }
+    }
+      
+    .custom-radio.theme-#{$color} {
+    .custom-control-input:checked ~ .custom-control-label {
+        &::before {
+            @include gradient-bg($value);
+        }
+        
+        }
+    }
+
+    .theme-#{$color} {
+        .custom-control-input {
+            &:focus ~ .custom-control-label::before {
+            box-shadow: 0 0 0 $input-btn-focus-width rgba($value, .25) !important;
+            }
+        }
+    }
+
+}
+
+
+
+  
