@@ -87,17 +87,17 @@ return [
 
         'admin' => [
             'driver' => 'eloquent',
-            'model' => App\Models\System\AdminAccount::class,
+            'model' => App\Models\Administrator::class,
         ],
 
         'merchant' => [
             'driver' => 'eloquent',
-            'model' => App\Models\System\AdminAccount::class,
+            'model' => App\Models\Administrator::class,
         ],
 
         'member' => [
             'driver' => 'eloquent',
-            'model' => App\Models\Member::class,
+            'model' => App\Models\Administrator::class,
         ],
     ],
 
