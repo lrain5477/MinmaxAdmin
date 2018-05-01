@@ -14,7 +14,7 @@ var Login = function () {
 
 jQuery(document).ready(function () {
     $('#getCaptcha').click(function(){
-        $('#rand-img').attr('src', '/siteadmin/captcha/' + (new Date()).getMilliseconds());
+        $('#rand-img').attr('src', '/administrator/login/captcha' + (new Date()).getMilliseconds());
     });
 
     $("#loginForm").validate({

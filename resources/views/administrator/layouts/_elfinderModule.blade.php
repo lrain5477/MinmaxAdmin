@@ -1,6 +1,6 @@
 @push('styles')
-<link rel="stylesheet" href="{{asset('/admin/js/components/elFinder/css/elfinder.min.css')}}">
-<link rel="stylesheet" href="{{asset('/admin/js/components/elFinder/css/theme.css')}}">
+<link rel="stylesheet" href="{{asset('components/elFinder/css/elfinder.min.css')}}">
+<link rel="stylesheet" href="{{asset('components/elFinder/css/theme.css')}}">
 <link type="text/css" rel="stylesheet" href="//code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css"/>
 <style>
     .file-img-list .card:not(.ui-sortable-helper){

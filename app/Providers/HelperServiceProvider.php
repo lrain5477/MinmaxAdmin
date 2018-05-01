@@ -23,6 +23,6 @@ class HelperServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        require app_path('/Helpers/TaiwanHelper.php');
+        // require app_path('/Helpers/CaptchaHelper.php');
     }
 }

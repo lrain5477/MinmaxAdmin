@@ -35,24 +35,6 @@ return [
         ],
     ],
 
-    'AdminAccount' => [
-        'id' => 'ID',
-        'guid' => 'GUID',
-        'group_guid' => '權限群組',
-        'username' => '帳號',
-        'password' => '密碼',
-        'name' => '姓名',
-        'active' => '狀態',
-        'created_at' => '建立時間',
-        'updated_at' => '更新時間',
-        'selection' => [
-            'active' => [
-                '1' => '啟用',
-                '0' => '停用',
-            ],
-        ],
-    ],
-
     'AdminMenuClass' => [
         'id' => 'ID',
         'guid' => 'GUID',
@@ -254,57 +236,6 @@ return [
             'result' => [
                 '1' => '成功',
                 '0' => '失敗',
-            ],
-        ],
-    ],
-
-    'Member' => [
-        'id' => 'ID',
-        'guid' => 'GUID',
-        'lang' => '語系',
-        'username' => '帳號',
-        'password' => '密碼',
-        'type' => '會員類別',
-        'credential' => '會員證編號',
-        'name' => '姓名',
-        'gender' => '性別',
-        'birthday' => '生日',
-        'ic' => '身分證字號',
-        'email' => 'Email',
-        'mobile' => '手機',
-        'phone' => '電話',
-        'fax' => '傳真',
-        'degree' => '學歷',
-        'career' => '職稱',
-        'company' => '服務單位',
-        'address_city' => '縣市',
-        'address_area' => '地區',
-        'address_zip' => '郵遞區號',
-        'address_street' => '街道',
-        'active' => '狀態',
-        'chk_apply' => '審核狀態',
-        'applied_at' => '審核時間',
-        'editor' => '文字敘述',
-        'created_at' => '建立時間',
-        'updated_at' => '更新時間',
-        'selection' => [
-            'active' => [
-                '1' => '啟用',
-                '0' => '停用',
-            ],
-            'chk_apply' => [
-                'N' => '未審核',
-                'Y' => '已核可',
-                'D' => '未通過',
-            ],
-            'gender' => [
-                '1' => '男士',
-                '0' => '女士',
-            ],
-            'type' => [
-                'N' => '一般會員',
-                'G' => '團體會員',
-                'V' => '贊助會員',
             ],
         ],
     ],

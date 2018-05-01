@@ -4,8 +4,8 @@
     <title>MINMAX 總後台管理系統 | 登入</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="{{ asset('/admin/css/styles.css') }}">
-    <link rel="stylesheet" href="{{ asset('/admin/js/sweetalert/sweetalert.css') }}">
+    <link rel="stylesheet" href="{{ asset('admin/css/styles.css') }}">
+    <link rel="stylesheet" href="{{ asset('admin/js/sweetalert/sweetalert.css') }}">
     <meta name="csrf-token" content="{{ csrf_token() }}"/>
 </head>
 <body class="login">
@@ -102,16 +102,16 @@
 <script src="{{ asset('admin/js/lib/env.js') }}"></script>
 <script src="{{ asset('admin/js/lib/popper.min.js') }}"></script>
 <!-- * * bootstrap4-->
-<script src="{{ asset('admin/js/components/bootstrap4/bootstrap.min.js') }}"></script>
+<script src="{{ asset('components/bootstrap4/bootstrap.min.js') }}"></script>
 <!-- * * imgLiquid 圖片縮圖-->
-<script src="{{ asset('admin/js/components/imgLiquid-master/imgLiquid-min.js') }}"></script>
+<script src="{{ asset('components/imgLiquid-master/imgLiquid-min.js') }}"></script>
 <!-- * * swiper 圖片輪播-->
-<script src="{{ asset('admin/js/components/swiper/js/swiper.min.js') }}"></script>
-<script src="{{ asset('admin/js/components/swiper/js/swiper.esm.bundle.js') }}"></script>
-<script src="{{ asset('admin/js/sweetalert/sweetalert.min.js') }}"></script>
+<script src="{{ asset('components/swiper/js/swiper.min.js') }}"></script>
+<script src="{{ asset('components/swiper/js/swiper.esm.bundle.js') }}"></script>
+<script src="{{ asset('components/sweetalert/sweetalert.min.js') }}"></script>
 <!-- * * validate 表單驗證-->
-<script src="{{ asset('admin/js/components/validate/jquery.validate.js') }}"></script>
-<script src="{{ asset('admin/js/components/validate/additional-methods.js') }}"></script>
+<script src="{{ asset('components/validate/jquery.validate.js') }}"></script>
+<script src="{{ asset('components/validate/additional-methods.js') }}"></script>
 
 <script src="{{ asset('admin/js/init.js') }}"></script>
 <script src="{{ asset('admin/js/login.js') }}"></script>
