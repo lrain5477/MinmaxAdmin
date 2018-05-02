@@ -27,6 +27,20 @@
             </ul>
         </li>
         <li>
+            <a class="collapsed {{ isset($pageData->parent) && ($pageData->parent === 'permission-control') ? 'active' : '' }}"
+               href="javascript:void(0);"
+               data-toggle="collapse"
+               data-target="#Menu_dr2_2">
+                <div class="float-left"><i class="icon-group"></i><span class="right-nav-text">權限管理</span></div>
+                <div class="float-right"><i class="icon-chevron-small-right"></i></div>
+                <div class="clearfix"></div>
+            </a>
+            <ul class="collapse collapse-level-1 {{ isset($pageData->parent) && ($pageData->parent === 'permission-control') ? 'show' : '' }}" id="Menu_dr2_2">
+                <li><a class="{{ isset($pageData->uri) && $pageData->uri === 'permission' ? 'active' : '' }}" href="{{ url('administrator/permission') }}">權限物件管理</a></li>
+                <li><a class="{{ isset($pageData->uri) && $pageData->uri === 'role' ? 'active' : '' }}" href="{{ url('administrator/role') }}">權限角色管理</a></li>
+            </ul>
+        </li>
+        <li>
             <a class="{{ isset($pageData->uri) && $pageData->uri === 'language' ? 'active' : '' }}" href="{{ url('administrator/language') }}">
                 <div class="float-left"><i class="icon-globe"></i><span class="right-nav-text">語系管理</span></div>
                 <div class="clearfix"></div>

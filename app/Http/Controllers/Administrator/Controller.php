@@ -263,9 +263,9 @@ class Controller extends BaseController
         }
 
         if($this->modelRepository->delete([$this->modelRepository->getIndexKey() => $id]))
-            return redirect()->route('index', [$this->uri])->withErrors([__('administrator.form.message.delete_success')])->withInput();
+            return redirect()->route('index', [$this->uri])->with('success', __('administrator.form.message.delete_success'));
 
-        return redirect()->route('index', [$this->uri])->with('success', __('administrator.form.message.delete_error'))->withInput();
+        return redirect()->route('index', [$this->uri])->withErrors([__('administrator.form.message.delete_error')]);
     }
 
     /**
