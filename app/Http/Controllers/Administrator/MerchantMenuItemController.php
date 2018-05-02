@@ -25,7 +25,7 @@ class MerchantMenuItemController extends Controller
              * @var \DaveJamesMiller\Breadcrumbs\BreadcrumbsGenerator $breadcrumbs
              */
             $breadcrumbs->parent('home');
-            $breadcrumbs->push($this->pageData->title, route('index', [$this->uri]));
+            $breadcrumbs->push($this->pageData->title, route('administrator.index', [$this->uri]));
         });
 
         try {

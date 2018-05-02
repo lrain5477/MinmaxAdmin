@@ -67,7 +67,7 @@ class Handler extends ExceptionHandler
         }
 
         if(Request::is('administrator*') || Request::is('siteadmin*') || Request::is('merchant*')) {
-            return redirect()->guest(route('login'));
+            return redirect()->guest(route(\Route::current()->action['middleware'][0] . '.login'));
         } else {
             return redirect()->guest('home');
         }

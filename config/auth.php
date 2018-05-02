@@ -58,7 +58,7 @@ return [
 
         'api' => [
             'driver' => 'token',
-            'provider' => 'siteAdmin',
+            'provider' => 'admin',
         ],
     ],
 
@@ -87,7 +87,7 @@ return [
 
         'admin' => [
             'driver' => 'eloquent',
-            'model' => App\Models\Administrator::class,
+            'model' => App\Models\Admin::class,
         ],
 
         'merchant' => [

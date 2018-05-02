@@ -36,7 +36,7 @@
 
                         <div class="col-sm captcha">
                             <input class="form-control form-group" type="text" autocomplete="off" placeholder="@lang('administrator.login.captcha')" name="captcha" id="captcha" maxlength="4">
-                            <img src="{{ route('loginCaptcha') }}" style="width:100px;height:auto;" id="rand-img" name="rand-img">
+                            <img src="{{ route('administrator.loginCaptcha') }}" style="width:100px;height:auto;" id="rand-img" name="rand-img">
                             <button class="btn btn-" type="button" id="getCaptcha" name="getCaptcha"><i class="icon-rotate"></i></button>
                         </div>
                     </div>
@@ -115,5 +115,37 @@
 
 <script src="{{ asset('admin/js/init.js') }}"></script>
 <script src="{{ asset('admin/js/login.js') }}"></script>
+<script>
+jQuery(document).ready(function () {
+    $('#getCaptcha').click(function(){
+        $('#rand-img').attr('src', '{{ route('administrator.loginCaptcha') }}' + '/' + (new Date()).getMilliseconds());
+    });
+
+    $("#loginForm").validate({
+        rules: {
+            login_admin_id: { required: true, minlength: 4, maxlength: 16},
+            login_passwd: {required: true, minlength: 4, maxlength: 16},
+            captcha: {required: true}
+        },
+        success: function (error) {},
+        invalidHandler: function (ev, validator) {
+            var errors = validator.numberOfInvalids();
+
+            if(errors) {
+                $("div.error span").html('您還有 '+errors+' 個欄位有問題');
+                $('.alert-danger').addClass('show');
+            } else {
+                $('.alert-danger').removeClass('show');
+            }
+        },
+        errorPlacement: function(error, element) {},
+        highlight: function(element){ $(element).css({'border': '1px dotted #ff0000'}); },
+        unhighlight: function(element){ $(element).css({"border": ''}); },
+        submitHandler: function(form) { $("#loginForm").submit(); }
+    });
+
+    Login();
+});
+</script>
 </body>
 </html>

@@ -29,7 +29,7 @@ class RoleController extends Controller
              * @var \DaveJamesMiller\Breadcrumbs\BreadcrumbsGenerator $breadcrumbs
              */
             $breadcrumbs->parent('home');
-            $breadcrumbs->push($this->pageData->title, route('index', [$this->uri]));
+            $breadcrumbs->push($this->pageData->title, route('administrator.index', [$this->uri]));
             $breadcrumbs->push(__('administrator.form.edit'));
         });
 
@@ -71,14 +71,14 @@ class RoleController extends Controller
 
                 \DB::commit();
 
-                return redirect()->route('edit', [$this->uri, $id])->with('success', __('administrator.form.message.edit_success'));
+                return redirect()->route('administrator.edit', [$this->uri, $id])->with('success', __('administrator.form.message.edit_success'));
             } catch (\Exception $e) {
                 \DB::rollBack();
 
-                return redirect()->route('edit', [$this->uri, $id])->withErrors([__('administrator.form.message.edit_error')])->withInput();
+                return redirect()->route('administrator.edit', [$this->uri, $id])->withErrors([__('administrator.form.message.edit_error')])->withInput();
             }
         }
 
-        return redirect()->route('edit', [$this->uri, $id])->withErrors($validator)->withInput();
+        return redirect()->route('administrator.edit', [$this->uri, $id])->withErrors($validator)->withInput();
     }
 }

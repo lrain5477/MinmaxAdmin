@@ -10,7 +10,7 @@
 <div class="text-center">
     <a class="badge badge-pill {{ $value == 1 ? 'badge-danger' : 'badge-secondary' }} badge-switch" href="#1"
        title="@lang('administrator.grid.click_to_switch')"
-       data-url="{{ route('switch', ['uri' => $uri]) }}"
+       data-url="{{ route('administrator.switch', ['uri' => $uri]) }}"
        data-column="{{ $column }}"
        data-value="{{ $value }}"
        data-id="{{ $id }}">

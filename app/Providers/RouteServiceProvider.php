@@ -71,6 +71,7 @@ class RouteServiceProvider extends ServiceProvider
     {
         Route::prefix('merchant')
             ->middleware('merchant')
+            ->name('merchant.')
             ->namespace($this->namespace . '\Merchant')
             ->group(base_path('routes/merchant.php'));
     }
@@ -86,6 +87,7 @@ class RouteServiceProvider extends ServiceProvider
     {
         Route::prefix('siteadmin')
             ->middleware('admin')
+            ->name('admin.')
             ->namespace($this->namespace . '\Admin')
             ->group(base_path('routes/admin.php'));
     }
@@ -101,6 +103,7 @@ class RouteServiceProvider extends ServiceProvider
     {
         Route::prefix('administrator')
             ->middleware('administrator')
+            ->name('administrator.')
             ->namespace($this->namespace . '\Administrator')
             ->group(base_path('routes/administrator.php'));
     }

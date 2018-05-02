@@ -3,8 +3,6 @@
 namespace App\Http\Controllers\Administrator;
 
 use Analytics;
-use App\Repositories\System\AdminMenuRepository;
-use App\Repositories\System\ContactRepository;
 use Illuminate\Support\Carbon;
 use Spatie\Analytics\Period;
 

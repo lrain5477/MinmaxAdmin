@@ -15,7 +15,7 @@
            name="{{ $column }}[{{ $id }}]"
            type="text"
            value="{{ $value }}"
-           data-url="{{ route('sort', ['uri' => $uri]) }}"
+           data-url="{{ route('administrator.sort', ['uri' => $uri]) }}"
            data-guid="{{ $id }}"
            data-column="{{ $column }}"
            onchange="updateSort('{{ $column }}', '{{ $id }}')"

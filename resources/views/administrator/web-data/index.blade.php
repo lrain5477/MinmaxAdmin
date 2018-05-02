@@ -49,7 +49,7 @@ $(document).ready(function() {
             url: '/admin/js/lang/{{ app()->getLocale() }}/datatables.json'
         },
         ajax: {
-            url: '{{ route('datatables', ['uri' => $pageData->uri]) }}',
+            url: '{{ route('administrator.datatables', ['uri' => $pageData->uri]) }}',
             data: function (d) {
                 let searchKeyword = $('#sch_keyword').val();
                 d.filter = {

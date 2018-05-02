@@ -85,7 +85,7 @@ class Controller extends BaseController
              * @var \DaveJamesMiller\Breadcrumbs\BreadcrumbsGenerator $breadcrumbs
              */
             $breadcrumbs->parent('home');
-            $breadcrumbs->push($this->pageData->title, route('index', [$this->uri]));
+            $breadcrumbs->push($this->pageData->title, route('administrator.index', [$this->uri]));
         });
 
         try {
@@ -117,7 +117,7 @@ class Controller extends BaseController
              * @var \DaveJamesMiller\Breadcrumbs\BreadcrumbsGenerator $breadcrumbs
              */
             $breadcrumbs->parent('home');
-            $breadcrumbs->push($this->pageData->title, route('index', [$this->uri]));
+            $breadcrumbs->push($this->pageData->title, route('administrator.index', [$this->uri]));
             $breadcrumbs->push(__('administrator.form.view'));
         });
 
@@ -149,7 +149,7 @@ class Controller extends BaseController
              * @var \DaveJamesMiller\Breadcrumbs\BreadcrumbsGenerator $breadcrumbs
              */
             $breadcrumbs->parent('home');
-            $breadcrumbs->push($this->pageData->title, route('index', [$this->uri]));
+            $breadcrumbs->push($this->pageData->title, route('administrator.index', [$this->uri]));
             $breadcrumbs->push(__('administrator.form.create'));
         });
 
@@ -180,13 +180,13 @@ class Controller extends BaseController
             $makeId = $formDataKey === 'id' ? [] : [$formDataKey => Str::uuid()];
 
             if($modelData = $this->modelRepository->create($request->input($this->pageData->model) + $makeId)) {
-                return redirect()->route('edit', [$this->uri, $modelData->$formDataKey])->with('success', __('administrator.form.message.edit_success'));
+                return redirect()->route('administrator.edit', [$this->uri, $modelData->$formDataKey])->with('success', __('administrator.form.message.edit_success'));
             }
 
-            return redirect()->route('create', [$this->uri])->withErrors([__('administrator.form.message.create_error')])->withInput();
+            return redirect()->route('administrator.create', [$this->uri])->withErrors([__('administrator.form.message.create_error')])->withInput();
         }
 
-        return redirect()->route('create', [$this->uri])->withErrors($validator)->withInput();
+        return redirect()->route('administrator.create', [$this->uri])->withErrors($validator)->withInput();
     }
 
     /**
@@ -212,7 +212,7 @@ class Controller extends BaseController
              * @var \DaveJamesMiller\Breadcrumbs\BreadcrumbsGenerator $breadcrumbs
              */
             $breadcrumbs->parent('home');
-            $breadcrumbs->push($this->pageData->title, route('index', [$this->uri]));
+            $breadcrumbs->push($this->pageData->title, route('administrator.index', [$this->uri]));
             $breadcrumbs->push(__('administrator.form.edit'));
         });
 
@@ -241,13 +241,13 @@ class Controller extends BaseController
 
         if($validator->passes()) {
             if($this->modelRepository->save($request->input($this->pageData->model), [$this->modelRepository->getIndexKey() => $id])) {
-                return redirect()->route('edit', [$this->uri, $id])->with('success', __('administrator.form.message.edit_success'));
+                return redirect()->route('administrator.edit', [$this->uri, $id])->with('success', __('administrator.form.message.edit_success'));
             }
 
-            return redirect()->route('edit', [$this->uri, $id])->withErrors([__('administrator.form.message.edit_error')])->withInput();
+            return redirect()->route('administrator.edit', [$this->uri, $id])->withErrors([__('administrator.form.message.edit_error')])->withInput();
         }
 
-        return redirect()->route('edit', [$this->uri, $id])->withErrors($validator)->withInput();
+        return redirect()->route('administrator.edit', [$this->uri, $id])->withErrors($validator)->withInput();
     }
 
     /**
@@ -263,9 +263,9 @@ class Controller extends BaseController
         }
 
         if($this->modelRepository->delete([$this->modelRepository->getIndexKey() => $id]))
-            return redirect()->route('index', [$this->uri])->with('success', __('administrator.form.message.delete_success'));
+            return redirect()->route('administrator.index', [$this->uri])->with('success', __('administrator.form.message.delete_success'));
 
-        return redirect()->route('index', [$this->uri])->withErrors([__('administrator.form.message.delete_error')]);
+        return redirect()->route('administrator.index', [$this->uri])->withErrors([__('administrator.form.message.delete_error')]);
     }
 
     /**

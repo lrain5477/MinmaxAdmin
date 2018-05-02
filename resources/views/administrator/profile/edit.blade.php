@@ -12,7 +12,7 @@
         <div class="panel-wrapper">
             <div class="panel-body">
                 <form id="editForm" class="form-horizontal validate editForm"  name="editForm"
-                      action="{{ route('profile') }}"
+                      action="{{ route('administrator.profile') }}"
                       method="post"
                       enctype="multipart/form-data">
                     @method('PUT')

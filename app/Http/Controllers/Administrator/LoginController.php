@@ -95,7 +95,7 @@ class LoginController extends BaseController
 
         $request->session()->invalidate();
 
-        return redirect()->route('home');
+        return redirect()->route('administrator.home');
     }
 
     /**

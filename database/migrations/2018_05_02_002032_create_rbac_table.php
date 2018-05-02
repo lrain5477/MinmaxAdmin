@@ -28,7 +28,7 @@ class CreateRbacTable extends Migration
 
         // Create table for associating roles to users (Many-to-Many)
         Schema::create('role_user', function (Blueprint $table) {
-            $table->unsignedInteger('user_id');
+            $table->string('user_id');
             $table->unsignedInteger('role_id');
 
             $table->foreign('role_id')->references('id')->on('roles')

@@ -2,7 +2,7 @@
 
 @section('action-buttons')
 <div class="float-right">
-    <a class="btn btn-sm btn-main" href="{{ route('create', [$pageData->uri]) }}" title="@lang('administrator.form.create')">
+    <a class="btn btn-sm btn-main" href="{{ route('administrator.create', [$pageData->uri]) }}" title="@lang('administrator.form.create')">
         <i class="icon-plus2"></i><span class="ml-1 d-none d-md-inline-block">@lang('administrator.form.create')</span>
     </a>
 </div>
@@ -57,7 +57,7 @@ $(document).ready(function() {
             url: '/admin/js/lang/{{ app()->getLocale() }}/datatables.json'
         },
         ajax: {
-            url: '{{ route('datatables', ['uri' => $pageData->uri]) }}',
+            url: '{{ route('administrator.datatables', ['uri' => $pageData->uri]) }}',
             data: function (d) {
                 let searchKeyword = $('#sch_keyword').val();
                 d.filter = {

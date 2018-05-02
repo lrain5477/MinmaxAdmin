@@ -89,12 +89,12 @@ class ProfileController extends BaseController
 
         if($validator->passes()) {
             if($this->modelRepository->save($input, ['guid' => $this->adminData->guid])) {
-                return redirect()->route('profile')->with('success', __('administrator.form.message.edit_success'));
+                return redirect()->route('administrator.profile')->with('success', __('administrator.form.message.edit_success'));
             }
 
-            return redirect()->route('profile')->withErrors([__('administrator.form.message.edit_error')])->withInput();
+            return redirect()->route('administrator.profile')->withErrors([__('administrator.form.message.edit_error')])->withInput();
         }
 
-        return redirect()->route('profile')->withErrors($validator)->withInput();
+        return redirect()->route('administrator.profile')->withErrors($validator)->withInput();
     }
 }

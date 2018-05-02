@@ -2,7 +2,7 @@
     <ul class="side-nav nicescroll-bar">
         <li class="navigation-header"><span>default</span><i class="icon-dots-three-horizontal"></i></li>
         <li>
-            <a class="{{ Route::currentRouteName() === 'home' ? 'active' : '' }}" href="{{ route('home') }}">
+            <a class="{{ Route::currentRouteName() === 'administrator.home' ? 'active' : '' }}" href="{{ route('administrator.home') }}">
                 <div class="float-left"><i class="icon-home3"></i><span class="right-nav-text">@lang('administrator.sidebar.home')</span></div>
                 <div class="clearfix"></div>
             </a>
