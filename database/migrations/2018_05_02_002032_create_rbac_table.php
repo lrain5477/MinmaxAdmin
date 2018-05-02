@@ -20,6 +20,7 @@ class CreateRbacTable extends Migration
             $table->string('name');
             $table->string('display_name')->nullable();
             $table->string('description')->nullable();
+            $table->enum('active', [1, 0])->default(1);
             $table->timestamps();
 
             $table->unique(['guard', 'name'], 'idx-guard-name');
@@ -41,8 +42,11 @@ class CreateRbacTable extends Migration
             $table->increments('id');
             $table->string('guard');
             $table->string('name');
+            $table->string('group');
+            $table->string('label');
             $table->string('display_name')->nullable();
             $table->string('description')->nullable();
+            $table->enum('active', [1, 0])->default(1);
             $table->timestamps();
 
             $table->unique(['guard', 'name'], 'idx-guard-name');
