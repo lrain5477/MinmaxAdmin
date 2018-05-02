@@ -17,23 +17,23 @@ class RbacSeeder extends Seeder
         /** 新增權限物件 **/
         $permissionsData = [
             [
-                'guard' => 'administrator', 'group' => 'adminMenuClass',
-                'name' => 'adminMenuClassShow', 'label' => '瀏覽', 'display_name' => '管理員選單類別 [瀏覽]', 'description' => '管理員選單類別 [瀏覽]',
+                'guard' => 'admin', 'group' => 'admin',
+                'name' => 'adminShow', 'label' => '瀏覽', 'display_name' => '管理員帳號 [瀏覽]', 'description' => '管理員帳號 [瀏覽]',
                 'active' => '1', 'updated_at' => $timestamp, 'created_at' => $timestamp,
             ],
             [
-                'guard' => 'administrator', 'group' => 'adminMenuClass',
-                'name' => 'adminMenuClassCreate', 'label' => '新增', 'display_name' => '管理員選單類別 [新增]', 'description' => '管理員選單類別 [新增]',
+                'guard' => 'admin', 'group' => 'admin',
+                'name' => 'adminCreate', 'label' => '新增', 'display_name' => '管理員帳號 [新增]', 'description' => '管理員帳號 [新增]',
                 'active' => '1', 'updated_at' => $timestamp, 'created_at' => $timestamp,
             ],
             [
-                'guard' => 'administrator', 'group' => 'adminMenuClass',
-                'name' => 'adminMenuClassEdit', 'label' => '編輯', 'display_name' => '管理員選單類別 [編輯]', 'description' => '管理員選單類別 [編輯]',
+                'guard' => 'admin', 'group' => 'admin',
+                'name' => 'adminEdit', 'label' => '編輯', 'display_name' => '管理員帳號 [編輯]', 'description' => '管理員帳號 [編輯]',
                 'active' => '1', 'updated_at' => $timestamp, 'created_at' => $timestamp,
             ],
             [
-                'guard' => 'administrator', 'group' => 'adminMenuClass',
-                'name' => 'adminMenuClassDestroy', 'label' => '刪除', 'display_name' => '管理員選單類別 [刪除]', 'description' => '管理員選單類別 [刪除]',
+                'guard' => 'admin', 'group' => 'admin',
+                'name' => 'adminDestroy', 'label' => '刪除', 'display_name' => '管理員帳號 [刪除]', 'description' => '管理員帳號 [刪除]',
                 'active' => '1', 'updated_at' => $timestamp, 'created_at' => $timestamp,
             ],
         ];
@@ -42,20 +42,15 @@ class RbacSeeder extends Seeder
         /** 新增權限角色 **/
         $rolesData = [
             [
-                'guard' => 'administrator', 'name' => 'systemAdmin', 'display_name' => '系統管理員', 'description' => '系統管理員',
+                'guard' => 'admin', 'name' => 'systemAdmin', 'display_name' => '系統管理員', 'description' => '系統管理員',
                 'active' => '1', 'updated_at' => $timestamp, 'created_at' => $timestamp,
             ],
         ];
         DB::table('roles')->insert($rolesData);
 
         /** 新增權限角色-物件對應 **/
-        $permissionRoleData = [
-            ['permission_id' => '1', 'role_id' => '1'],
-            ['permission_id' => '2', 'role_id' => '1'],
-            ['permission_id' => '3', 'role_id' => '1'],
-            ['permission_id' => '4', 'role_id' => '1'],
-        ];
+        $permissionRoleData = [];
+        foreach($permissionsData as $key => $value) $permissionRoleData[] = ['permission_id' => $key + 1, 'role_id' => 1];
         DB::table('permission_role')->insert($permissionRoleData);
-
     }
 }
