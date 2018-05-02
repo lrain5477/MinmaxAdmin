@@ -10,4 +10,8 @@ class Firewall extends Model
     protected $fillable = [
         'guid', 'guard', 'ip', 'rule', 'active',
     ];
+
+    public static function getIndexKey() {
+        return 'guid';
+    }
 }

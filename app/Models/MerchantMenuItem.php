@@ -17,6 +17,10 @@ class MerchantMenuItem extends Model
         'lang', 'guid', 'title', 'uri', 'model', 'class', 'parent', 'link', 'icon', 'filter', 'keeps', 'sort', 'active',
     ];
 
+    public static function getIndexKey() {
+        return 'guid';
+    }
+
     public static function rules()
     {
         return [

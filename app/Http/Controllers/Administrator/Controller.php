@@ -56,6 +56,9 @@ class Controller extends BaseController
             ['uri' => 'merchant-menu-class', 'title' => '經銷商選單類別', 'model' => 'MerchantMenuClass', 'parent' => 'menu-control'],
             ['uri' => 'merchant-menu-item', 'title' => '經銷商選單目錄', 'model' => 'MerchantMenuItem', 'parent' => 'menu-control'],
             ['uri' => 'language', 'title' => '語系管理', 'model' => 'Language', 'parent' => '0'],
+            ['uri' => 'permission', 'title' => '權限物件管理', 'model' => 'Permission', 'parent' => 'permission-control'],
+            ['uri' => 'role', 'title' => '權限角色管理', 'model' => 'Role', 'parent' => 'permission-control'],
+            ['uri' => 'language', 'title' => '語系管理', 'model' => 'Language', 'parent' => '0'],
             ['uri' => 'web-data', 'title' => '網站基本資訊', 'model' => 'WebData', 'parent' => '0'],
             ['uri' => 'system-log', 'title' => '操作紀錄', 'model' => 'SystemLog', 'parent' => '0'],
         ])->map(function($item, $key) { return (object) $item; });
@@ -106,7 +109,7 @@ class Controller extends BaseController
             return app()->make(__NAMESPACE__ . '\\' . $this->pageData->model . 'Controller')->view($id);
         }
 
-        $this->viewData['formData'] = $this->modelRepository->one(['guid' => $id]);
+        $this->viewData['formData'] = $this->modelRepository->one([$this->modelRepository->getIndexKey() => $id]);
 
         // 設定麵包屑導航
         Breadcrumbs::register('view', function ($breadcrumbs) {
@@ -173,8 +176,11 @@ class Controller extends BaseController
         $validator = Validator::make($request->input($this->pageData->model), $this->modelRepository->getRules() ?? []);
 
         if($validator->passes()) {
-            if($modelData = $this->modelRepository->create($request->input($this->pageData->model) + ['guid' => Str::uuid()])) {
-                return redirect()->route('edit', [$this->uri, $modelData->guid])->with('success', __('administrator.form.message.edit_success'));
+            $formDataKey = $this->modelRepository->getIndexKey();
+            $makeId = $formDataKey === 'id' ? [] : [$formDataKey => Str::uuid()];
+
+            if($modelData = $this->modelRepository->create($request->input($this->pageData->model) + $makeId)) {
+                return redirect()->route('edit', [$this->uri, $modelData->$formDataKey])->with('success', __('administrator.form.message.edit_success'));
             }
 
             return redirect()->route('create', [$this->uri])->withErrors([__('administrator.form.message.create_error')])->withInput();
@@ -197,7 +203,8 @@ class Controller extends BaseController
             return app()->make(__NAMESPACE__ . '\\' . $this->pageData->model . 'Controller')->edit($id);
         }
 
-        $this->viewData['formData'] = $this->modelRepository->one(['guid' => $id]);
+        $this->viewData['formDataId'] = $id;
+        $this->viewData['formData'] = $this->modelRepository->one([$this->modelRepository->getIndexKey() => $id]);
 
         // 設定麵包屑導航
         Breadcrumbs::register('edit', function ($breadcrumbs) {
@@ -233,7 +240,7 @@ class Controller extends BaseController
         $validator = Validator::make($request->input($this->pageData->model), $this->modelRepository->getRules() ?? []);
 
         if($validator->passes()) {
-            if($this->modelRepository->save($request->input($this->pageData->model), ['guid' => $id])) {
+            if($this->modelRepository->save($request->input($this->pageData->model), [$this->modelRepository->getIndexKey() => $id])) {
                 return redirect()->route('edit', [$this->uri, $id])->with('success', __('administrator.form.message.edit_success'));
             }
 
@@ -255,7 +262,7 @@ class Controller extends BaseController
             return app()->make(__NAMESPACE__ . '\\' . $this->pageData->model . 'Controller')->destroy($id);
         }
 
-        if($this->modelRepository->delete(['guid' => $id]))
+        if($this->modelRepository->delete([$this->modelRepository->getIndexKey() => $id]))
             return redirect()->route('index', [$this->uri])->withErrors([__('administrator.form.message.delete_success')])->withInput();
 
         return redirect()->route('index', [$this->uri])->with('success', __('administrator.form.message.delete_error'))->withInput();
@@ -277,18 +284,31 @@ class Controller extends BaseController
 
         $datatables = \DataTables::of($this->modelRepository->query());
 
-        if($request->has('filter')) {
+        if($request->has('filter') || $request->has('equal')) {
             $datatables->filter(function($query) use ($request) {
                 $whereQuery = '';
                 $whereValue = [];
-                foreach($request->input('filter') as $column => $value) {
-                    if(is_null($value) || $value === '') continue;
-                    if($whereQuery === '') {
-                        $whereQuery .= "{$column} like ?";
-                    } else {
-                        $whereQuery .= " or {$column} like ?";
+                if($request->has('filter')) {
+                    foreach ($request->input('filter') as $column => $value) {
+                        if (is_null($value) || $value === '') continue;
+                        if ($whereQuery === '') {
+                            $whereQuery .= "{$column} like ?";
+                        } else {
+                            $whereQuery .= " or {$column} like ?";
+                        }
+                        $whereValue[] = "%{$value}%";
                     }
-                    $whereValue[] = "%{$value}%";
+                }
+                if($request->has('equal')) {
+                    foreach($request->input('equal') as $column => $value) {
+                        if(is_null($value) || $value === '') continue;
+                        if($whereQuery === '') {
+                            $whereQuery .= "{$column} = ?";
+                        } else {
+                            $whereQuery .= " or {$column} = ?";
+                        }
+                        $whereValue[] = "{$value}";
+                    }
                 }
 
                 if($whereQuery !== '' && count($whereValue) > 0)
@@ -314,7 +334,7 @@ class Controller extends BaseController
             'switchTo' => 'required|in:0,1',
         ]);
 
-        if($this->modelRepository->save([$request->input('column') => $request->input('switchTo')], [['guid', '=', $request->input('id')]])) {
+        if($this->modelRepository->save([$request->input('column') => $request->input('switchTo')], [[$this->modelRepository->getIndexKey(), '=', $request->input('id')]])) {
             //LogHelper::systemLog(Auth::guard('administrator')->user()->username, 'Update ' . $this->modelName . '(' . $request->input('id') . ') ' . $request->input('column') . ' to ' . $request->input('switchTo'), 'Success');
 
             return response([
@@ -345,7 +365,7 @@ class Controller extends BaseController
             $inputData[$value->name] = ($value->name == 'selID') ? explode(',', substr($value->value, 0, -1)) : $value->value;
         }
 
-        if($this->modelRepository->update(['active' => $inputData['active']], function($query) use ($inputData) { $query->whereIn('guid', $inputData['selID']); })) {
+        if($this->modelRepository->update(['active' => $inputData['active']], function($query) use ($inputData) { $query->whereIn($this->modelRepository->getIndexKey(), $inputData['selID']); })) {
             //LogHelper::systemLog(Auth::guard('administrator')->user()->username, 'Update ' . $this->modelName . '(' . implode(',', $inputData['selID']) . ') chk to ' . $inputData['chk'], 'Success');
 
             return response(['msg' => 'success'], 200)->header('Content-Type', 'application/json');
@@ -369,7 +389,7 @@ class Controller extends BaseController
             'index' => 'required|integer',
         ]);
 
-        if($this->modelRepository->save([$request->input('column') => $request->input('index')], [['guid', '=', $request->input('id')]])) {
+        if($this->modelRepository->save([$request->input('column') => $request->input('index')], [[$this->modelRepository->getIndexKey(), '=', $request->input('id')]])) {
             //LogHelper::systemLog(Auth::guard('administrator')->user()->username, 'Update ' . $this->modelName . '(' . $request->input('id') . ') sorting to ' . $request->input('index'), 'Success');
 
             return response([

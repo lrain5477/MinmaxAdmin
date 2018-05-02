@@ -48,18 +48,31 @@ class AdminMenuItemController extends Controller
 
         $datatables = \DataTables::of($this->modelRepository->query()->where(['parent' => $parent]));
 
-        if($request->has('filter')) {
+        if($request->has('filter') || $request->has('equal')) {
             $datatables->filter(function($query) use ($request) {
                 $whereQuery = '';
                 $whereValue = [];
-                foreach($request->input('filter') as $column => $value) {
-                    if(is_null($value) || $value === '') continue;
-                    if($whereQuery === '') {
-                        $whereQuery .= "{$column} like ?";
-                    } else {
-                        $whereQuery .= " or {$column} like ?";
+                if($request->has('filter')) {
+                    foreach ($request->input('filter') as $column => $value) {
+                        if (is_null($value) || $value === '') continue;
+                        if ($whereQuery === '') {
+                            $whereQuery .= "{$column} like ?";
+                        } else {
+                            $whereQuery .= " or {$column} like ?";
+                        }
+                        $whereValue[] = "%{$value}%";
                     }
-                    $whereValue[] = "%{$value}%";
+                }
+                if($request->has('equal')) {
+                    foreach($request->input('equal') as $column => $value) {
+                        if(is_null($value) || $value === '') continue;
+                        if($whereQuery === '') {
+                            $whereQuery .= "{$column} = ?";
+                        } else {
+                            $whereQuery .= " or {$column} = ?";
+                        }
+                        $whereValue[] = "{$value}";
+                    }
                 }
 
                 if($whereQuery !== '' && count($whereValue) > 0)

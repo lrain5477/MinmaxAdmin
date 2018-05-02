@@ -123,6 +123,42 @@ return [
         ],
     ],
 
+    'Role' => [
+        'id' => 'ID',
+        'guard' => '平台',
+        'name' => '代碼',
+        'display_name' => '角色名稱',
+        'description' => '敘述',
+        'active' => '狀態',
+        'created_at' => '建立時間',
+        'updated_at' => '更新時間',
+        'selection' => [
+            'active' => [
+                '1' => '啟用',
+                '0' => '停用',
+            ],
+        ],
+    ],
+
+    'Permission' => [
+        'id' => 'ID',
+        'guard' => '平台',
+        'name' => '代碼',
+        'group' => '群組',
+        'label' => '標籤',
+        'display_name' => '權限名稱',
+        'description' => '敘述',
+        'active' => '狀態',
+        'created_at' => '建立時間',
+        'updated_at' => '更新時間',
+        'selection' => [
+            'active' => [
+                '1' => '啟用',
+                '0' => '停用',
+            ],
+        ],
+    ],
+
     'Language' => [
         'id' => 'ID',
         'guid' => 'GUID',

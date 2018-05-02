@@ -17,6 +17,10 @@ class MerchantMenuClass extends Model
         'guid', 'title', 'sort', 'active',
     ];
 
+    public static function getIndexKey() {
+        return 'guid';
+    }
+
     public static function rules()
     {
         return [

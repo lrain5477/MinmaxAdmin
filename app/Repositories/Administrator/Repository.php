@@ -25,6 +25,10 @@ class Repository
         return call_user_func_array("App\\Models\\{$this->modelClassName}::rules", []) ?? null;
     }
 
+    public function getIndexKey() {
+        return call_user_func_array("App\\Models\\{$this->modelClassName}::getIndexKey", []) ?? null;
+    }
+
     /**
      * @return \Illuminate\Database\Eloquent\Model
      */

@@ -12,6 +12,10 @@ class Language extends Model
         'guid', 'title', 'codes', 'name', 'icon', 'sort', 'active'
     ];
 
+    public static function getIndexKey() {
+        return 'guid';
+    }
+
     public static function rules()
     {
         return [

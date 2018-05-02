@@ -10,4 +10,8 @@ class SystemLog extends Model
     protected $fillable = [
         'guard', 'uri', 'action', 'guid', 'username', 'ip', 'note', 'result',
     ];
+
+    public static function getIndexKey() {
+        return 'id';
+    }
 }

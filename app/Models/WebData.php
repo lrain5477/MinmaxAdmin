@@ -16,6 +16,10 @@ class WebData extends Model
         'active', 'offline_text',
     ];
 
+    public static function getIndexKey() {
+        return 'guid';
+    }
+
     public static function rules()
     {
         return [

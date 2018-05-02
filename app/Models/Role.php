@@ -13,6 +13,20 @@ class Role extends Model
         'guard', 'name', 'display_name', 'description',
     ];
 
+    public static function getIndexKey() {
+        return 'id';
+    }
+
+    public static function rules()
+    {
+        return [
+            'guard' => 'required|in:admin,merchant',
+            'name' => 'required|string',
+            'display_name' => 'required|string',
+            'active' => 'required|in:1,0',
+        ];
+    }
+
     //Big block of caching functionality.
     public function cachedPermissions()
     {
@@ -53,17 +67,6 @@ class Role extends Model
             Cache::tags('permission_role')->flush();
         }
         return true;
-    }
-
-    /**
-     * Many-to-Many relations with the user model.
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
-     */
-    public function users()
-    {
-        $userModel = 'App\Models\Administrator';
-        return $this->belongsToMany($userModel, 'role_user', 'role_id', 'user_id');
     }
 
     /**

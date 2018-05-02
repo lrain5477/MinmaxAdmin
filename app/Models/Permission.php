@@ -11,6 +11,22 @@ class Permission extends Model
         'guard', 'name', 'group', 'label', 'display_name', 'description',
     ];
 
+    public static function getIndexKey() {
+        return 'id';
+    }
+
+    public static function rules()
+    {
+        return [
+            'guard' => 'required|in:admin,merchant',
+            'name' => 'required|string',
+            'display_name' => 'required|string',
+            'group' => 'required|string',
+            'label' => 'required|string',
+            'active' => 'required|in:1,0',
+        ];
+    }
+
     /**
      * Many-to-Many relations with role model.
      *

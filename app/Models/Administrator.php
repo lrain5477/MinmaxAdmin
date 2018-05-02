@@ -32,6 +32,10 @@ class Administrator extends Authenticatable
         'password', 'remember_token',
     ];
 
+    public static function getIndexKey() {
+        return 'guid';
+    }
+
     /**
      * Big block of caching functionality.
      *

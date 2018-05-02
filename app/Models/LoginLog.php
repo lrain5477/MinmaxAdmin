@@ -10,4 +10,8 @@ class LoginLog extends Model
     protected $fillable = [
         'guard', 'username', 'ip', 'note', 'result',
     ];
+
+    public static function getIndexKey() {
+        return 'id';
+    }
 }
