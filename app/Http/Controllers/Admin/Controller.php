@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 //use App\Helpers\LogHelper;
+use App\Models\AdminMenuItem;
 use App\Repositories\Admin\Repository;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Http\Request;
@@ -45,23 +46,31 @@ class Controller extends BaseController
             $this->viewData['pageData'] = $this->pageData;
 
             $this->modelRepository = $modelRepository;
-            if($this->pageData) $this->modelRepository->setModelClassName($this->pageData->model ?? null);
+            if($this->pageData) {
+                $this->modelRepository->setModelClassName($this->pageData->model ?? null);
+            } else {
+                abort(404);
+            }
         }
     }
 
     protected function getPageData($uri) {
-        $menuModel = collect([
-            ['uri' => 'admin-menu-class', 'title' => '管理員選單類別', 'model' => 'AdminMenuClass', 'parent' => 'menu-control'],
-            ['uri' => 'admin-menu-item', 'title' => '管理員選單目錄', 'model' => 'AdminMenuItem', 'parent' => 'menu-control'],
-            ['uri' => 'merchant-menu-class', 'title' => '經銷商選單類別', 'model' => 'MerchantMenuClass', 'parent' => 'menu-control'],
-            ['uri' => 'merchant-menu-item', 'title' => '經銷商選單目錄', 'model' => 'MerchantMenuItem', 'parent' => 'menu-control'],
-            ['uri' => 'language', 'title' => '語系管理', 'model' => 'Language', 'parent' => '0'],
-            ['uri' => 'permission', 'title' => '權限物件管理', 'model' => 'Permission', 'parent' => 'permission-control'],
-            ['uri' => 'role', 'title' => '權限角色管理', 'model' => 'Role', 'parent' => 'permission-control'],
-            ['uri' => 'language', 'title' => '語系管理', 'model' => 'Language', 'parent' => '0'],
-            ['uri' => 'web-data', 'title' => '網站基本資訊', 'model' => 'WebData', 'parent' => '0'],
-            ['uri' => 'system-log', 'title' => '操作紀錄', 'model' => 'SystemLog', 'parent' => '0'],
-        ])->map(function($item, $key) { return (object) $item; });
+        $menuItemData = AdminMenuItem::all();
+        $menuModel = $menuItemData->filter(function($item, $key) use ($menuItemData) {
+            if($item->parent == '0' &&  $item->adminMenuItem(true)->count() > 0) {
+                if($item->link === 'javascript:void(0);' && $item->adminMenuItem(true)->count() > 0) {
+                    return true;
+                } elseif($item->link !== 'javascript:void(0);' && $item->adminMenuItem(true)->count() < 1) {
+                    return true;
+                } else {
+                    return false;
+                }
+            } elseif($item->parent != '0' && $item->adminMenuItem->parent == '0') {
+                return true;
+            } else {
+                return false;
+            }
+        });
 
         return $menuModel->where('uri', $uri)->first();
     }

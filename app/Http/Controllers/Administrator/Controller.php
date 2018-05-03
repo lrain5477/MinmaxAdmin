@@ -45,7 +45,11 @@ class Controller extends BaseController
             $this->viewData['pageData'] = $this->pageData;
 
             $this->modelRepository = $modelRepository;
-            if($this->pageData) $this->modelRepository->setModelClassName($this->pageData->model ?? null);
+            if($this->pageData) {
+                $this->modelRepository->setModelClassName($this->pageData->model ?? null);
+            } else {
+                abort(404);
+            }
         }
     }
 
