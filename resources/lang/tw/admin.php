@@ -53,6 +53,7 @@ return [
             'all_active' => '狀態全部',
             'all_result' => '狀態全部',
             'all_guard' => '平台全部',
+            'all_rule' => '規則全部',
         ],
         'back' => '返回',
         'root' => '根列表',

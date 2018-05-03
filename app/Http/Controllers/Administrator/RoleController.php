@@ -21,7 +21,7 @@ class RoleController extends Controller
     {
         $this->viewData['formDataId'] = $id;
         $this->viewData['formData'] = $this->modelRepository->one([$this->modelRepository->getIndexKey() => $id]);
-        $this->viewData['permissionData'] = Permission::Where(['guard' => $this->viewData['formData']->guard])->get()->groupBy('group');
+        $this->viewData['permissionData'] = Permission::Where(['guard' => $this->viewData['formData']->guard, 'active' => 1])->get()->groupBy('group');
 
         // 設定麵包屑導航
         Breadcrumbs::register('edit', function ($breadcrumbs) {

@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Admin;
 
 use App\Models\Firewall;
 use Auth;
+use Cache;
+use Illuminate\Cache\TaggableStore;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 use Illuminate\Foundation\Bus\DispatchesJobs;
@@ -47,10 +49,18 @@ class LoginController extends BaseController
      * Validate the user login request.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return void
      */
     protected function validateLogin(Request $request)
     {
+        $request->merge(['ip' => \Request::ip()]);
+
+        // 防火牆
+        $firewallData = Firewall::where(['guard' => 'admin', 'active' => 1])->get();
+        $firewallBlack = $firewallData->where('rule', 0)->map(function($item, $key) { return $item->ip; })->toArray();
+        $firewallWhite = $firewallData->where('rule', 1)->map(function($item, $key) { return $item->ip; })->toArray();
+        $firewallWhite = count($firewallWhite) > 0 ? $firewallWhite : [\Request::ip()];
+
         $this->validate($request, [
             $this->username() => [
                 'required',
@@ -62,23 +72,14 @@ class LoginController extends BaseController
             ],
             'password' => 'required|string',
             'captcha' => ['required', Rule::in([session('adminCaptcha')])],
+            'ip' => [
+                Rule::in($firewallWhite),
+                Rule::notIn($firewallBlack),
+            ],
+        ], [
+            'ip.in' =>  __('validation.custom.ip.white'),
+            'ip.not_in' => __('validation.custom.ip.black'),
         ]);
-
-        // 驗證防火牆
-        $firewallData = Firewall::where(['guard' => 'admin'])->get();
-
-        // 驗證白名單 IP
-        if($firewallData->where('rule', 1)->count() > 0) {
-            if($firewallData->where('rule', 1)->where('ip', \Request::ip())->count() < 1) {
-                // LogHelper::loginLog($request->input('username'), 'Login Deny', 'Failed');
-                return redirect()->route('admin.login')->withErrors(['ip' => __('validation.custom.ip.white')]);
-            }
-        }
-        // 驗證黑名單 IP
-        if($firewallData->where('rule', 0)->where('ip', \Request::ip())->count() > 0) {
-            // LogHelper::loginLog($request->input('username'), 'Login Deny', 'Failed');
-            return redirect()->route('admin.login')->withErrors(['ip' => __('validation.custom.ip.black')]);
-        }
     }
 
     /**
@@ -105,6 +106,10 @@ class LoginController extends BaseController
         $this->guard()->logout();
 
         $request->session()->invalidate();
+
+        if(Cache::getStore() instanceof TaggableStore) {
+            Cache::tags('role_admin')->flush();
+        }
 
         return redirect()->route('admin.home');
     }

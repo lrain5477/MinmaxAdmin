@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 //use App\Helpers\LogHelper;
+use App\Models\AdminMenuClass;
 use App\Models\AdminMenuItem;
 use App\Repositories\Admin\Repository;
 use Illuminate\Foundation\Bus\DispatchesJobs;
@@ -35,6 +36,8 @@ class Controller extends BaseController
             $this->adminData = Auth::guard('admin')->user();
             $this->viewData['adminData'] = $this->adminData;
 
+            $this->viewData['menuData'] = $this->getMenuData();
+
             return $next($request);
         });
 
@@ -54,23 +57,16 @@ class Controller extends BaseController
         }
     }
 
+    protected function getMenuData() {
+        $menuItemData = AdminMenuClass::where(['active' => 1])->orderBy('sort')->get();
+        $menuModel = $menuItemData;     //TODO: 加入權限篩選
+
+        return $menuModel;
+    }
+
     protected function getPageData($uri) {
-        $menuItemData = AdminMenuItem::all();
-        $menuModel = $menuItemData->filter(function($item, $key) use ($menuItemData) {
-            if($item->parent == '0' &&  $item->adminMenuItem(true)->count() > 0) {
-                if($item->link === 'javascript:void(0);' && $item->adminMenuItem(true)->count() > 0) {
-                    return true;
-                } elseif($item->link !== 'javascript:void(0);' && $item->adminMenuItem(true)->count() < 1) {
-                    return true;
-                } else {
-                    return false;
-                }
-            } elseif($item->parent != '0' && $item->adminMenuItem->parent == '0') {
-                return true;
-            } else {
-                return false;
-            }
-        });
+        $menuItemData = AdminMenuItem::where(['lang' => app()->getLocale(), 'active' => 1])->get();
+        $menuModel = $menuItemData;     //TODO: 加入權限篩選
 
         return $menuModel->where('uri', $uri)->first();
     }

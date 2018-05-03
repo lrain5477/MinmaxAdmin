@@ -33,6 +33,7 @@ class CreateAdminMenuTable extends Migration
             $table->string('parent', 255)->default('0')->comment('上層目錄');
             $table->string('link')->comment('項目連結');    // 根目錄為 javascript:void(0);
             $table->string('icon', 64)->nullable()->comment('圖示 Class');
+            $table->string('permission_key', 128)->nullable()->comment('權限綁定代碼');
             $table->string('filter', 255)->nullable()->comment('資料過濾 (where)');
             $table->text('keeps')->nullable()->comment('不可刪除 GUID');
             $table->unsignedInteger('sort')->default(1)->comment('排序');
