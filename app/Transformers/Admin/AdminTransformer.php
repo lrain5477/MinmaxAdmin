@@ -35,10 +35,10 @@ class AdminTransformer extends Transformer
         }
 
         $transformerData = [
-            'role_id' => $this->getGridText($model->role->display_name),
             'username' => $this->getGridText($model->username),
             'name' => $this->getGridText($model->name),
             'email' => $this->getGridText($model->email),
+            'role_id' => $this->getGridText($model->roles()->first()->display_name),
             'active' => $this->getGridSwitch($model->guid, 'active', $model->active),
             'action' => $this->getGridActions($model->guid),
         ];

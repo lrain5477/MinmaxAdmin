@@ -43,8 +43,9 @@ class AdminController extends Controller
             try {
                 \DB::beginTransaction();
 
+                RoleAdmin::create(['role_id' =>$input['role_id'], 'user_id' => $input['guid']]);
+                unset($input['role_id']);
                 $modelData = $this->modelRepository->create($input);
-                RoleAdmin::create(['role_id' => $modelData->role_id, 'user_id' => $modelData->guid]);
 
                 \DB::commit();
 
@@ -89,8 +90,9 @@ class AdminController extends Controller
             try {
                 \DB::beginTransaction();
 
-                $this->modelRepository->save($input, [$this->modelRepository->getIndexKey() => $id]);
                 RoleAdmin::where('user_id', $id)->update(['role_id' => $input['role_id']]);
+                unset($input['role_id']);
+                $this->modelRepository->save($input, [$this->modelRepository->getIndexKey() => $id]);
 
                 \DB::commit();
 

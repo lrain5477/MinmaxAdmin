@@ -40,10 +40,10 @@
 <table class="table table-responsive-md table-bordered table-striped table-hover table-checkable datatables" id="tableList">
     <thead>
     <tr role="row">
-        <th>@lang('models.Admin.role_id')</th>
         <th>@lang('models.Admin.username')</th>
         <th>@lang('models.Admin.name')</th>
         <th>@lang('models.Admin.email')</th>
+        <th class="nosort">@lang('models.Admin.role_id')</th>
         <th>@lang('models.Admin.active')</th>
         <th class="nosort">@lang('admin.grid.title.action')</th>
     </tr>
@@ -76,10 +76,10 @@
                 }
             },
             columns: [
-                {data: 'role_id', name: 'role_id'},
                 {data: 'username', name: 'username'},
                 {data: 'name', name: 'name'},
                 {data: 'email', name: 'email'},
+                {data: 'role_id', name: 'role_id'},
                 {data: 'active', name: 'active'},
                 {data: 'action', name: 'action'}
             ],

@@ -1,8 +1,6 @@
 <?php
 namespace App\Helpers;
 
-use Session;
-
 class CaptchaHelper {
     /**
      * @param string $seed

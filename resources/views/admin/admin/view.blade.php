@@ -19,7 +19,7 @@
     <fieldset id="baseFieldSet">
         <legend class="legend h6 mb-4"><i class="icon-angle-double-down2 mr-2"></i>主要設定</legend>
 
-        {!! $modelPresenter->getViewNormalText($formData, 'role_id', $formData->role->display_name) !!}
+        {!! $modelPresenter->getViewNormalText($formData, 'role_id', $formData->roles()->first()->display_name) !!}
 
         {!! $modelPresenter->getViewNormalText($formData, 'username') !!}
 
