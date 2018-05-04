@@ -16,7 +16,6 @@ class CreateAdminTable extends Migration
         Schema::create('admin', function (Blueprint $table) {
             $table->increments('id');
             $table->string('guid', 64);
-            $table->integer('role_id')->comment('權限群組');
             $table->string('username', 32)->unique()->comment('帳號');
             $table->string('password')->comment('密碼');
             $table->rememberToken();

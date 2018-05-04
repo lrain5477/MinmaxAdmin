@@ -86,7 +86,9 @@ return [
         ],
         'message' => [
             'create_success' => '您新增的資料儲存成功。',
+            'create_error' => '您的新增資料操作失敗。',
             'edit_success' => '您編輯的資料儲存成功。',
+            'edit_error' => '您編輯的資料儲存失敗。',
             'delete_success' => '您選擇的資料已經刪除成功。',
             'delete_error' => '您選擇的資料無法刪除，請再次確認。',
             'delete_error_account_self' => '您無法刪除自己的帳號，請再次確認。',

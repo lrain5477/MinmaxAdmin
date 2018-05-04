@@ -35,6 +35,30 @@ return [
         ],
     ],
 
+    'Admin' => [
+        'id' => 'ID',
+        'guid' => 'GUID',
+        'role_id' => '權限群組',
+        'username' => '帳號',
+        'password' => '密碼',
+        'password_confirmation' => '密碼確認',
+        'name' => '姓名',
+        'email' => 'Email',
+        'active' => '狀態',
+        'created_at' => '建立時間',
+        'updated_at' => '更新時間',
+        'selection' => [
+            'active' => [
+                '1' => '啟用',
+                '0' => '停用',
+            ],
+        ],
+        'hint' => [
+            'password' => '若不需更新密碼，請維持此欄位空白',
+            'password_confirmation' => '請再次輸入密碼；若不需更新密碼，請維持此欄位空白',
+        ],
+    ],
+
     'AdminMenuClass' => [
         'id' => 'ID',
         'guid' => 'GUID',

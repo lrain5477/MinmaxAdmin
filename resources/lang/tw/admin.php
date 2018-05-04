@@ -73,6 +73,7 @@ return [
         'record' => '系統紀錄',
         'note' => '說明敘述',
         'select_default_title' => '請選擇項目',
+        'password_build_auto' => '預設密碼為 123456，由系統自動設定',
         'fieldSet' => [
             'default' => '主要設定',
             'information' => '資訊設定',

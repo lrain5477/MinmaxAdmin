@@ -3,11 +3,24 @@
 namespace App\Http\Controllers\Admin;
 
 use Analytics;
+use Auth;
+use App\Repositories\Admin\Repository;
 use Illuminate\Support\Carbon;
 use Spatie\Analytics\Period;
 
 class SiteController extends Controller
 {
+    public function __construct(Repository $modelRepository)
+    {
+        $this->middleware('auth:admin');
+
+        parent::__construct($modelRepository);
+
+        $this->adminData = Auth::guard('admin')->user();
+        $this->viewData['adminData'] = $this->adminData;
+        $this->viewData['menuData'] = $this->getMenuData();
+    }
+
     /**
      * Display Dashboard.
      *

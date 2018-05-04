@@ -267,7 +267,7 @@ class Controller extends BaseController
     }
 
     /**
-     * Model Update
+     * Model Destroy
      *
      * @param string $id
      * @return $this|\Illuminate\Http\RedirectResponse

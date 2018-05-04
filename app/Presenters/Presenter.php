@@ -13,10 +13,10 @@ class Presenter
     protected $fieldRequired = [];
     protected $fieldSelection = [];
 
-    public function getViewNormalText($model, $column) {
+    public function getViewNormalText($model, $column, $value = '') {
         $modelName = class_basename($model);
         $columnLabel = __("models.{$modelName}.{$column}");
-        $fieldValue = isset($model->$column) ? $model->$column : '';
+        $fieldValue = $value === '' ? (isset($model->$column) ? $model->$column : '') : $value;
 
         $componentData = [
             'id' => "{$modelName}-{$column}",

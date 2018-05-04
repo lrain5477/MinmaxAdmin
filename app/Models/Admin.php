@@ -32,18 +32,25 @@ class Admin extends Authenticatable
         'password', 'remember_token',
     ];
 
-    public static function getIndexKey() {
+    public static function getIndexKey()
+    {
         return 'guid';
     }
 
     public static function rules()
     {
         return [
+            'role_id' => 'required',    // this attribute not in Admin, but for Role.
             'username' => 'required|string|min:4',
-            'name' => 'nullable|string',
+            'name' => 'required|string',
             'email' => 'nullable|email',
             'active' => 'required|in:1,0',
         ];
+    }
+
+    public function role()
+    {
+        return $this->hasOne('App\Models\Role', 'id', 'role_id');
     }
 
     /**
@@ -53,7 +60,7 @@ class Admin extends Authenticatable
      */
     public function cachedRoles()
     {
-        $cacheKey = 'roles_for_admin_guid';
+        $cacheKey = 'roles_for_admin_' . $this->guid;
         if(Cache::getStore() instanceof TaggableStore) {
             return Cache::tags('role_admin')->remember($cacheKey, 60, function () {
                 return $this->roles()->get();

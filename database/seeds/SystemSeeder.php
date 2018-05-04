@@ -177,7 +177,7 @@ class SystemSeeder extends Seeder
                 'model' => 'WebData',
                 'class' => $menuClassGuid3,
                 'parent' => $menuGuid1,
-                'link' => 'front-web-data/' . $webDataGuid3 . '/edit',
+                'link' => 'front-web-data/' . $webDataGuid4 . '/edit',
                 'icon' => null,
                 'permission_key' => 'frontWebDataEdit',
                 //'filter' => '',
