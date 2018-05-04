@@ -6,7 +6,6 @@ use App\Models\AdminMenuItem;
 
 class AdminMenuItemTransformer extends Transformer
 {
-    protected $uri = 'admin-menu-item';
     protected $model = 'AdminMenuItem';
 
     /**

@@ -81,7 +81,7 @@ class AdminMenuItemController extends Controller
         }
 
         return $datatables
-            ->setTransformer(app()->make('App\\Transformers\\Administrator\\' . $this->pageData->model . 'Transformer'))
+            ->setTransformer(app()->make('App\\Transformers\\Administrator\\' . $this->pageData->model . 'Transformer'), ['uri' => $this->uri])
             ->make(true);
     }
 }

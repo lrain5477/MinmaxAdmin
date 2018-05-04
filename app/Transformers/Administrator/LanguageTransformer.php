@@ -6,7 +6,6 @@ use App\Models\Language;
 
 class LanguageTransformer extends Transformer
 {
-    protected $uri = 'language';
     protected $model = 'Language';
 
     /**

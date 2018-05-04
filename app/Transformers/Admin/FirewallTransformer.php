@@ -6,11 +6,16 @@ use App\Models\Firewall;
 
 class FirewallTransformer extends Transformer
 {
-    protected $uri = 'firewall';
     protected $model = 'Firewall';
 
-    public function __construct()
+    /**
+     * Transformer constructor. Put action permissions.
+     * @param string $uri
+     */
+    public function __construct($uri)
     {
+        parent::__construct($uri);
+
         if(\Auth::guard('admin')->user()->can('firewallShow')) $this->permissions[] = 'R';
         if(\Auth::guard('admin')->user()->can('firewallEdit')) $this->permissions[] = 'U';
         if(\Auth::guard('admin')->user()->can('firewallDestroy')) $this->permissions[] = 'D';

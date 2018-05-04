@@ -11,6 +11,15 @@ class Transformer extends TransformerAbstract
     protected $model;
 
     /**
+     * Transformer constructor. Initial setting uri.
+     * @param string $uri
+     */
+    public function __construct($uri)
+    {
+        $this->uri = $uri;
+    }
+
+    /**
      * @param string $value
      * @return string
      */

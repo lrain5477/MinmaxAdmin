@@ -6,7 +6,6 @@ use App\Models\WebData;
 
 class WebDataTransformer extends Transformer
 {
-    protected $uri = 'web-data';
     protected $model = 'WebData';
 
     /**

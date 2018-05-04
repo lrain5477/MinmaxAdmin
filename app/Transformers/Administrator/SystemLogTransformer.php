@@ -6,7 +6,6 @@ use App\Models\SystemLog;
 
 class SystemLogTransformer extends Transformer
 {
-    protected $uri = 'system-log';
     protected $model = 'SystemLog';
 
     /**

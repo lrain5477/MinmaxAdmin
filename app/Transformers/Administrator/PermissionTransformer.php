@@ -6,7 +6,6 @@ use App\Models\Permission;
 
 class PermissionTransformer extends Transformer
 {
-    protected $uri = 'permission';
     protected $model = 'Permission';
 
     /**

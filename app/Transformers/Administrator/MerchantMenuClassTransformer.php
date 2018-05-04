@@ -6,7 +6,6 @@ use App\Models\MerchantMenuClass;
 
 class MerchantMenuClassTransformer extends Transformer
 {
-    protected $uri = 'merchant-menu-class';
     protected $model = 'MerchantMenuClass';
 
     /**

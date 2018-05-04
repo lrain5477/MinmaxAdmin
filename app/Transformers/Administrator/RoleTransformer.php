@@ -6,7 +6,6 @@ use App\Models\Role;
 
 class RoleTransformer extends Transformer
 {
-    protected $uri = 'role';
     protected $model = 'Role';
 
     /**
