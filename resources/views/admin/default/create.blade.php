@@ -7,11 +7,8 @@
 <section class="panel panel-default">
     <header class="panel-heading">
         <h1 class="h5 float-left font-weight-bold">{{ $pageData->title }} @lang('admin.form.create')</h1>
-        <div class="float-right">
-            <a class="btn btn-sm btn-light" href="{{ route('admin.index', [$pageData->uri]) }}" title="@lang('admin.form.back_list')">
-                <i class="icon-undo2"></i><span class="ml-1 d-none d-md-inline-block">@lang('admin.form.back_list')</span>
-            </a>
-        </div>
+
+        @yield('action-buttons')
     </header>
 
     <div class="panel-wrapper">

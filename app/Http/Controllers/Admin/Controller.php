@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 //use App\Helpers\LogHelper;
+use App\Helpers\PermissionHelper;
 use App\Models\AdminMenuClass;
 use App\Models\AdminMenuItem;
 use App\Repositories\Admin\Repository;
@@ -84,6 +85,8 @@ class Controller extends BaseController
             return app()->make(__NAMESPACE__ . '\\' . $this->pageData->model . 'Controller')->index();
         }
 
+        if($this->adminData->can(PermissionHelper::replacePermissionName($this->pageData->permission_key, 'Show')) === false) return abort(404);
+
         // 設定麵包屑導航
         Breadcrumbs::register('index', function ($breadcrumbs) {
             /**
@@ -113,6 +116,8 @@ class Controller extends BaseController
             Route::current()->setParameter('uri', $this->uri);
             return app()->make(__NAMESPACE__ . '\\' . $this->pageData->model . 'Controller')->view($id);
         }
+
+        if($this->adminData->can(PermissionHelper::replacePermissionName($this->pageData->permission_key, 'Show')) === false) return abort(404);
 
         $this->viewData['formData'] = $this->modelRepository->one([$this->modelRepository->getIndexKey() => $id]);
 
@@ -146,6 +151,8 @@ class Controller extends BaseController
             return app()->make(__NAMESPACE__ . '\\' . $this->pageData->model . 'Controller')->create();
         }
 
+        if($this->adminData->can(PermissionHelper::replacePermissionName($this->pageData->permission_key, 'Create')) === false) return abort(404);
+
         $this->viewData['formData'] = $this->modelRepository->new();
 
         // 設定麵包屑導航
@@ -178,6 +185,8 @@ class Controller extends BaseController
             return app()->make(__NAMESPACE__ . '\\' . $this->pageData->model . 'Controller')->store($request);
         }
 
+        if($this->adminData->can(PermissionHelper::replacePermissionName($this->pageData->permission_key, 'Create')) === false) return abort(404);
+
         $validator = Validator::make($request->input($this->pageData->model), $this->modelRepository->getRules() ?? []);
 
         if($validator->passes()) {
@@ -207,6 +216,8 @@ class Controller extends BaseController
             Route::current()->setParameter('uri', $this->uri);
             return app()->make(__NAMESPACE__ . '\\' . $this->pageData->model . 'Controller')->edit($id);
         }
+
+        if($this->adminData->can(PermissionHelper::replacePermissionName($this->pageData->permission_key, 'Edit')) === false) return abort(404);
 
         $this->viewData['formDataId'] = $id;
         $this->viewData['formData'] = $this->modelRepository->one([$this->modelRepository->getIndexKey() => $id]);
@@ -242,6 +253,8 @@ class Controller extends BaseController
             return app()->make(__NAMESPACE__ . '\\' . $this->pageData->model . 'Controller')->update($id, $request);
         }
 
+        if($this->adminData->can(PermissionHelper::replacePermissionName($this->pageData->permission_key, 'Edit')) === false) return abort(404);
+
         $validator = Validator::make($request->input($this->pageData->model), $this->modelRepository->getRules() ?? []);
 
         if($validator->passes()) {
@@ -267,6 +280,8 @@ class Controller extends BaseController
             return app()->make(__NAMESPACE__ . '\\' . $this->pageData->model . 'Controller')->destroy($id);
         }
 
+        if($this->adminData->can(PermissionHelper::replacePermissionName($this->pageData->permission_key, 'Destroy')) === false) return abort(404);
+
         if($this->modelRepository->delete([$this->modelRepository->getIndexKey() => $id]))
             return redirect()->route('admin.index', [$this->uri])->with('success', __('admin.form.message.delete_success'));
 
@@ -286,6 +301,8 @@ class Controller extends BaseController
             Route::current()->setParameter('uri', $this->uri);
             return app()->make(__NAMESPACE__ . '\\' . $this->pageData->model . 'Controller')->ajaxDataTable($request);
         }
+
+        if($this->adminData->can(PermissionHelper::replacePermissionName($this->pageData->permission_key, 'Show')) === false) return abort(403);
 
         $datatables = \DataTables::of($this->modelRepository->query());
 
@@ -333,6 +350,8 @@ class Controller extends BaseController
             return app()->make(__NAMESPACE__ . '\\' . $this->pageData->model . 'Controller')->ajaxSwitch($request);
         }
 
+        if($this->adminData->can(PermissionHelper::replacePermissionName($this->pageData->permission_key, 'Edit')) === false) return abort(403);
+
         $validateResult = $request->validate([
             'id' => 'required',
             'column' => 'required',
@@ -359,6 +378,8 @@ class Controller extends BaseController
             Route::current()->setParameter('uri', $this->uri);
             return app()->make(__NAMESPACE__ . '\\' . $this->pageData->model . 'Controller')->ajaxMultiSwitch($request);
         }
+
+        if($this->adminData->can(PermissionHelper::replacePermissionName($this->pageData->permission_key, 'Edit')) === false) return abort(403);
 
         $validateResult = $request->validate([
             'data' => 'required',
@@ -387,6 +408,8 @@ class Controller extends BaseController
             Route::current()->setParameter('uri', $this->uri);
             return app()->make(__NAMESPACE__ . '\\' . $this->pageData->model . 'Controller')->ajaxSort($request);
         }
+
+        if($this->adminData->can(PermissionHelper::replacePermissionName($this->pageData->permission_key, 'Edit')) === false) return abort(403);
 
         $validateResult = $request->validate([
             'id' => 'required',

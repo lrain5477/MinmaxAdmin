@@ -11,6 +11,14 @@ class Transformer extends TransformerAbstract
     protected $model;
 
     /**
+     * @var array $permissions can include above character
+     *      R - Show (Read)
+     *      U - Edit (Update)
+     *      D - Destroy (Delete)
+     */
+    protected $permissions = [];
+
+    /**
      * @param string $value
      * @return string
      */
@@ -61,7 +69,11 @@ class Transformer extends TransformerAbstract
      */
     public function getGridCheckBox($id)
     {
-        return view('admin.grid-components.checkbox', ['id' => $id])->render();
+        if(in_array('U',  $this->permissions)) {
+            return view('admin.grid-components.checkbox', ['id' => $id])->render();
+        } else {
+            return $this->getGridText('-');
+        }
     }
 
     /**
@@ -73,35 +85,43 @@ class Transformer extends TransformerAbstract
      */
     public function getGridSort($id, $column, $value)
     {
-        return view('admin.grid-components.sort', [
-            'id' => $id,
-            'column' => $column,
-            'value' => $value,
-            'uri' => $this->uri,
-            'model' => $this->model,
+        if(in_array('U',  $this->permissions)) {
+            return view('admin.grid-components.sort', [
+                'id' => $id,
+                'column' => $column,
+                'value' => $value,
+                'uri' => $this->uri,
+                'model' => $this->model,
             ])->render();
+        } else {
+            return $this->getGridText($value);
+        }
     }
 
     /**
-     * @param $id
-     * @param $column
-     * @param $value
+     * @param string $id
+     * @param string $column
+     * @param string $value
      * @return string
      * @throws \Throwable
      */
     public function getGridSwitch($id, $column, $value)
     {
-        return view('admin.grid-components.switch', [
-            'id' => $id,
-            'column' => $column,
-            'value' => $value,
-            'uri' => $this->uri,
-            'model' => $this->model,
+        if(in_array('U',  $this->permissions)) {
+            return view('admin.grid-components.switch', [
+                'id' => $id,
+                'column' => $column,
+                'value' => $value,
+                'uri' => $this->uri,
+                'model' => $this->model,
             ])->render();
+        } else {
+            return $this->getGridText(__("models.{$this->model}.selection.{$column}.{$value}"));
+        }
     }
 
     /**
-     * @param $id
+     * @param string $id
      * @return string
      * @throws \Throwable
      */
@@ -110,7 +130,7 @@ class Transformer extends TransformerAbstract
         return view('admin.grid-components.actions', [
             'id' => $id,
             'uri' => $this->uri,
-            'rules' => ['R', 'U', 'D'],
+            'rules' => $this->permissions,
         ])->render();
     }
 }

@@ -14,4 +14,14 @@ class Firewall extends Model
     public static function getIndexKey() {
         return 'guid';
     }
+
+    public static function rules()
+    {
+        return [
+            'guard' => 'required|in:admin,merchant',
+            'ip' => 'required|ip',
+            'rule' => 'required|in:1,0',
+            'active' => 'required|in:1,0',
+        ];
+    }
 }
