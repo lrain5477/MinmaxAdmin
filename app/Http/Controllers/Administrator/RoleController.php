@@ -4,12 +4,23 @@ namespace App\Http\Controllers\Administrator;
 
 use App\Models\Permission;
 use App\Models\PermissionRole;
+use App\Repositories\Administrator\Repository;
 use Breadcrumbs;
 use Illuminate\Http\Request;
 use Validator;
 
 class RoleController extends Controller
 {
+    public function __construct(Repository $modelRepository)
+    {
+        $this->middleware('auth:administrator');
+
+        parent::__construct($modelRepository);
+
+        $this->adminData = \Auth::guard('administrator')->user();
+        $this->viewData['adminData'] = $this->adminData;
+    }
+
     /**
      * Model Edit
      *

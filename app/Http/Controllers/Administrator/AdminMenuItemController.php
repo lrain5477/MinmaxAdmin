@@ -3,11 +3,22 @@
 namespace App\Http\Controllers\Administrator;
 
 use App\Models\AdminMenuItem;
+use App\Repositories\Administrator\Repository;
 use Breadcrumbs;
 use Illuminate\Http\Request;
 
 class AdminMenuItemController extends Controller
 {
+    public function __construct(Repository $modelRepository)
+    {
+        $this->middleware('auth:administrator');
+
+        parent::__construct($modelRepository);
+
+        $this->adminData = \Auth::guard('administrator')->user();
+        $this->viewData['adminData'] = $this->adminData;
+    }
+
     /**
      * Administrator AdminMenuItem DataGrid List.
      *
@@ -62,6 +73,7 @@ class AdminMenuItemController extends Controller
                         }
                         $whereValue[] = "%{$value}%";
                     }
+                    if($whereQuery !== '') $whereQuery = "({$whereQuery})";
                 }
                 if($request->has('equal')) {
                     foreach($request->input('equal') as $column => $value) {
@@ -69,7 +81,7 @@ class AdminMenuItemController extends Controller
                         if($whereQuery === '') {
                             $whereQuery .= "{$column} = ?";
                         } else {
-                            $whereQuery .= " or {$column} = ?";
+                            $whereQuery .= " and {$column} = ?";
                         }
                         $whereValue[] = "{$value}";
                     }
@@ -81,7 +93,7 @@ class AdminMenuItemController extends Controller
         }
 
         return $datatables
-            ->setTransformer(app()->make('App\\Transformers\\Administrator\\' . $this->pageData->model . 'Transformer'), ['uri' => $this->uri])
+            ->setTransformer(app()->make('App\\Transformers\\Administrator\\' . $this->pageData->model . 'Transformer', ['uri' => $this->uri]))
             ->make(true);
     }
 }

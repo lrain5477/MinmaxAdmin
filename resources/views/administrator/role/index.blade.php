@@ -31,8 +31,8 @@
         <div class="col col-md-auto ml-1">
             <select class="bs-select form-control sch_select" id="searchActive" name="searchActive" data-style="btn-outline-light btn-sm">
                 <option selected="selected" value="">@lang('administrator.grid.selection.all_active')</option>
-                <option value="1">@lang('models.Permission.selection.active.1')</option>
-                <option value="0">@lang('models.Permission.selection.active.0')</option>
+                <option value="1">@lang('models.Role.selection.active.1')</option>
+                <option value="0">@lang('models.Role.selection.active.0')</option>
             </select>
         </div>
     </div>
@@ -45,10 +45,10 @@
 <table class="table table-responsive-md table-bordered table-striped table-hover table-checkable datatables" id="tableList">
     <thead>
     <tr role="row">
-        <th>@lang('models.Permission.guard')</th>
-        <th>@lang('models.Permission.name')</th>
-        <th>@lang('models.Permission.display_name')</th>
-        <th>@lang('models.Permission.active')</th>
+        <th>@lang('models.Role.guard')</th>
+        <th>@lang('models.Role.name')</th>
+        <th>@lang('models.Role.display_name')</th>
+        <th>@lang('models.Role.active')</th>
         <th class="nosort">@lang('administrator.grid.title.action')</th>
     </tr>
     </thead>

@@ -110,7 +110,7 @@ class Controller extends BaseController
     {
         if(get_class($this) !== __NAMESPACE__ . '\\' . $this->pageData->model . 'Controller' && class_exists(__NAMESPACE__ . '\\' . $this->pageData->model . 'Controller')) {
             Route::current()->setParameter('uri', $this->uri);
-            return app()->make(__NAMESPACE__ . '\\' . $this->pageData->model . 'Controller')->view($id);
+            return app()->make(__NAMESPACE__ . '\\' . $this->pageData->model . 'Controller')->show($id);
         }
 
         $this->viewData['formData'] = $this->modelRepository->one([$this->modelRepository->getIndexKey() => $id]);
@@ -302,6 +302,7 @@ class Controller extends BaseController
                         }
                         $whereValue[] = "%{$value}%";
                     }
+                    if($whereQuery !== '') $whereQuery = "({$whereQuery})";
                 }
                 if($request->has('equal')) {
                     foreach($request->input('equal') as $column => $value) {
@@ -309,7 +310,7 @@ class Controller extends BaseController
                         if($whereQuery === '') {
                             $whereQuery .= "{$column} = ?";
                         } else {
-                            $whereQuery .= " or {$column} = ?";
+                            $whereQuery .= " and {$column} = ?";
                         }
                         $whereValue[] = "{$value}";
                     }

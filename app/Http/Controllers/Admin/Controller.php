@@ -60,16 +60,14 @@ class Controller extends BaseController
 
     protected function getMenuData() {
         $menuItemData = AdminMenuClass::where(['active' => 1])->orderBy('sort')->get();
-        $menuModel = $menuItemData;     //TODO: 加入權限篩選
 
-        return $menuModel;
+        return $menuItemData;
     }
 
     protected function getPageData($uri) {
         $menuItemData = AdminMenuItem::where(['lang' => app()->getLocale(), 'active' => 1])->get();
-        $menuModel = $menuItemData;     //TODO: 加入權限篩選
 
-        return $menuModel->where('uri', $uri)->first();
+        return $menuItemData->where('uri', $uri)->first();
     }
 
     /**
@@ -114,7 +112,7 @@ class Controller extends BaseController
     {
         if(get_class($this) !== __NAMESPACE__ . '\\' . $this->pageData->model . 'Controller' && class_exists(__NAMESPACE__ . '\\' . $this->pageData->model . 'Controller')) {
             Route::current()->setParameter('uri', $this->uri);
-            return app()->make(__NAMESPACE__ . '\\' . $this->pageData->model . 'Controller')->view($id);
+            return app()->make(__NAMESPACE__ . '\\' . $this->pageData->model . 'Controller')->show($id);
         }
 
         if($this->adminData->can(PermissionHelper::replacePermissionName($this->pageData->permission_key, 'Show')) === false) return abort(404);
@@ -320,6 +318,7 @@ class Controller extends BaseController
                         }
                         $whereValue[] = "%{$value}%";
                     }
+                    if($whereQuery !== '') $whereQuery = "({$whereQuery})";
                 }
                 if($request->has('equal')) {
                     foreach($request->input('equal') as $column => $value) {
@@ -327,7 +326,7 @@ class Controller extends BaseController
                         if($whereQuery === '') {
                             $whereQuery .= "{$column} = ?";
                         } else {
-                            $whereQuery .= " or {$column} = ?";
+                            $whereQuery .= " and {$column} = ?";
                         }
                         $whereValue[] = "{$value}";
                     }

@@ -3,11 +3,22 @@
 namespace App\Http\Controllers\Administrator;
 
 use App\Models\MerchantMenuItem;
+use App\Repositories\Administrator\Repository;
 use Breadcrumbs;
 use Illuminate\Http\Request;
 
 class MerchantMenuItemController extends Controller
 {
+    public function __construct(Repository $modelRepository)
+    {
+        $this->middleware('auth:administrator');
+
+        parent::__construct($modelRepository);
+
+        $this->adminData = \Auth::guard('administrator')->user();
+        $this->viewData['adminData'] = $this->adminData;
+    }
+
     /**
      * Administrator MerchantMenuItem DataGrid List.
      *
@@ -62,6 +73,7 @@ class MerchantMenuItemController extends Controller
                         }
                         $whereValue[] = "%{$value}%";
                     }
+                    if($whereQuery !== '') $whereQuery = "({$whereQuery})";
                 }
                 if($request->has('equal')) {
                     foreach($request->input('equal') as $column => $value) {
@@ -69,7 +81,7 @@ class MerchantMenuItemController extends Controller
                         if($whereQuery === '') {
                             $whereQuery .= "{$column} = ?";
                         } else {
-                            $whereQuery .= " or {$column} = ?";
+                            $whereQuery .= " and {$column} = ?";
                         }
                         $whereValue[] = "{$value}";
                     }
