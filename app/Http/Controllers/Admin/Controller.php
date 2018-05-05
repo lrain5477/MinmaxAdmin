@@ -6,6 +6,7 @@ namespace App\Http\Controllers\Admin;
 use App\Helpers\PermissionHelper;
 use App\Models\AdminMenuClass;
 use App\Models\AdminMenuItem;
+use App\Models\WebData;
 use App\Repositories\Admin\Repository;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Http\Request;
@@ -37,6 +38,7 @@ class Controller extends BaseController
             $this->adminData = Auth::guard('admin')->user();
             $this->viewData['adminData'] = $this->adminData;
 
+            $this->viewData['webData'] = WebData::where(['lang' => app()->getLocale(), 'website_key' => 'admin'])->first();
             $this->viewData['menuData'] = $this->getMenuData();
 
             return $next($request);

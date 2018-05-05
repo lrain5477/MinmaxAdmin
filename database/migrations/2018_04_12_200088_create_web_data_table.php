@@ -17,6 +17,7 @@ class CreateWebDataTable extends Migration
             $table->increments('id');
             $table->string('guid', 64);
             $table->string('lang', 100);
+            $table->string('website_key', 16);
             $table->string('website_name', 128)->comment('網站名稱');
             $table->string('system_email')->comment('系統信箱');
             $table->string('system_url')->comment('網站網址');

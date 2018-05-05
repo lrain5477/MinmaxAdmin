@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Administrator;
 
+use App\Models\WebData;
 use App\Repositories\Administrator\Repository;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Routing\Controller as BaseController;
@@ -28,6 +29,7 @@ class TestController extends BaseController
         $this->middleware(function($request, $next) {
             $this->adminData = Auth::guard('administrator')->user();
             $this->viewData['adminData'] = $this->adminData;
+            $this->viewData['webData'] = WebData::where(['lang' => app()->getLocale(), 'website_key' => 'administrator'])->first();
 
             return $next($request);
         });

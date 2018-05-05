@@ -18,7 +18,8 @@ class SystemSeeder extends Seeder
             [
                 'guid' => $webDataGuid1 = Str::uuid(),
                 'lang' => 'tw',
-                'website_name' => 'MinMax',
+                'website_key' => 'administrator',
+                'website_name' => '總後臺管理系統',
                 'system_email' => 'design27@e-creative.tw',
                 'system_url' => 'http://minmax.test.la/administrator',
                 'company_name' => '雲端數位科技',
@@ -44,7 +45,8 @@ class SystemSeeder extends Seeder
             [
                 'guid' => $webDataGuid2 = Str::uuid(),
                 'lang' => 'tw',
-                'website_name' => '雲端後台管理系統',
+                'website_key' => 'admin',
+                'website_name' => '後臺管理系統',
                 'system_email' => 'design27@e-creative.tw',
                 'system_url' => 'http://minmax.test.la/siteadmin',
                 'company_name' => '雲端數位科技',
@@ -70,9 +72,10 @@ class SystemSeeder extends Seeder
             [
                 'guid' => $webDataGuid3 = Str::uuid(),
                 'lang' => 'tw',
-                'website_name' => '雲端經銷商管理平台',
+                'website_key' => 'merchant',
+                'website_name' => '經銷商管理系統',
                 'system_email' => 'design27@e-creative.tw',
-                'system_url' => 'http://minmax.test.la',
+                'system_url' => 'http://minmax.test.la/merchant',
                 'company_name' => '雲端數位科技',
                 'company_name_en' => 'MinMax',
                 'phone' => '04-24350749',
@@ -96,6 +99,7 @@ class SystemSeeder extends Seeder
             [
                 'guid' => $webDataGuid4 = Str::uuid(),
                 'lang' => 'tw',
+                'website_key' => 'web',
                 'website_name' => '雲端數位科技',
                 'system_email' => 'design27@e-creative.tw',
                 'system_url' => 'http://minmax.test.la',

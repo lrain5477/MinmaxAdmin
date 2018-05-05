@@ -3,11 +3,24 @@
 namespace App\Http\Controllers\Administrator;
 
 use Analytics;
+use App\Models\WebData;
+use App\Repositories\Administrator\Repository;
 use Illuminate\Support\Carbon;
 use Spatie\Analytics\Period;
 
 class SiteController extends Controller
 {
+    public function __construct(Repository $modelRepository)
+    {
+        $this->middleware('auth:administrator');
+
+        parent::__construct($modelRepository);
+
+        $this->adminData = \Auth::guard('administrator')->user();
+        $this->viewData['adminData'] = $this->adminData;
+        $this->viewData['webData'] = WebData::where(['lang' => app()->getLocale(), 'website_key' => 'administrator'])->first();
+    }
+
     /**
      * Display Dashboard.
      *

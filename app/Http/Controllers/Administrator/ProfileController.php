@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Administrator;
 
+use App\Models\WebData;
 use App\Repositories\Administrator\ProfileRepository;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as BaseController;
@@ -30,6 +31,7 @@ class ProfileController extends BaseController
         $this->middleware(function($request, $next) {
             $this->adminData = Auth::guard('administrator')->user();
             $this->viewData['adminData'] = $this->adminData;
+            $this->viewData['webData'] = WebData::where(['lang' => app()->getLocale(), 'website_key' => 'administrator'])->first();
 
             return $next($request);
         });

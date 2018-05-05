@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="{{ app()->getLocale() }}">
 <head>
-    <title>MINMAX 總後台管理系統 | 登入</title>
+    <title>{{ $webData->website_name }} | @lang('administrator.header.login')</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta charset="UTF-8">
     <link rel="stylesheet" href="{{ asset('admin/css/styles.css') }}">
@@ -14,7 +14,7 @@
     <div class="row no-gutters">
         <div class="col-lg-6 login-container">
             <div class="login-content">
-                <h1>@lang('administrator.login.title')</h1>
+                <h1>{{ $webData->website_name }}@lang('administrator.header.login')</h1>
                 <p>@lang('administrator.login.info.login')</p>
 
                 <form class="login-form" action="" method="post" data-toggle="validator" id="loginForm"  name="loginForm">

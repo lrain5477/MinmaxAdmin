@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Administrator;
 
+use App\Models\WebData;
 use Auth;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
@@ -39,7 +40,7 @@ class LoginController extends BaseController
      */
     public function showLoginForm()
     {
-        return view('administrator.login');
+        return view('administrator.login', ['webData' => WebData::where(['lang' => app()->getLocale(), 'website_key' => 'administrator'])->first()]);
     }
 
     /**

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Helpers\PermissionHelper;
 use App\Models\RoleAdmin;
+use App\Models\WebData;
 use App\Repositories\Admin\Repository;
 use Auth;
 use Illuminate\Http\Request;
@@ -21,6 +22,7 @@ class AdminController extends Controller
         $this->adminData = Auth::guard('admin')->user();
         $this->viewData['adminData'] = $this->adminData;
         $this->viewData['menuData'] = $this->getMenuData();
+        $this->viewData['webData'] = WebData::where(['lang' => app()->getLocale(), 'website_key' => 'admin'])->first();
     }
 
     /**

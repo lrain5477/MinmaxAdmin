@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Models\Firewall;
+use App\Models\WebData;
 use Auth;
 use Cache;
 use Illuminate\Cache\TaggableStore;
@@ -42,7 +43,7 @@ class LoginController extends BaseController
      */
     public function showLoginForm()
     {
-        return view('admin.login');
+        return view('admin.login', ['webData' => WebData::where(['lang' => app()->getLocale(), 'website_key' => 'admin'])->first()]);
     }
 
     /**
