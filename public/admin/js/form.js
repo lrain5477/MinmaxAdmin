@@ -1,28 +1,6 @@
 $(document).ready(function () {
 
     /*--------------------------------------------
-       		Form ckeditor.js 編輯器 
-     ---------------------------------------------*/
-    var ckeditor = (function () {
-        $('.editor').each(function () {
-            setCkeditor($(this).attr("id"), '250px');
-        });
-        $('.editor-full').each(function () {
-            setCkeditor($(this).attr("id"), '550px');
-        });
-        //設定編輯器
-        function setCkeditor(Field, height) {
-            CKEDITOR.replace(Field, {
-                customConfig: 'config.js',
-                width: '100%',
-                height: height,
-            });
-            CKEDITOR.dtd.$removeEmpty['i'] = false
-        }
-    })();
-
-    //ckeditor();
-    /*--------------------------------------------
            		Form Bootstrap-Select.js  下拉搜尋
      ---------------------------------------------*/
     $('.bs-select').each(function () {

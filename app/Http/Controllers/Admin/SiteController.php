@@ -13,8 +13,6 @@ class SiteController extends Controller
 {
     public function __construct(Repository $modelRepository)
     {
-        $this->middleware('auth:admin');
-
         parent::__construct($modelRepository);
 
         $this->adminData = Auth::guard('admin')->user();
