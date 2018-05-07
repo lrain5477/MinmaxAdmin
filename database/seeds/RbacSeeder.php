@@ -17,6 +17,12 @@ class RbacSeeder extends Seeder
         /** 新增權限物件 **/
         $permissionsData = [
             [
+                'guard' => 'admin', 'group' => 'system',
+                'name' => 'systemUpload', 'label' => '上傳', 'display_name' => '系統操作 [上傳]', 'description' => '系統操作 [上傳]',
+                'active' => '1', 'updated_at' => $timestamp, 'created_at' => $timestamp,
+            ],
+
+            [
                 'guard' => 'admin', 'group' => 'merchantWebData',
                 'name' => 'merchantWebDataEdit', 'label' => '編輯', 'display_name' => '經銷商網站基本資料 [編輯]', 'description' => '經銷商網站基本資料 [編輯]',
                 'active' => '1', 'updated_at' => $timestamp, 'created_at' => $timestamp,

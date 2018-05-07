@@ -76,12 +76,20 @@
             height: '500px',
             uiOptions: {
                 toolbar: [
+                    @if(\Auth::guard('admin')->user()->can('systemUpload'))
                     ['back', 'forward'], ['reload'], ['home', 'up'], ['mkdir', 'mkfile', 'upload'], ['open', 'download'], ['info'],
                     ['copy', 'cut', 'paste'], ['rm'], ['duplicate', 'rename', 'edit', 'resize'], ['view', 'sort']
+                    @else
+                    ['back', 'forward'], ['reload'], ['home', 'up'], ['open', 'download'], ['info'], ['view', 'sort']
+                    @endif
                 ]
             },
             contextmenu: {
+                @if(\Auth::guard('admin')->user()->can('systemUpload'))
                 files: ['open', 'download', '|', 'copy', 'cut', 'paste', 'rm', '|', 'rename', '|', 'info']
+                @else
+                files: ['open', 'download', 'info']
+                @endif
             },
             handlers: {
                 select: function (event, elfinderInstance) {}
