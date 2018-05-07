@@ -86,6 +86,8 @@ return [
             'reset' => '重新設定',
             'import' => '匯入',
             'export' => '匯出',
+            'media_image' => '媒體庫',
+            'media_file' => '選擇檔案',
         ],
         'message' => [
             'create_success' => '您新增的資料儲存成功。',
@@ -99,6 +101,17 @@ return [
             'import_error' => '您的資料匯入失敗，請再次確認。',
             'import_error_extension' => '您的來源檔案不符合要求格式，請再次確認。',
             'export_error' => '您的資料匯出失敗，請再次嘗試。',
+        ],
+        'elfinder' => [
+            'limit_title' => '已達到選擇上限',
+            'limit_text' => '您最多只能選擇 :limit 個檔案',
+            'limit_confirm_button' => '確認',
+            'remove_title' => '是否確認刪除',
+            'remove_text' => '您將刪除此檔案',
+            'remove_cancel_button' => '取消',
+            'remove_confirm_button' => '確認',
+            'remove_success_title' => '刪除完成!',
+            'remove_success_text' => '您的檔案已刪除!',
         ],
     ],
 

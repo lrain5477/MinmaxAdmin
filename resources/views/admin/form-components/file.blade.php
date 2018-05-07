@@ -2,7 +2,7 @@
     <label class="col-sm-2 col-form-label" for="{{ $id }}">{{ $label }}{!! $required === true ? '<span class="text-danger ml-1">*</span>' : '' !!}</label>
     <div class="col-sm-10">
         <input type="hidden" id="{{ $id }}" name="{{ $name }}" value="" {{ $required === true ? 'required' : '' }} />
-        <button class="btn btn-secondary" type="button" data-target="#{{ $id }}-modal" data-toggle="modal"><i class="icon-folder"> </i> 選擇檔案</button>
+        <button class="btn btn-secondary" type="button" data-target="#{{ $id }}-modal" data-toggle="modal"><i class="icon-folder"> </i> @lang('admin.form.button.media_file')</button>
     </div>
     @if($hint !== '')
     <small class="form-text text-muted ml-sm-auto col-sm-10">{!! $hint !!}</small>
@@ -27,7 +27,7 @@
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">選擇檔案</h5>
+                <h5 class="modal-title">@lang('admin.form.button.media_file')</h5>
                 <button class="close" type="button" data-dismiss="modal" aria-label="Close"></button><span aria-hidden="true">×</span>
             </div>
             <div class="modal-body">
@@ -81,7 +81,7 @@
                 ]
             },
             contextmenu: {
-                files: ['open', 'quicklook', 'sharefolder', '|', 'download', '|', 'copy', 'cut', 'paste', 'rm', '|', 'rename', '|', 'importBut', '|', 'info']
+                files: ['open', 'download', '|', 'copy', 'cut', 'paste', 'rm', '|', 'rename', '|', 'info']
             },
             handlers: {
                 select: function (event, elfinderInstance) {}
@@ -90,9 +90,9 @@
                 if({{ $limit }} !== 0 && $('#{{ $id }}-list .alert').length >= {{ $limit }}) {
                     $('#{{ $id }}-modal').modal('hide');
                     swal({
-                        title: "已達到選擇上限",
-                        text: "您最多只能選擇 {{ $limit }} 個檔案",
-                        confirmButtonText: "確認",
+                        title: "@lang('admin.form.elfinder.limit_title')",
+                        text: "@lang('admin.form.elfinder.limit_text', ['limit' => $limit])",
+                        confirmButtonText: "@lang('admin.form.elfinder.limit_confirm_button')",
                         confirmButtonClass: "btn-danger",
                         closeOnConfirm: true
                     });
