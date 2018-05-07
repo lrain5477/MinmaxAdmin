@@ -26,8 +26,6 @@ class ProfileController extends BaseController
 
     public function __construct(ProfileRepository $modelRepository)
     {
-        $this->middleware('auth:administrator');
-
         $this->middleware(function($request, $next) {
             $this->adminData = Auth::guard('administrator')->user();
             $this->viewData['adminData'] = $this->adminData;

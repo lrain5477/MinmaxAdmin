@@ -84,28 +84,6 @@ $("body").delegate(".changeStatus", "click", function() {
     }
 });
 
-/*刪除圖片*/
-$('body').delegate('.delFiles.imgSeetAlert', 'click', function(){
-	var _pic = $(this).attr('data-id').replace('_alt','');
-	
-	swal({
-	  title: "是否確認刪除",
-	  text: "您將刪除此檔案",
-	  type: "info",
-	  showCancelButton: true,
-	  cancelButtonText:'取消',	
-	  confirmButtonText: "確認",
-	  confirmButtonClass: "btn-danger",	
-	  closeOnConfirm: false
-	},
-	function(){	  
-		
-		$('#'+_pic).remove();
-		
-		swal("刪除完成!", "您的檔案已刪除", "success");
-	});
-});
-
 /*刪除記錄*/
 $('body').delegate('.delItem', 'click', function(e){
 	var _guid = $(this).attr('data-guid');

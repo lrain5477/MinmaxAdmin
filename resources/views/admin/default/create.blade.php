@@ -26,21 +26,3 @@
 </section>
 <!-- / layout-content-->
 @endsection
-
-@push('scripts')
-<script>
-(function($) {
-    $(function() {
-        $('.editor').each(function () {
-            CKEDITOR.replace($(this).attr('id'), {customConfig: 'config.js', width: '100%', height: '250px', filebrowserBrowseUrl: '/siteadmin/elfinder/ckeditor'});
-        });
-        $('.editor-full').each(function () {
-            CKEDITOR.replace($(this).attr('id'), {customConfig: 'config.js', width: '100%', height: '550px', filebrowserBrowseUrl: '/siteadmin/elfinder/ckeditor'});
-        });
-        if($('.editor').length > 0 || $('.editor-full').length > 0) {
-            CKEDITOR.dtd.$removeEmpty['i'] = false;
-        }
-    });
-})(jQuery);
-</script>
-@endpush

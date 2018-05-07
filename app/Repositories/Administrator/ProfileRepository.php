@@ -32,7 +32,7 @@ class ProfileRepository
         $thisRow = $this->one($where);
 
         foreach($data as $key => $value) {
-            $thisRow->$key = is_array($value) ? implode(',', $value) : $value;
+            $thisRow->$key = is_array($value) ? implode(env('SEPARATE_STRING', ','), $value) : $value;
         }
 
         return $thisRow->save();

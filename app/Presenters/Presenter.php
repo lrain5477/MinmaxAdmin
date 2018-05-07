@@ -221,6 +221,7 @@ class Presenter
             'value' => $fieldValue,
             'required' => $required,
             'size' => isset($options['size']) ? $options['size'] : 10,
+            'height' => isset($options['height']) ? $options['height'] : '250px',
             'hint' => isset($options['hint']) && $options['hint'] == true ? __("models.{$modelName}.hint.{$column}") : '',
         ];
 
@@ -303,101 +304,62 @@ class Presenter
         return view("{$this->guardName}.form-components.radio", $componentData);
     }
 
-    public function getFieldMediaImage(Model $model, $column, $fieldNote, $fieldLimit = 0, $useLang = false) {
-        $modelName = class_basename($model);
-        $columnLabel = __('siteadmin.' . $modelName . '.' . $column);
-        $requiredTip = in_array($column, $this->fieldRequired) ? '<span class="text-danger ml-1">*</span>' : '';
-        $limitTip = $fieldLimit == 0 ? '圖片數量不限. ' : '您只能選擇 ' . $fieldLimit . ' 張圖片. ';
-        $langId = $useLang && isset($model->lang) ? ('_' . $model->lang) : '';
-        $langName = $useLang && isset($model->lang) ? ('[' . $model->lang . ']') : '';
-
-        $columnAlt = $column . '_alt';
-        $imagesArray = isset($model->$column) ? explode(',', $model->$column) : [];
-        $altArray = isset($model->$columnAlt) ? explode('§', str_replace(' ', '', $model->$columnAlt)) : [];
-
-        $imagesHtml = '';
-        foreach($imagesArray as $imageKey => $imagePath) {
-            if($imagePath != '') {
-                $altText = isset($altArray[$imageKey]) ? $altArray[$imageKey] : '';
-                $imagesHtml .= <<<IMAGE
-<div class="card ml-2 ui-sortable-handle" id="{$column}_{$model->lang}{$imageKey}">
-    <a class="thumb" href="{$imagePath}" data-fancybox="">
-        <span class="imgFill imgLiquid_bgSize imgLiquid_ready" style="background-image: url(&quot;{$imagePath}&quot;); background-size: cover; background-position: center center; background-repeat: no-repeat;">
-            <img src="{$imagePath}" class="imgData" style="display: none;">
-        </span>
-    </a>
-    <div class="btn-group btn-group-sm justify-content-center">
-        <input type="hidden" class="imgData" id="{$column}{$langId}{$imageKey}" name="{$modelName}[{$column}]{$langName}[{$imageKey}]" value="{$imagePath}">
-        <input type="hidden" class="altData" id="{$column}{$langId}_alt{$imageKey}" name="{$modelName}[{$column}_alt]{$langName}[{$imageKey}]" value="{$altText}">
-        <button class="btn btn-outline-default open_modal_picname" type="button" title="設定" data-target="#modal_picname" data-toggle="modal" data-filename="{$imagePath}" data-alt="{$altText}" data-id="{$column}{$langId}_alt{$imageKey}"><i class="icon-wrench"></i></button>
-        <button class="btn btn-outline-default delFiles imgSeetAlert delBtn" type="button" data-title="是否確認刪除" data-message="您將刪除此檔案" data-type="info" data-show-confirm-button="true" data-confirm-button-class="btn-danger" data-show-cancel-button="true" data-cancel-button-class="btn-outline-default" data-close-on-confirm="false" data-confirm-button-text="確認" data-cancel-button-text="取消" data-popup-title-success="刪除完成" data-popup-message-success="您的項目已丟進垃圾桶區" data-id="{$column}{$langId}_alt{$imageKey}"><i class="icon-trash2"></i></button>
-    </div>
-</div>
-IMAGE;
-            }
+    public function getFieldMediaImage($model, $column, $required = false, $options = []) {
+        if(is_array($required)) {
+            $options = $required;
+            $required = false;
         }
 
-        $columnHtml = <<<CELL
-<div class="form-group row imageArea" data-key="pic">
-    <label class="col-sm-2 col-form-label" for="">{$columnLabel}{$requiredTip}</label>
-    <div class="col-sm-10">
-        <button class="btn btn-secondary getImages" type="button" data-target="#modal_file" data-toggle="modal" data-field="{$column}{$langId}" ><i class="icon-pictures"></i>瀏覽媒體庫</button>
-        <div style="color:#FF0000">{$limitTip}{$fieldNote}</div>
-        <input type="hidden" id="isSelFile_{$column}{$langId}" value="" data-title="被選取的檔案">
-    </div>
-</div>
-<div class="form-group row">
-    <div class="col-sm-10 offset-sm-2">
-        <div class="row file-img-list" id="{$column}{$langId}_img">{$imagesHtml}</div>
-    </div>
-</div>
-CELL;
-        return $columnHtml;
+        $modelName = class_basename($model);
+        $columnLabel = __("models.{$modelName}.{$column}");
+        $columnAlt = "{$column}_alt";
+        $imageList = isset($model->$column) ? explode(env('SEPARATE_STRING', ','), $model->$column) : [];
+        $altList = isset($model->$columnAlt) ? explode(env('SEPARATE_STRING', ','), $model->$columnAlt) : [];
+
+        $images = collect([]);
+        foreach($imageList as $key => $item) {
+            if($item === '' || !\File::exists(public_path($item))) continue;
+
+            $images->push((object) [
+                'path' => $item,
+                'alt' => $altList[$key] ?? '',
+            ]);
+        }
+
+        $componentData = [
+            'id' => "{$modelName}-{$column}",
+            'label' => $columnLabel,
+            'name' => "{$modelName}[{$column}]",
+            'altName' => "{$modelName}[{$columnAlt}]",
+            'required' => $required,
+            'limit' => isset($options['limit']) ? $options['limit'] : 0,
+            'hint' => isset($options['hint']) && $options['hint'] == true ? __("models.{$modelName}.hint.{$column}") : '',
+            'images' => $images,
+        ];
+
+        return view("{$this->guardName}.form-components.image", $componentData);
     }
 
-    public function getFieldMediaFile(Model $model, $column, $fieldNote, $fieldLimit = 1, $useLang = false) {
-        $modelName = class_basename($model);
-        $columnLabel = __('siteadmin.' . $modelName . '.' . $column);
-        $requiredTip = in_array($column, $this->fieldRequired) ? '<span class="text-danger ml-1">*</span>' : '';
-        $limitTip = $fieldLimit == 0 ? '檔案數量不限. ' : '您只能選擇 ' . $fieldLimit . ' 個檔案. ';
-        $langId = $useLang && isset($model->lang) ? ('_' . $model->lang) : '';
-        $langName = $useLang && isset($model->lang) ? ('[' . $model->lang . ']') : '';
-
-        $filesArray = isset($model->$column) ? explode(',', $model->$column) : [];
-
-        $imagesHtml = '';
-        foreach($filesArray as $fileKey => $filePath) {
-            if($filePath != '') {
-                $imagesHtml .= <<<IMAGE
-<div class="card ml-2 ui-sortable-handle" id="{$column}_{$model->lang}{$fileKey}">
-    <a class="thumb" href="{$filePath}" target="_blank" title="{$filePath}">
-        <span class="imgFill imgLiquid_bgSize imgLiquid_ready" style="background-image: url(&quot;/admin/images/file.png&quot;); background-size: cover; background-position: center center; background-repeat: no-repeat;">
-            <img src="{$filePath}" class="imgData" style="display: none;">
-        </span>
-    </a>
-    <div class="btn-group btn-group-sm justify-content-center">
-        <button class="btn btn-outline-default delFiles imgSeetAlert delBtn" type="button" data-title="是否確認刪除" data-message="您將刪除此檔案" data-type="info" data-show-confirm-button="true" data-confirm-button-class="btn-danger" data-show-cancel-button="true" data-cancel-button-class="btn-outline-default" data-close-on-confirm="false" data-confirm-button-text="確認" data-cancel-button-text="取消" data-popup-title-success="刪除完成" data-popup-message-success="您的項目已丟進垃圾桶區" data-id="{$column}{$langId}_alt{$fileKey}"><i class="icon-trash2"></i></button>
-    </div>
-</div>
-IMAGE;
-            }
+    public function getFieldMediaFile($model, $column, $required = false, $options = []) {
+        if(is_array($required)) {
+            $options = $required;
+            $required = false;
         }
 
-        $columnHtml = <<<CELL
-<div class="form-group row imageArea" data-key="pic">
-    <label class="col-sm-2 col-form-label" for="">{$columnLabel}{$requiredTip}</label>
-    <div class="col-sm-10">
-        <button class="btn btn-secondary getFiles" type="button" data-target="#modal_file" data-toggle="modal" data-field="{$column}{$langId}" ><i class="icon-pictures"></i>瀏覽檔案庫</button>
-        <div style="color:#FF0000">{$limitTip}{$fieldNote}</div>
-        <input type="hidden" id="isSelFile_{$column}{$langId}" value="" data-title="被選取的檔案">
-    </div>
-</div>
-<div class="form-group row">
-    <div class="col-sm-10 offset-sm-2">
-        <div class="row file-img-list" id="{$column}{$langId}_img">{$imagesHtml}</div>
-    </div>
-</div>
-CELL;
-        return $columnHtml;
+        $modelName = class_basename($model);
+        $columnLabel = __("models.{$modelName}.{$column}");
+        $fileList = isset($model->$column) ? explode(env('SEPARATE_STRING', ','), $model->$column) : [];
+
+        $componentData = [
+            'id' => "{$modelName}-{$column}",
+            'label' => $columnLabel,
+            'name' => "{$modelName}[{$column}]",
+            'required' => $required,
+            'limit' => isset($options['limit']) ? $options['limit'] : 0,
+            'hint' => isset($options['hint']) && $options['hint'] == true ? __("models.{$modelName}.hint.{$column}") : '',
+            'files' => $fileList,
+        ];
+
+        return view("{$this->guardName}.form-components.file", $componentData);
     }
 }

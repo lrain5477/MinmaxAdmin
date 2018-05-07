@@ -72,7 +72,7 @@ class Repository
     {
         foreach($data as $key => $value) {
             if(is_null($value)) unset($data[$key]);
-            if(is_array($value)) $data[$key] = implode(',', $value);
+            if(is_array($value)) $data[$key] = implode(env('SEPARATE_STRING', ','), $value);
         }
         return call_user_func_array("App\\Models\\{$this->modelClassName}::create", [$data]) ?? null;
     }
@@ -87,7 +87,7 @@ class Repository
         $thisRow = $this->one($where);
 
         foreach($data as $key => $value) {
-            $thisRow->$key = is_array($value) ? implode(',', $value) : $value;
+            $thisRow->$key = is_array($value) ? implode(env('SEPARATE_STRING', ','), $value) : $value;
         }
 
         return $thisRow->save();
@@ -101,7 +101,7 @@ class Repository
     public function update($data, $where = [])
     {
         foreach($data as $key => $value) {
-            if(is_array($value)) $data[$key] = implode(',', $value);
+            if(is_array($value)) $data[$key] = implode(env('SEPARATE_STRING', ','), $value);
         }
         return call_user_func_array("App\\Models\\{$this->modelClassName}::where", [$where])->update($data) ?? false;
     }

@@ -33,10 +33,6 @@ Route::middleware(['auth:admin'])->group(function() {
     Route::prefix('elfinder')->group(function() {
         Route::get('/',  ['as' => 'elfinder.index', 'uses' =>'CustomElfinderController@showIndex']);
         Route::any('connector', ['as' => 'elfinder.connector', 'uses' => 'CustomElfinderController@showConnector']);
-        Route::get('popup/{input_id}', ['as' => 'elfinder.popup', 'uses' => 'CustomElfinderController@showPopup']);
-        Route::get('filepicker/{input_id}', ['as' => 'elfinder.filepicker', 'uses' => 'CustomElfinderController@showFilePicker']);
-        Route::get('tinymce', ['as' => 'elfinder.tinymce', 'uses' => 'CustomElfinderController@showTinyMCE']);
-        Route::get('tinymce4', ['as' => 'elfinder.tinymce4', 'uses' => 'CustomElfinderController@showTinyMCE4']);
         Route::get('ckeditor', ['as' => 'elfinder.ckeditor', 'uses' => 'CustomElfinderController@showCKeditor4']);
     });
 

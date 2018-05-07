@@ -1,5 +1,6 @@
 {{-- * * lib --}}
 <script src="{{ asset('admin/js/lib/jquery.min.js') }}"></script>
+<script src="{{ asset('packages/barryvdh/elfinder/js/jquery-ui-1.11.4.min.js') }}"></script>
 <script src="{{ asset('admin/js/lib/env.js') }}"></script>
 <script src="{{ asset('admin/js/lib/popper.min.js') }}"></script>
 {{-- * * * slimscroll 捲軸--}}
@@ -37,6 +38,9 @@
 <script src="{{ asset('components/validate/additional-methods.js') }}"></script>
 {{-- * * * inputmask 表單格式--}}
 <script src="{{ asset('components/inputmask/jquery.inputmask.bundle.min.js') }}"></script>
+{{-- * * * elFinder 檔案管理--}}
+<script src="{{ asset('packages/barryvdh/elfinder/js/elfinder.min.js') }}"></script>
+<script src="{{ asset('packages/barryvdh/elfinder/js/i18n/elfinder.zh_TW.js') }}"></script>
 {{-- * * * jquery.repeater.min.js 新增欄位--}}
 <script src="{{ asset('components/repeater/jquery.repeater.min.js') }}"></script>
 {{-- * * * bootstrap-colorpicker-master 顏色選取--}}

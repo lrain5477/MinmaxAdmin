@@ -12,8 +12,6 @@ class AdminMenuItemController extends Controller
 {
     public function __construct(Repository $modelRepository)
     {
-        $this->middleware('auth:administrator');
-
         parent::__construct($modelRepository);
 
         $this->adminData = \Auth::guard('administrator')->user();

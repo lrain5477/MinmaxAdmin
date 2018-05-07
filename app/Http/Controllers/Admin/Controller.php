@@ -188,10 +188,11 @@ class Controller extends BaseController
         $validator = Validator::make($request->input($this->pageData->model), $this->modelRepository->getRules() ?? []);
 
         if($validator->passes()) {
+            $input = $request->input($this->pageData->model);
             $formDataKey = $this->modelRepository->getIndexKey();
-            $makeId = $formDataKey === 'id' ? [] : [$formDataKey => Str::uuid()];
+            if($formDataKey !== 'id') $input[$formDataKey] = Str::uuid();
 
-            if($modelData = $this->modelRepository->create($request->input($this->pageData->model) + $makeId)) {
+            if($modelData = $this->modelRepository->create($input)) {
                 return redirect()->route('admin.edit', [$this->uri, $modelData->$formDataKey])->with('success', __('admin.form.message.edit_success'));
             }
 

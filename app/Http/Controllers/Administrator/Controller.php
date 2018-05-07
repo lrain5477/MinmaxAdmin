@@ -29,8 +29,6 @@ class Controller extends BaseController
 
     public function __construct(Repository $modelRepository)
     {
-        $this->middleware('auth:administrator');
-
         $this->middleware(function($request, $next) {
             $this->adminData = Auth::guard('administrator')->user();
             $this->viewData['adminData'] = $this->adminData;
