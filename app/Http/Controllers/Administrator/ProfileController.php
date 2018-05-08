@@ -59,7 +59,7 @@ class ProfileController extends BaseController
             /**
              * @var \DaveJamesMiller\Breadcrumbs\BreadcrumbsGenerator $breadcrumbs
              */
-            $breadcrumbs->parent('home');
+            $breadcrumbs->parent('administrator.home');
             $breadcrumbs->push(__('administrator.header.account'));
         });
 

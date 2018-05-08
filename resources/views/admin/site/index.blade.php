@@ -1,6 +1,6 @@
 @extends('admin.layouts.site')
 
-@section('breadcrumbs', Breadcrumbs::render('home'))
+@section('breadcrumbs', Breadcrumbs::view('admin.layouts.breadcrumbs', 'admin.home'))
 
 @section('content')
 <div class="content-body">

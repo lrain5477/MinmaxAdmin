@@ -44,8 +44,13 @@ class RoleController extends Controller
             /**
              * @var \DaveJamesMiller\Breadcrumbs\BreadcrumbsGenerator $breadcrumbs
              */
-            $breadcrumbs->parent('home');
-            $breadcrumbs->push($this->pageData->title, route('admin.index', [$this->uri]));
+            $breadcrumbs->parent('admin.home');
+            $breadcrumbs->push(
+                $this->pageData->title,
+                $this->adminData->can(PermissionHelper::replacePermissionName($this->pageData->permission_key, 'Show')) === true
+                    ? route('admin.index', [$this->uri])
+                    : null
+            );
             $breadcrumbs->push(__('admin.form.edit'));
         });
 

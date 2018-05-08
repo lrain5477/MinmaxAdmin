@@ -89,7 +89,7 @@ class Controller extends BaseController
             /**
              * @var \DaveJamesMiller\Breadcrumbs\BreadcrumbsGenerator $breadcrumbs
              */
-            $breadcrumbs->parent('home');
+            $breadcrumbs->parent('administrator.home');
             $breadcrumbs->push($this->pageData->title, route('administrator.index', [$this->uri]));
         });
 
@@ -121,7 +121,7 @@ class Controller extends BaseController
             /**
              * @var \DaveJamesMiller\Breadcrumbs\BreadcrumbsGenerator $breadcrumbs
              */
-            $breadcrumbs->parent('home');
+            $breadcrumbs->parent('administrator.home');
             $breadcrumbs->push($this->pageData->title, route('administrator.index', [$this->uri]));
             $breadcrumbs->push(__('administrator.form.view'));
         });
@@ -153,7 +153,7 @@ class Controller extends BaseController
             /**
              * @var \DaveJamesMiller\Breadcrumbs\BreadcrumbsGenerator $breadcrumbs
              */
-            $breadcrumbs->parent('home');
+            $breadcrumbs->parent('administrator.home');
             $breadcrumbs->push($this->pageData->title, route('administrator.index', [$this->uri]));
             $breadcrumbs->push(__('administrator.form.create'));
         });
@@ -216,7 +216,7 @@ class Controller extends BaseController
             /**
              * @var \DaveJamesMiller\Breadcrumbs\BreadcrumbsGenerator $breadcrumbs
              */
-            $breadcrumbs->parent('home');
+            $breadcrumbs->parent('administrator.home');
             $breadcrumbs->push($this->pageData->title, route('administrator.index', [$this->uri]));
             $breadcrumbs->push(__('administrator.form.edit'));
         });
