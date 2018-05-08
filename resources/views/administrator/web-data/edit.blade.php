@@ -39,14 +39,19 @@
 
     </fieldset>
 
-    <fieldset class="mt-4" id="advFieldSet">
-        <legend class="legend h6 mb-4"><i class="icon-angle-double-down2 mr-2"></i>@lang('administrator.form.fieldSet.advanced')</legend>
+    <fieldset class="mt-4" id="seoFieldSet">
+        <legend class="legend h6 mb-4"><i class="icon-angle-double-down2 mr-2"></i>@lang('administrator.form.fieldSet.seo')</legend>
 
         {!! $modelPresenter->getFieldTextarea($formData, 'seo_description', ['hint' => true]) !!}
 
         {!! $modelPresenter->getFieldTextarea($formData, 'seo_keywords', ['hint' => true]) !!}
 
         {!! $modelPresenter->getFieldTextarea($formData, 'google_analytics') !!}
+
+    </fieldset>
+
+    <fieldset class="mt-4" id="advFieldSet">
+        <legend class="legend h6 mb-4"><i class="icon-angle-double-down2 mr-2"></i>@lang('administrator.form.fieldSet.advanced')</legend>
 
         {!! $modelPresenter->getFieldRadio($formData, 'active', true, ['inline' => true]) !!}
 

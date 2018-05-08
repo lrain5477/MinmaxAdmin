@@ -250,6 +250,8 @@ return [
         'google_analytics' => 'Google Analytics',
         'active' => '網站狀態',
         'offline_text' => '網站離線訊息',
+        'created_at' => '建立時間',
+        'updated_at' => '更新時間',
         'hint' => [
             'seo_description' => '(Metadata Description) 利用簡短的說明讓人清楚的了解網站的主要內容、簡介方向等，搜尋引擎將會幫我們適當的顯示在介紹頁面上。',
             'seo_keywords' => '(Metadata Keywords) 搜尋關鍵字:為了幫助搜尋引擎更容易搜尋到網站，你可以在這裡填寫相關的搜尋字詞，多組關鍵字以上請使用半形逗號區隔。',
