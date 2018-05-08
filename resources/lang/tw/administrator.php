@@ -13,6 +13,7 @@ return [
 
     'header' => [
         'menu' => '選單',
+        'profile' => '個人資料',
         'language' => '語系',
         'account' => '帳戶',
         'login' => '登入',

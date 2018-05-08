@@ -1,6 +1,6 @@
 @extends('administrator.layouts.site')
 
-@section('breadcrumbs', Breadcrumbs::render('edit'))
+@section('breadcrumbs', Breadcrumbs::view('administrator.layouts.breadcrumbs', 'edit'))
 
 @section('content')
     <!-- layout-content-->
@@ -23,9 +23,9 @@
                     <fieldset id="baseFieldSet">
                         <legend class="legend h6 mb-4"><i class="icon-angle-double-down2 mr-2"></i>主要設定</legend>
 
-                        {!! $modelPresenter->getFieldText($formData, 'name', true, ['size' => 4]) !!}
-
                         {!! $modelPresenter->getFieldNormalText($formData, 'username', true) !!}
+
+                        {!! $modelPresenter->getFieldText($formData, 'name', true, ['size' => 4]) !!}
 
                         {!! $modelPresenter->getFieldPassword($formData, 'password', false, ['size' => 4, 'hint' => true]) !!}
 

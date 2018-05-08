@@ -1,9 +1,10 @@
 <?php
 
-namespace App\Http\Controllers\Administrator;
+namespace App\Http\Controllers\Admin;
 
+use App\Models\AdminMenuClass;
 use App\Models\WebData;
-use App\Repositories\Administrator\ProfileRepository;
+use App\Repositories\Admin\ProfileRepository;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Foundation\Bus\DispatchesJobs;
@@ -27,9 +28,9 @@ class ProfileController extends BaseController
     public function __construct(ProfileRepository $modelRepository)
     {
         $this->middleware(function($request, $next) {
-            $this->adminData = Auth::guard('administrator')->user();
+            $this->adminData = Auth::guard('admin')->user();
             $this->viewData['adminData'] = $this->adminData;
-            $this->viewData['webData'] = WebData::where(['lang' => app()->getLocale(), 'website_key' => 'administrator'])->first();
+            $this->viewData['webData'] = WebData::where(['lang' => app()->getLocale(), 'website_key' => 'admin'])->first();
 
             return $next($request);
         });
@@ -39,9 +40,17 @@ class ProfileController extends BaseController
 
         $this->viewData['pageData'] = collect([[
             'uri' => $this->uri,
-            'title' => __('administrator.header.profile'),
+            'title' => __('admin.header.profile'),
             'parent' => '0',
         ]])->map(function($item, $key) { return (object) $item; })->first();
+
+        $this->viewData['menuData'] = $this->getMenuData();
+    }
+
+    protected function getMenuData() {
+        $menuItemData = AdminMenuClass::where(['active' => 1])->orderBy('sort')->get();
+
+        return $menuItemData;
     }
 
     /**
@@ -59,11 +68,11 @@ class ProfileController extends BaseController
             /**
              * @var \DaveJamesMiller\Breadcrumbs\BreadcrumbsGenerator $breadcrumbs
              */
-            $breadcrumbs->parent('administrator.home');
-            $breadcrumbs->push(__('administrator.header.account'));
+            $breadcrumbs->parent('admin.home');
+            $breadcrumbs->push(__('admin.header.account'));
         });
 
-        return view('administrator.' . $this->uri . '.edit', $this->viewData);
+        return view('admin.' . $this->uri . '.edit', $this->viewData);
     }
 
     /**
@@ -74,12 +83,12 @@ class ProfileController extends BaseController
      */
     public function update(Request $request)
     {
-        $validator = Validator::make($request->input('Administrator'), [
+        $validator = Validator::make($request->input('Admin'), [
             'name' => 'required',
             'password' => 'nullable|confirmed|min:6'
         ]);
 
-        $input = $request->input('Administrator');
+        $input = $request->input('Admin');
         if(is_null($input['password']) || $input['password'] === '') {
             unset($input['password']);
         } else {
@@ -89,12 +98,12 @@ class ProfileController extends BaseController
 
         if($validator->passes()) {
             if($this->modelRepository->save($input, ['guid' => $this->adminData->guid])) {
-                return redirect()->route('administrator.profile')->with('success', __('administrator.form.message.edit_success'));
+                return redirect()->route('admin.profile')->with('success', __('admin.form.message.edit_success'));
             }
 
-            return redirect()->route('administrator.profile')->withErrors([__('administrator.form.message.edit_error')])->withInput();
+            return redirect()->route('admin.profile')->withErrors([__('admin.form.message.edit_error')])->withInput();
         }
 
-        return redirect()->route('administrator.profile')->withErrors($validator)->withInput();
+        return redirect()->route('admin.profile')->withErrors($validator)->withInput();
     }
 }

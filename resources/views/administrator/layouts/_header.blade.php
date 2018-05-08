@@ -15,7 +15,7 @@
         <div class="d-inline-block dropdown globe">
             <button class="btn btn-link text-secondary dropdown-toggle px-2" id="menu-profile" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="icon-user h4"></i><span class="text-hide">>@lang('administrator.header.account')</span></button>
             <div class="dropdown-menu dropdown-menu-right rounded-0" aria-labelledby="menu-profile">
-                <a class="dropdown-item" href="{{ route('administrator.profile') }}"><i class="icon-vcard"></i><span>個人資料</span></a>
+                <a class="dropdown-item" href="{{ route('administrator.profile') }}"><i class="icon-vcard"></i><span>@lang('administrator.header.profile')</span></a>
                 <a class="dropdown-item" href="{{ route('administrator.logout') }}"><i class="icon-log-out"></i><span>@lang('administrator.header.logout')</span></a>
             </div>
         </div>
