@@ -185,7 +185,7 @@ class Controller extends BaseController
             $makeId = $formDataKey === 'id' ? [] : [$formDataKey => Str::uuid()];
 
             if($modelData = $this->modelRepository->create($request->input($this->pageData->model) + $makeId)) {
-                return redirect()->route('administrator.edit', [$this->uri, $modelData->$formDataKey])->with('success', __('administrator.form.message.edit_success'));
+                return redirect()->route('administrator.edit', [$this->uri, $modelData->$formDataKey])->with('success', __('administrator.form.message.create_success'));
             }
 
             return redirect()->route('administrator.create', [$this->uri])->withErrors([__('administrator.form.message.create_error')])->withInput();

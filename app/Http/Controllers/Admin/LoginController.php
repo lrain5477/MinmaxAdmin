@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Helpers\LogHelper;
 use App\Models\Firewall;
 use App\Models\WebData;
 use Auth;
@@ -113,6 +114,17 @@ class LoginController extends BaseController
         }
 
         return redirect()->route('admin.home');
+    }
+
+    /**
+     * The user has been authenticated.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  mixed  $user
+     */
+    protected function authenticated(Request $request, $user)
+    {
+        LogHelper::login('admin', $user->username, 1, 'Login success');
     }
 
     /**

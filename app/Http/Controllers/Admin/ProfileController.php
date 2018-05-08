@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Helpers\LogHelper;
 use App\Models\AdminMenuClass;
 use App\Models\WebData;
 use App\Repositories\Admin\ProfileRepository;
@@ -98,12 +99,15 @@ class ProfileController extends BaseController
 
         if($validator->passes()) {
             if($this->modelRepository->save($input, ['guid' => $this->adminData->guid])) {
+                LogHelper::system('admin', $this->uri, 'update', $this->adminData->guid, $this->adminData->username, 1, __('admin.form.message.edit_success'));
                 return redirect()->route('admin.profile')->with('success', __('admin.form.message.edit_success'));
             }
 
+            LogHelper::system('admin', $this->uri, 'update', $this->adminData->guid, $this->adminData->username, 0, __('admin.form.message.edit_error'));
             return redirect()->route('admin.profile')->withErrors([__('admin.form.message.edit_error')])->withInput();
         }
 
+        LogHelper::system('admin', $this->uri, 'update', $this->adminData->guid, $this->adminData->username, 0, $validator->errors()->first());
         return redirect()->route('admin.profile')->withErrors($validator)->withInput();
     }
 }

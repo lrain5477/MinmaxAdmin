@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Helpers\LogHelper;
 use App\Helpers\PermissionHelper;
 use App\Models\Permission;
 use App\Models\PermissionRole;
@@ -94,14 +95,17 @@ class RoleController extends Controller
 
                 \DB::commit();
 
+                LogHelper::system('admin', $this->uri, 'update', $id, $this->adminData->username, 1, __('admin.form.message.edit_success'));
                 return redirect()->route('admin.edit', [$this->uri, $id])->with('success', __('admin.form.message.edit_success'));
             } catch (\Exception $e) {
                 \DB::rollBack();
 
+                LogHelper::system('admin', $this->uri, 'update', $id, $this->adminData->username, 0, __('admin.form.message.edit_error'));
                 return redirect()->route('admin.edit', [$this->uri, $id])->withErrors([__('admin.form.message.edit_error')])->withInput();
             }
         }
 
+        LogHelper::system('admin', $this->uri, 'update', $id, $this->adminData->username, 0, $validator->errors()->first());
         return redirect()->route('admin.edit', [$this->uri, $id])->withErrors($validator)->withInput();
     }
 }

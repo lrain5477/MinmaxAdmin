@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 //use App\Helpers\LogHelper;
+use App\Helpers\LogHelper;
 use App\Helpers\PermissionHelper;
 use App\Models\AdminMenuClass;
 use App\Models\AdminMenuItem;
@@ -198,12 +199,15 @@ class Controller extends BaseController
             if($formDataKey !== 'id') $input[$formDataKey] = Str::uuid();
 
             if($modelData = $this->modelRepository->create($input)) {
-                return redirect()->route('admin.edit', [$this->uri, $modelData->$formDataKey])->with('success', __('admin.form.message.edit_success'));
+                LogHelper::system('admin', $this->uri, 'store', $modelData->$formDataKey, $this->adminData->username, 1, __('admin.form.message.create_success'));
+                return redirect()->route('admin.edit', [$this->uri, $modelData->$formDataKey])->with('success', __('admin.form.message.create_success'));
             }
 
+            LogHelper::system('admin', $this->uri, 'store', '', $this->adminData->username, 0, __('admin.form.message.create_error'));
             return redirect()->route('admin.create', [$this->uri])->withErrors([__('admini.form.message.create_error')])->withInput();
         }
 
+        LogHelper::system('admin', $this->uri, 'store', '', $this->adminData->username, 0, $validator->errors()->first());
         return redirect()->route('admin.create', [$this->uri])->withErrors($validator)->withInput();
     }
 
@@ -268,12 +272,15 @@ class Controller extends BaseController
 
         if($validator->passes()) {
             if($this->modelRepository->save($request->input($this->pageData->model), [$this->modelRepository->getIndexKey() => $id])) {
+                LogHelper::system('admin', $this->uri, 'update', $id, $this->adminData->username, 1, __('admin.form.message.edit_success'));
                 return redirect()->route('admin.edit', [$this->uri, $id])->with('success', __('admin.form.message.edit_success'));
             }
 
+            LogHelper::system('admin', $this->uri, 'update', $id, $this->adminData->username, 0, __('admin.form.message.edit_error'));
             return redirect()->route('admin.edit', [$this->uri, $id])->withErrors([__('admin.form.message.edit_error')])->withInput();
         }
 
+        LogHelper::system('admin', $this->uri, 'update', $id, $this->adminData->username, 0, $validator->errors()->first());
         return redirect()->route('admin.edit', [$this->uri, $id])->withErrors($validator)->withInput();
     }
 
@@ -291,9 +298,12 @@ class Controller extends BaseController
 
         if($this->adminData->can(PermissionHelper::replacePermissionName($this->pageData->permission_key, 'Destroy')) === false) return abort(404);
 
-        if($this->modelRepository->delete([$this->modelRepository->getIndexKey() => $id]))
+        if($this->modelRepository->delete([$this->modelRepository->getIndexKey() => $id])) {
+            LogHelper::system('admin', $this->uri, 'destroy', $id, $this->adminData->username, 1, __('admin.form.message.delete_success'));
             return redirect()->route('admin.index', [$this->uri])->with('success', __('admin.form.message.delete_success'));
+        }
 
+        LogHelper::system('admin', $this->uri, 'destroy', $id, $this->adminData->username, 0, __('admin.form.message.delete_error'));
         return redirect()->route('admin.index', [$this->uri])->withErrors([__('admin.form.message.delete_error')]);
     }
 

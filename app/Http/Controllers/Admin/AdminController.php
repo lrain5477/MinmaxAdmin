@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Helpers\LogHelper;
 use App\Helpers\PermissionHelper;
 use App\Models\RoleAdmin;
 use App\Models\WebData;
@@ -51,7 +52,8 @@ class AdminController extends Controller
 
                 \DB::commit();
 
-                return redirect()->route('admin.edit', [$this->uri, $modelData->guid])->with('success', __('admin.form.message.edit_success'));
+                LogHelper::system('admin', $this->uri, 'store', $modelData->guid, $this->adminData->username, 1, __('admin.form.message.create_success'));
+                return redirect()->route('admin.edit', [$this->uri, $modelData->guid])->with('success', __('admin.form.message.create_success'));
             } catch (\Exception $e) {
                 \DB::rollBack();
 
@@ -98,14 +100,17 @@ class AdminController extends Controller
 
                 \DB::commit();
 
+                LogHelper::system('admin', $this->uri, 'update', $id, $this->adminData->username, 1, __('admin.form.message.edit_success'));
                 return redirect()->route('admin.edit', [$this->uri, $id])->with('success', __('admin.form.message.edit_success'));
             } catch (\Exception $e) {
                 \DB::rollBack();
 
+                LogHelper::system('admin', $this->uri, 'update', $id, $this->adminData->username, 0, __('admin.form.message.edit_error'));
                 return redirect()->route('admin.edit', [$this->uri, $id])->withErrors([__('admin.form.message.edit_error')])->withInput();
             }
         }
 
+        LogHelper::system('admin', $this->uri, 'update', $id, $this->adminData->username, 0, $validator->errors()->first());
         return redirect()->route('admin.edit', [$this->uri, $id])->withErrors($validator)->withInput();
     }
 
@@ -119,8 +124,10 @@ class AdminController extends Controller
     {
         if($this->adminData->can(PermissionHelper::replacePermissionName($this->pageData->permission_key, 'Destroy')) === false) return abort(404);
 
-        if($this->adminData->guid === $id)
+        if($this->adminData->guid === $id) {
+            LogHelper::system('admin', $this->uri, 'destroy', $id, $this->adminData->username, 0, 'Can not delete self account');
             return redirect()->route('admin.index', [$this->uri])->withErrors([__('admin.form.message.delete_error')]);
+        }
 
         try {
             \DB::beginTransaction();
@@ -130,10 +137,12 @@ class AdminController extends Controller
 
             \DB::commit();
 
+            LogHelper::system('admin', $this->uri, 'destroy', $id, $this->adminData->username, 1, __('admin.form.message.delete_success'));
             return redirect()->route('admin.index', [$this->uri])->with('success', __('admin.form.message.delete_success'));
         } catch (\Exception $e) {
             \DB::rollBack();
 
+            LogHelper::system('admin', $this->uri, 'destroy', $id, $this->adminData->username, 0, __('admin.form.message.delete_error'));
             return redirect()->route('admin.index', [$this->uri])->withErrors([__('admin.form.message.delete_error')]);
         }
     }
