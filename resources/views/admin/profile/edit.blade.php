@@ -21,13 +21,18 @@
                 @inject('modelPresenter', 'App\Presenters\Admin\ProfilePresenter')
 
                 <fieldset id="baseFieldSet">
-                    <legend class="legend h6 mb-4"><i class="icon-angle-double-down2 mr-2"></i>主要設定</legend>
+                    <legend class="legend h6 mb-4"><i class="icon-angle-double-down2 mr-2"></i>@lang('admin.form.fieldSet.default')</legend>
 
                     {!! $modelPresenter->getFieldNormalText($formData, 'username', true) !!}
 
                     {!! $modelPresenter->getFieldText($formData, 'name', true, ['size' => 4]) !!}
 
                     {!! $modelPresenter->getFieldEmail($formData, 'email', true) !!}
+
+                </fieldset>
+
+                <fieldset class="mt-4" id="advFieldSet">
+                    <legend class="legend h6 mb-4"><i class="icon-angle-double-down2 mr-2"></i>@lang('admin.form.fieldSet.advanced')</legend>
 
                     {!! $modelPresenter->getFieldPassword($formData, 'password', false, ['size' => 4, 'hint' => true]) !!}
 

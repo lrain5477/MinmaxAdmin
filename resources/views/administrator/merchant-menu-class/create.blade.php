@@ -4,14 +4,14 @@
     @inject('modelPresenter', 'App\Presenters\Administrator\MerchantMenuClassPresenter')
 
     <fieldset id="baseFieldSet">
-        <legend class="legend h6 mb-4"><i class="icon-angle-double-down2 mr-2"></i>主要設定</legend>
+        <legend class="legend h6 mb-4"><i class="icon-angle-double-down2 mr-2"></i>@lang('administrator.form.fieldSet.default')</legend>
 
         {!! $modelPresenter->getFieldText($formData, 'title', true) !!}
 
     </fieldset>
 
     <fieldset class="mt-4" id="advFieldSet">
-        <legend class="legend h6 mb-4"><i class="icon-angle-double-down2 mr-2"></i>進階選項</legend>
+        <legend class="legend h6 mb-4"><i class="icon-angle-double-down2 mr-2"></i>@lang('administrator.form.fieldSet.advanced')</legend>
 
         {!! $modelPresenter->getFieldText($formData, 'sort', false, ['size' => 2]) !!}
 

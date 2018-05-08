@@ -14,7 +14,7 @@
     @inject('modelPresenter', 'App\Presenters\Admin\RolePresenter')
 
     <fieldset id="baseFieldSet">
-        <legend class="legend h6 mb-4"><i class="icon-angle-double-down2 mr-2"></i>主要設定</legend>
+        <legend class="legend h6 mb-4"><i class="icon-angle-double-down2 mr-2"></i>@lang('admin.form.fieldSet.default')</legend>
 
         {!! $modelPresenter->getFieldSelect($formData, 'guard', true) !!}
 
@@ -27,7 +27,7 @@
     </fieldset>
 
     <fieldset class="mt-4" id="advFieldSet">
-        <legend class="legend h6 mb-4"><i class="icon-angle-double-down2 mr-2"></i>進階選項</legend>
+        <legend class="legend h6 mb-4"><i class="icon-angle-double-down2 mr-2"></i>@lang('admin.form.fieldSet.advanced')</legend>
 
         {!! $modelPresenter->getFieldRadio($formData, 'active', true, ['inline' => true]) !!}
 

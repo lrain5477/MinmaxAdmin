@@ -75,11 +75,16 @@ return [
         'record' => '系統紀錄',
         'note' => '說明敘述',
         'select_default_title' => '請選擇項目',
+        'select_all' => '選擇全部',
+        'select_clear' => '清除選取',
         'fieldSet' => [
             'default' => '主要設定',
             'information' => '資訊設定',
             'media' => '多媒體設定',
             'advanced' => '進階選項',
+            'permission' => '權限設定',
+            'seo' => '搜尋引擎優化',
+            'system_record' => '系統紀錄',
         ],
         'button' => [
             'send' => '送出',

@@ -4,7 +4,7 @@
     @inject('modelPresenter', 'App\Presenters\Administrator\RolePresenter')
 
     <fieldset id="baseFieldSet">
-        <legend class="legend h6 mb-4"><i class="icon-angle-double-down2 mr-2"></i>主要設定</legend>
+        <legend class="legend h6 mb-4"><i class="icon-angle-double-down2 mr-2"></i>@lang('administrator.form.fieldSet.default')</legend>
 
         {!! $modelPresenter->getFieldSelect($formData, 'guard', true) !!}
 
@@ -17,14 +17,14 @@
     </fieldset>
 
     <fieldset class="mt-4" id="advFieldSet">
-        <legend class="legend h6 mb-4"><i class="icon-angle-double-down2 mr-2"></i>進階選項</legend>
+        <legend class="legend h6 mb-4"><i class="icon-angle-double-down2 mr-2"></i>@lang('administrator.form.fieldSet.advanced')</legend>
 
         {!! $modelPresenter->getFieldRadio($formData, 'active', true, ['inline' => true]) !!}
 
     </fieldset>
 
-    <fieldset class="mt-4" id="advFieldSet">
-        <legend class="legend h6 mb-4"><i class="icon-angle-double-down2 mr-2"></i>權限設定</legend>
+    <fieldset class="mt-4" id="permFieldSet">
+        <legend class="legend h6 mb-4"><i class="icon-angle-double-down2 mr-2"></i>@lang('administrator.form.fieldSet.permission')</legend>
 
         <div class="form-group row">
             <div class="col">
@@ -38,8 +38,8 @@
                     @endforeach
                 </select>
                 <div class="button-multiselect-box mt-1">
-                    <a class="select-all btn btn-secondary btn-sm" href="#">選取全部</a>
-                    <a class="deselect-all btn btn-secondary btn-sm" href="#">清除選取</a>
+                    <a class="select-all btn btn-secondary btn-sm" href="#">@lang('administrator.form.select_all')</a>
+                    <a class="deselect-all btn btn-secondary btn-sm" href="#">@lang('administrator.form.select_clear')</a>
                 </div>
             </div>
         </div>

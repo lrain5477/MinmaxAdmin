@@ -17,7 +17,7 @@
     @inject('modelPresenter', 'App\Presenters\Admin\AdminPresenter')
 
     <fieldset id="baseFieldSet">
-        <legend class="legend h6 mb-4"><i class="icon-angle-double-down2 mr-2"></i>主要設定</legend>
+        <legend class="legend h6 mb-4"><i class="icon-angle-double-down2 mr-2"></i>@lang('admin.form.fieldSet.default')</legend>
 
         {!! $modelPresenter->getViewNormalText($formData, 'role_id', $formData->roles()->first()->display_name) !!}
 
@@ -30,14 +30,14 @@
     </fieldset>
 
     <fieldset class="mt-4" id="advFieldSet">
-        <legend class="legend h6 mb-4"><i class="icon-angle-double-down2 mr-2"></i>進階選項</legend>
+        <legend class="legend h6 mb-4"><i class="icon-angle-double-down2 mr-2"></i>@lang('admin.form.fieldSet.advanced')</legend>
 
         {!! $modelPresenter->getViewSelection($formData, 'active') !!}
 
     </fieldset>
 
     <fieldset class="mt-4" id="sysFieldSet">
-        <legend class="legend h6 mb-4"><i class="icon-angle-double-down2 mr-2"></i>系統紀錄</legend>
+        <legend class="legend h6 mb-4"><i class="icon-angle-double-down2 mr-2"></i>@lang('admin.form.fieldSet.system_record')</legend>
 
         {!! $modelPresenter->getViewNormalText($formData, 'created_at') !!}
 
