@@ -1,6 +1,6 @@
 @extends('administrator.layouts.site')
 
-@section('breadcrumbs', Breadcrumbs::render('view'))
+@section('breadcrumbs', Breadcrumbs::view('administrator.layouts.breadcrumbs', 'view'))
 
 @section('content')
 <!-- layout-content-->
