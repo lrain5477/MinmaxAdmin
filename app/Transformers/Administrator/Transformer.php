@@ -47,6 +47,22 @@ class Transformer extends TransformerAbstract
 
     /**
      * @param string $value
+     * @param string $alt_text
+     * @param integer $size
+     * @return string
+     * @throws \Throwable
+     */
+    public function getGridThumbnail($value, $alt_text = '', $size = 120)
+    {
+        return view('administrator.grid-components.thumbnail', [
+            'value' => $value,
+            'alt' => $alt_text,
+            'size' => $size,
+        ])->render();
+    }
+
+    /**
+     * @param string $value
      * @return string
      */
     public function getGridDate($value)

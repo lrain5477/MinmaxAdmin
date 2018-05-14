@@ -27,6 +27,17 @@ Route::middleware(['auth:administrator'])->group(function() {
     Route::get('profile', 'ProfileController@edit')->name('profile');
     Route::put('profile', 'ProfileController@update');
 
+    // 圖片縮圖
+    Route::get('thumbnail/{width}x{height}/{imagePath}', function($width, $height, $imagePath) {
+        if($width != $height) abort(404);
+        $thumbnailPath = \App\Helpers\ImageHelper::makeThumbnail($imagePath, $width, $height);
+        return response(Storage::get($thumbnailPath), 200)->header('Content-Type', Storage::mimeType($thumbnailPath));
+    })->where([
+        'width' => env('THUMBNAIL_SIZE'),
+        'height' => env('THUMBNAIL_SIZE'),
+        'imagePath' => '.+\.(jpg|png|gif)$'
+    ])->name('thumbnail');
+
     // elFinder
     Route::prefix('elfinder')->group(function() {
         Route::get('/',  ['as' => 'elfinder.index', 'uses' =>'CustomElfinderController@showIndex']);
