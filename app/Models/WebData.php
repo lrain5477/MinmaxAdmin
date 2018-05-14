@@ -16,8 +16,18 @@ class WebData extends Model
         'active', 'offline_text',
     ];
 
-    public static function getIndexKey() {
+    public static function getIndexKey()
+    {
         return 'guid';
+    }
+
+    /**
+     * Return if this model's table with column `lang` and need to use.
+     * @return bool
+     */
+    public static function isMultiLanguage()
+    {
+        return true;
     }
 
     public static function rules()

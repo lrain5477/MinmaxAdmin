@@ -25,8 +25,18 @@ class Repository
         return call_user_func_array("App\\Models\\{$this->modelClassName}::rules", []) ?? null;
     }
 
-    public function getIndexKey() {
+    public function getIndexKey()
+    {
         return call_user_func_array("App\\Models\\{$this->modelClassName}::getIndexKey", []) ?? null;
+    }
+
+    /**
+     * Return if this model's table with column `lang` and need to use.
+     * @return bool
+     */
+    public function isMultiLanguage()
+    {
+        return call_user_func_array("App\\Models\\{$this->modelClassName}::isMultiLanguage", []) ?? false;
     }
 
     /**

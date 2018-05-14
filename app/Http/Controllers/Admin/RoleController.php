@@ -21,8 +21,6 @@ class RoleController extends Controller
 
         $this->adminData = Auth::guard('admin')->user();
         $this->viewData['adminData'] = $this->adminData;
-        $this->viewData['menuData'] = $this->getMenuData();
-        $this->viewData['webData'] = WebData::where(['lang' => app()->getLocale(), 'website_key' => 'admin'])->first();
     }
 
     /**

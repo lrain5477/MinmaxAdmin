@@ -13,8 +13,18 @@ class Role extends Model
         'guard', 'name', 'display_name', 'description',
     ];
 
-    public static function getIndexKey() {
+    public static function getIndexKey()
+    {
         return 'id';
+    }
+
+    /**
+     * Return if this model's table with column `lang` and need to use.
+     * @return bool
+     */
+    public static function isMultiLanguage()
+    {
+        return false;
     }
 
     public static function rules()

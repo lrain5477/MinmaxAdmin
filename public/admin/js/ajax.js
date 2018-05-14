@@ -185,7 +185,6 @@ function updateSort(column, id) {
         beforeSend:function(){},
         success:function(result){
             $('#tableList').DataTable().draw();
-            useDataTable(url.replace('/sort', '/datatables'), '');
         },
         complete:function(){},
         error:function(response){console.log(response);}

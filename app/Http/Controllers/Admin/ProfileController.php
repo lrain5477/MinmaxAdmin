@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Helpers\LogHelper;
 use App\Models\AdminMenuClass;
+use App\Models\Language;
 use App\Models\WebData;
 use App\Repositories\Admin\ProfileRepository;
 use Illuminate\Http\Request;
@@ -22,36 +23,75 @@ class ProfileController extends BaseController
     protected $uri;
     protected $viewData;
     protected $adminData;
+    protected $languageData;
     protected $pageData;
     protected $modelName;
     protected $modelRepository;
 
     public function __construct(ProfileRepository $modelRepository)
     {
-        $this->middleware(function($request, $next) {
-            $this->adminData = Auth::guard('admin')->user();
-            $this->viewData['adminData'] = $this->adminData;
-            $this->viewData['webData'] = WebData::where(['lang' => app()->getLocale(), 'website_key' => 'admin'])->first();
 
-            return $next($request);
-        });
+        $this->languageData = Language::all();
+        $this->viewData['languageData'] = $this->languageData->where('active', '1');
+
+        $this->viewData['webData'] = WebData::where(['lang' => app()->getLocale(), 'website_key' => 'admin', 'active' => 1])->first() ?? abort(404);
 
         $this->uri = 'profile';
         $this->modelRepository = $modelRepository;
 
-        $this->viewData['pageData'] = collect([[
-            'uri' => $this->uri,
-            'title' => __('admin.header.profile'),
-            'parent' => '0',
-        ]])->map(function($item, $key) { return (object) $item; })->first();
+        $this->pageData = $this->getPageData($this->uri);
+        $this->viewData['pageData'] = $this->pageData;
 
         $this->viewData['menuData'] = $this->getMenuData();
+
+        $this->middleware(function($request, $next) {
+            $this->adminData = Auth::guard('admin')->user();
+            $this->viewData['adminData'] = $this->adminData;
+
+            if(\Request::has('language') && $this->languageData->where('codes', \Request::get('language'))->where('active', '1')->count() > 0) {
+                session()->put('adminLanguage', \Request::get('language'));
+                session()->save();
+            }
+            if(session()->has('adminLanguage') && !is_null(session('adminLanguage'))) {
+                app()->setLocale(session('adminLanguage'));
+            }
+
+            return $next($request);
+        });
+
+        // 檢查經過前一個 middleware 後，是否需要重讀語系資料
+        $this->middleware(function($request, $next) use ($modelRepository) {
+            if(isset($this->viewData['webData']) && $this->viewData['webData']->lang !== app()->getLocale()) {
+                $this->viewData['webData'] = WebData::where(['lang' => app()->getLocale(), 'website_key' => 'admin'])->first() ?? abort(404);
+            }
+            if($this->pageData && $this->pageData->lang !== app()->getLocale()) {
+                $this->pageData = $this->getPageData($this->uri);
+                $this->viewData['pageData'] = $this->pageData;
+
+                if($this->pageData) {
+                    $this->modelRepository = $modelRepository;
+                } else {
+                    abort(404);
+                }
+            }
+
+            return $next($request);
+        });
     }
 
     protected function getMenuData() {
         $menuItemData = AdminMenuClass::where(['active' => 1])->orderBy('sort')->get();
 
         return $menuItemData;
+    }
+
+    protected function getPageData($uri) {
+        return collect([[
+            'lang' => app()->getLocale(),
+            'uri' => $uri,
+            'title' => __('admin.header.profile'),
+            'parent' => '0',
+        ]])->map(function($item, $key) { return (object) $item; })->first();
     }
 
     /**

@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers\Admin;
 
-//use App\Helpers\LogHelper;
 use App\Helpers\LogHelper;
 use App\Helpers\PermissionHelper;
 use App\Models\AdminMenuClass;
 use App\Models\AdminMenuItem;
+use App\Models\Language;
 use App\Models\WebData;
 use App\Repositories\Admin\Repository;
 use Illuminate\Foundation\Bus\DispatchesJobs;
@@ -27,24 +27,21 @@ class Controller extends BaseController
     protected $uri;
     protected $viewData;
     protected $adminData;
+    protected $languageData;
     protected $pageData;
     protected $modelName;
     protected $modelRepository;
 
     public function __construct(Repository $modelRepository)
     {
-        $this->middleware(function($request, $next) {
-            $this->adminData = Auth::guard('admin')->user();
-            $this->viewData['adminData'] = $this->adminData;
-
-            $this->viewData['webData'] = WebData::where(['lang' => app()->getLocale(), 'website_key' => 'admin'])->first();
-            $this->viewData['menuData'] = $this->getMenuData();
-
-            return $next($request);
-        });
-
         $this->uri = Route::current()->parameter('uri');
         Route::current()->forgetParameter('uri');
+
+        $this->languageData = Language::all();
+        $this->viewData['languageData'] = $this->languageData->where('active', '1');
+
+        $this->viewData['webData'] = WebData::where(['lang' => app()->getLocale(), 'website_key' => 'admin', 'active' => 1])->first() ?? abort(404);
+        $this->viewData['menuData'] = $this->getMenuData();
 
         if($this->uri) {
             $this->pageData = $this->getPageData($this->uri);
@@ -57,6 +54,40 @@ class Controller extends BaseController
                 abort(404);
             }
         }
+
+        $this->middleware(function($request, $next) {
+            $this->adminData = Auth::guard('admin')->user();
+            $this->viewData['adminData'] = $this->adminData;
+
+            if(\Request::has('language') && $this->languageData->where('codes', \Request::get('language'))->where('active', '1')->count() > 0) {
+                session()->put('adminLanguage', \Request::get('language'));
+                session()->save();
+            }
+            if(session()->has('adminLanguage') && !is_null(session('adminLanguage'))) {
+                app()->setLocale(session('adminLanguage'));
+            }
+
+            return $next($request);
+        });
+
+        // 檢查經過前一個 middleware 後，是否需要重讀語系資料
+        $this->middleware(function($request, $next) use ($modelRepository) {
+            if(isset($this->viewData['webData']) && $this->viewData['webData']->lang !== app()->getLocale()) {
+                $this->viewData['webData'] = WebData::where(['lang' => app()->getLocale(), 'website_key' => 'admin', 'active' => 1])->first() ?? abort(404);
+            }
+            if($this->pageData && $this->pageData->lang !== app()->getLocale()) {
+                $this->pageData = $this->getPageData($this->uri);
+                $this->viewData['pageData'] = $this->pageData;
+
+                if($this->pageData) {
+                    $this->modelRepository->setModelClassName($this->pageData->model ?? null);
+                } else {
+                    abort(404);
+                }
+            }
+
+            return $next($request);
+        });
     }
 
     protected function getMenuData() {
@@ -118,7 +149,10 @@ class Controller extends BaseController
 
         if($this->adminData->can(PermissionHelper::replacePermissionName($this->pageData->permission_key, 'Show')) === false) return abort(404);
 
-        $this->viewData['formData'] = $this->modelRepository->one([$this->modelRepository->getIndexKey() => $id]);
+        $where = [$this->modelRepository->getIndexKey() => $id];
+        if($this->modelRepository->isMultiLanguage()) $where['lang'] = app()->getLocale();
+
+        $this->viewData['formData'] = $this->modelRepository->one($where);
 
         // 設定麵包屑導航
         Breadcrumbs::register('view', function ($breadcrumbs) {
@@ -200,6 +234,17 @@ class Controller extends BaseController
 
             if($modelData = $this->modelRepository->create($input)) {
                 LogHelper::system('admin', $this->uri, 'store', $modelData->$formDataKey, $this->adminData->username, 1, __('admin.form.message.create_success'));
+
+                // 多語系複製
+                if($this->modelRepository->isMultiLanguage()) {
+                    foreach ($this->languageData as $language) {
+                        if($language->codes === app()->getLocale()) continue;
+                        $copyInsert = $modelData->replicate();
+                        $copyInsert->lang = $language->codes;
+                        $copyInsert->save();
+                    }
+                }
+
                 return redirect()->route('admin.edit', [$this->uri, $modelData->$formDataKey])->with('success', __('admin.form.message.create_success'));
             }
 
@@ -227,8 +272,11 @@ class Controller extends BaseController
 
         if($this->adminData->can(PermissionHelper::replacePermissionName($this->pageData->permission_key, 'Edit')) === false) return abort(404);
 
+        $where = [$this->modelRepository->getIndexKey() => $id];
+        if($this->modelRepository->isMultiLanguage()) $where['lang'] = app()->getLocale();
+
         $this->viewData['formDataId'] = $id;
-        $this->viewData['formData'] = $this->modelRepository->one([$this->modelRepository->getIndexKey() => $id]);
+        $this->viewData['formData'] = $this->modelRepository->one($where);
 
         // 設定麵包屑導航
         Breadcrumbs::register('edit', function ($breadcrumbs) {
@@ -271,7 +319,10 @@ class Controller extends BaseController
         $validator = Validator::make($request->input($this->pageData->model), $this->modelRepository->getRules() ?? []);
 
         if($validator->passes()) {
-            if($this->modelRepository->save($request->input($this->pageData->model), [$this->modelRepository->getIndexKey() => $id])) {
+            $where = [$this->modelRepository->getIndexKey() => $id];
+            if($this->modelRepository->isMultiLanguage()) $where['lang'] = app()->getLocale();
+
+            if($this->modelRepository->save($request->input($this->pageData->model), $where)) {
                 LogHelper::system('admin', $this->uri, 'update', $id, $this->adminData->username, 1, __('admin.form.message.edit_success'));
                 return redirect()->route('admin.edit', [$this->uri, $id])->with('success', __('admin.form.message.edit_success'));
             }
@@ -323,7 +374,10 @@ class Controller extends BaseController
 
         if($this->adminData->can(PermissionHelper::replacePermissionName($this->pageData->permission_key, 'Show')) === false) return abort(403);
 
-        $datatables = \DataTables::of($this->modelRepository->query());
+        $where = [];
+        if($this->modelRepository->isMultiLanguage()) $where['lang'] = app()->getLocale();
+
+        $datatables = \DataTables::of($this->modelRepository->query($where));
 
         if($request->has('filter') || $request->has('equal')) {
             $datatables->filter(function($query) use ($request) {
@@ -440,9 +494,7 @@ class Controller extends BaseController
         if($this->modelRepository->save([$request->input('column') => $request->input('index')], [[$this->modelRepository->getIndexKey(), '=', $request->input('id')]])) {
             //LogHelper::systemLog(Auth::guard('admin')->user()->username, 'Update ' . $this->modelName . '(' . $request->input('id') . ') sorting to ' . $request->input('index'), 'Success');
 
-            return response([
-                'msg' => 'success',
-            ], 200)->header('Content-Type', 'application/json');
+            return response(['msg' => 'success'], 200)->header('Content-Type', 'application/json');
         } else {
             return response(['msg' => 'error'], 400)->header('Content-Type', 'application/json');
         }

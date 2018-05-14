@@ -11,7 +11,17 @@ class SystemLog extends Model
         'guard', 'uri', 'action', 'guid', 'username', 'ip', 'note', 'result',
     ];
 
-    public static function getIndexKey() {
+    public static function getIndexKey()
+    {
         return 'id';
+    }
+
+    /**
+     * Return if this model's table with column `lang` and need to use.
+     * @return bool
+     */
+    public static function isMultiLanguage()
+    {
+        return false;
     }
 }

@@ -13,6 +13,7 @@ class DatabaseSeeder extends Seeder
     {
         $this->call(SystemSeeder::class);
         $this->call(RbacSeeder::class);
+        $this->call(ModulesSeeder::class);
         $this->call(AdminSeeder::class);
     }
 }

@@ -27,7 +27,7 @@ class CreateAdminMenuTable extends Migration
             $table->string('guid', 64);
             $table->string('lang', 100);
             $table->string('title', 255)->comment('選單名稱');
-            $table->string('uri', 64)->unique()->comment('Uri');
+            $table->string('uri', 64)->comment('Uri');
             $table->string('model', 64)->nullable()->comment('Model 名稱');
             $table->string('class', 64)->comment('類別');
             $table->string('parent', 255)->default('0')->comment('上層目錄');
@@ -39,6 +39,9 @@ class CreateAdminMenuTable extends Migration
             $table->unsignedInteger('sort')->default(1)->comment('排序');
             $table->enum('active', [1, 0])->default(1)->comment('狀態');
             $table->timestamps();
+
+            $table->unique(['guid', 'lang'], 'idx-guid-lang');
+            $table->unique(['lang', 'uri'], 'idx-lang-uri');
         });
     }
 

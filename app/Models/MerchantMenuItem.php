@@ -17,8 +17,18 @@ class MerchantMenuItem extends Model
         'lang', 'guid', 'title', 'uri', 'model', 'class', 'parent', 'link', 'icon', 'filter', 'keeps', 'sort', 'active',
     ];
 
-    public static function getIndexKey() {
+    public static function getIndexKey()
+    {
         return 'guid';
+    }
+
+    /**
+     * Return if this model's table with column `lang` and need to use.
+     * @return bool
+     */
+    public static function isMultiLanguage()
+    {
+        return true;
     }
 
     public static function rules()

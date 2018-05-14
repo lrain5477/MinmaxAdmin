@@ -12,7 +12,15 @@ class SystemSeeder extends Seeder
      */
     public function run()
     {
+        $defaultLanguage = 'tw';
         $timestamp = date('Y-m-d H:i:s');
+
+        $languageData = [
+            ['guid' => Str::uuid(), 'title' => '繁中', 'codes' => 'tw', 'name' => '繁體中文', 'icon' => 'flag-icon-tw', 'sort' => 1, 'active' => '1', 'updated_at' => $timestamp, 'created_at' => $timestamp],
+            //['guid' => Str::uuid(), 'title' => '簡中', 'codes' => 'cn', 'name' => '简体中文', 'icon' => 'flag-icon-cn', 'sort' => 2, 'active' => '0', 'updated_at' => $timestamp, 'created_at' => $timestamp],
+            //['guid' => Str::uuid(), 'title' => '英文', 'codes' => 'en', 'name' => 'English', 'icon' => 'flag-icon-us', 'sort' => 3, 'active' => '0', 'updated_at' => $timestamp, 'created_at' => $timestamp],
+        ];
+        DB::table('language')->insert($languageData);
 
         $webData = [
             [
@@ -126,16 +134,17 @@ class SystemSeeder extends Seeder
         ];
         DB::table('web_data')->insert($webData);
 
-        $languageData = [
-            ['guid' => Str::uuid(), 'title' => '繁中', 'codes' => 'tw', 'name' => '繁體中文', 'icon' => 'flag-icon-tw', 'sort' => 1, 'active' => '1', 'updated_at' => $timestamp, 'created_at' => $timestamp],
-            ['guid' => Str::uuid(), 'title' => '簡中', 'codes' => 'cn', 'name' => '简体中文', 'icon' => 'flag-icon-cn', 'sort' => 2, 'active' => '0', 'updated_at' => $timestamp, 'created_at' => $timestamp],
-            ['guid' => Str::uuid(), 'title' => '英文', 'codes' => 'en', 'name' => 'English', 'icon' => 'flag-icon-us', 'sort' => 3, 'active' => '0', 'updated_at' => $timestamp, 'created_at' => $timestamp],
-        ];
-        DB::table('language')->insert($languageData);
+        foreach ($languageData as $language) {
+            if($language['codes'] === $defaultLanguage) continue;
+            $languageInsert = collect($webData)->map(function($item, $key) use ($language) {
+                $item['lang'] = $language['codes'];
+                return $item;
+            })->toArray();
+            DB::table('web_data')->insert($languageInsert);
+        }
 
         $adminMenuClassData = [
             ['guid' => $menuClassGuid1 = Str::uuid(), 'title' => 'default', 'sort' => 1, 'active' => '1', 'updated_at' => $timestamp, 'created_at' => $timestamp],
-            ['guid' => $menuClassGuid2 = Str::uuid(), 'title' => 'modules', 'sort' => 2, 'active' => '1', 'updated_at' => $timestamp, 'created_at' => $timestamp],
             ['guid' => $menuClassGuid3 = Str::uuid(), 'title' => 'system', 'sort' => 3, 'active' => '1', 'updated_at' => $timestamp, 'created_at' => $timestamp],
         ];
         DB::table('admin_menu_class')->insert($adminMenuClassData);
@@ -321,6 +330,15 @@ class SystemSeeder extends Seeder
             ],
         ];
         DB::table('admin_menu_item')->insert($adminMenuItemData);
+
+        foreach ($languageData as $language) {
+            if($language['codes'] === $defaultLanguage) continue;
+            $languageInsert = collect($adminMenuItemData)->map(function($item, $key) use ($language) {
+                $item['lang'] = $language['codes'];
+                return $item;
+            })->toArray();
+            DB::table('admin_menu_item')->insert($languageInsert);
+        }
 
         $administratorData = [
             [
