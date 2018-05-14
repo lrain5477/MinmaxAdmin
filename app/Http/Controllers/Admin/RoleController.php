@@ -15,14 +15,6 @@ use Validator;
 
 class RoleController extends Controller
 {
-    public function __construct(Repository $modelRepository)
-    {
-        parent::__construct($modelRepository);
-
-        $this->adminData = Auth::guard('admin')->user();
-        $this->viewData['adminData'] = $this->adminData;
-    }
-
     /**
      * Model Edit
      *
@@ -71,13 +63,13 @@ class RoleController extends Controller
     {
         if($this->adminData->can(PermissionHelper::replacePermissionName($this->pageData->permission_key, 'Edit')) === false) return abort(404);
 
-        $validator = Validator::make($request->input($this->pageData->model), $this->modelRepository->getRules() ?? []);
+        $validator = Validator::make($request->input($this->pageData->getAttribute('model')), $this->modelRepository->getRules() ?? []);
 
         if($validator->passes()) {
             try {
                 \DB::beginTransaction();
 
-                $this->modelRepository->save($request->input($this->pageData->model), [$this->modelRepository->getIndexKey() => $id]);
+                $this->modelRepository->save($request->input($this->pageData->getAttribute('model')), [$this->modelRepository->getIndexKey() => $id]);
                 $permissionData = $request->input('PermissionRole');
                 $permissionRoleData = [];
                 foreach ($permissionData as $permission_id) {

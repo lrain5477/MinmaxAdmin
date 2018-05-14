@@ -81,6 +81,7 @@ return [
         'lang' => '語系',
         'title' => '選單名稱',
         'uri' => 'Uri',
+        'controller' => 'Controller 名稱',
         'model' => 'Model 名稱',
         'class' => '類別',
         'parent' => '上層目錄',

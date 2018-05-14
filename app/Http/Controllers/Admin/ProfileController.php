@@ -30,68 +30,49 @@ class ProfileController extends BaseController
 
     public function __construct(ProfileRepository $modelRepository)
     {
-
-        $this->languageData = Language::all();
-        $this->viewData['languageData'] = $this->languageData->where('active', '1');
-
-        $this->viewData['webData'] = WebData::where(['lang' => app()->getLocale(), 'website_key' => 'admin', 'active' => 1])->first() ?? abort(404);
-
-        $this->uri = 'profile';
         $this->modelRepository = $modelRepository;
 
-        $this->pageData = $this->getPageData($this->uri);
-        $this->viewData['pageData'] = $this->pageData;
-
-        $this->viewData['menuData'] = $this->getMenuData();
-
         $this->middleware(function($request, $next) {
-            $this->adminData = Auth::guard('admin')->user();
-            $this->viewData['adminData'] = $this->adminData;
+            /**
+             * @var \Illuminate\Http\Request $request
+             */
 
-            if(\Request::has('language') && $this->languageData->where('codes', \Request::get('language'))->where('active', '1')->count() > 0) {
-                session()->put('adminLanguage', \Request::get('language'));
+            // 取得 語系資料
+            $this->languageData = Language::all();
+            $this->viewData['languageData'] = $this->languageData->where('active', '1');
+
+            // 設定 語系
+            if($request->has('language') && $this->languageData->where('codes', $request->get('language'))->where('active', '1')->count() > 0) {
+                session(['adminLanguage' => $request->get('language')]);
                 session()->save();
             }
             if(session()->has('adminLanguage') && !is_null(session('adminLanguage'))) {
                 app()->setLocale(session('adminLanguage'));
             }
 
+            $this->uri = 'profile';
+
+            // 設定 網站資料
+            $this->viewData['webData'] = WebData::where(['lang' => app()->getLocale(), 'website_key' => 'admin', 'active' => 1])->first() ?? abort(404);
+
+            // 設定 選單資料
+            $this->viewData['menuData'] = AdminMenuClass::where(['active' => 1])->orderBy('sort')->get();
+
+            // 設定 頁面資料
+            $this->pageData =  collect([[
+                'lang' => app()->getLocale(),
+                'uri' => $this->uri,
+                'title' => __('admin.header.profile'),
+                'parent' => '0',
+            ]])->map(function($item, $key) { return (object) $item; })->first();
+            $this->viewData['pageData'] = $this->pageData;
+
+            // 設定 帳號資料
+            $this->adminData = Auth::guard('admin')->user();
+            $this->viewData['adminData'] = $this->adminData;
+
             return $next($request);
         });
-
-        // 檢查經過前一個 middleware 後，是否需要重讀語系資料
-        $this->middleware(function($request, $next) use ($modelRepository) {
-            if(isset($this->viewData['webData']) && $this->viewData['webData']->lang !== app()->getLocale()) {
-                $this->viewData['webData'] = WebData::where(['lang' => app()->getLocale(), 'website_key' => 'admin'])->first() ?? abort(404);
-            }
-            if($this->pageData && $this->pageData->lang !== app()->getLocale()) {
-                $this->pageData = $this->getPageData($this->uri);
-                $this->viewData['pageData'] = $this->pageData;
-
-                if($this->pageData) {
-                    $this->modelRepository = $modelRepository;
-                } else {
-                    abort(404);
-                }
-            }
-
-            return $next($request);
-        });
-    }
-
-    protected function getMenuData() {
-        $menuItemData = AdminMenuClass::where(['active' => 1])->orderBy('sort')->get();
-
-        return $menuItemData;
-    }
-
-    protected function getPageData($uri) {
-        return collect([[
-            'lang' => app()->getLocale(),
-            'uri' => $uri,
-            'title' => __('admin.header.profile'),
-            'parent' => '0',
-        ]])->map(function($item, $key) { return (object) $item; })->first();
     }
 
     /**

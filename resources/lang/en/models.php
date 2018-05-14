@@ -29,9 +29,9 @@ return [
             ],
         ],
         'hint' => [
-            'allow_ip' => '請斷行設定可登入來源IP位置，空白表示可自任何地方登入',
-            'password' => '若不需更新密碼，請維持此欄位空白',
-            'password_confirmation' => '請再次輸入密碼；若不需更新密碼，請維持此欄位空白',
+            'allow_ip' => 'Input ip address with enter for whitelist. Keep empty to allow everywhere.',
+            'password' => 'If you do not change password, please keep empty.',
+            'password_confirmation' => 'Insert password again. If you do not change password, please keep empty.',
         ],
     ],
 
@@ -54,8 +54,8 @@ return [
             ],
         ],
         'hint' => [
-            'password' => '若不需更新密碼，請維持此欄位空白',
-            'password_confirmation' => '請再次輸入密碼；若不需更新密碼，請維持此欄位空白',
+            'password' => 'If you do not change password, please keep empty.',
+            'password_confirmation' => 'Insert password again. If you do not change password, please keep empty.',
         ],
     ],
 
@@ -81,6 +81,7 @@ return [
         'lang' => 'Language',
         'title' => 'Title',
         'uri' => 'Uri',
+        'controller' => 'Controller Name',
         'model' => 'Model Name',
         'class' => 'Class',
         'parent' => 'Parent Menu',
@@ -99,7 +100,7 @@ return [
             ],
         ],
         'hint' => [
-            'icon' => '僅 (根列表) 使用，請參考連結選擇您所需要的圖示 <a target="_blank" href="/admin/css/fonts/icon/demo.html">圖示列表</a>',
+            'icon' => 'Only (root) using. Please check <a target="_blank" href="/admin/css/fonts/icon/demo.html">Icon List</a> for usage.',
         ],
     ],
 
@@ -143,7 +144,7 @@ return [
             ],
         ],
         'hint' => [
-            'icon' => '僅 (根列表) 使用，請參考連結選擇您所需要的圖示 <a target="_blank" href="/admin/css/fonts/icon/demo.html">圖示列表</a>',
+            'icon' => 'Only (root) using. Please check <a target="_blank" href="/admin/css/fonts/icon/demo.html">Icon List</a> for usage.',
         ],
     ],
 
@@ -166,19 +167,19 @@ return [
 
     'Permission' => [
         'id' => 'ID',
-        'guard' => '平台',
-        'name' => '代碼',
-        'group' => '群組',
-        'label' => '標籤',
-        'display_name' => '權限名稱',
-        'description' => '敘述',
-        'active' => '狀態',
-        'created_at' => '建立時間',
-        'updated_at' => '更新時間',
+        'guard' => 'Platform',
+        'name' => 'Unique Code',
+        'group' => 'Group',
+        'label' => 'Label',
+        'display_name' => 'Permission Name',
+        'description' => 'Description',
+        'active' => 'Active',
+        'created_at' => 'Created At',
+        'updated_at' => 'Updated At',
         'selection' => [
             'active' => [
-                '1' => '啟用',
-                '0' => '停用',
+                '1' => 'On',
+                '0' => 'Off',
             ],
         ],
     ],
@@ -186,18 +187,18 @@ return [
     'Language' => [
         'id' => 'ID',
         'guid' => 'GUID',
-        'title' => '語系',
-        'codes' => '語系代碼',
-        'name' => '顯示文字',
-        'icon' => '圖示代碼',
-        'sort' => '排序',
-        'active' => '狀態',
-        'created_at' => '建立時間',
-        'updated_at' => '更新時間',
+        'title' => 'Title',
+        'codes' => 'Code',
+        'name' => 'Name',
+        'icon' => 'Icon Class',
+        'sort' => 'Sort',
+        'active' => 'Active',
+        'created_at' => 'Created At',
+        'updated_at' => 'Updated At',
         'selection' => [
             'active' => [
-                '1' => '啟用',
-                '0' => '停用',
+                '1' => 'On',
+                '0' => 'Off',
             ],
         ],
     ],
@@ -253,9 +254,9 @@ return [
         'created_at' => 'Created At',
         'updated_at' => 'Updated At',
         'hint' => [
-            'seo_description' => '(Metadata Description) 利用簡短的說明讓人清楚的了解網站的主要內容、簡介方向等，搜尋引擎將會幫我們適當的顯示在介紹頁面上。',
-            'seo_keywords' => '(Metadata Keywords) 搜尋關鍵字:為了幫助搜尋引擎更容易搜尋到網站，你可以在這裡填寫相關的搜尋字詞，多組關鍵字以上請使用半形逗號區隔。',
-            'offline_text' => '當網站處於離線狀態時顯示給使用者看到的訊息。',
+            'seo_description' => '(Metadata Description) Short description make people understand what your website support.',
+            'seo_keywords' => '(Metadata Keywords) please separate keywords with comma.',
+            'offline_text' => 'The text information show out when website is offline.',
         ],
         'selection' => [
             'active' => [

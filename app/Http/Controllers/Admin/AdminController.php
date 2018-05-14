@@ -14,14 +14,6 @@ use Validator;
 
 class AdminController extends Controller
 {
-    public function __construct(Repository $modelRepository)
-    {
-        parent::__construct($modelRepository);
-
-        $this->adminData = Auth::guard('admin')->user();
-        $this->viewData['adminData'] = $this->adminData;
-    }
-
     /**
      * Model Store
      *
@@ -32,10 +24,10 @@ class AdminController extends Controller
     {
         if($this->adminData->can(PermissionHelper::replacePermissionName($this->pageData->permission_key, 'Create')) === false) return abort(404);
 
-        $validator = Validator::make($request->input($this->pageData->model), $this->modelRepository->getRules() ?? []);
+        $validator = Validator::make($request->input($this->pageData->getAttribute('model')), $this->modelRepository->getRules() ?? []);
 
         if($validator->passes()) {
-            $input = $request->input($this->pageData->model);
+            $input = $request->input($this->pageData->getAttribute('model'));
             $input['guid'] = Str::uuid();
             $input['password'] = \Hash::make('123456');
 
@@ -76,10 +68,10 @@ class AdminController extends Controller
             'password' => 'nullable|confirmed|min:6',
             'password_confirmation' => 'required_with:password'
         ];
-        $validator = Validator::make($request->input($this->pageData->model), $validateRules);
+        $validator = Validator::make($request->input($this->pageData->getAttribute('model')), $validateRules);
 
         if($validator->passes()) {
-            $input = $request->input($this->pageData->model);
+            $input = $request->input($this->pageData->getAttribute('model'));
             if(isset($input['password']) && is_null($input['password'])) {
                 unset($input['password']);
             } else {

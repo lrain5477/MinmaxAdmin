@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Administrator;
 
 use App\Helpers\LogHelper;
+use App\Models\Administrator;
+use App\Models\Language;
 use App\Models\WebData;
 use App\Repositories\Administrator\Repository;
 use Illuminate\Foundation\Bus\DispatchesJobs;
@@ -20,52 +22,89 @@ class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
+    /**
+     * @var string $uri
+     * @var array $viewData
+     * @var Administrator $adminData
+     * @var Language $languageData
+     * @var mixed $pageData
+     * @var string $modelName
+     * @var Repository $modelRepository
+     */
     protected $uri;
     protected $viewData;
     protected $adminData;
+    protected $languageData;
     protected $pageData;
     protected $modelName;
     protected $modelRepository;
 
     public function __construct(Repository $modelRepository)
     {
+        $this->modelRepository = $modelRepository;
+
         $this->middleware(function($request, $next) {
+            /**
+             * @var \Illuminate\Http\Request $request
+             */
+
+            // 取得 語系資料
+            $this->languageData = Language::all();
+            $this->viewData['languageData'] = $this->languageData->where('active', '1');
+
+            // 設定 語系
+            if($request->has('language') && $this->languageData->where('codes', $request->get('language'))->where('active', '1')->count() > 0) {
+                session(['administratorLanguage' => $request->get('language')]);
+                session()->save();
+            }
+            if(session()->has('administratorLanguage') && !is_null(session('administratorLanguage'))) {
+                app()->setLocale(session('administratorLanguage'));
+            }
+
+            // 設定 URI
+            if($request->route()->hasParameter('uri')) {
+                $this->uri = $request->route()->parameter('uri');
+                Route::current()->forgetParameter('uri');
+            } else {
+                $this->uri = explode('/', $request->route()->uri())[1] ?? $this->uri;
+            }
+
+            // 設定 網站資料
+            $this->viewData['webData'] = WebData::where(['lang' => app()->getLocale(), 'website_key' => 'administrator'])->first();
+
+            // 設定 頁面資料
+            if($this->uri) {
+                $this->pageData = $this->getPageData($this->uri);
+                $this->viewData['pageData'] = $this->pageData;
+            }
+
+            // 設定 帳號資料
             $this->adminData = Auth::guard('administrator')->user();
             $this->viewData['adminData'] = $this->adminData;
 
-            $this->viewData['webData'] = WebData::where(['lang' => app()->getLocale(), 'website_key' => 'administrator'])->first();
+            // 設定 模型注入
+            if($this->pageData) {
+                $this->modelRepository->setModelClassName($this->pageData->model ?? null);
+            } elseif($request->route()->uri() !== 'administrator') {
+                abort(404);
+            }
 
             return $next($request);
         });
-
-        $this->uri = Route::current()->parameter('uri');
-        Route::current()->forgetParameter('uri');
-
-        if($this->uri) {
-            $this->pageData = $this->getPageData($this->uri);
-            $this->viewData['pageData'] = $this->pageData;
-
-            $this->modelRepository = $modelRepository;
-            if($this->pageData) {
-                $this->modelRepository->setModelClassName($this->pageData->model ?? null);
-            } else {
-                abort(404);
-            }
-        }
     }
 
     protected function getPageData($uri) {
         $menuModel = collect([
-            ['uri' => 'admin-menu-class', 'title' => '管理員選單類別', 'model' => 'AdminMenuClass', 'parent' => 'menu-control'],
-            ['uri' => 'admin-menu-item', 'title' => '管理員選單目錄', 'model' => 'AdminMenuItem', 'parent' => 'menu-control'],
-            ['uri' => 'merchant-menu-class', 'title' => '經銷商選單類別', 'model' => 'MerchantMenuClass', 'parent' => 'menu-control'],
-            ['uri' => 'merchant-menu-item', 'title' => '經銷商選單目錄', 'model' => 'MerchantMenuItem', 'parent' => 'menu-control'],
-            ['uri' => 'language', 'title' => '語系管理', 'model' => 'Language', 'parent' => '0'],
-            ['uri' => 'permission', 'title' => '權限物件管理', 'model' => 'Permission', 'parent' => 'permission-control'],
-            ['uri' => 'role', 'title' => '權限角色管理', 'model' => 'Role', 'parent' => 'permission-control'],
-            ['uri' => 'language', 'title' => '語系管理', 'model' => 'Language', 'parent' => '0'],
-            ['uri' => 'web-data', 'title' => '網站基本資訊', 'model' => 'WebData', 'parent' => '0'],
-            ['uri' => 'system-log', 'title' => '操作紀錄', 'model' => 'SystemLog', 'parent' => '0'],
+            ['uri' => 'admin-menu-class', 'title' => '管理員選單類別', 'controller' => null, 'model' => 'AdminMenuClass', 'parent' => 'menu-control'],
+            ['uri' => 'admin-menu-item', 'title' => '管理員選單目錄', 'controller' => 'AdminMenuItemController', 'model' => 'AdminMenuItem', 'parent' => 'menu-control'],
+            ['uri' => 'merchant-menu-class', 'title' => '經銷商選單類別', 'controller' => null, 'model' => 'MerchantMenuClass', 'parent' => 'menu-control'],
+            ['uri' => 'merchant-menu-item', 'title' => '經銷商選單目錄', 'controller' => 'MerchantMenuItemController', 'model' => 'MerchantMenuItem', 'parent' => 'menu-control'],
+            ['uri' => 'language', 'title' => '語系管理', 'controller' => null, 'model' => 'Language', 'parent' => '0'],
+            ['uri' => 'permission', 'title' => '權限物件管理', 'controller' => null, 'model' => 'Permission', 'parent' => 'permission-control'],
+            ['uri' => 'role', 'title' => '權限角色管理', 'controller' => 'RoleController', 'model' => 'Role', 'parent' => 'permission-control'],
+            ['uri' => 'language', 'title' => '語系管理', 'controller' => null, 'model' => 'Language', 'parent' => '0'],
+            ['uri' => 'web-data', 'title' => '網站基本資訊', 'controller' => null, 'model' => 'WebData', 'parent' => '0'],
+            ['uri' => 'system-log', 'title' => '操作紀錄', 'controller' => null, 'model' => 'SystemLog', 'parent' => '0'],
         ])->map(function($item, $key) { return (object) $item; });
 
         return $menuModel->where('uri', $uri)->first();
@@ -79,11 +118,6 @@ class Controller extends BaseController
      */
     public function index()
     {
-        if(get_class($this) !== (__NAMESPACE__ . '\\' . $this->pageData->model . 'Controller') && class_exists(__NAMESPACE__ . '\\' . $this->pageData->model . 'Controller')) {
-            Route::current()->setParameter('uri', $this->uri);
-            return app()->make(__NAMESPACE__ . '\\' . $this->pageData->model . 'Controller')->index();
-        }
-
         // 設定麵包屑導航
         Breadcrumbs::register('index', function ($breadcrumbs) {
             /**
@@ -109,12 +143,10 @@ class Controller extends BaseController
      */
     public function show($id)
     {
-        if(get_class($this) !== __NAMESPACE__ . '\\' . $this->pageData->model . 'Controller' && class_exists(__NAMESPACE__ . '\\' . $this->pageData->model . 'Controller')) {
-            Route::current()->setParameter('uri', $this->uri);
-            return app()->make(__NAMESPACE__ . '\\' . $this->pageData->model . 'Controller')->show($id);
-        }
+        $where = [$this->modelRepository->getIndexKey() => $id];
+        if($this->modelRepository->isMultiLanguage()) $where['lang'] = app()->getLocale();
 
-        $this->viewData['formData'] = $this->modelRepository->one([$this->modelRepository->getIndexKey() => $id]);
+        $this->viewData['formData'] = $this->modelRepository->one($where);
 
         // 設定麵包屑導航
         Breadcrumbs::register('view', function ($breadcrumbs) {
@@ -141,11 +173,6 @@ class Controller extends BaseController
      */
     public function create()
     {
-        if(get_class($this) !== __NAMESPACE__ . '\\' . $this->pageData->model . 'Controller' && class_exists(__NAMESPACE__ . '\\' . $this->pageData->model . 'Controller')) {
-            Route::current()->setParameter('uri', $this->uri);
-            return app()->make(__NAMESPACE__ . '\\' . $this->pageData->model . 'Controller')->create();
-        }
-
         $this->viewData['formData'] = $this->modelRepository->new();
 
         // 設定麵包屑導航
@@ -173,18 +200,24 @@ class Controller extends BaseController
      */
     public function store(Request $request)
     {
-        if(get_class($this) !== __NAMESPACE__ . '\\' . $this->pageData->model . 'Controller' && class_exists(__NAMESPACE__ . '\\' . $this->pageData->model . 'Controller')) {
-            Route::current()->setParameter('uri', $this->uri);
-            return app()->make(__NAMESPACE__ . '\\' . $this->pageData->model . 'Controller')->store($request);
-        }
-
         $validator = Validator::make($request->input($this->pageData->model), $this->modelRepository->getRules() ?? []);
 
         if($validator->passes()) {
+            $input = $request->input($this->pageData->model);
             $formDataKey = $this->modelRepository->getIndexKey();
-            $makeId = $formDataKey === 'id' ? [] : [$formDataKey => Str::uuid()];
+            if($formDataKey !== 'id') $input[$formDataKey] = Str::uuid();
 
-            if($modelData = $this->modelRepository->create($request->input($this->pageData->model) + $makeId)) {
+            if($modelData = $this->modelRepository->create($input)) {
+                // 多語系複製
+                if($this->modelRepository->isMultiLanguage()) {
+                    foreach ($this->languageData as $language) {
+                        if($language->codes === app()->getLocale()) continue;
+                        $copyInsert = $modelData->replicate();
+                        $copyInsert->lang = $language->codes;
+                        $copyInsert->save();
+                    }
+                }
+
                 return redirect()->route('administrator.edit', [$this->uri, $modelData->$formDataKey])->with('success', __('administrator.form.message.create_success'));
             }
 
@@ -203,13 +236,11 @@ class Controller extends BaseController
      */
     public function edit($id)
     {
-        if(get_class($this) !== __NAMESPACE__ . '\\' . $this->pageData->model . 'Controller' && class_exists(__NAMESPACE__ . '\\' . $this->pageData->model . 'Controller')) {
-            Route::current()->setParameter('uri', $this->uri);
-            return app()->make(__NAMESPACE__ . '\\' . $this->pageData->model . 'Controller')->edit($id);
-        }
+        $where = [$this->modelRepository->getIndexKey() => $id];
+        if($this->modelRepository->isMultiLanguage()) $where['lang'] = app()->getLocale();
 
         $this->viewData['formDataId'] = $id;
-        $this->viewData['formData'] = $this->modelRepository->one([$this->modelRepository->getIndexKey() => $id]);
+        $this->viewData['formData'] = $this->modelRepository->one($where);
 
         // 設定麵包屑導航
         Breadcrumbs::register('edit', function ($breadcrumbs) {
@@ -237,15 +268,13 @@ class Controller extends BaseController
      */
     public function update($id, Request $request)
     {
-        if(get_class($this) !== __NAMESPACE__ . '\\' . $this->pageData->model . 'Controller' && class_exists(__NAMESPACE__ . '\\' . $this->pageData->model . 'Controller')) {
-            Route::current()->setParameter('uri', $this->uri);
-            return app()->make(__NAMESPACE__ . '\\' . $this->pageData->model . 'Controller')->update($id, $request);
-        }
-
         $validator = Validator::make($request->input($this->pageData->model), $this->modelRepository->getRules() ?? []);
 
         if($validator->passes()) {
-            if($this->modelRepository->save($request->input($this->pageData->model), [$this->modelRepository->getIndexKey() => $id])) {
+            $where = [$this->modelRepository->getIndexKey() => $id];
+            if($this->modelRepository->isMultiLanguage()) $where['lang'] = app()->getLocale();
+
+            if($this->modelRepository->save($request->input($this->pageData->model), $where)) {
                 return redirect()->route('administrator.edit', [$this->uri, $id])->with('success', __('administrator.form.message.edit_success'));
             }
 
@@ -261,12 +290,8 @@ class Controller extends BaseController
      * @param string $id
      * @return $this|\Illuminate\Http\RedirectResponse
      */
-    public function destroy($id) {
-        if(get_class($this) !== __NAMESPACE__ . '\\' . $this->pageData->model . 'Controller' && class_exists(__NAMESPACE__ . '\\' . $this->pageData->model . 'Controller')) {
-            Route::current()->setParameter('uri', $this->uri);
-            return app()->make(__NAMESPACE__ . '\\' . $this->pageData->model . 'Controller')->destroy($id);
-        }
-
+    public function destroy($id)
+    {
         if($this->modelRepository->delete([$this->modelRepository->getIndexKey() => $id]))
             return redirect()->route('administrator.index', [$this->uri])->with('success', __('administrator.form.message.delete_success'));
 
@@ -282,12 +307,10 @@ class Controller extends BaseController
      */
     public function ajaxDataTable(Request $request)
     {
-        if(get_class($this) !== __NAMESPACE__ . '\\' . $this->pageData->model . 'Controller' && class_exists(__NAMESPACE__ . '\\' . $this->pageData->model . 'Controller')) {
-            Route::current()->setParameter('uri', $this->uri);
-            return app()->make(__NAMESPACE__ . '\\' . $this->pageData->model . 'Controller')->ajaxDataTable($request);
-        }
+        $where = [];
+        if($this->modelRepository->isMultiLanguage()) $where['lang'] = app()->getLocale();
 
-        $datatables = \DataTables::of($this->modelRepository->query());
+        $datatables = \DataTables::of($this->modelRepository->query($where));
 
         if($request->has('filter') || $request->has('equal')) {
             $datatables->filter(function($query) use ($request) {
@@ -329,11 +352,6 @@ class Controller extends BaseController
 
     public function ajaxSwitch(Request $request)
     {
-        if(get_class($this) !== __NAMESPACE__ . '\\' . $this->pageData->model . 'Controller' && class_exists(__NAMESPACE__ . '\\' . $this->pageData->model . 'Controller')) {
-            Route::current()->setParameter('uri', $this->uri);
-            return app()->make(__NAMESPACE__ . '\\' . $this->pageData->model . 'Controller')->ajaxSwitch($request);
-        }
-
         $validateResult = $request->validate([
             'id' => 'required',
             'column' => 'required',
@@ -356,11 +374,6 @@ class Controller extends BaseController
 
     public function ajaxMultiSwitch(Request $request)
     {
-        if(get_class($this) !== __NAMESPACE__ . '\\' . $this->pageData->model . 'Controller' && class_exists(__NAMESPACE__ . '\\' . $this->pageData->model . 'Controller')) {
-            Route::current()->setParameter('uri', $this->uri);
-            return app()->make(__NAMESPACE__ . '\\' . $this->pageData->model . 'Controller')->ajaxMultiSwitch($request);
-        }
-
         $validateResult = $request->validate([
             'data' => 'required',
         ]);
@@ -384,11 +397,6 @@ class Controller extends BaseController
 
     public function ajaxSort(Request $request)
     {
-        if(get_class($this) !== __NAMESPACE__ . '\\' . $this->pageData->model . 'Controller' && class_exists(__NAMESPACE__ . '\\' . $this->pageData->model . 'Controller')) {
-            Route::current()->setParameter('uri', $this->uri);
-            return app()->make(__NAMESPACE__ . '\\' . $this->pageData->model . 'Controller')->ajaxSort($request);
-        }
-
         $validateResult = $request->validate([
             'id' => 'required',
             'column' => 'required',

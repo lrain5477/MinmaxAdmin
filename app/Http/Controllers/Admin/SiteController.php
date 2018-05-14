@@ -11,13 +11,7 @@ use Spatie\Analytics\Period;
 
 class SiteController extends Controller
 {
-    public function __construct(Repository $modelRepository)
-    {
-        parent::__construct($modelRepository);
 
-        $this->adminData = Auth::guard('admin')->user();
-        $this->viewData['adminData'] = $this->adminData;
-    }
 
     /**
      * Display Dashboard.

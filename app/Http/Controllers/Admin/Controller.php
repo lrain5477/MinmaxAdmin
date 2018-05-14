@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Helpers\LogHelper;
 use App\Helpers\PermissionHelper;
+use App\Models\Admin;
 use App\Models\AdminMenuClass;
 use App\Models\AdminMenuItem;
 use App\Models\Language;
@@ -24,6 +25,15 @@ class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
+    /**
+     * @var string $uri
+     * @var array $viewData
+     * @var Admin $adminData
+     * @var Language $languageData
+     * @var AdminMenuItem $pageData
+     * @var string $modelName
+     * @var Repository $modelRepository
+     */
     protected $uri;
     protected $viewData;
     protected $adminData;
@@ -34,72 +44,59 @@ class Controller extends BaseController
 
     public function __construct(Repository $modelRepository)
     {
-        $this->uri = Route::current()->parameter('uri');
-        Route::current()->forgetParameter('uri');
-
-        $this->languageData = Language::all();
-        $this->viewData['languageData'] = $this->languageData->where('active', '1');
-
-        $this->viewData['webData'] = WebData::where(['lang' => app()->getLocale(), 'website_key' => 'admin', 'active' => 1])->first() ?? abort(404);
-        $this->viewData['menuData'] = $this->getMenuData();
-
-        if($this->uri) {
-            $this->pageData = $this->getPageData($this->uri);
-            $this->viewData['pageData'] = $this->pageData;
-
-            $this->modelRepository = $modelRepository;
-            if($this->pageData) {
-                $this->modelRepository->setModelClassName($this->pageData->model ?? null);
-            } else {
-                abort(404);
-            }
-        }
+        $this->modelRepository = $modelRepository;
 
         $this->middleware(function($request, $next) {
-            $this->adminData = Auth::guard('admin')->user();
-            $this->viewData['adminData'] = $this->adminData;
+            /**
+             * @var \Illuminate\Http\Request $request
+             */
 
-            if(\Request::has('language') && $this->languageData->where('codes', \Request::get('language'))->where('active', '1')->count() > 0) {
-                session()->put('adminLanguage', \Request::get('language'));
+            // 取得 語系資料
+            $this->languageData = Language::all();
+            $this->viewData['languageData'] = $this->languageData->where('active', '1');
+
+            // 設定 語系
+            if($request->has('language') && $this->languageData->where('codes', $request->get('language'))->where('active', '1')->count() > 0) {
+                session(['adminLanguage' => $request->get('language')]);
                 session()->save();
             }
             if(session()->has('adminLanguage') && !is_null(session('adminLanguage'))) {
                 app()->setLocale(session('adminLanguage'));
             }
 
-            return $next($request);
-        });
-
-        // 檢查經過前一個 middleware 後，是否需要重讀語系資料
-        $this->middleware(function($request, $next) use ($modelRepository) {
-            if(isset($this->viewData['webData']) && $this->viewData['webData']->lang !== app()->getLocale()) {
-                $this->viewData['webData'] = WebData::where(['lang' => app()->getLocale(), 'website_key' => 'admin', 'active' => 1])->first() ?? abort(404);
+            // 設定 URI
+            if($request->route()->hasParameter('uri')) {
+                $this->uri = $request->route()->parameter('uri');
+                Route::current()->forgetParameter('uri');
+            } else {
+                $this->uri = explode('/', $request->route()->uri())[1] ?? $this->uri;
             }
-            if($this->pageData && $this->pageData->lang !== app()->getLocale()) {
-                $this->pageData = $this->getPageData($this->uri);
+
+            // 設定 網站資料
+            $this->viewData['webData'] = WebData::where(['lang' => app()->getLocale(), 'website_key' => 'admin', 'active' => 1])->first() ?? abort(404);
+
+            // 設定 選單資料
+            $this->viewData['menuData'] = AdminMenuClass::where(['active' => 1])->orderBy('sort')->get();
+
+            // 設定 頁面資料
+            if($this->uri) {
+                $this->pageData = AdminMenuItem::where(['lang' => app()->getLocale(), 'uri' => $this->uri, 'active' => 1])->first() ?? null;
                 $this->viewData['pageData'] = $this->pageData;
+            }
 
-                if($this->pageData) {
-                    $this->modelRepository->setModelClassName($this->pageData->model ?? null);
-                } else {
-                    abort(404);
-                }
+            // 設定 帳號資料
+            $this->adminData = Auth::guard('admin')->user();
+            $this->viewData['adminData'] = $this->adminData;
+
+            // 設定 模型注入
+            if($this->pageData) {
+                $this->modelRepository->setModelClassName($this->pageData->getAttribute('model') ?? null);
+            } elseif($request->route()->uri() !== 'siteadmin') {
+                abort(404);
             }
 
             return $next($request);
         });
-    }
-
-    protected function getMenuData() {
-        $menuItemData = AdminMenuClass::where(['active' => 1])->orderBy('sort')->get();
-
-        return $menuItemData;
-    }
-
-    protected function getPageData($uri) {
-        $menuItemData = AdminMenuItem::where(['lang' => app()->getLocale(), 'active' => 1])->get();
-
-        return $menuItemData->where('uri', $uri)->first();
     }
 
     /**
@@ -110,11 +107,6 @@ class Controller extends BaseController
      */
     public function index()
     {
-        if(get_class($this) !== (__NAMESPACE__ . '\\' . $this->pageData->model . 'Controller') && class_exists(__NAMESPACE__ . '\\' . $this->pageData->model . 'Controller')) {
-            Route::current()->setParameter('uri', $this->uri);
-            return app()->make(__NAMESPACE__ . '\\' . $this->pageData->model . 'Controller')->index();
-        }
-
         if($this->adminData->can(PermissionHelper::replacePermissionName($this->pageData->permission_key, 'Show')) === false) return abort(404);
 
         // 設定麵包屑導航
@@ -142,11 +134,6 @@ class Controller extends BaseController
      */
     public function show($id)
     {
-        if(get_class($this) !== __NAMESPACE__ . '\\' . $this->pageData->model . 'Controller' && class_exists(__NAMESPACE__ . '\\' . $this->pageData->model . 'Controller')) {
-            Route::current()->setParameter('uri', $this->uri);
-            return app()->make(__NAMESPACE__ . '\\' . $this->pageData->model . 'Controller')->show($id);
-        }
-
         if($this->adminData->can(PermissionHelper::replacePermissionName($this->pageData->permission_key, 'Show')) === false) return abort(404);
 
         $where = [$this->modelRepository->getIndexKey() => $id];
@@ -179,11 +166,6 @@ class Controller extends BaseController
      */
     public function create()
     {
-        if(get_class($this) !== __NAMESPACE__ . '\\' . $this->pageData->model . 'Controller' && class_exists(__NAMESPACE__ . '\\' . $this->pageData->model . 'Controller')) {
-            Route::current()->setParameter('uri', $this->uri);
-            return app()->make(__NAMESPACE__ . '\\' . $this->pageData->model . 'Controller')->create();
-        }
-
         if($this->adminData->can(PermissionHelper::replacePermissionName($this->pageData->permission_key, 'Create')) === false) return abort(404);
 
         $this->viewData['formData'] = $this->modelRepository->new();
@@ -218,17 +200,12 @@ class Controller extends BaseController
      */
     public function store(Request $request)
     {
-        if(get_class($this) !== __NAMESPACE__ . '\\' . $this->pageData->model . 'Controller' && class_exists(__NAMESPACE__ . '\\' . $this->pageData->model . 'Controller')) {
-            Route::current()->setParameter('uri', $this->uri);
-            return app()->make(__NAMESPACE__ . '\\' . $this->pageData->model . 'Controller')->store($request);
-        }
-
         if($this->adminData->can(PermissionHelper::replacePermissionName($this->pageData->permission_key, 'Create')) === false) return abort(404);
 
-        $validator = Validator::make($request->input($this->pageData->model), $this->modelRepository->getRules() ?? []);
+        $validator = Validator::make($request->input($this->pageData->getAttribute('model')), $this->modelRepository->getRules() ?? []);
 
         if($validator->passes()) {
-            $input = $request->input($this->pageData->model);
+            $input = $request->input($this->pageData->getAttribute('model'));
             $formDataKey = $this->modelRepository->getIndexKey();
             if($formDataKey !== 'id') $input[$formDataKey] = Str::uuid();
 
@@ -265,11 +242,6 @@ class Controller extends BaseController
      */
     public function edit($id)
     {
-        if(get_class($this) !== __NAMESPACE__ . '\\' . $this->pageData->model . 'Controller' && class_exists(__NAMESPACE__ . '\\' . $this->pageData->model . 'Controller')) {
-            Route::current()->setParameter('uri', $this->uri);
-            return app()->make(__NAMESPACE__ . '\\' . $this->pageData->model . 'Controller')->edit($id);
-        }
-
         if($this->adminData->can(PermissionHelper::replacePermissionName($this->pageData->permission_key, 'Edit')) === false) return abort(404);
 
         $where = [$this->modelRepository->getIndexKey() => $id];
@@ -309,20 +281,15 @@ class Controller extends BaseController
      */
     public function update($id, Request $request)
     {
-        if(get_class($this) !== __NAMESPACE__ . '\\' . $this->pageData->model . 'Controller' && class_exists(__NAMESPACE__ . '\\' . $this->pageData->model . 'Controller')) {
-            Route::current()->setParameter('uri', $this->uri);
-            return app()->make(__NAMESPACE__ . '\\' . $this->pageData->model . 'Controller')->update($id, $request);
-        }
-
         if($this->adminData->can(PermissionHelper::replacePermissionName($this->pageData->permission_key, 'Edit')) === false) return abort(404);
 
-        $validator = Validator::make($request->input($this->pageData->model), $this->modelRepository->getRules() ?? []);
+        $validator = Validator::make($request->input($this->pageData->getAttribute('model')), $this->modelRepository->getRules() ?? []);
 
         if($validator->passes()) {
             $where = [$this->modelRepository->getIndexKey() => $id];
             if($this->modelRepository->isMultiLanguage()) $where['lang'] = app()->getLocale();
 
-            if($this->modelRepository->save($request->input($this->pageData->model), $where)) {
+            if($this->modelRepository->save($request->input($this->pageData->getAttribute('model')), $where)) {
                 LogHelper::system('admin', $this->uri, 'update', $id, $this->adminData->username, 1, __('admin.form.message.edit_success'));
                 return redirect()->route('admin.edit', [$this->uri, $id])->with('success', __('admin.form.message.edit_success'));
             }
@@ -341,12 +308,8 @@ class Controller extends BaseController
      * @param string $id
      * @return $this|\Illuminate\Http\RedirectResponse
      */
-    public function destroy($id) {
-        if(get_class($this) !== __NAMESPACE__ . '\\' . $this->pageData->model . 'Controller' && class_exists(__NAMESPACE__ . '\\' . $this->pageData->model . 'Controller')) {
-            Route::current()->setParameter('uri', $this->uri);
-            return app()->make(__NAMESPACE__ . '\\' . $this->pageData->model . 'Controller')->destroy($id);
-        }
-
+    public function destroy($id)
+    {
         if($this->adminData->can(PermissionHelper::replacePermissionName($this->pageData->permission_key, 'Destroy')) === false) return abort(404);
 
         if($this->modelRepository->delete([$this->modelRepository->getIndexKey() => $id])) {
@@ -367,11 +330,6 @@ class Controller extends BaseController
      */
     public function ajaxDataTable(Request $request)
     {
-        if(get_class($this) !== __NAMESPACE__ . '\\' . $this->pageData->model . 'Controller' && class_exists(__NAMESPACE__ . '\\' . $this->pageData->model . 'Controller')) {
-            Route::current()->setParameter('uri', $this->uri);
-            return app()->make(__NAMESPACE__ . '\\' . $this->pageData->model . 'Controller')->ajaxDataTable($request);
-        }
-
         if($this->adminData->can(PermissionHelper::replacePermissionName($this->pageData->permission_key, 'Show')) === false) return abort(403);
 
         $where = [];
@@ -413,17 +371,12 @@ class Controller extends BaseController
         }
 
         return $datatables
-            ->setTransformer(app()->make('App\\Transformers\\Admin\\' . $this->pageData->model . 'Transformer', ['uri' => $this->uri]))
+            ->setTransformer(app()->make('App\\Transformers\\Admin\\' . $this->pageData->getAttribute('model') . 'Transformer', ['uri' => $this->uri]))
             ->make(true);
     }
 
     public function ajaxSwitch(Request $request)
     {
-        if(get_class($this) !== __NAMESPACE__ . '\\' . $this->pageData->model . 'Controller' && class_exists(__NAMESPACE__ . '\\' . $this->pageData->model . 'Controller')) {
-            Route::current()->setParameter('uri', $this->uri);
-            return app()->make(__NAMESPACE__ . '\\' . $this->pageData->model . 'Controller')->ajaxSwitch($request);
-        }
-
         if($this->adminData->can(PermissionHelper::replacePermissionName($this->pageData->permission_key, 'Edit')) === false) return abort(403);
 
         $validateResult = $request->validate([
@@ -437,7 +390,7 @@ class Controller extends BaseController
 
             return response([
                 'msg' => 'success',
-                'newLabel' => __("models.{$this->pageData->model}.selection.{$request->input('column')}.{$request->input('switchTo')}"),
+                'newLabel' => __("models.{$this->pageData->getAttribute('model')}.selection.{$request->input('column')}.{$request->input('switchTo')}"),
             ], 200)->header('Content-Type', 'application/json');
         } else {
             //LogHelper::systemLog(Auth::guard('admin')->user()->username, 'Update ' . $this->modelName . '(' . $request->input('id') . ') ' . $request->input('column') . ' to ' . $request->input('switchTo'), 'Failed');
@@ -448,11 +401,6 @@ class Controller extends BaseController
 
     public function ajaxMultiSwitch(Request $request)
     {
-        if(get_class($this) !== __NAMESPACE__ . '\\' . $this->pageData->model . 'Controller' && class_exists(__NAMESPACE__ . '\\' . $this->pageData->model . 'Controller')) {
-            Route::current()->setParameter('uri', $this->uri);
-            return app()->make(__NAMESPACE__ . '\\' . $this->pageData->model . 'Controller')->ajaxMultiSwitch($request);
-        }
-
         if($this->adminData->can(PermissionHelper::replacePermissionName($this->pageData->permission_key, 'Edit')) === false) return abort(403);
 
         $validateResult = $request->validate([
@@ -478,11 +426,6 @@ class Controller extends BaseController
 
     public function ajaxSort(Request $request)
     {
-        if(get_class($this) !== __NAMESPACE__ . '\\' . $this->pageData->model . 'Controller' && class_exists(__NAMESPACE__ . '\\' . $this->pageData->model . 'Controller')) {
-            Route::current()->setParameter('uri', $this->uri);
-            return app()->make(__NAMESPACE__ . '\\' . $this->pageData->model . 'Controller')->ajaxSort($request);
-        }
-
         if($this->adminData->can(PermissionHelper::replacePermissionName($this->pageData->permission_key, 'Edit')) === false) return abort(403);
 
         $validateResult = $request->validate([

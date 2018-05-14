@@ -10,15 +10,6 @@ use Illuminate\Http\Request;
 
 class MerchantMenuItemController extends Controller
 {
-    public function __construct(Repository $modelRepository)
-    {
-        parent::__construct($modelRepository);
-
-        $this->adminData = \Auth::guard('administrator')->user();
-        $this->viewData['adminData'] = $this->adminData;
-        $this->viewData['webData'] = WebData::where(['lang' => app()->getLocale(), 'website_key' => 'administrator'])->first();
-    }
-
     /**
      * Administrator MerchantMenuItem DataGrid List.
      *

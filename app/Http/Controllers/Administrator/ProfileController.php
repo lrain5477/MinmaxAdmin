@@ -20,28 +20,39 @@ class ProfileController extends BaseController
     protected $uri;
     protected $viewData;
     protected $adminData;
+    protected $languageData;
     protected $pageData;
     protected $modelName;
     protected $modelRepository;
 
     public function __construct(ProfileRepository $modelRepository)
     {
+        $this->modelRepository = $modelRepository;
+
         $this->middleware(function($request, $next) {
+            /**
+             * @var \Illuminate\Http\Request $request
+             */
+
+            $this->uri = 'profile';
+
+            // 設定 網站資料
+            $this->viewData['webData'] = WebData::where(['lang' => app()->getLocale(), 'website_key' => 'administrator'])->first();
+
+            // 設定 頁面資料
+            $this->viewData['pageData'] = collect([[
+                'lang' => app()->getLocale(),
+                'uri' => $this->uri,
+                'title' => __('administrator.header.profile'),
+                'parent' => '0',
+            ]])->map(function($item, $key) { return (object) $item; })->first();
+
+            // 設定 帳號資料
             $this->adminData = Auth::guard('administrator')->user();
             $this->viewData['adminData'] = $this->adminData;
-            $this->viewData['webData'] = WebData::where(['lang' => app()->getLocale(), 'website_key' => 'administrator'])->first();
 
             return $next($request);
         });
-
-        $this->uri = 'profile';
-        $this->modelRepository = $modelRepository;
-
-        $this->viewData['pageData'] = collect([[
-            'uri' => $this->uri,
-            'title' => __('administrator.header.profile'),
-            'parent' => '0',
-        ]])->map(function($item, $key) { return (object) $item; })->first();
     }
 
     /**

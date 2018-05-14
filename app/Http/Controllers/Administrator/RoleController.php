@@ -12,15 +12,6 @@ use Validator;
 
 class RoleController extends Controller
 {
-    public function __construct(Repository $modelRepository)
-    {
-        parent::__construct($modelRepository);
-
-        $this->adminData = \Auth::guard('administrator')->user();
-        $this->viewData['adminData'] = $this->adminData;
-        $this->viewData['webData'] = WebData::where(['lang' => app()->getLocale(), 'website_key' => 'administrator'])->first();
-    }
-
     /**
      * Model Edit
      *

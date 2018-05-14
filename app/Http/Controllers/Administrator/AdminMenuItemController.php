@@ -10,15 +10,6 @@ use Illuminate\Http\Request;
 
 class AdminMenuItemController extends Controller
 {
-    public function __construct(Repository $modelRepository)
-    {
-        parent::__construct($modelRepository);
-
-        $this->adminData = \Auth::guard('administrator')->user();
-        $this->viewData['adminData'] = $this->adminData;
-        $this->viewData['webData'] = WebData::where(['lang' => app()->getLocale(), 'website_key' => 'administrator'])->first();
-    }
-
     /**
      * Administrator AdminMenuItem DataGrid List.
      *
@@ -28,7 +19,7 @@ class AdminMenuItemController extends Controller
     public function index()
     {
         $this->viewData['menuParent'] = request()->has('parent') ? request('parent') : '0';
-        $this->viewData['menuParentBack'] = request()->has('parent') ? AdminMenuItem::where('guid', request('parent'))->first()->parent : '0';
+        $this->viewData['menuParentBack'] = request()->has('parent') ? AdminMenuItem::where(['guid' => request('parent'), 'lang' => app()->getLocale()])->first()->parent : '0';
 
         // 設定麵包屑導航
         Breadcrumbs::register('index', function ($breadcrumbs) {
@@ -57,7 +48,7 @@ class AdminMenuItemController extends Controller
     {
         $parent = $request->has('parent') ? $request->input('parent') : 0;
 
-        $datatables = \DataTables::of($this->modelRepository->query()->where(['parent' => $parent]));
+        $datatables = \DataTables::of($this->modelRepository->query(['parent' => $parent, 'lang' => app()->getLocale()]));
 
         if($request->has('filter') || $request->has('equal')) {
             $datatables->filter(function($query) use ($request) {

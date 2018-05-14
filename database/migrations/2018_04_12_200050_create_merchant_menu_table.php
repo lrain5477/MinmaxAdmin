@@ -28,6 +28,7 @@ class CreateMerchantMenuTable extends Migration
             $table->string('lang', 100);
             $table->string('title', 255)->comment('選單名稱');
             $table->string('uri', 64)->unique()->comment('Uri');
+            $table->string('controller', 128)->nullable()->comment('Controller 名稱');
             $table->string('model', 64)->nullable()->comment('Model 名稱');
             $table->string('class', 64)->comment('類別');
             $table->string('parent', 255)->default('0')->comment('上層目錄');
