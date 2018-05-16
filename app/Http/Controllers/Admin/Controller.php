@@ -385,15 +385,19 @@ class Controller extends BaseController
             'switchTo' => 'required|in:0,1',
         ]);
 
-        if($this->modelRepository->save([$request->input('column') => $request->input('switchTo')], [[$this->modelRepository->getIndexKey(), '=', $request->input('id')]])) {
-            //LogHelper::systemLog(Auth::guard('admin')->user()->username, 'Update ' . $this->modelName . '(' . $request->input('id') . ') ' . $request->input('column') . ' to ' . $request->input('switchTo'), 'Success');
+        $where = [
+            $this->modelRepository->getIndexKey() => $request->input('id')
+        ];
+
+        if($this->modelRepository->update([$request->input('column') => $request->input('switchTo')], $where)) {
+            LogHelper::system('admin', $this->uri, 'update', $request->input('id'), $this->adminData->username, 1, __('admin.form.message.edit_success'));
 
             return response([
                 'msg' => 'success',
                 'newLabel' => __("models.{$this->pageData->getAttribute('model')}.selection.{$request->input('column')}.{$request->input('switchTo')}"),
             ], 200)->header('Content-Type', 'application/json');
         } else {
-            //LogHelper::systemLog(Auth::guard('admin')->user()->username, 'Update ' . $this->modelName . '(' . $request->input('id') . ') ' . $request->input('column') . ' to ' . $request->input('switchTo'), 'Failed');
+            LogHelper::system('admin', $this->uri, 'update', $request->input('id'), $this->adminData->username, 0, __('admin.form.message.edit_error'));
 
             return response(['msg' => 'error'], 400)->header('Content-Type', 'application/json');
         }
@@ -414,11 +418,11 @@ class Controller extends BaseController
         }
 
         if($this->modelRepository->update(['active' => $inputData['active']], function($query) use ($inputData) { $query->whereIn($this->modelRepository->getIndexKey(), $inputData['selID']); })) {
-            //LogHelper::systemLog(Auth::guard('admin')->user()->username, 'Update ' . $this->modelName . '(' . implode(',', $inputData['selID']) . ') chk to ' . $inputData['chk'], 'Success');
+            LogHelper::system('admin', $this->uri, 'update', implode(',', $inputData['selID']), $this->adminData->username, 1, __('admin.form.message.edit_success'));
 
             return response(['msg' => 'success'], 200)->header('Content-Type', 'application/json');
         } else {
-            //LogHelper::systemLog(Auth::guard('admin')->user()->username, 'Update ' . $this->modelName . '(' . implode(',', $inputData['selID']) . ') chk to ' . $inputData['chk'], 'Failed');
+            LogHelper::system('admin', $this->uri, 'update', implode(',', $inputData['selID']), $this->adminData->username, 0, __('admin.form.message.edit_error'));
 
             return response(['msg' => 'error'], 400)->header('Content-Type', 'application/json');
         }
@@ -435,7 +439,7 @@ class Controller extends BaseController
         ]);
 
         if($this->modelRepository->save([$request->input('column') => $request->input('index')], [[$this->modelRepository->getIndexKey(), '=', $request->input('id')]])) {
-            //LogHelper::systemLog(Auth::guard('admin')->user()->username, 'Update ' . $this->modelName . '(' . $request->input('id') . ') sorting to ' . $request->input('index'), 'Success');
+            LogHelper::system('admin', $this->uri, 'update', $request->input('id'), $this->adminData->username, 1, __('admin.form.message.edit_success'));
 
             return response(['msg' => 'success'], 200)->header('Content-Type', 'application/json');
         } else {
