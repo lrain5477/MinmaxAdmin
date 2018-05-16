@@ -55,6 +55,11 @@ Admin
 # This model is admin account model with rbac setting, it's easy to check permission.
 
 # you can fallow those construct to make other account model.
+
+GoogleAnalyticsClient
+# This model is usage for Google Analytics Api.
+# You must put api credential json file at 'storge/app/analytics'
+# and setting analytics config file.
 ```
 
 **Manage `Route`**

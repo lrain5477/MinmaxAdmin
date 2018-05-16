@@ -5,66 +5,8 @@
 @section('content')
 <div class="content-body">
     <!-- layout-content-->
-    <!-- row    -->
-    <div class="row text-center mt-3">
-        <!-- col-->
-        <div class="col-xl-3 col-md-6 col-sm-6">
-        </div>
-        <!-- / col-->
-        <!-- col-->
-        <div class="col-xl-3 col-md-6 col-sm-6">
-        </div>
-        <!-- / col-->
-    </div>
-    <!-- / row-->
     <!-- row  -->
     <div class="row">
-        <div class="col-xl-3 col-lg-6 col-sm-6 col-xs-12">
-            <section class="panel p-3 bg-danger text-white">
-                <div class="row">
-                    <div class="col"><span class="d-block mb-1 h3">{{ $todayVisitor }}</span><span class="d-block">今日參觀量</span></div>
-                    <div class="col"><span class="icon-accessibility display-4"></span></div>
-                </div>
-            </section>
-            <section class="panel p-3 bg-warning text-white">
-                <div class="row">
-                    <div class="col"><span class="d-block mb-1 h3">{{ $contactAmount }}</span><span class="d-block">客服信函</span></div>
-                    <div class="col"><span class="icon-mail-envelope-open display-4"></span></div>
-                </div>
-            </section>
-        </div>
-        <div class="col-xl-3 col-lg-6 col-sm-6 col-xs-12">
-            <section class="panel">
-                <header class="panel-heading text-center">
-                    <h2 class="h5 px-2">線上使用者</h2>
-                </header>
-                <div class="panel-body px-0 py-0">
-                    <div class="h1 text-center font-weight-bold pb-2"><span class="text-danger">{{ $currentVisitor }}</span></div>
-                    <div class="progress" title="73.77% 新工作階段">
-                        <div class="progress-bar bg-danger" role="progressbar" style="width: 73.77%; height:5px;" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
-                    </div>
-                    <div class="row text-center py-3">
-                        <div class="col"><span class="d-block text-muted small">單次頁數</span><span class="d-block font-weight-bold mb-1">{{ $pageViewsPerSession }}</span></div>
-                        <div class="col"><span class="d-block text-muted small">停留時間</span><span class="d-block font-weight-bold mb-1">{{ $avgTimeOnPage }}</span></div>
-                        <div class="col"><span class="d-block text-muted small">跳出率</span><span class="d-block font-weight-bold mb-1">{{ $exitRate }}%</span></div>
-                    </div>
-                </div>
-            </section>
-            <section class="panel">
-                <header class="panel-heading text-center">
-                    <h2 class="h5">瀏覽器使用</h2>
-                </header>
-                @foreach($browserUsage as $browserItem)
-                    <div class="clearfix px-4 {{ !$loop->first ? 'py-1' : '' }} {{ $loop->last ? 'pb-2' : '' }}">
-                        <span class="flot-left small">{{ $browserItem['browser'] }}</span>
-                        <span class="float-right"><span class="badge badge-pill badge-danger">{{ $browserItem['sessions'] * 100 / $browserUsage->sum('sessions') }}%</span></span>
-                    </div>
-                    @if(!$loop->last)
-                        <hr class="my-2 w-100">
-                    @endif
-                @endforeach
-            </section>
-        </div>
         <div class="col-xl-3 col-lg-6 col-sm-6 col-xs-12">
             <section class="panel">
                 <header class="panel-heading mb-2">
@@ -103,34 +45,65 @@
         </div>
         <div class="col-xl-3 col-lg-6 col-sm-6 col-xs-12">
             <section class="panel">
-                <header class="panel-heading">
-                    <h2 class="h5 float-left">熱門關鍵字</h2>
+                <header class="panel-heading text-center">
+                    <h2 class="h5 px-2">線上使用者</h2>
                 </header>
-                <div class="panel-wrapper"></div>
-                <div class="panel-body" style="min-height:270px;">
-                    <div class="table-wrap">
-                        <table class="table table-responsive">
-                            <thead class="font-weight-bold">
-                            <tr>
-                                <th>#</th>
-                                <th>關鍵字</th>
-                                <th>次數</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            @foreach($referrerKeyword as $key => $keywordItem)
-                                <tr>
-                                    <th class="text-center" scope="row">{{ $key + 1 }}</th>
-                                    <td>{{ $keywordItem['keyword'] }}</td>
-                                    <td>{{ $keywordItem['count'] }}</td>
-                                </tr>
-                            @endforeach
-                            </tbody>
-                        </table>
+                <div class="panel-body px-0 py-0">
+                    <div class="h1 text-center font-weight-bold pb-2"><span class="text-danger">{{ $currentVisitor }}</span></div>
+                    <div class="progress" title="73.77% 新工作階段">
+                        <div class="progress-bar bg-danger" role="progressbar" style="width: 73.77%; height:5px;" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                    <div class="row text-center py-3">
+                        <div class="col"><span class="d-block text-muted small">單次頁數</span><span class="d-block font-weight-bold mb-1">{{ $pageViewsPerSession }}</span></div>
+                        <div class="col"><span class="d-block text-muted small">停留時間</span><span class="d-block font-weight-bold mb-1">{{ $avgTimeOnPage }}</span></div>
+                        <div class="col"><span class="d-block text-muted small">跳出率</span><span class="d-block font-weight-bold mb-1">{{ $exitRate }}%</span></div>
                     </div>
                 </div>
             </section>
+            <section class="panel">
+                <header class="panel-heading text-center">
+                    <h2 class="h5">瀏覽器使用</h2>
+                </header>
+                @foreach($browserUsage as $browserItem)
+                    <div class="clearfix px-4 {{ !$loop->first ? 'py-1' : '' }} {{ $loop->last ? 'pb-2' : '' }}">
+                        <span class="flot-left small">{{ $browserItem['browser'] }}</span>
+                        <span class="float-right"><span class="badge badge-pill badge-danger">{{ number_format($browserItem['sessions'] * 100 / $browserUsage->sum('sessions'), 2) }}%</span></span>
+                    </div>
+                    @if(!$loop->last)
+                        <hr class="my-2 w-100">
+                    @endif
+                @endforeach
+            </section>
         </div>
+        <div class="col-xl-6 col-xs-12">
+            <section class="panel p-2">
+                <div id="mapdiv" style="width: 100%; height: 420px;"></div>
+            </section>
+        </div>
+    </div>
+    <!-- / row-->
+    <!-- row    -->
+    <div class="row text-center mt-3">
+        <!-- col-->
+        <div class="col-xl-3 col-md-6 col-sm-6">
+            <section class="panel p-3 bg-danger text-white">
+                <div class="row">
+                    <div class="col"><span class="d-block mb-1 h3">{{ $todayVisitor }}</span><span class="d-block">今日參觀量</span></div>
+                    <div class="col"><span class="icon-accessibility display-4"></span></div>
+                </div>
+            </section>
+        </div>
+        <!-- / col-->
+        <!-- col-->
+        <div class="col-xl-3 col-md-6 col-sm-6">
+            <section class="panel p-3 bg-warning text-white">
+                <div class="row">
+                    <div class="col"><span class="d-block mb-1 h3">{{ $contactAmount }}</span><span class="d-block">客服信函</span></div>
+                    <div class="col"><span class="icon-mail-envelope-open display-4"></span></div>
+                </div>
+            </section>
+        </div>
+        <!-- / col-->
     </div>
     <!-- / row-->
     <!-- row  -->
@@ -187,6 +160,36 @@
                                 </tbody>
                             </table>
                         </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+        <div class="col-xl-3 col-lg-6 col-sm-6 col-xs-12">
+            <section class="panel">
+                <header class="panel-heading">
+                    <h2 class="h5 float-left">熱門關鍵字</h2>
+                </header>
+                <div class="panel-wrapper"></div>
+                <div class="panel-body" style="min-height:270px;">
+                    <div class="table-wrap">
+                        <table class="table table-responsive">
+                            <thead class="font-weight-bold">
+                            <tr>
+                                <th>#</th>
+                                <th>關鍵字</th>
+                                <th>次數</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            @foreach($referrerKeyword as $key => $keywordItem)
+                                <tr>
+                                    <th class="text-center" scope="row">{{ $key + 1 }}</th>
+                                    <td>{{ $keywordItem['keyword'] }}</td>
+                                    <td>{{ $keywordItem['count'] }}</td>
+                                </tr>
+                            @endforeach
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </section>
