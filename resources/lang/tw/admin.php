@@ -46,6 +46,25 @@ return [
         ],
     ],
 
+    'dashboard' => [
+        'source_from' => '流量來源',
+        'visits' => '訪問',
+        'online_users' => '線上使用者',
+        'session_page' => '單次頁數',
+        'stay_time' => '停留時間',
+        'exit_rate' => '跳出率',
+        'browser_usage' => '瀏覽器使用',
+        'source_country' => '流量地區分布',
+        'today_visitors' => '今日參觀量',
+        'service_message' => '客服信函',
+        'recently_message' => '近期聯絡表單',
+        'empty_message' => '沒有聯絡表單',
+        'view_all' => '瀏覽全部',
+        'keywords' => '熱門關鍵字',
+        'keyword' => '關鍵字',
+        'keyword_count' => '次數',
+    ],
+
     'grid' => [
         'title' => [
             'action' => '動作'

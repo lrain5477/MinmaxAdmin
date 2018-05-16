@@ -269,26 +269,28 @@ class GoogleAnalyticsClient
      */
     public function putSourceMedium($days = 30)
     {
-        $response = Cache::remember('sourceMedium', config('analytics.cache_lifetime_in_minutes'), function() use ($days) {
-            return $this->query('ga', [
-                'startTime' => strtotime("-{$days} days"),
-                'endTime' => time(),
-                'metrics' => 'ga:sessions',
-                'others' => [
-                    'dimensions' => 'ga:sourceMedium',
-                    'sort' => '-ga:sessions',
-                ]
-            ]);
-        });
+        if(!Cache::has('sourceMedium')) {
+            $response = Cache::remember('sourceMedium', config('analytics.cache_lifetime_in_minutes'), function () use ($days) {
+                return $this->query('ga', [
+                    'startTime' => strtotime("-{$days} days"),
+                    'endTime' => time(),
+                    'metrics' => 'ga:sessions',
+                    'others' => [
+                        'dimensions' => 'ga:sourceMedium',
+                        'sort' => '-ga:sessions',
+                    ]
+                ]);
+            });
 
-        $sourceData = collect($response->rows ?? [])->map(function($item) {
-            return [
-                'source' => $item[0] == '(direct) / (none)' ? 'Direct 直接' : $item[0],
-                'count' => $item[1]
-            ];
-        })->toJson(JSON_UNESCAPED_UNICODE);
+            $sourceData = collect($response->rows ?? [])->map(function ($item) {
+                return [
+                    'source' => $item[0] == '(direct) / (none)' ? 'Direct 直接' : $item[0],
+                    'count' => $item[1]
+                ];
+            })->toJson(JSON_UNESCAPED_UNICODE);
 
-        File::put(public_path('admin/data/live-analytics-traffic.json'), $sourceData);
+            File::put(public_path('admin/data/live-analytics-traffic.json'), $sourceData);
+        }
     }
 
     /**
@@ -296,37 +298,39 @@ class GoogleAnalyticsClient
      */
     public function putSourceCountry($days = 30)
     {
-        $response = Cache::remember('sourceCountry', config('analytics.cache_lifetime_in_minutes'), function() use ($days) {
-            return $this->query('ga', [
-                'startTime' => strtotime("-{$days} days"),
-                'endTime' => time(),
-                'metrics' => 'ga:sessions',
-                'others' => [
-                    'dimensions' => 'ga:country'
-                ]
-            ]);
-        });
+        if(!Cache::has('sourceCountry')) {
+            $response = Cache::remember('sourceCountry', config('analytics.cache_lifetime_in_minutes'), function () use ($days) {
+                return $this->query('ga', [
+                    'startTime' => strtotime("-{$days} days"),
+                    'endTime' => time(),
+                    'metrics' => 'ga:sessions',
+                    'others' => [
+                        'dimensions' => 'ga:country'
+                    ]
+                ]);
+            });
 
-        $sourceCountryData = collect($response->rows ?? [])->mapWithKeys(function($item) {
-            return [$item[0] => $item[1]];
-        })->toArray();
+            $sourceCountryData = collect($response->rows ?? [])->mapWithKeys(function ($item) {
+                return [$item[0] => $item[1]];
+            })->toArray();
 
-        try {
-            $mapCollection = collect(json_decode(File::get(public_path('admin/data/template-analytics-country.json')), true))
-                ->filter(function($item) use ($sourceCountryData) {
-                    if(array_key_exists($item['name'], $sourceCountryData)) {
-                        return true;
-                    }
-                    return false;
-                })
-                ->values()
-                ->map(function($item) use ($sourceCountryData) {
-                    $item['value'] = $sourceCountryData[$item['name']];
-                    return $item;
-                })
-                ->toJson(JSON_UNESCAPED_UNICODE);
+            try {
+                $mapCollection = collect(json_decode(File::get(public_path('admin/data/template-analytics-country.json')), true))
+                    ->filter(function ($item) use ($sourceCountryData) {
+                        if (array_key_exists($item['name'], $sourceCountryData)) {
+                            return true;
+                        }
+                        return false;
+                    })
+                    ->values()
+                    ->map(function ($item) use ($sourceCountryData) {
+                        $item['value'] = $sourceCountryData[$item['name']];
+                        return $item;
+                    })
+                    ->toJson(JSON_UNESCAPED_UNICODE);
 
-            File::put(public_path('admin/data/live-analytics-country.json'), $mapCollection);
-        } catch (\Exception $e) {}
+                File::put(public_path('admin/data/live-analytics-country.json'), $mapCollection);
+            } catch (\Exception $e) {}
+        }
     }
 }

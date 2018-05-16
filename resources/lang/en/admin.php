@@ -46,6 +46,25 @@ return [
         ],
     ],
 
+    'dashboard' => [
+        'source_from' => 'Source From',
+        'visits' => 'visitors',
+        'online_users' => 'Online Visitor',
+        'session_page' => 'Single Page Visit',
+        'stay_time' => 'Stay Time',
+        'exit_rate' => 'Exit Rate',
+        'browser_usage' => 'Browser Usage',
+        'source_country' => 'Visitor\'s Country',
+        'today_visitors' => 'Today Visitor',
+        'service_message' => 'Service Message',
+        'recently_message' => 'Recently Message',
+        'empty_message' => 'There is no message.',
+        'view_all' => 'View All',
+        'keywords' => 'Hot Keywords',
+        'keyword' => 'Keyword',
+        'keyword_count' => 'Amount',
+    ],
+
     'grid' => [
         'title' => [
             'action' => 'Action'

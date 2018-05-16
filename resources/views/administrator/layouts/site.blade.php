@@ -33,7 +33,7 @@
     @include('administrator.layouts._sidebar')
 
     <footer class="page-footer small p-2">
-        <p class="mb-0">{{ date('Y') }} © MINMAX. design by <a href="http://minmax.biz" target="_blank">MINMAX</a></p>
+        <p class="mb-0">{{ date('Y') }} © {{ env('APP_AUTHOR') }}. design by <a href="{{ env('APP_AUTHOR_URL') }}" target="_blank">{{ env('APP_AUTHOR') }}</a></p>
     </footer>
 </div>
 
