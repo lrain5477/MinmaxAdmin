@@ -4,7 +4,7 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Web (Frontend) Language Lines
+    | Merchant Language Lines
     |--------------------------------------------------------------------------
     |
     | The following language lines contain the system text in admin page.

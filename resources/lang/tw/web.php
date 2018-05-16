@@ -11,6 +11,10 @@ return [
     |
     */
 
+    'page_not_found' => [
+        'message' => '對不起，您所請求的頁面不存在。',
+    ],
+
     'header' => [
         'menu' => '選單',
         'language' => '語系',

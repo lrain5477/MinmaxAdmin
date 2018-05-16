@@ -73,7 +73,8 @@ class Controller extends BaseController
             }
 
             // 設定 網站資料
-            $this->viewData['webData'] = WebData::where(['lang' => app()->getLocale(), 'website_key' => 'admin', 'active' => 1])->first() ?? abort(404);
+            $this->viewData['webData'] = WebData::where(['lang' => app()->getLocale(), 'website_key' => 'admin', 'active' => 1])->first()
+                ?? abort(404, WebData::where(['lang' => app()->getLocale(), 'website_key' => 'admin'])->first()->offline_text ?? '');
 
             // 設定 選單資料
             $this->viewData['menuData'] = AdminMenuClass::where(['active' => 1])->orderBy('sort')->get();

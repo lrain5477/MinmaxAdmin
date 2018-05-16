@@ -11,6 +11,10 @@ return [
     |
     */
 
+    'page_not_found' => [
+        'message' => 'Sorry, the page you are looking for could not be found.',
+    ],
+
     'header' => [
         'menu' => 'Menu',
         'profile' => 'Profile',
