@@ -91,10 +91,14 @@ class GoogleAnalyticsClient
                 break;
             case 'rt':
                 if(is_string($params) || (is_array($params) && count($params) > 0)) {
-                    $result = $this->service->data_realtime->get(
-                        "ga:{$this->viewId}",
-                        is_string($params) ? $params : ($params['metrics'] ?? '')
-                    );
+                    try {
+                        $result = $this->service->data_realtime->get(
+                            "ga:{$this->viewId}",
+                            is_string($params) ? $params : ($params['metrics'] ?? '')
+                        );
+                    } catch (\Exception $e) {
+                        $result = null;
+                    }
                 }
                 break;
         }
