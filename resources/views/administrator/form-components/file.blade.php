@@ -105,7 +105,7 @@
                         closeOnConfirm: true
                     });
                 } else {
-                    $('#{{ $id }}-list').append($('#{{ $id }}-template').html().replace(/#replace_path/g, '/' + file.path));
+                    $('#{{ $id }}-list').append($('#{{ $id }}-template').html().replace(/#replace_path/g, '/' + file.path.replace(/\\/g, '/')));
                 }
             }
         }).elfinder('instance');
