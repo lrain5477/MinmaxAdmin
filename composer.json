@@ -10,7 +10,6 @@
         "davejamesmiller/laravel-breadcrumbs": "^5.0",
         "fideloper/proxy": "~4.0",
         "google/apiclient": "^2.0",
-        "google/apiclient-services": "^0.59.0",
         "guzzlehttp/guzzle": "^6.3",
         "laravel/framework": "5.6.*",
         "laravel/tinker": "~1.0",
