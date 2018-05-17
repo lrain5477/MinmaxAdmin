@@ -24,6 +24,13 @@
                 @endif
             </div>
             @endforeach
+            @if($images->count() < 1)
+            <div class="card mr-2 d-inline-block ui-sortable-handle">
+                <div class="thumb">
+                    <span class="imgFill imgLiquid_bgSize imgLiquid_ready"><img src="{{ asset('admin/images/noimage.gif') }}"/></span>
+                </div>
+            </div>
+            @endif
         </div>
     </div>
 </div>
