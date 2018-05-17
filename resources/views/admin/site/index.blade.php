@@ -19,7 +19,7 @@
                     <hr class="my-2 w-100">
                     @endif
                     <div class="row pl-3 pr-1">
-                        <div class="col-sm-8 col-xs-12"><span class="badge badge-info float-left clabels d-inline mt-1 mr-3 no-radius"></span>
+                        <div class="col-sm-8 col-xs-12"><span class="badge {{ $loop->index == 0 ? 'badge-info' : ($loop->index == 1 ? 'badge-warning' : 'badge-success') }} float-left clabels d-inline mt-1 mr-3 no-radius"></span>
                             <div class="clabels-text d-inline txt-dark text-capitalize float-left"><span class="d-block font-weight-bold mb-1">{{ $item['rate'] }}%  {{ $item['source'] }}</span><span class="d-block text-muted small">{{ $item['count'] }} @lang('admin.dashboard.visits')</span></div>
                         </div>
                         <div class="col-sm-4 col-xs-12">
