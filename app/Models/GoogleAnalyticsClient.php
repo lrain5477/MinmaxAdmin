@@ -144,9 +144,27 @@ class GoogleAnalyticsClient
      * @param int $decimals
      * @return string
      */
+    public function getPercentNewSessions($days = 30, $decimals = 2)
+    {
+        $response = Cache::remember("percentNewSessions{$days}", config('analytics.cache_lifetime_in_minutes'), function() use ($days) {
+            return $this->query('ga', [
+                'startTime' => strtotime("-{$days} days"),
+                'endTime' => time(),
+                'metrics' => 'ga:percentNewSessions'
+            ]);
+        });
+
+        return isset($response[0][0]) ? number_format($response[0][0], $decimals) : '0';
+    }
+
+    /**
+     * @param int $days
+     * @param int $decimals
+     * @return string
+     */
     public function getPageViewsPerSession($days = 30, $decimals = 2)
     {
-        $response = Cache::remember('pageViewsPerSession', config('analytics.cache_lifetime_in_minutes'), function() use ($days) {
+        $response = Cache::remember("pageViewsPerSession{$days}", config('analytics.cache_lifetime_in_minutes'), function() use ($days) {
             return $this->query('ga', [
                 'startTime' => strtotime("-{$days} days"),
                 'endTime' => time(),
@@ -163,7 +181,7 @@ class GoogleAnalyticsClient
      */
     public function getAvgTimeOnPage($days = 30)
     {
-        $response = Cache::remember('avgTimeOnPage', config('analytics.cache_lifetime_in_minutes'), function() use ($days) {
+        $response = Cache::remember("avgTimeOnPage{$days}", config('analytics.cache_lifetime_in_minutes'), function() use ($days) {
             return $this->query('ga', [
                 'startTime' => strtotime("-{$days} days"),
                 'endTime' => time(),
@@ -181,7 +199,7 @@ class GoogleAnalyticsClient
      */
     public function getExitRate($days = 30, $decimals = 2)
     {
-        $response = Cache::remember('exitRate', config('analytics.cache_lifetime_in_minutes'), function() use ($days) {
+        $response = Cache::remember("exitRate{$days}", config('analytics.cache_lifetime_in_minutes'), function() use ($days) {
             return $this->query('ga', [
                 'startTime' => strtotime("-{$days} days"),
                 'endTime' => time(),
@@ -199,7 +217,7 @@ class GoogleAnalyticsClient
      */
     public function getTopBrowsers($days = 30, $maxResults = 3)
     {
-        $response = Cache::remember('topBrowsers', config('analytics.cache_lifetime_in_minutes'), function() use ($days) {
+        $response = Cache::remember("topBrowsers{$days}", config('analytics.cache_lifetime_in_minutes'), function() use ($days) {
             return $this->query('ga', [
                 'startTime' => strtotime("-{$days} days"),
                 'endTime' => time(),
@@ -235,7 +253,7 @@ class GoogleAnalyticsClient
      */
     public function getReferrerKeyword($days = 30)
     {
-        $response = Cache::remember('referrerKeyword', 10, function() use ($days) {
+        $response = Cache::remember("referrerKeyword{$days}", 10, function() use ($days) {
             return $this->query('ga', [
                 'startTime' => strtotime("-{$days} days"),
                 'endTime' => time(),
@@ -266,28 +284,90 @@ class GoogleAnalyticsClient
 
     /**
      * @param int $days
+     * @return Collection
+     */
+    public function getSourceMedium($days = 30)
+    {
+        $response = Cache::remember("sourceMedium{$days}", config('analytics.cache_lifetime_in_minutes'), function () use ($days) {
+            return $this->query('ga', [
+                'startTime' => strtotime("-{$days} days"),
+                'endTime' => time(),
+                'metrics' => 'ga:sessions',
+                'others' => [
+                    'dimensions' => 'ga:medium',
+                    'sort' => '-ga:sessions',
+                ]
+            ]);
+        });
+
+        $sourceSummary = collect($response->rows ?? [])->sum(function ($item) {
+            return (int) $item[1];
+        });
+
+        $sourceData = collect($response->rows ?? [])
+            ->map(function ($item) {
+                $source = __(\Request::route()->middleware()[0] . '.dashboard.medium.direct');
+
+                if(strpos($item[0], 'organic') !== false) $source = __(\Request::route()->middleware()[0] . '.dashboard.medium.organic');
+                if(strpos($item[0], 'referral') !== false) $source = __(\Request::route()->middleware()[0] . '.dashboard.medium.referral');
+
+                return [
+                    'source' => $source,
+                    'count' => $item[1]
+                ];
+            })
+            ->groupBy('source')
+            ->map(function($item, $key) use ($sourceSummary) {
+                return [
+                    'source' => $key,
+                    'count' => collect($item)->sum('count'),
+                    'rate' => $sourceSummary == 0 ? '0.00' : number_format(collect($item)->sum('count') * 100 / $sourceSummary, 2)
+                ];
+            })
+            ->values();
+
+        return $sourceData;
+    }
+
+    /**
+     * @param int $days
      */
     public function putSourceMedium($days = 30)
     {
-        if(!Cache::has('sourceMedium')) {
-            $response = Cache::remember('sourceMedium', config('analytics.cache_lifetime_in_minutes'), function () use ($days) {
+        if(!Cache::has("sourceMedium{$days}")) {
+            $response = Cache::remember("sourceMedium{$days}", config('analytics.cache_lifetime_in_minutes'), function () use ($days) {
                 return $this->query('ga', [
                     'startTime' => strtotime("-{$days} days"),
                     'endTime' => time(),
                     'metrics' => 'ga:sessions',
                     'others' => [
-                        'dimensions' => 'ga:sourceMedium',
+                        'dimensions' => 'ga:medium',
                         'sort' => '-ga:sessions',
                     ]
                 ]);
             });
 
-            $sourceData = collect($response->rows ?? [])->map(function ($item) {
-                return [
-                    'source' => $item[0] == '(direct) / (none)' ? 'Direct 直接' : $item[0],
-                    'count' => $item[1]
-                ];
-            })->toJson(JSON_UNESCAPED_UNICODE);
+            $sourceData = collect($response->rows ?? [])
+                ->map(function ($item) {
+                    $source = __(\Request::route()->middleware()[0] . '.dashboard.medium.json_direct');
+
+                    if(strpos($item[0], 'organic') !== false) $source = __(\Request::route()->middleware()[0] . '.dashboard.medium.json_organic');
+                    if(strpos($item[0], 'referral') !== false) $source = __(\Request::route()->middleware()[0] . '.dashboard.medium.json_referral');
+
+                    return [
+                        'source' => $source,
+                        'count' => $item[1]
+                    ];
+                })
+                ->groupBy('source')
+                ->map(function($item, $key) {
+                    return [
+                        'source' => $key,
+                        'count' => collect($item)->sum('count')
+                    ];
+                })
+                ->values()
+                ->toJson(JSON_UNESCAPED_UNICODE);
 
             File::put(public_path('admin/data/live-analytics-traffic.json'), $sourceData);
         }
@@ -299,7 +379,7 @@ class GoogleAnalyticsClient
     public function putSourceCountry($days = 30)
     {
         if(!Cache::has('sourceCountry')) {
-            $response = Cache::remember('sourceCountry', config('analytics.cache_lifetime_in_minutes'), function () use ($days) {
+            $response = Cache::remember("sourceCountry{$days}", config('analytics.cache_lifetime_in_minutes'), function () use ($days) {
                 return $this->query('ga', [
                     'startTime' => strtotime("-{$days} days"),
                     'endTime' => time(),

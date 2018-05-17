@@ -14,32 +14,19 @@
                 </header>
                 <div class="panel-body px-0 pt-0 pb-2">
                     <div id="analyticsTraffic" style="width: 100%; height:195px;"></div>
+                    @foreach($sourceMedium as $key => $item)
+                    @if(!$loop->first)
+                    <hr class="my-2 w-100">
+                    @endif
                     <div class="row pl-3 pr-1">
                         <div class="col-sm-8 col-xs-12"><span class="badge badge-info float-left clabels d-inline mt-1 mr-3 no-radius"></span>
-                            <div class="clabels-text d-inline txt-dark text-capitalize float-left"><span class="d-block font-weight-bold mb-1">44.46%  搜索</span><span class="d-block text-muted small">85 @lang('admin.dashboard.visits')</span></div>
+                            <div class="clabels-text d-inline txt-dark text-capitalize float-left"><span class="d-block font-weight-bold mb-1">{{ $item['rate'] }}%  {{ $item['source'] }}</span><span class="d-block text-muted small">{{ $item['count'] }} @lang('admin.dashboard.visits')</span></div>
                         </div>
                         <div class="col-sm-4 col-xs-12">
-                            <div class="float-right mb-1" id="traffic1" style="width: 100%; height:30px;"></div>
+                            <div class="float-right mb-1" id="traffic{{ ($key + 1) }}" style="width: 100%; height:30px;"></div>
                         </div>
                     </div>
-                    <hr class="my-2 w-100">
-                    <div class="row pl-3 pr-1">
-                        <div class="col-sm-8 col-xs-12"><span class="badge badge-warning float-left clabels d-inline mt-1 mr-3 no-radius"></span>
-                            <div class="clabels-text d-inline txt-dark text-capitalize float-left"><span class="d-block font-weight-bold mb-1">32.1%  直接</span><span class="d-block text-muted small">68 @lang('admin.dashboard.visits')</span></div>
-                        </div>
-                        <div class="col-sm-4 col-xs-12">
-                            <div class="float-right mb-1" id="traffic2" style="width: 100%; height:30px;"></div>
-                        </div>
-                    </div>
-                    <hr class="my-2 w-100">
-                    <div class="row pl-3 pr-1">
-                        <div class="col-sm-8 col-xs-12"><span class="badge badge-success float-left clabels d-inline mt-1 mr-3 no-radius"></span>
-                            <div class="clabels-text d-inline txt-dark text-capitalize float-left"><span class="d-block font-weight-bold mb-1">27.8%  推薦</span><span class="d-block text-muted small">59 @lang('admin.dashboard.visits')</span></div>
-                        </div>
-                        <div class="col-sm-4 col-xs-12">
-                            <div class="float-right mb-1" id="traffic3" style="width: 100%; height:30px;"></div>
-                        </div>
-                    </div>
+                    @endforeach
                 </div>
             </section>
         </div>
@@ -50,8 +37,8 @@
                 </header>
                 <div class="panel-body px-0 py-0">
                     <div class="h1 text-center font-weight-bold pb-2"><span class="text-danger">{{ $currentVisitor }}</span></div>
-                    <div class="progress" title="73.77% 新工作階段">
-                        <div class="progress-bar bg-danger" role="progressbar" style="width: 73.77%; height:5px;" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+                    <div class="progress" title="{{ $percentNewSessions }}% @lang('admin.dashboard.new_session')" style="height: 5px;">
+                        <div class="progress-bar progress-bar-striped progress-bar-animated bg-main" role="progressbar" style="width: {{ $percentNewSessions }}%;" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
                     </div>
                     <div class="row text-center py-3">
                         <div class="col"><span class="d-block text-muted small">@lang('admin.dashboard.session_page')</span><span class="d-block font-weight-bold mb-1">{{ $pageViewsPerSession }}</span></div>

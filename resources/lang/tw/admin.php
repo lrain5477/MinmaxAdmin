@@ -50,6 +50,7 @@ return [
         'source_from' => '流量來源',
         'visits' => '訪問',
         'online_users' => '線上使用者',
+        'new_session' => '新工作階段',
         'session_page' => '單次頁數',
         'stay_time' => '停留時間',
         'exit_rate' => '跳出率',
@@ -63,6 +64,14 @@ return [
         'keywords' => '熱門關鍵字',
         'keyword' => '關鍵字',
         'keyword_count' => '次數',
+        'medium' => [
+            'direct' => '直接',
+            'organic' => '搜尋',
+            'referral' => '推薦',
+            'json_direct' => 'Direct 直接',
+            'json_organic' => 'Organic 搜尋',
+            'json_referral' => 'Referral 推薦',
+        ],
     ],
 
     'grid' => [

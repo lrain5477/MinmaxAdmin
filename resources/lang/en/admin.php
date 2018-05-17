@@ -50,6 +50,7 @@ return [
         'source_from' => 'Source From',
         'visits' => 'visitors',
         'online_users' => 'Online Visitor',
+        'new_session' => 'New Session',
         'session_page' => 'Single Page Visit',
         'stay_time' => 'Stay Time',
         'exit_rate' => 'Exit Rate',
@@ -63,6 +64,14 @@ return [
         'keywords' => 'Hot Keywords',
         'keyword' => 'Keyword',
         'keyword_count' => 'Amount',
+        'medium' => [
+            'direct' => 'Direct',
+            'organic' => 'Organic',
+            'referral' => 'Referral',
+            'json_direct' => 'Direct',
+            'json_organic' => 'Organic',
+            'json_referral' => 'Referral',
+        ],
     ],
 
     'grid' => [

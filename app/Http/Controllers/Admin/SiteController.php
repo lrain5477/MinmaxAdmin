@@ -34,12 +34,14 @@ class SiteController extends Controller
 
         // Google Analytics
         $this->viewData['currentVisitor'] = $this->gaClient->getActiveVisitors();
+        $this->viewData['percentNewSessions'] = $this->gaClient->getPercentNewSessions();
         $this->viewData['pageViewsPerSession'] = $this->gaClient->getPageViewsPerSession();
         $this->viewData['avgTimeOnPage'] = $this->gaClient->getAvgTimeOnPage();
         $this->viewData['exitRate'] = $this->gaClient->getExitRate();
         $this->viewData['browserUsage'] = $this->gaClient->getTopBrowsers();
         $this->viewData['todayVisitor'] = $this->gaClient->getTodayTotalVisitors();
         $this->viewData['referrerKeyword'] = $this->gaClient->getReferrerKeyword();
+        $this->viewData['sourceMedium'] = $this->gaClient->getSourceMedium();
 
         // Google Analytics put into JSON file
         $this->gaClient->putSourceMedium();     // 流量來源
