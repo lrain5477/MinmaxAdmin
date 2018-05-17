@@ -41,6 +41,33 @@ class Presenter
         return view("{$this->guardName}.view-components.normal-text", $componentData);
     }
 
+    public function getViewMediaImage($model, $column, $options = []) {
+        $modelName = class_basename($model);
+        $columnLabel = __("models.{$modelName}.{$column}");
+        $columnAlt = "{$column}_alt";
+        $imageList = isset($model->$column) ? explode(env('SEPARATE_STRING', ','), $model->$column) : [];
+        $altList = isset($model->$columnAlt) ? explode(env('SEPARATE_STRING', ','), $model->$columnAlt) : [];
+
+        $images = collect([]);
+        foreach($imageList as $key => $item) {
+            if($item === '' || !\File::exists(public_path($item))) continue;
+
+            $images->push((object) [
+                'path' => $item,
+                'alt' => $altList[$key] ?? '',
+            ]);
+        }
+
+        $componentData = [
+            'id' => "{$modelName}-{$column}",
+            'label' => $columnLabel,
+            'images' => $images,
+            'altShow' => isset($options['alt']) ? $options['alt'] : false,
+        ];
+
+        return view("{$this->guardName}.view-components.image-list", $componentData);
+    }
+
     public function getFieldNormalText($model, $column, $plaintText = false) {
         $modelName = class_basename($model);
         $columnLabel = __("models.{$modelName}.{$column}");
