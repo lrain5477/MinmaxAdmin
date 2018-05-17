@@ -45,6 +45,7 @@ class SiteController extends Controller
 
         // Google Analytics put into JSON file
         $this->gaClient->putSourceMedium();     // 流量來源
+        $this->gaClient->putWeekSourceMedium(); // 一周流量來源
         $this->gaClient->putSourceCountry();    // 流量國家來源
 
         return view('admin.site.index', $this->viewData);

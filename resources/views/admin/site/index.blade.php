@@ -23,7 +23,7 @@
                             <div class="clabels-text d-inline txt-dark text-capitalize float-left"><span class="d-block font-weight-bold mb-1">{{ $item['rate'] }}%  {{ $item['source'] }}</span><span class="d-block text-muted small">{{ $item['count'] }} @lang('admin.dashboard.visits')</span></div>
                         </div>
                         <div class="col-sm-4 col-xs-12">
-                            <div class="float-right mb-1" id="traffic{{ ($key + 1) }}" style="width: 100%; height:30px;"></div>
+                            <div class="float-right mb-1" id="traffic-{{ $key }}" style="width: 100%; height:30px;"></div>
                         </div>
                     </div>
                     @endforeach

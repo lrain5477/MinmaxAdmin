@@ -206,11 +206,11 @@ var analyticsTraffic = AmCharts.makeChart("analyticsTraffic", {
     "labelText": ""
 });
 /* 流量來源 - 1 organic*/
-var traffic1 = AmCharts.makeChart("traffic1", {
+var traffic1 = AmCharts.makeChart("traffic-organic", {
     "type": "serial",
     "theme": "light",
     "dataLoader": {
-        "url": "/admin/data/demo-analytics-traffic1.json",
+        "url": "/admin/data/live-analytics-traffic-organic.json",
         "showCurtain": false
     },
 
@@ -261,11 +261,11 @@ var traffic1 = AmCharts.makeChart("traffic1", {
     }
 });
 /* 流量來源 - 2 Direct */
-var traffic2 = AmCharts.makeChart("traffic2", {
+var traffic2 = AmCharts.makeChart("traffic-direct", {
     "type": "serial",
     "theme": "light",
     "dataLoader": {
-        "url": "/admin/data/demo-analytics-traffic2.json",
+        "url": "/admin/data/live-analytics-traffic-direct.json",
         "showCurtain": false
     },
 
@@ -320,11 +320,11 @@ var traffic2 = AmCharts.makeChart("traffic2", {
 
 });
 /* 流量來源 - 3 Referral */
-var traffic3 = AmCharts.makeChart("traffic3", {
+var traffic3 = AmCharts.makeChart("traffic-referral", {
     "type": "serial",
     "theme": "light",
     "dataLoader": {
-        "url": "/admin/data/demo-analytics-traffic3.json",
+        "url": "/admin/data/live-analytics-traffic-referral.json",
         "showCurtain": false
     },
 
