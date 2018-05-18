@@ -181,6 +181,13 @@ class Presenter
         return view("{$this->guardName}.form-components.password", $componentData);
     }
 
+    public function getFieldHidden($model, $column) {
+        $modelName = class_basename($model);
+        $fieldValue = isset($model->$column) ? $model->$column : app()->getLocale();
+
+        return "<input type=\"hidden\" name=\"{$modelName}[{$column}]\" value=\"{$fieldValue}\" />";
+    }
+
     public function getFieldDatePicker($model, $column, $required = false, $options = []) {
         if(is_array($required)) {
             $options = $required;
@@ -198,6 +205,7 @@ class Presenter
             'value' => $fieldValue,
             'required' => $required,
             'icon' => isset($options['icon']) ? $options['icon'] : '',
+            'type' => isset($options['type']) ? $options['type'] : 'birthdate',
             'size' => isset($options['size']) ? $options['size'] : 3,
             'placeholder' => isset($options['placeholder']) ? $options['placeholder'] : '',
             'hint' => isset($options['hint']) && $options['hint'] == true ? __("models.{$modelName}.hint.{$column}") : '',
