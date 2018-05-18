@@ -27,6 +27,27 @@ class Presenter
         return view("{$this->guardName}.view-components.normal-text", $componentData);
     }
 
+    public function getViewEditor($model, $column, $value = '', $options = []) {
+        if(is_array($value)) {
+            $options = $value;
+            $value = '';
+        }
+
+        $modelName = class_basename($model);
+        $columnLabel = __("models.{$modelName}.{$column}");
+        $fieldValue = $value === '' ? (isset($model->$column) ? $model->$column : '') : $value;
+
+        $componentData = [
+            'id' => "{$modelName}-{$column}",
+            'label' => $columnLabel,
+            'value' => $fieldValue,
+            'size' => isset($options['size']) ? $options['size'] : 10,
+            'height' => isset($options['height']) ? $options['height'] : '250px',
+        ];
+
+        return view("{$this->guardName}.view-components.editor", $componentData);
+    }
+
     public function getViewSelection($model, $column) {
         $modelName = class_basename($model);
         $columnLabel = __("models.{$modelName}.{$column}");
