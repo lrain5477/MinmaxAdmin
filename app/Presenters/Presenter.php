@@ -196,7 +196,16 @@ class Presenter
 
         $modelName = class_basename($model);
         $columnLabel = __("models.{$modelName}.{$column}");
-        $fieldValue = isset($model->$column) ? date('Y-m-d', strtotime($model->$column)) : '';
+        $pickerType = isset($options['type']) ? $options['type'] : 'birthdate';
+
+        switch($pickerType) {
+            case 'birthdateTime':
+                $fieldValue = isset($model->$column) ? date('Y-m-d H:i:s', strtotime($model->$column)) : '';
+                break;
+            default:
+                $fieldValue = isset($model->$column) ? date('Y-m-d', strtotime($model->$column)) : '';
+                break;
+        }
 
         $componentData = [
             'id' => "{$modelName}-{$column}",
@@ -205,7 +214,7 @@ class Presenter
             'value' => $fieldValue,
             'required' => $required,
             'icon' => isset($options['icon']) ? $options['icon'] : '',
-            'type' => isset($options['type']) ? $options['type'] : 'birthdate',
+            'type' => $pickerType,
             'size' => isset($options['size']) ? $options['size'] : 3,
             'placeholder' => isset($options['placeholder']) ? $options['placeholder'] : '',
             'hint' => isset($options['hint']) && $options['hint'] == true ? __("models.{$modelName}.hint.{$column}") : '',

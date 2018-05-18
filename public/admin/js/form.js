@@ -154,13 +154,13 @@ $(document).ready(function () {
             timePickerIncrement: 30,
             locale: {
                 cancelLabel: 'Clear',
-                format: 'YYYY-MM-DD h:mm A',
+                format: 'YYYY-MM-DD HH:mm:00',
                 "daysOfWeek": ["日", "一", "二", "三", "四", "五", "六"],
                 "monthNames": ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"],
             }
         });
         $(this).on('apply.daterangepicker', function (ev, picker) {
-            $(this).val(picker.startDate.format('YYYY/MM/DD h:mm A'));
+            $(this).val(picker.startDate.format('YYYY-MM-DD HH:mm:00'));
         });
         $(this).on('cancel.daterangepicker', function (ev, picker) {
             $(this).val('');
@@ -172,7 +172,7 @@ $(document).ready(function () {
         var end = moment();
 
         function cb(start, end) {
-            $(this).html(start.format('YYYY/MM/DD') + ' - ' + end.format('YYYY/MM/DD'));
+            $(this).html(start.format('YYYY-MM-DD') + ' ~ ' + end.format('YYYY-MM-DD'));
         }
 
         $(this).daterangepicker({
@@ -181,7 +181,7 @@ $(document).ready(function () {
             autoUpdateInput: false,
             locale: {
                 cancelLabel: 'Clear',
-                format: 'YYYY/MM/DD',
+                format: 'YYYY-MM-DD',
                 "daysOfWeek": ["日", "一", "二", "三", "四", "五", "六"],
                 "monthNames": ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"],
             },
@@ -196,7 +196,7 @@ $(document).ready(function () {
         }, cb);
         cb(start, end);
         $(this).on('apply.daterangepicker', function (ev, picker) {
-            $(this).val(picker.startDate.format('YYYY/MM/DD') + ' - ' + picker.endDate.format('YYYY/MM/DD'));
+            $(this).val(picker.startDate.format('YYYY-MM-DD') + ' ~ ' + picker.endDate.format('YYYY-MM-DD'));
         });
         $(this).on('cancel.daterangepicker', function (ev, picker) {
             $(this).val('');
@@ -208,14 +208,14 @@ $(document).ready(function () {
             autoUpdateInput: false,
             locale: {
                 cancelLabel: 'Clear',
-                format: 'YYYY/MM/DD',
+                format: 'YYYY-MM-DD',
                 "daysOfWeek": ["日", "一", "二", "三", "四", "五", "六"],
                 "monthNames": ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"],
             }
         });
 
         $(this).on('apply.daterangepicker', function (ev, picker) {
-            $(this).val(picker.startDate.format('YYYY/MM/DD') + ' - ' + picker.endDate.format('YYYY/MM/DD'));
+            $(this).val(picker.startDate.format('YYYY-MM-DD') + ' ~ ' + picker.endDate.format('YYYY-MM-DD'));
         });
 
         $(this).on('cancel.daterangepicker', function (ev, picker) {
@@ -231,11 +231,11 @@ $(document).ready(function () {
             autoUpdateInput: false,
             locale: {
                 cancelLabel: 'Clear',
-                format: 'YYYY/MM/DD h:mm A'
+                format: 'YYYY-MM-DD HH:mm:00'
             }
         });
         $(this).on('apply.daterangepicker', function (ev, picker) {
-            $(this).val(picker.startDate.format('YYYY/MM/DD h:mm A') + ' - ' + picker.endDate.format('YYYY/MM/DD h:mm A'));
+            $(this).val(picker.startDate.format('YYYY-MM-DD HH:mm:00') + ' ~ ' + picker.endDate.format('YYYY-MM-DD HH:mm:00'));
         });
         $(this).on('cancel.daterangepicker', function (ev, picker) {
             $(this).val('');
@@ -247,7 +247,7 @@ $(document).ready(function () {
         var $maxDate = $(this).attr("maxDate");
         var $dateLimit = $(this).attr("dateLimit");
         $(this).daterangepicker({
-            format: 'YYYY/MM/DD',
+            format: 'YYYY-MM-DD',
             minDate: $minDate,
             autoUpdateInput: false,
             maxDate: $maxDate,
@@ -256,13 +256,13 @@ $(document).ready(function () {
             },
             locale: {
                 cancelLabel: 'Clear',
-                format: 'YYYY/MM/DD h:mm A',
+                format: 'YYYY-MM-DD HH:mm:00',
                 "daysOfWeek": ["日", "一", "二", "三", "四", "五", "六"],
                 "monthNames": ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"],
             }
         });
         $(this).on('apply.daterangepicker', function (ev, picker) {
-            $(this).val(picker.startDate.format('YYYY/MM/DD h:mm A') + ' - ' + picker.endDate.format('YYYY/MM/DD h:mm A'));
+            $(this).val(picker.startDate.format('YYYY-MM-DD HH:mm:00') + ' - ' + picker.endDate.format('YYYY-MM-DD HH:mm:00'));
         });
         $(this).on('cancel.daterangepicker', function (ev, picker) {
             $(this).val('');
