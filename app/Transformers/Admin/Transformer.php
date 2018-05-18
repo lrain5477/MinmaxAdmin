@@ -75,7 +75,7 @@ class Transformer extends TransformerAbstract
      */
     public function getGridDate($value)
     {
-        return Carbon::parse($value)->format('Y-m-d');
+        return is_null($value) ? '-' : Carbon::parse($value)->format('Y-m-d');
     }
 
     /**
@@ -84,7 +84,7 @@ class Transformer extends TransformerAbstract
      */
     public function getGridDatetime($value)
     {
-        return Carbon::parse($value)->format('Y-m-d H:i:s');
+        return is_null($value) ? '-' : Carbon::parse($value)->format('Y-m-d H:i:s');
     }
 
     /**
