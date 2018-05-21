@@ -8,6 +8,7 @@ CKEDITOR.editorConfig = function( config ) {
     config.toolbar = [
         ['Source'],
         ['Undo', 'Redo', '-', 'RemoveFormat'],
+        ['Templates'],
         ['Format', 'Font', 'FontSize'],
         ['TextColor', 'BGColor'],
         ['Maximize', 'ShowBlocks'], '/',
@@ -15,8 +16,7 @@ CKEDITOR.editorConfig = function( config ) {
         ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', 'CreateDiv'],
         ['JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock'],
         ['Link', 'Unlink'],
-        ['Image', 'Table', 'HorizontalRule', 'SpecialChar'],
-        ['Code']
+        ['Image', 'Table', 'HorizontalRule', 'SpecialChar']
     ];
 
     config.allowedContent = true;

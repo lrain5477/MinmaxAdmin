@@ -266,6 +266,30 @@ return [
         ],
     ],
 
+    'EditorTemplate' => [
+        'id' => 'ID',
+        'guid' => 'GUID',
+        'lang' => '語系',
+        'guard' => '平台',
+        'category' => '使用類別',
+        'title' => '名稱',
+        'description' => '敘述',
+        'editor' => 'HTML內容',
+        'sort' => '排序',
+        'active' => '狀態',
+        'created_at' => '建立時間',
+        'updated_at' => '更新時間',
+        'hint' => [
+            'pic' => '建議尺寸：240px * 240px。圖片類型：jpg、png、gif。',
+        ],
+        'selection' => [
+            'active' => [
+                '1' => '啟用',
+                '0' => '停用',
+            ],
+        ],
+    ],
+
     'SystemLog' => [
         'id' => 'ID',
         'guard' => '平台',

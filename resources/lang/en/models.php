@@ -266,6 +266,30 @@ return [
         ],
     ],
 
+    'EditorTemplate' => [
+        'id' => 'ID',
+        'guid' => 'GUID',
+        'lang' => 'Language',
+        'guard' => 'Platform',
+        'category' => 'Category',
+        'title' => 'Title',
+        'description' => 'Description',
+        'editor' => 'HTML Content',
+        'sort' => 'Sort',
+        'active' => 'Active',
+        'created_at' => 'Created At',
+        'updated_at' => 'Updated At',
+        'hint' => [
+            'pic' => 'Size: 240px * 240px. Type: jpg、png、gif.',
+        ],
+        'selection' => [
+            'active' => [
+                '1' => 'On',
+                '0' => 'Off',
+            ],
+        ],
+    ],
+
     'SystemLog' => [
         'id' => 'ID',
         'guard' => 'Platform',

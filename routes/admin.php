@@ -38,6 +38,23 @@ Route::middleware(['auth:admin'])->group(function($route) {
         'imagePath' => '.+\.(jpg|png|gif)$'
     ])->name('thumbnail');
 
+    // EditorTemplate
+    Route::get('editor/template/{category}.js', function($category) {
+        $templates = \App\Models\EditorTemplate::where(['guard' => 'admin', 'lang' => app()->getLocale(), 'category' => $category, 'active' => '1'])
+            ->orderBy('sort')
+            ->get(['title', 'description', 'editor'])
+            ->map(function($item) {
+                return [
+                    'title' => $item->title,
+                    'description' => $item->description,
+                    'html' => $item->editor,
+                ];
+            })
+            ->toJson(JSON_UNESCAPED_UNICODE);
+
+        return "CKEDITOR.addTemplates('default', { templates: {$templates} });";
+    })->name('editorTemplate');
+
     // elFinder
     Route::prefix('elfinder')->group(function() {
         Route::get('/',  ['as' => 'elfinder.index', 'uses' =>'CustomElfinderController@showIndex']);

@@ -32,6 +32,26 @@ class RbacSeeder extends Seeder
                 'name' => 'frontWebDataEdit', 'label' => '編輯', 'display_name' => '前台網站基本資料 [編輯]', 'description' => '前台網站基本資料 [編輯]',
                 'active' => '1', 'updated_at' => $timestamp, 'created_at' => $timestamp,
             ],
+            [
+                'guard' => 'admin', 'group' => 'editorTemplate',
+                'name' => 'editorTemplateShow', 'label' => '瀏覽', 'display_name' => '編輯器模板管理 [瀏覽]', 'description' => '編輯器模板管理 [瀏覽]',
+                'active' => '1', 'updated_at' => $timestamp, 'created_at' => $timestamp,
+            ],
+            [
+                'guard' => 'admin', 'group' => 'editorTemplate',
+                'name' => 'editorTemplateCreate', 'label' => '新增', 'display_name' => '編輯器模板管理 [新增]', 'description' => '編輯器模板管理 [新增]',
+                'active' => '1', 'updated_at' => $timestamp, 'created_at' => $timestamp,
+            ],
+            [
+                'guard' => 'admin', 'group' => 'editorTemplate',
+                'name' => 'editorTemplateEdit', 'label' => '編輯', 'display_name' => '編輯器模板管理 [編輯]', 'description' => '編輯器模板管理 [編輯]',
+                'active' => '1', 'updated_at' => $timestamp, 'created_at' => $timestamp,
+            ],
+            [
+                'guard' => 'admin', 'group' => 'editorTemplate',
+                'name' => 'editorTemplateDestroy', 'label' => '刪除', 'display_name' => '編輯器模板管理 [刪除]', 'description' => '編輯器模板管理 [刪除]',
+                'active' => '1', 'updated_at' => $timestamp, 'created_at' => $timestamp,
+            ],
 
             [
                 'guard' => 'admin', 'group' => 'admin',

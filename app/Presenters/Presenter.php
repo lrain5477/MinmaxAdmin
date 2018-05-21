@@ -290,6 +290,7 @@ class Presenter
             'height' => isset($options['height']) ? $options['height'] : '250px',
             'hint' => isset($options['hint']) && $options['hint'] == true ? __("models.{$modelName}.hint.{$column}") : '',
             'stylesheet' => isset($options['stylesheet']) ? $options['stylesheet'] : null,
+            'template' => isset($options['template']) ? $options['template'] : null,
         ];
 
         return view("{$this->guardName}.form-components.editor", $componentData);

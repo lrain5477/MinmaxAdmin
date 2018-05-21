@@ -151,7 +151,7 @@ class SystemSeeder extends Seeder
 
         $adminMenuItemData = [
             [
-                'lang' => 'tw',
+                'lang' => $defaultLanguage,
                 'guid' => $menuGuid1 = Str::uuid(),
                 'title' => '控制臺',
                 'uri' => 'root-command',
@@ -168,7 +168,7 @@ class SystemSeeder extends Seeder
                 'active' => '1', 'updated_at' => $timestamp, 'created_at' => $timestamp
             ],
             [
-                'lang' => 'tw',
+                'lang' => $defaultLanguage,
                 'guid' => Str::uuid(),
                 'title' => '經銷商網站基本資訊',
                 'uri' => 'merchant-web-data',
@@ -185,7 +185,7 @@ class SystemSeeder extends Seeder
                 'active' => '1', 'updated_at' => $timestamp, 'created_at' => $timestamp
             ],
             [
-                'lang' => 'tw',
+                'lang' => $defaultLanguage,
                 'guid' => Str::uuid(),
                 'title' => '前台網站基本資訊',
                 'uri' => 'front-web-data',
@@ -201,9 +201,26 @@ class SystemSeeder extends Seeder
                 'sort' => 2,
                 'active' => '1', 'updated_at' => $timestamp, 'created_at' => $timestamp
             ],
+            [
+                'lang' => $defaultLanguage,
+                'guid' => Str::uuid(),
+                'title' => '編輯器模板管理',
+                'uri' => 'editor-template',
+                'controller' => null,
+                'model' => 'EditorTemplate',
+                'class' => $menuClassGuid3,
+                'parent' => $menuGuid1,
+                'link' => 'editor-template',
+                'icon' => null,
+                'permission_key' => 'editorTemplateShow',
+                //'filter' => '',
+                //'keeps' => '',
+                'sort' => 3,
+                'active' => '1', 'updated_at' => $timestamp, 'created_at' => $timestamp
+            ],
 
             [
-                'lang' => 'tw',
+                'lang' => $defaultLanguage,
                 'guid' => $menuGuid2 = Str::uuid(),
                 'title' => '帳戶資訊',
                 'uri' => 'root-system-account',
@@ -220,7 +237,7 @@ class SystemSeeder extends Seeder
                 'active' => '1', 'updated_at' => $timestamp, 'created_at' => $timestamp
             ],
             [
-                'lang' => 'tw',
+                'lang' => $defaultLanguage,
                 'guid' => Str::uuid(),
                 'title' => '管理員帳戶',
                 'uri' => 'admin',

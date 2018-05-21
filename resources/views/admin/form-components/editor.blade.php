@@ -15,7 +15,18 @@
 <script>
 (function($) {
     $(function() {
-        CKEDITOR.replace('{{ $id }}', {customConfig: 'config.js', width: '100%', height: '{{ $height }}', contentsCss: '{{ $stylesheet }}', filebrowserBrowseUrl: '/siteadmin/elfinder/ckeditor'});
+        CKEDITOR.replace('{{ $id }}', {
+            customConfig: 'config.js',
+            width: '100%',
+            height: '{{ $height }}',
+            contentsCss: '{{ $stylesheet }}',
+            @if($template)
+            templates_files: ['{{ route('admin.editorTemplate', ['category' => $template]) }}'],
+            @else
+            removeButtons: 'Templates',
+            @endif
+            filebrowserBrowseUrl: '/siteadmin/elfinder/ckeditor'
+        });
         CKEDITOR.dtd.$removeEmpty['i'] = false;
     });
 })(jQuery);
