@@ -5,9 +5,10 @@
 ## Project Install
 
 ```bash
-> composer install
 > cp .env.example .env
 > vim .env      // Change database, analytic view id, and some else.
+
+> composer install
 
 > php artisan generate
 > php artisan migrate   // Update please use migrate:fresh
