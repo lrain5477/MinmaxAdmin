@@ -43,6 +43,7 @@ class Presenter
             'value' => $fieldValue,
             'size' => isset($options['size']) ? $options['size'] : 10,
             'height' => isset($options['height']) ? $options['height'] : '250px',
+            'stylesheet' => isset($options['stylesheet']) ? $options['stylesheet'] : null,
         ];
 
         return view("{$this->guardName}.view-components.editor", $componentData);
@@ -288,6 +289,7 @@ class Presenter
             'size' => isset($options['size']) ? $options['size'] : 10,
             'height' => isset($options['height']) ? $options['height'] : '250px',
             'hint' => isset($options['hint']) && $options['hint'] == true ? __("models.{$modelName}.hint.{$column}") : '',
+            'stylesheet' => isset($options['stylesheet']) ? $options['stylesheet'] : null,
         ];
 
         return view("{$this->guardName}.form-components.editor", $componentData);

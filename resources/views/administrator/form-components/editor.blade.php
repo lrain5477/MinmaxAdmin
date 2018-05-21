@@ -15,7 +15,7 @@
 <script>
 (function($) {
     $(function() {
-        CKEDITOR.replace('{{ $id }}', {customConfig: 'config.js', width: '100%', height: '{{ $height }}', filebrowserBrowseUrl: '/administrator/elfinder/ckeditor'});
+        CKEDITOR.replace('{{ $id }}', {customConfig: 'config.js', width: '100%', height: '{{ $height }}', contentsCss: '{{ $stylesheet }}', filebrowserBrowseUrl: '/administrator/elfinder/ckeditor'});
         CKEDITOR.dtd.$removeEmpty['i'] = false;
     });
 })(jQuery);
