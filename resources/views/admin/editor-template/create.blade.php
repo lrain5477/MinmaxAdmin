@@ -26,7 +26,7 @@
 
         {!! $modelPresenter->getFieldText($formData, 'description', true) !!}
 
-        {!! $modelPresenter->getFieldEditor($formData, 'editor', true) !!}
+        {!! $modelPresenter->getFieldEditor($formData, 'editor', true, ['height' => '550px']) !!}
 
     </fieldset>
 
