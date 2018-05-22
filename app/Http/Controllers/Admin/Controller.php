@@ -227,7 +227,7 @@ class Controller extends BaseController
             }
 
             LogHelper::system('admin', $this->uri, 'store', '', $this->adminData->username, 0, __('admin.form.message.create_error'));
-            return redirect()->route('admin.create', [$this->uri])->withErrors([__('admini.form.message.create_error')])->withInput();
+            return redirect()->route('admin.create', [$this->uri])->withErrors([__('admin.form.message.create_error')])->withInput();
         }
 
         LogHelper::system('admin', $this->uri, 'store', '', $this->adminData->username, 0, $validator->errors()->first());

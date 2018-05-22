@@ -45,7 +45,7 @@ class AdminController extends Controller
             } catch (\Exception $e) {
                 \DB::rollBack();
 
-                return redirect()->route('admin.create', [$this->uri])->withErrors([__('admini.form.message.create_error')])->withInput();
+                return redirect()->route('admin.create', [$this->uri])->withErrors([__('admin.form.message.create_error')])->withInput();
             }
         }
 
