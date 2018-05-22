@@ -1,3 +1,8 @@
+<?php
+/**
+ * @var \Illuminate\Support\Collection $menuData
+ */
+?>
 <nav class="fixed-sidebar-left left-width">
     <ul class="side-nav nicescroll-bar">
         <li class="navigation-header"><span>default</span><i class="icon-dots-three-horizontal"></i></li>
@@ -8,55 +13,33 @@
             </a>
         </li>
 
+    @foreach($menuData as $menuLayer1)
+        @if($loop->first)
         <li><hr class="mb-0"></li>
-        <li class="navigation-header"><span>system</span><i class="icon-dots-three-horizontal"></i></li>
+        <li class="navigation-header"><span>{{ $menuLayer1->class }}</span><i class="icon-dots-three-horizontal"></i></li>
+        @endif
         <li>
-            <a class="collapsed {{ isset($pageData->parent) && ($pageData->parent === 'menu-control') ? 'active' : '' }}"
+            @if($menuLayer1->administratorMenu(true)->count() > 0)
+            <a class="collapsed {{ isset($pageData->parent) && ($pageData->parent === $menuLayer1->uri) ? 'active' : '' }}"
                href="javascript:void(0);"
                data-toggle="collapse"
-               data-target="#Menu_dr2_1">
-                <div class="float-left"><i class="icon-folder"></i><span class="right-nav-text">系統選單管理</span></div>
+               data-target="#Menu_{{ $menuLayer1->uri }}">
+                <div class="float-left"><i class="{{ $menuLayer1->icon }}"></i><span class="right-nav-text">{{ $menuLayer1->title }}</span></div>
                 <div class="float-right"><i class="icon-chevron-small-right"></i></div>
                 <div class="clearfix"></div>
             </a>
-            <ul class="collapse collapse-level-1 {{ isset($pageData->parent) && ($pageData->parent === 'menu-control') ? 'show' : '' }}" id="Menu_dr2_1">
-                <li><a class="{{ isset($pageData->uri) && $pageData->uri === 'admin-menu-class' ? 'active' : '' }}" href="{{ url('administrator/admin-menu-class') }}">管理員選單類別</a></li>
-                <li><a class="{{ isset($pageData->uri) && $pageData->uri === 'admin-menu-item' ? 'active' : '' }}" href="{{ url('administrator/admin-menu-item') }}">管理員選單目錄</a></li>
-                <li><a class="{{ isset($pageData->uri) && $pageData->uri === 'merchant-menu-class' ? 'active' : '' }}" href="{{ url('administrator/merchant-menu-class') }}">經銷商選單類別</a></li>
-                <li><a class="{{ isset($pageData->uri) && $pageData->uri === 'merchant-menu-item' ? 'active' : '' }}" href="{{ url('administrator/merchant-menu-item') }}">經銷商選單目錄</a></li>
+            <ul class="collapse collapse-level-1 {{ isset($pageData->parent) && ($pageData->parent === $menuLayer1->uri) ? 'show' : '' }}" id="Menu_{{ $menuLayer1->uri }}">
+                @foreach($menuLayer1->administratorMenu(true)->orderBy('sort')->get() as $menuLayer2)
+                <li><a class="{{ isset($pageData->uri) && $pageData->uri === $menuLayer2->uri ? 'active' : '' }}" href="{{ url('administrator/' . $menuLayer2->link) }}">{{ $menuLayer2->title }}</a></li>
+                @endforeach
             </ul>
-        </li>
-        <li>
-            <a class="collapsed {{ isset($pageData->parent) && ($pageData->parent === 'permission-control') ? 'active' : '' }}"
-               href="javascript:void(0);"
-               data-toggle="collapse"
-               data-target="#Menu_dr2_2">
-                <div class="float-left"><i class="icon-group"></i><span class="right-nav-text">權限管理</span></div>
-                <div class="float-right"><i class="icon-chevron-small-right"></i></div>
+            @else
+            <a class="{{ isset($pageData->uri) && $pageData->uri === $menuLayer1->uri ? 'active' : '' }}" href="{{ url('administrator/' . $menuLayer1->link) }}">
+                <div class="float-left"><i class="{{ $menuLayer1->icon }}"></i><span class="right-nav-text">{{ $menuLayer1->title }}</span></div>
                 <div class="clearfix"></div>
             </a>
-            <ul class="collapse collapse-level-1 {{ isset($pageData->parent) && ($pageData->parent === 'permission-control') ? 'show' : '' }}" id="Menu_dr2_2">
-                <li><a class="{{ isset($pageData->uri) && $pageData->uri === 'permission' ? 'active' : '' }}" href="{{ url('administrator/permission') }}">權限物件管理</a></li>
-                <li><a class="{{ isset($pageData->uri) && $pageData->uri === 'role' ? 'active' : '' }}" href="{{ url('administrator/role') }}">權限角色管理</a></li>
-            </ul>
+            @endif
         </li>
-        <li>
-            <a class="{{ isset($pageData->uri) && $pageData->uri === 'language' ? 'active' : '' }}" href="{{ url('administrator/language') }}">
-                <div class="float-left"><i class="icon-globe"></i><span class="right-nav-text">語系管理</span></div>
-                <div class="clearfix"></div>
-            </a>
-        </li>
-        <li>
-            <a class="{{ isset($pageData->uri) && $pageData->uri === 'web-data' ? 'active' : '' }}" href="{{ url('administrator/web-data') }}">
-                <div class="float-left"><i class="icon-cog"></i><span class="right-nav-text">網站基本資訊</span></div>
-                <div class="clearfix"></div>
-            </a>
-        </li>
-        <li>
-            <a class="{{ isset($pageData->uri) && $pageData->uri === 'system-log' ? 'active' : '' }}" href="{{ url('administrator/system-log') }}">
-                <div class="float-left"><i class="icon-warning"></i><span class="right-nav-text">操作紀錄</span></div>
-                <div class="clearfix"></div>
-            </a>
-        </li>
+    @endforeach
     </ul>
 </nav>

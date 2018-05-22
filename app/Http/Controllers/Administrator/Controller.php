@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers\Administrator;
 
-use App\Helpers\LogHelper;
 use App\Models\Administrator;
+use App\Models\AdministratorMenu;
 use App\Models\Language;
 use App\Models\WebData;
 use App\Repositories\Administrator\Repository;
@@ -35,6 +35,7 @@ class Controller extends BaseController
     protected $viewData;
     protected $adminData;
     protected $languageData;
+    protected $menuData;
     protected $pageData;
     protected $modelName;
     protected $modelRepository;
@@ -72,9 +73,13 @@ class Controller extends BaseController
             // 設定 網站資料
             $this->viewData['webData'] = WebData::where(['lang' => app()->getLocale(), 'website_key' => 'administrator'])->first();
 
+            // 設定 選單資料
+            $this->menuData = AdministratorMenu::where(['parent' => '0'])->orderBy('sort')->get()->sortBy('class');
+            $this->viewData['menuData'] = $this->menuData;
+
             // 設定 頁面資料
             if($this->uri) {
-                $this->pageData = $this->getPageData($this->uri);
+                $this->pageData = AdministratorMenu::where(['uri' => $this->uri])->first();
                 $this->viewData['pageData'] = $this->pageData;
             }
 
@@ -84,30 +89,13 @@ class Controller extends BaseController
 
             // 設定 模型注入
             if($this->pageData) {
-                $this->modelRepository->setModelClassName($this->pageData->model ?? null);
+                $this->modelRepository->setModelClassName($this->pageData->getAttribute('model') ?? null);
             } elseif($request->route()->uri() !== 'administrator') {
                 abort(404);
             }
 
             return $next($request);
         });
-    }
-
-    protected function getPageData($uri) {
-        $menuModel = collect([
-            ['uri' => 'admin-menu-class', 'title' => '管理員選單類別', 'controller' => null, 'model' => 'AdminMenuClass', 'parent' => 'menu-control'],
-            ['uri' => 'admin-menu-item', 'title' => '管理員選單目錄', 'controller' => 'AdminMenuItemController', 'model' => 'AdminMenuItem', 'parent' => 'menu-control'],
-            ['uri' => 'merchant-menu-class', 'title' => '經銷商選單類別', 'controller' => null, 'model' => 'MerchantMenuClass', 'parent' => 'menu-control'],
-            ['uri' => 'merchant-menu-item', 'title' => '經銷商選單目錄', 'controller' => 'MerchantMenuItemController', 'model' => 'MerchantMenuItem', 'parent' => 'menu-control'],
-            ['uri' => 'language', 'title' => '語系管理', 'controller' => null, 'model' => 'Language', 'parent' => '0'],
-            ['uri' => 'permission', 'title' => '權限物件管理', 'controller' => null, 'model' => 'Permission', 'parent' => 'permission-control'],
-            ['uri' => 'role', 'title' => '權限角色管理', 'controller' => 'RoleController', 'model' => 'Role', 'parent' => 'permission-control'],
-            ['uri' => 'language', 'title' => '語系管理', 'controller' => null, 'model' => 'Language', 'parent' => '0'],
-            ['uri' => 'web-data', 'title' => '網站基本資訊', 'controller' => null, 'model' => 'WebData', 'parent' => '0'],
-            ['uri' => 'system-log', 'title' => '操作紀錄', 'controller' => null, 'model' => 'SystemLog', 'parent' => '0'],
-        ])->map(function($item, $key) { return (object) $item; });
-
-        return $menuModel->where('uri', $uri)->first();
     }
 
     /**
@@ -200,10 +188,10 @@ class Controller extends BaseController
      */
     public function store(Request $request)
     {
-        $validator = Validator::make($request->input($this->pageData->model), $this->modelRepository->getRules() ?? []);
+        $validator = Validator::make($request->input($this->pageData->getAttribute('model')), $this->modelRepository->getRules() ?? []);
 
         if($validator->passes()) {
-            $input = $request->input($this->pageData->model);
+            $input = $request->input($this->pageData->getAttribute('model'));
             $formDataKey = $this->modelRepository->getIndexKey();
             if($formDataKey !== 'id') $input[$formDataKey] = Str::uuid();
 
@@ -268,13 +256,13 @@ class Controller extends BaseController
      */
     public function update($id, Request $request)
     {
-        $validator = Validator::make($request->input($this->pageData->model), $this->modelRepository->getRules() ?? []);
+        $validator = Validator::make($request->input($this->pageData->getAttribute('model')), $this->modelRepository->getRules() ?? []);
 
         if($validator->passes()) {
             $where = [$this->modelRepository->getIndexKey() => $id];
             if($this->modelRepository->isMultiLanguage()) $where['lang'] = app()->getLocale();
 
-            if($this->modelRepository->save($request->input($this->pageData->model), $where)) {
+            if($this->modelRepository->save($request->input($this->pageData->getAttribute('model')), $where)) {
                 return redirect()->route('administrator.edit', [$this->uri, $id])->with('success', __('administrator.form.message.edit_success'));
             }
 
@@ -346,7 +334,7 @@ class Controller extends BaseController
         }
 
         return $datatables
-            ->setTransformer(app()->make('App\\Transformers\\Administrator\\' . $this->pageData->model . 'Transformer', ['uri' => $this->uri]))
+            ->setTransformer(app()->make('App\\Transformers\\Administrator\\' . $this->pageData->getAttribute('model') . 'Transformer', ['uri' => $this->uri]))
             ->make(true);
     }
 
@@ -363,7 +351,7 @@ class Controller extends BaseController
 
             return response([
                 'msg' => 'success',
-                'newLabel' => __("models.{$this->pageData->model}.selection.{$request->input('column')}.{$request->input('switchTo')}"),
+                'newLabel' => __("models.{$this->pageData->getAttribute('model')}.selection.{$request->input('column')}.{$request->input('switchTo')}"),
             ], 200)->header('Content-Type', 'application/json');
         } else {
             //LogHelper::systemLog(Auth::guard('administrator')->user()->username, 'Update ' . $this->modelName . '(' . $request->input('id') . ') ' . $request->input('column') . ' to ' . $request->input('switchTo'), 'Failed');
