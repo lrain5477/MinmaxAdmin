@@ -21,9 +21,9 @@ class ImageHelper
 
         if(File::exists(public_path($filePath))) {
             // $fileFullname = File::basename($filePath);
-            $filename = str_replace('/', '_', $filePath); //File::name($filePath);
+            $filename = str_replace(['/', '.' . File::extension($filePath)], '_', $filePath); //File::name($filePath);
             $fileExtension = strtolower(File::extension($filePath));
-            $thumbnailPath = "thumbnail/{$filename}_{$maxWidth}x{$maxHeight}.{$fileExtension}";
+            $thumbnailPath = "thumbnail/{$filename}{$maxWidth}x{$maxHeight}.{$fileExtension}";
 
             try {
                 if(Storage::exists($thumbnailPath) && !$overwrite) {
@@ -64,7 +64,7 @@ class ImageHelper
                             $storgeStatus = imagejpeg($thumbnail, Storage::path($thumbnailPath), $quality);
                             break;
                         case 'png':
-                            $storgeStatus = imagepng($thumbnail, Storage::path($thumbnailPath), $quality);
+                            $storgeStatus = imagepng($thumbnail, Storage::path($thumbnailPath));
                             break;
                         case 'gif':
                             $storgeStatus = imagegif($thumbnail, Storage::path($thumbnailPath));
