@@ -88,9 +88,19 @@
         }).disableSelection();
 
         let elf_{{ str_replace('-', '_', $id) }} = $('#{{ $id }}-elfinder').elfinder({
-            lang: 'zh_TW',
-            headers: {
-                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+            @switch(app()->getLocale())
+                @case('tw')
+                lang: 'zh_TW',
+                @break
+                @case('cn')
+                lang: 'zh_CN',
+                @break
+                @case('jp')
+                lang: 'ja',
+                @break
+            @endswitch
+            customData: {
+                _token: '{{ csrf_token() }}'
             },
             url: '{{ route('admin.elfinder.connector') }}',
             commands: elFinder.prototype._options.commands,
@@ -99,7 +109,7 @@
                     ui : 'uploadbutton'
                 }
             },
-            soundPath: '{{ asset('packages/barryvdh/elfinder/sounds') }}',
+            soundPath: '{{ asset('components/elFinder/sounds') }}',
             reloadClearHistory: true,
             resizable: false,
             rememberLastDir: false,
@@ -122,9 +132,6 @@
                 cwd: ['reload', '|', 'view', 'sort', 'selectall', '|', 'info'],
                 files: ['getfile', 'open', 'download', 'info']
                 @endif
-            },
-            handlers: {
-                select: function (event, elfinderInstance) {}
             },
             getFileCallback: function (file) {
                 if({{ $limit }} !== 0 && $('#{{ $id }}-list .card').length >= {{ $limit }}) {
