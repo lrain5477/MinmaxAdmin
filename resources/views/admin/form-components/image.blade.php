@@ -94,6 +94,11 @@
             },
             url: '{{ route('admin.elfinder.connector') }}',
             commands: elFinder.prototype._options.commands,
+            commandsOptions: {
+                upload : {
+                    ui : 'uploadbutton'
+                }
+            },
             soundPath: '{{ asset('packages/barryvdh/elfinder/sounds') }}',
             reloadClearHistory: true,
             resizable: false,
@@ -102,18 +107,20 @@
             uiOptions: {
                 toolbar: [
                     @if(\Auth::guard('admin')->user()->can('systemUpload'))
-                    ['back', 'forward'], ['reload'], ['home', 'up'], ['mkdir', 'mkfile', 'upload'], ['open', 'download'], ['info'],
-                    ['copy', 'cut', 'paste'], ['rm'], ['duplicate', 'rename', 'edit', 'resize'], ['view', 'sort']
+                    ['back', 'forward', 'up'], ['view', 'sort'], ['copy', 'cut', 'paste'], ['rm'],
+                    ['duplicate', 'rename'], ['mkdir', 'upload'], ['getfile', 'open', 'download'], ['info']
                     @else
-                    ['back', 'forward'], ['reload'], ['home', 'up'], ['open', 'download'], ['info'], ['view', 'sort']
+                    ['back', 'forward', 'up'], ['view', 'sort'], ['getfile', 'open', 'download'], ['info']
                     @endif
                 ]
             },
             contextmenu: {
                 @if(\Auth::guard('admin')->user()->can('systemUpload'))
-                files: ['open', 'download', '|', 'copy', 'cut', 'paste', 'rm', '|', 'rename', '|', 'info']
+                cwd: ['reload', '|', 'upload', 'mkdir', 'paste', '|', 'view', 'sort', 'selectall', '|', 'info'],
+                files: ['getfile', 'open', 'download', '|', 'copy', 'cut', 'paste', 'rm', '|', 'rename', '|', 'info']
                 @else
-                files: ['open', 'download', 'info']
+                cwd: ['reload', '|', 'view', 'sort', 'selectall', '|', 'info'],
+                files: ['getfile', 'open', 'download', 'info']
                 @endif
             },
             handlers: {

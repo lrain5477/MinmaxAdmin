@@ -8,7 +8,8 @@ class CustomElfinderController extends ElfinderController
 {
     protected function getViewVars()
     {
-        $dir = 'packages/barryvdh/' . $this->package;
+        $guard = 'administrator';
+        $dir = 'components/elFinder';
         $locale = str_replace("-",  "_", $this->app->config->get('app.locale'));
         switch ($locale) {
             case 'tw':
@@ -17,11 +18,16 @@ class CustomElfinderController extends ElfinderController
             case 'cn':
                 $locale = 'zh_CN';
                 break;
+            case 'jp':
+                $locale = 'ja';
+                break;
+            default:
+                $locale = '';
         }
         if (!file_exists($this->app['path.public'] . "/$dir/js/i18n/elfinder.$locale.js")) {
             $locale = false;
         }
         $csrf = true;
-        return compact('dir', 'locale', 'csrf');
+        return compact('dir', 'locale', 'csrf', 'guard');
     }
 }

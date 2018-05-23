@@ -1,6 +1,6 @@
 {{-- * * lib --}}
 <script src="{{ asset('admin/js/lib/jquery.min.js') }}"></script>
-<script src="{{ asset('packages/barryvdh/elfinder/js/jquery-ui-1.11.4.min.js') }}"></script>
+<script src="{{ asset('admin/js/lib/jquery-ui.min.js') }}"></script>
 <script src="{{ asset('admin/js/lib/env.js') }}"></script>
 <script src="{{ asset('admin/js/lib/popper.min.js') }}"></script>
 {{-- * * * slimscroll 捲軸--}}
@@ -39,8 +39,18 @@
 {{-- * * * inputmask 表單格式--}}
 <script src="{{ asset('components/inputmask/jquery.inputmask.bundle.min.js') }}"></script>
 {{-- * * * elFinder 檔案管理--}}
-<script src="{{ asset('packages/barryvdh/elfinder/js/elfinder.min.js') }}"></script>
-<script src="{{ asset('packages/barryvdh/elfinder/js/i18n/elfinder.zh_TW.js') }}"></script>
+<script src="{{ asset('components/elFinder/js/elfinder.full.js') }}"></script>
+@switch(app()->getLocale())
+    @case('tw')
+    <script src="{{ asset('components/elFinder/js/i18n/elfinder.zh_TW.js') }}"></script>
+    @break
+    @case('cn')
+    <script src="{{ asset('components/elFinder/js/i18n/elfinder.zh_CN.js') }}"></script>
+    @break
+    @case('jp')
+    <script src="{{ asset('components/elFinder/js/i18n/elfinder.ja.js') }}"></script>
+    @break
+@endswitch
 {{-- * * * jquery.repeater.min.js 新增欄位--}}
 <script src="{{ asset('components/repeater/jquery.repeater.min.js') }}"></script>
 {{-- * * * bootstrap-colorpicker-master 顏色選取--}}

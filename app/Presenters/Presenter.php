@@ -203,9 +203,9 @@ class Presenter
         return view("{$this->guardName}.form-components.password", $componentData);
     }
 
-    public function getFieldHidden($model, $column) {
+    public function getFieldHidden($model, $column, $defaultValue = null) {
         $modelName = class_basename($model);
-        $fieldValue = isset($model->$column) ? $model->$column : app()->getLocale();
+        $fieldValue = isset($model->$column) ? $model->$column : $defaultValue;
 
         return "<input type=\"hidden\" name=\"{$modelName}[{$column}]\" value=\"{$fieldValue}\" />";
     }
@@ -380,9 +380,8 @@ class Presenter
 
         $modelName = class_basename($model);
         $columnLabel = __("models.{$modelName}.{$column}");
-        $columnAlt = "{$column}_alt";
         $imageList = isset($model->$column) ? explode(env('SEPARATE_STRING', ','), $model->$column) : [];
-        $altList = isset($model->$columnAlt) ? explode(env('SEPARATE_STRING', ','), $model->$columnAlt) : [];
+        $altList = isset($model->{"{$column}_alt"}) ? explode(env('SEPARATE_STRING', ','), $model->{"{$column}_alt"}) : [];
 
         $images = collect([]);
         foreach($imageList as $key => $item) {
@@ -398,7 +397,7 @@ class Presenter
             'id' => "{$modelName}-{$column}",
             'label' => $columnLabel,
             'name' => "{$modelName}[{$column}]",
-            'altName' => "{$modelName}[{$columnAlt}]",
+            'altName' => "{$modelName}[{$column}_alt]",
             'required' => $required,
             'limit' => isset($options['limit']) ? $options['limit'] : 0,
             'hint' => isset($options['hint']) && $options['hint'] == true ? __("models.{$modelName}.hint.{$column}") : '',

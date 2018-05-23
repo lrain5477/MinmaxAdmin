@@ -5,7 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta charset="UTF-8">
     <meta name="csrf-token" content="{{ csrf_token() }}"/>
-    <link rel="stylesheet" type="text/css" href="{{ asset('packages/barryvdh/elfinder/css/elfinder.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('components/elFinder/css/elfinder.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('components/elFinder/css/theme.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('components/elFinder/themes/windows-10/css/theme.css') }}">
     <link rel="stylesheet" href="{{ asset('admin/css/styles.css') }}">
     @stack('styles')

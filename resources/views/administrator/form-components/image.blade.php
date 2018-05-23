@@ -35,7 +35,7 @@
 
 {{-- 彈跳視窗 START --}}
 <div class="modal fade bd-example-modal-lg" id="{{ $id }}-modal" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-dialog modal-md" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">@lang('administrator.form.button.media_image')</h5>
@@ -88,36 +88,41 @@
         }).disableSelection();
 
         let elf_{{ str_replace('-', '_', $id) }} = $('#{{ $id }}-elfinder').elfinder({
-            lang: 'zh_TW',
-            headers: {
-                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+            @switch(app()->getLocale())
+                @case('tw')
+                lang: 'zh_TW',
+                @break
+                @case('cn')
+                lang: 'zh_CN',
+                @break
+                @case('jp')
+                lang: 'ja',
+                @break
+            @endswitch
+            customData: {
+                _token: '{{ csrf_token() }}'
             },
             url: '{{ route('administrator.elfinder.connector') }}',
             commands: elFinder.prototype._options.commands,
-            soundPath: '{{ asset('packages/barryvdh/elfinder/sounds') }}',
+            commandsOptions: {
+                upload : {
+                    ui : 'uploadbutton'
+                }
+            },
+            soundPath: '{{ asset('components/elFinder/sounds') }}',
             reloadClearHistory: true,
             resizable: false,
             rememberLastDir: false,
             height: '500px',
             uiOptions: {
                 toolbar: [
-                    @if(\Auth::guard('administrator')->user()->can('systemUpload'))
-                    ['back', 'forward'], ['reload'], ['home', 'up'], ['mkdir', 'mkfile', 'upload'], ['open', 'download'], ['info'],
-                    ['copy', 'cut', 'paste'], ['rm'], ['duplicate', 'rename', 'edit', 'resize'], ['view', 'sort']
-                    @else
-                    ['back', 'forward'], ['reload'], ['home', 'up'], ['open', 'download'], ['info'], ['view', 'sort']
-                    @endif
+                    ['back', 'forward', 'up'], ['view', 'sort'], ['copy', 'cut', 'paste'], ['rm'],
+                    ['duplicate', 'rename'], ['mkdir', 'upload'], ['getfile', 'open', 'download'], ['info']
                 ]
             },
             contextmenu: {
-                @if(\Auth::guard('administrator')->user()->can('systemUpload'))
-                files: ['open', 'download', '|', 'copy', 'cut', 'paste', 'rm', '|', 'rename', '|', 'info']
-                @else
-                files: ['open', 'download', 'info']
-                @endif
-            },
-            handlers: {
-                select: function (event, elfinderInstance) {}
+                cwd: ['reload', '|', 'upload', 'mkdir', 'paste', '|', 'view', 'sort', 'selectall', '|', 'info'],
+                files: ['getfile', 'open', 'download', '|', 'copy', 'cut', 'paste', 'rm', '|', 'rename', '|', 'info']
             },
             getFileCallback: function (file) {
                 if({{ $limit }} !== 0 && $('#{{ $id }}-list .card').length >= {{ $limit }}) {
