@@ -81,7 +81,7 @@
 			'errTrash'             : '無法丟入垃圾桶', // from v2.1.24 added 30.4.2017
 			'errRmSrc'             : '無法删除來源檔案.',
 			'errExtract'           : '無法從 "$1" 解壓縮檔案.',
-			'errArchive'           : '無法建立壓縮膽.',
+			'errArchive'           : '無法建立壓縮檔.',
 			'errArcType'           : '不支援的壓縮格式.',
 			'errNoArchive'         : '檔案不是壓縮檔, 或者不支援該壓缩格式.',
 			'errCmdNoSupport'      : '後端不支援該指令.',
