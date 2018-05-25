@@ -7,6 +7,9 @@ use App\Models\MerchantMenuClass;
 class MerchantMenuClassTransformer extends Transformer
 {
     protected $model = 'MerchantMenuClass';
+    protected $parameterSet = [
+        'active' => 'active',
+    ];
 
     /**
      * @param MerchantMenuClass $model

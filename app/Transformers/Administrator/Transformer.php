@@ -66,13 +66,13 @@ class Transformer extends TransformerAbstract
      * @return string
      * @throws \Throwable
      */
-    public function getGridTextBadge($value, $class, $column)
+    public function getGridTextBadge($value, $column)
     {
         return view('administrator.grid-components.text-badge', [
             'value' => $value,
-            'class' => $class,
             'column' => $column,
             'model' => $this->model,
+            'parameter' => $this->parameters[$column][$value] ?? null,
             ])->render();
     }
 
@@ -153,6 +153,7 @@ class Transformer extends TransformerAbstract
             'value' => $value,
             'uri' => $this->uri,
             'model' => $this->model,
+            'parameter' => $this->parameters[$column][$value] ?? null,
             ])->render();
     }
 

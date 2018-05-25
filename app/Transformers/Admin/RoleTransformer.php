@@ -7,6 +7,9 @@ use App\Models\Role;
 class RoleTransformer extends Transformer
 {
     protected $model = 'Role';
+    protected $parameterSet = [
+        'active' => 'active',
+    ];
 
     /**
      * Transformer constructor. Put action permissions.

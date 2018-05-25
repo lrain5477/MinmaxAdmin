@@ -7,6 +7,9 @@ use App\Models\Permission;
 class PermissionTransformer extends Transformer
 {
     protected $model = 'Permission';
+    protected $parameterSet = [
+        'active' => 'active',
+    ];
 
     /**
      * @param Permission $model

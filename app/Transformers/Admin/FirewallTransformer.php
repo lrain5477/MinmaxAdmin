@@ -7,6 +7,10 @@ use App\Models\Firewall;
 class FirewallTransformer extends Transformer
 {
     protected $model = 'Firewall';
+    protected $parameterSet = [
+        'rule' => 'rule',
+        'active' => 'active',
+    ];
 
     /**
      * Transformer constructor. Put action permissions.

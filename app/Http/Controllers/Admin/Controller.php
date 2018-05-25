@@ -8,6 +8,7 @@ use App\Models\Admin;
 use App\Models\AdminMenuClass;
 use App\Models\AdminMenuItem;
 use App\Models\Language;
+use App\Models\ParameterGroup;
 use App\Models\WebData;
 use App\Repositories\Admin\Repository;
 use Illuminate\Foundation\Bus\DispatchesJobs;
@@ -30,6 +31,7 @@ class Controller extends BaseController
      * @var array $viewData
      * @var Admin $adminData
      * @var Language $languageData
+     * @var array $parameterData
      * @var AdminMenuItem $pageData
      * @var string $modelName
      * @var Repository $modelRepository
@@ -38,6 +40,7 @@ class Controller extends BaseController
     protected $viewData;
     protected $adminData;
     protected $languageData;
+    protected $parameterData;
     protected $pageData;
     protected $modelName;
     protected $modelRepository;
@@ -71,6 +74,29 @@ class Controller extends BaseController
             } else {
                 $this->uri = explode('/', $request->route()->uri())[1] ?? $this->uri;
             }
+
+            // 設定 系統參數
+            $this->parameterData = ParameterGroup::where(['active' => 1])
+                ->get(['guid', 'code'])
+                ->mapWithKeys(function($item) {
+                    /** @var ParameterGroup $item */
+                    return [
+                        $item->code => $item
+                            ->parameterItem()
+                            ->get(['guid', 'title', 'value', 'class'])
+                            ->mapWithKeys(function($item) {
+                                /** @var \App\Models\ParameterItem $item */
+                                return [
+                                    $item->value => [
+                                        'title' => $item->getAttribute('title'),
+                                        'class' => $item->getAttribute('class')
+                                    ]
+                                ];
+                            })
+                            ->toArray()
+                    ];
+                })->toArray();
+            $this->viewData['parameterData'] = $this->parameterData;
 
             // 設定 網站資料
             $this->viewData['webData'] = WebData::where(['lang' => app()->getLocale(), 'website_key' => 'admin', 'active' => 1])->first()
@@ -383,6 +409,7 @@ class Controller extends BaseController
         $validateResult = $request->validate([
             'id' => 'required',
             'column' => 'required',
+            'oriValue' => 'required|in:0,1',
             'switchTo' => 'required|in:0,1',
         ]);
 
@@ -395,7 +422,12 @@ class Controller extends BaseController
 
             return response([
                 'msg' => 'success',
-                'newLabel' => __("models.{$this->pageData->getAttribute('model')}.selection.{$request->input('column')}.{$request->input('switchTo')}"),
+                'oriClass' => 'badge-' . ($this->parameterData[$request->input('column')][$request->input('oriValue')]['class']
+                    ?? ($request->input('oriValue') == 1 ? 'danger' : 'secondary')),
+                'newLabel' => $this->parameterData[$request->input('column')][$request->input('switchTo')]['title']
+                    ?? __("models.{$this->pageData->getAttribute('model')}.selection.{$request->input('column')}.{$request->input('switchTo')}"),
+                'newClass' => 'badge-' . ($this->parameterData[$request->input('column')][$request->input('switchTo')]['class']
+                    ?? ($request->input('switchTo') == 1 ? 'danger' : 'secondary')),
             ], 200)->header('Content-Type', 'application/json');
         } else {
             LogHelper::system('admin', $this->uri, 'update', $request->input('id'), $this->adminData->username, 0, __('admin.form.message.edit_error'));

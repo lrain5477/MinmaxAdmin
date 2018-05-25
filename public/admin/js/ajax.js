@@ -123,23 +123,15 @@ $('#tableList').delegate(".badge-switch", "click", function(e){
     $.ajax({
         type: 'POST',
         url: url,
-        data: {id:id,column:column,switchTo:switchTo},
+        data: {id:id,column:column,oriValue:status,switchTo:switchTo},
         dataType:'json',
         headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
         beforeSend:function(){},
         success:function(result) {
-            if(status == 1) {
-                $this.attr('data-value' , 0);
-                $this.removeClass("badge-danger");
-                $this.addClass("badge-secondary");
-                $this.html(result.newLabel);
-            }
-            if(status == 0) {
-                $this.attr('data-value' , 1);
-                $this.removeClass("badge-secondary");
-                $this.addClass("badge-danger");
-                $this.html(result.newLabel);
-            }
+            $this.attr('data-value' , switchTo);
+            $this.removeClass(result.oriClass);
+            $this.addClass(result.newClass);
+            $this.html(result.newLabel);
         },
         error:function(){},
         complete:function(){}

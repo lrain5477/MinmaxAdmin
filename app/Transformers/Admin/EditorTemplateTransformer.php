@@ -7,6 +7,9 @@ use App\Models\EditorTemplate;
 class EditorTemplateTransformer extends Transformer
 {
     protected $model = 'EditorTemplate';
+    protected $parameterSet = [
+        'active' => 'active',
+    ];
 
     /**
      * Transformer constructor. Put action permissions.

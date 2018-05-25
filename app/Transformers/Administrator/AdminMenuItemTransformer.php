@@ -7,6 +7,9 @@ use App\Models\AdminMenuItem;
 class AdminMenuItemTransformer extends Transformer
 {
     protected $model = 'AdminMenuItem';
+    protected $parameterSet = [
+        'active' => 'active',
+    ];
 
     /**
      * @param AdminMenuItem $model

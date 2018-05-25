@@ -9,11 +9,19 @@ class AdminMenuItemPresenter extends Presenter
 {
     public function __construct()
     {
+        parent::__construct();
+
         $this->fieldSelection = [
-            'active' => [
-                '1' => __('models.AdminMenuItem.selection.active.1'),
-                '0' => __('models.AdminMenuItem.selection.active.0'),
-            ],
+            'active' => $this->parameterSet
+                ->firstWhere('code', '=', 'active')
+                ->parameterItem()
+                ->where(['active' => 1])
+                ->get(['title', 'value'])
+                ->mapWithKeys(function($item) {
+                    /** @var \App\Models\ParameterItem $item **/
+                    return [$item->value => $item->title];
+                })
+                ->toArray(),
             'class' => AdminMenuClass::orderBy('sort')->get(['guid', 'title'])->mapWithKeys(function($item) {
                 return [$item->guid => $item->title];
             })->toArray(),

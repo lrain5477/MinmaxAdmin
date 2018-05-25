@@ -29,7 +29,7 @@ class Transformer extends TransformerAbstract
     {
         $this->uri = $uri;
 
-        $parameterGroup = ParameterGroup::where(['admin' => 1, 'active' => 1])
+        $parameterGroup = ParameterGroup::where(['active' => 1])
             ->get(['guid', 'code', 'title'])
             ->filter(function($item) {
                 return in_array($item->code, $this->parameterSet);
@@ -74,13 +74,13 @@ class Transformer extends TransformerAbstract
      * @return string
      * @throws \Throwable
      */
-    public function getGridTextBadge($value, $class, $column)
+    public function getGridTextBadge($value, $column)
     {
         return view('admin.grid-components.text-badge', [
             'value' => $value,
-            'class' => $class,
             'column' => $column,
             'model' => $this->model,
+            'parameter' => $this->parameters[$column][$value] ?? null,
             ])->render();
     }
 
@@ -170,6 +170,7 @@ class Transformer extends TransformerAbstract
                 'value' => $value,
                 'uri' => $this->uri,
                 'model' => $this->model,
+                'parameter' => $this->parameters[$column][$value] ?? null,
             ])->render();
         } else {
             return $this->getGridText(__("models.{$this->model}.selection.{$column}.{$value}"));

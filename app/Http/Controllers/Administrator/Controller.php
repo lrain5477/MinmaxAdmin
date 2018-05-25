@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Administrator;
 use App\Models\Administrator;
 use App\Models\AdministratorMenu;
 use App\Models\Language;
+use App\Models\ParameterGroup;
 use App\Models\WebData;
 use App\Repositories\Administrator\Repository;
 use Illuminate\Foundation\Bus\DispatchesJobs;
@@ -27,6 +28,7 @@ class Controller extends BaseController
      * @var array $viewData
      * @var Administrator $adminData
      * @var Language $languageData
+     * @var array $parameterData
      * @var mixed $pageData
      * @var string $modelName
      * @var Repository $modelRepository
@@ -35,6 +37,7 @@ class Controller extends BaseController
     protected $viewData;
     protected $adminData;
     protected $languageData;
+    protected $parameterData;
     protected $menuData;
     protected $pageData;
     protected $modelName;
@@ -69,6 +72,29 @@ class Controller extends BaseController
             } else {
                 $this->uri = explode('/', $request->route()->uri())[1] ?? $this->uri;
             }
+
+            // 設定 系統參數
+            $this->parameterData = ParameterGroup::where(['active' => 1])
+                ->get(['guid', 'code'])
+                ->mapWithKeys(function($item) {
+                    /** @var ParameterGroup $item */
+                    return [
+                        $item->code => $item
+                            ->parameterItem()
+                            ->get(['guid', 'title', 'value', 'class'])
+                            ->mapWithKeys(function($item) {
+                                /** @var \App\Models\ParameterItem $item */
+                                return [
+                                    $item->value => [
+                                        'title' => $item->getAttribute('title'),
+                                        'class' => $item->getAttribute('class')
+                                    ]
+                                ];
+                            })
+                            ->toArray()
+                    ];
+                })->toArray();
+            $this->viewData['parameterData'] = $this->parameterData;
 
             // 設定 網站資料
             $this->viewData['webData'] = WebData::where(['lang' => app()->getLocale(), 'website_key' => 'administrator'])->first();
@@ -343,19 +369,21 @@ class Controller extends BaseController
         $validateResult = $request->validate([
             'id' => 'required',
             'column' => 'required',
+            'oriValue' => 'required|in:0,1',
             'switchTo' => 'required|in:0,1',
         ]);
 
         if($this->modelRepository->save([$request->input('column') => $request->input('switchTo')], [[$this->modelRepository->getIndexKey(), '=', $request->input('id')]])) {
-            //LogHelper::systemLog(Auth::guard('administrator')->user()->username, 'Update ' . $this->modelName . '(' . $request->input('id') . ') ' . $request->input('column') . ' to ' . $request->input('switchTo'), 'Success');
-
             return response([
                 'msg' => 'success',
-                'newLabel' => __("models.{$this->pageData->getAttribute('model')}.selection.{$request->input('column')}.{$request->input('switchTo')}"),
+                'oriClass' => 'badge-' . ($this->parameterData[$request->input('column')][$request->input('oriValue')]['class']
+                    ?? ($request->input('oriValue') == 1 ? 'danger' : 'secondary')),
+                'newLabel' => $this->parameterData[$request->input('column')][$request->input('switchTo')]['title']
+                    ?? __("models.{$this->pageData->getAttribute('model')}.selection.{$request->input('column')}.{$request->input('switchTo')}"),
+                'newClass' => 'badge-' . ($this->parameterData[$request->input('column')][$request->input('switchTo')]['class']
+                    ?? ($request->input('switchTo') == 1 ? 'danger' : 'secondary')),
             ], 200)->header('Content-Type', 'application/json');
         } else {
-            //LogHelper::systemLog(Auth::guard('administrator')->user()->username, 'Update ' . $this->modelName . '(' . $request->input('id') . ') ' . $request->input('column') . ' to ' . $request->input('switchTo'), 'Failed');
-
             return response(['msg' => 'error'], 400)->header('Content-Type', 'application/json');
         }
     }

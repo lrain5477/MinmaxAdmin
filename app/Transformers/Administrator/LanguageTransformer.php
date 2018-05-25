@@ -7,6 +7,9 @@ use App\Models\Language;
 class LanguageTransformer extends Transformer
 {
     protected $model = 'Language';
+    protected $parameterSet = [
+        'active' => 'active',
+    ];
 
     /**
      * @param Language $model

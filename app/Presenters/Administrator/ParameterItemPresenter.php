@@ -8,10 +8,11 @@ class ParameterItemPresenter extends Presenter
 {
     public function __construct()
     {
-        $parameterSet = ParameterGroup::where(['active' => 1])->get(['guid', 'code', 'title']);
+        parent::__construct();
 
         $this->fieldSelection = [
-            'active' => $parameterSet->firstWhere('code', '=', 'active')
+            'active' => $this->parameterSet
+                ->firstWhere('code', '=', 'active')
                 ->parameterItem()
                 ->where(['active' => 1])
                 ->get(['title', 'value'])

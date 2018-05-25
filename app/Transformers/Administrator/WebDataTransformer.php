@@ -7,6 +7,9 @@ use App\Models\WebData;
 class WebDataTransformer extends Transformer
 {
     protected $model = 'WebData';
+    protected $parameterSet = [
+        'active' => 'active',
+    ];
 
     /**
      * @param WebData $model

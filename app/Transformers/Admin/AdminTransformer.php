@@ -7,6 +7,9 @@ use App\Models\Admin;
 class AdminTransformer extends Transformer
 {
     protected $model = 'Admin';
+    protected $parameterSet = [
+        'active' => 'active',
+    ];
 
     /**
      * Transformer constructor. Put action permissions.

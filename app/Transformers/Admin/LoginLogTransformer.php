@@ -7,6 +7,9 @@ use App\Models\LoginLog;
 class LoginLogTransformer extends Transformer
 {
     protected $model = 'LoginLog';
+    protected $parameterSet = [
+        'result' => 'result',
+    ];
 
     /**
      * @param LoginLog $model
@@ -15,15 +18,10 @@ class LoginLogTransformer extends Transformer
      */
     public function transform(LoginLog $model)
     {
-        $classResult = [
-            '1' => 'badge-danger',
-            '0' => 'badge-warning'
-        ];
-
         return [
             'username' => $this->getGridText($model->username),
             'ip' => $this->getGridText($model->ip),
-            'result' => $this->getGridTextBadge($model->getAttribute('result'), $classResult[$model->getAttribute('result')], 'result'),
+            'result' => $this->getGridTextBadge($model->getAttribute('result'), 'result'),
             'created_at' => $this->getGridDatetime($model->created_at),
         ];
     }

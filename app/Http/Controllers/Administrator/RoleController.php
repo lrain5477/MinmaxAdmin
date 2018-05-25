@@ -51,13 +51,13 @@ class RoleController extends Controller
      */
     public function update($id, Request $request)
     {
-        $validator = Validator::make($request->input($this->pageData->model), $this->modelRepository->getRules() ?? []);
+        $validator = Validator::make($request->input($this->pageData->getAttribute('model')), $this->modelRepository->getRules() ?? []);
 
         if($validator->passes()) {
             try {
                 \DB::beginTransaction();
 
-                $this->modelRepository->save($request->input($this->pageData->model), [$this->modelRepository->getIndexKey() => $id]);
+                $this->modelRepository->save($request->input($this->pageData->getAttribute('model')), [$this->modelRepository->getIndexKey() => $id]);
                 $permissionData = $request->input('PermissionRole');
                 $permissionRoleData = [];
                 foreach ($permissionData as $permission_id) {

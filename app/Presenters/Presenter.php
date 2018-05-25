@@ -2,16 +2,23 @@
 
 namespace App\Presenters;
 
-use Illuminate\Support\Carbon;
+use App\Models\ParameterGroup;
 use Illuminate\Support\Collection;
-use Illuminate\Database\Eloquent\Model;
 
 class Presenter
 {
+    /** @var string $guardName **/
     protected $guardName;
+    /** @var Collection $parameterSet **/
+    protected $parameterSet;
     protected $columnClass = [];
     protected $fieldRequired = [];
     protected $fieldSelection = [];
+
+    public function __construct()
+    {
+        $this->parameterSet = ParameterGroup::where(['active' => 1])->get(['guid', 'code', 'title']);
+    }
 
     public function getViewNormalText($model, $column, $value = '') {
         $modelName = class_basename($model);

@@ -2,16 +2,15 @@
 
 namespace App\Presenters\Administrator;
 
-use App\Models\ParameterGroup;
-
 class ParameterGroupPresenter extends Presenter
 {
     public function __construct()
     {
-        $parameterSet = ParameterGroup::where(['active' => 1])->get(['guid', 'code', 'title']);
+        parent::__construct();
 
         $this->fieldSelection = [
-            'admin' => $parameterSet->firstWhere('code', '=', 'admin')
+            'admin' => $this->parameterSet
+                ->firstWhere('code', '=', 'admin')
                 ->parameterItem()
                 ->where(['active' => 1])
                 ->get(['title', 'value'])
@@ -20,7 +19,8 @@ class ParameterGroupPresenter extends Presenter
                     return [$item->value => $item->title];
                 })
                 ->toArray(),
-            'active' => $parameterSet->firstWhere('code', '=', 'active')
+            'active' => $this->parameterSet
+                ->firstWhere('code', '=', 'active')
                 ->parameterItem()
                 ->where(['active' => 1])
                 ->get(['title', 'value'])
