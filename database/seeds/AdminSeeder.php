@@ -249,6 +249,41 @@ class AdminSeeder extends Seeder
                 'sort' => 1,
                 'active' => '1', 'updated_at' => $timestamp, 'created_at' => $timestamp
             ],
+
+            [
+                'lang' => $defaultLanguage,
+                'guid' => $menuGuid4 = Str::uuid(),
+                'title' => '系統參數',
+                'uri' => 'root-parameter',
+                'controller' => null,
+                'model' => null,
+                'class' => $menuClassGuid3,
+                'parent' => '0',
+                'link' => 'javascript:void(0);',
+                'icon' => 'icon-filter',
+                'permission_key' => null,
+                //'filter' => '',
+                //'keeps' => '',
+                'sort' => 4,
+                'active' => '1', 'updated_at' => $timestamp, 'created_at' => $timestamp
+            ],
+            [
+                'lang' => $defaultLanguage,
+                'guid' => Str::uuid(),
+                'title' => '參數項目',
+                'uri' => 'parameter-item',
+                'controller' => 'ParameterItemController',
+                'model' => 'ParameterItem',
+                'class' => $menuClassGuid3,
+                'parent' => $menuGuid4,
+                'link' => 'parameter-item',
+                'icon' => null,
+                'permission_key' => 'parameterItemShow',
+                //'filter' => '',
+                //'keeps' => '',
+                'sort' => 1,
+                'active' => '1', 'updated_at' => $timestamp, 'created_at' => $timestamp
+            ],
         ];
         DB::table('admin_menu_item')->insert($adminMenuItemData);
 

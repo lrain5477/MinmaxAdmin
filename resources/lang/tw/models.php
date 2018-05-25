@@ -266,6 +266,53 @@ return [
         ],
     ],
 
+    'ParameterGroup' => [
+        'id' => 'ID',
+        'guid' => 'GUID',
+        'code' => '群組代碼',
+        'title' => '群組名稱',
+        'admin' => '管理權限',
+        'active' => '狀態',
+        'created_at' => '建立時間',
+        'updated_at' => '更新時間',
+        'hint' => [
+            'admin' => '設定 admin 平台之管理員可否管理此分類之參數項目。',
+        ],
+        'selection' => [
+            'admin' => [
+                '1' => '可用',
+                '0' => '禁止',
+            ],
+            'active' => [
+                '1' => '啟用',
+                '0' => '停用',
+            ],
+        ],
+    ],
+
+    'ParameterItem' => [
+        'id' => 'ID',
+        'guid' => 'GUID',
+        'lang' => '語系',
+        'group' => '群組',
+        'title' => '標題',
+        'value' => '參數值',
+        'class' => 'Class 名稱',
+        'sort' => '排序',
+        'active' => '狀態',
+        'created_at' => '建立時間',
+        'updated_at' => '更新時間',
+        'hint' => [
+            'class' => '請輸入該參數值所對應的 Bootstrap 元件類別識別名稱。例：badge-danger 請輸入 danger。',
+        ],
+        'selection' => [
+            'active' => [
+                '1' => '啟用',
+                '0' => '停用',
+            ],
+        ],
+    ],
+
     'EditorTemplate' => [
         'id' => 'ID',
         'guid' => 'GUID',

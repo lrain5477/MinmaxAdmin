@@ -2,6 +2,7 @@
 
 namespace App\Transformers\Admin;
 
+use App\Models\ParameterGroup;
 use Illuminate\Support\Carbon;
 use League\Fractal\TransformerAbstract;
 
@@ -9,6 +10,8 @@ class Transformer extends TransformerAbstract
 {
     protected $uri;
     protected $model;
+    protected $parameters = [];
+    protected $parameterSet = [];
 
     /**
      * @var array $permissions can include above character
@@ -25,6 +28,34 @@ class Transformer extends TransformerAbstract
     public function __construct($uri)
     {
         $this->uri = $uri;
+
+        $parameterGroup = ParameterGroup::where(['admin' => 1, 'active' => 1])
+            ->get(['guid', 'code', 'title'])
+            ->filter(function($item) {
+                return in_array($item->code, $this->parameterSet);
+            })
+            ->values();
+
+        $this->parameters = collect($this->parameterSet)
+            ->map(function($item) use ($parameterGroup) {
+                return $parameterGroup->where('code', '=', $item)->count() > 0
+                    ? $parameterGroup
+                        ->firstWhere('code', '=', $item)
+                        ->parameterItem()
+                        ->get(['title', 'value', 'class'])
+                        ->mapWithKeys(function($item) {
+                            /** @var \App\Models\ParameterItem $item **/
+                            return [
+                                $item->value => [
+                                    'title' => $item->getAttribute('title'),
+                                    'class' => $item->getAttribute('class')
+                                ]
+                            ];
+                        })
+                        ->toArray()
+                    : [];
+            })
+            ->toArray();
     }
 
     /**

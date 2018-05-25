@@ -144,6 +144,32 @@ class SystemSeeder extends Seeder
             DB::table('web_data')->insert($languageInsert);
         }
 
+        $parameterGroupData = [
+            ['guid' => $parameterGroupGuid1 = Str::uuid(), 'code' => 'active', 'title' => '狀態', 'admin' => '0', 'active' => '1', 'updated_at' => $timestamp, 'created_at' => $timestamp],
+            ['guid' => $parameterGroupGuid2 = Str::uuid(), 'code' => 'result', 'title' => '狀態(結果)', 'admin' => '0', 'active' => '1', 'updated_at' => $timestamp, 'created_at' => $timestamp],
+            ['guid' => $parameterGroupGuid3 = Str::uuid(), 'code' => 'admin', 'title' => '管理權限', 'admin' => '0', 'active' => '1', 'updated_at' => $timestamp, 'created_at' => $timestamp],
+        ];
+        DB::table('parameter_group')->insert($parameterGroupData);
+
+        $parameterItemData = [
+            ['guid' => Str::uuid(), 'lang' => $defaultLanguage, 'group' => $parameterGroupGuid1, 'title' => '啟用', 'value' => '1', 'class' => 'danger', 'sort' => 1, 'active' => '1', 'updated_at' => $timestamp, 'created_at' => $timestamp],
+            ['guid' => Str::uuid(), 'lang' => $defaultLanguage, 'group' => $parameterGroupGuid1, 'title' => '停用', 'value' => '0', 'class' => 'default', 'sort' => 2, 'active' => '1', 'updated_at' => $timestamp, 'created_at' => $timestamp],
+            ['guid' => Str::uuid(), 'lang' => $defaultLanguage, 'group' => $parameterGroupGuid2, 'title' => '成功', 'value' => '1', 'class' => 'success', 'sort' => 1, 'active' => '1', 'updated_at' => $timestamp, 'created_at' => $timestamp],
+            ['guid' => Str::uuid(), 'lang' => $defaultLanguage, 'group' => $parameterGroupGuid2, 'title' => '失敗', 'value' => '0', 'class' => 'danger', 'sort' => 2, 'active' => '1', 'updated_at' => $timestamp, 'created_at' => $timestamp],
+            ['guid' => Str::uuid(), 'lang' => $defaultLanguage, 'group' => $parameterGroupGuid3, 'title' => '可用', 'value' => '1', 'class' => 'success', 'sort' => 1, 'active' => '1', 'updated_at' => $timestamp, 'created_at' => $timestamp],
+            ['guid' => Str::uuid(), 'lang' => $defaultLanguage, 'group' => $parameterGroupGuid3, 'title' => '禁止', 'value' => '0', 'class' => 'danger', 'sort' => 2, 'active' => '1', 'updated_at' => $timestamp, 'created_at' => $timestamp],
+        ];
+        DB::table('parameter_item')->insert($parameterItemData);
+
+        foreach ($languageData as $language) {
+            if($language['codes'] === $defaultLanguage) continue;
+            $languageInsert = collect($parameterItemData)->map(function($item, $key) use ($language) {
+                $item['lang'] = $language['codes'];
+                return $item;
+            })->toArray();
+            DB::table('parameter_item')->insert($languageInsert);
+        }
+
         try {
             $emailTemplate1 = view('emails.templates.email-normal')->render();
         } catch (\Exception $e) {

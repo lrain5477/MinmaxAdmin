@@ -266,6 +266,53 @@ return [
         ],
     ],
 
+    'ParameterGroup' => [
+        'id' => 'ID',
+        'guid' => 'GUID',
+        'code' => 'Code',
+        'title' => 'Group Name',
+        'admin' => 'Admin Permission',
+        'active' => 'Active',
+        'created_at' => 'Created At',
+        'updated_at' => 'Updated At',
+        'hint' => [
+            'admin' => 'Allow admin can manage the items of this group.',
+        ],
+        'selection' => [
+            'admin' => [
+                '1' => 'Allow',
+                '0' => 'Deny',
+            ],
+            'active' => [
+                '1' => 'On',
+                '0' => 'Off',
+            ],
+        ],
+    ],
+
+    'ParameterItem' => [
+        'id' => 'ID',
+        'guid' => 'GUID',
+        'lang' => 'Language',
+        'group' => 'Group',
+        'title' => 'Title',
+        'value' => 'Value',
+        'class' => 'Class Name',
+        'sort' => 'Sort',
+        'active' => 'Active',
+        'created_at' => 'Created At',
+        'updated_at' => 'Updated At',
+        'hint' => [
+            'class' => 'Please fill bootstrap class name for this value. etc. fill \'danger\' for badge-danger.',
+        ],
+        'selection' => [
+            'active' => [
+                '1' => 'On',
+                '0' => 'Off',
+            ],
+        ],
+    ],
+
     'EditorTemplate' => [
         'id' => 'ID',
         'guid' => 'GUID',

@@ -161,6 +161,44 @@ class AdministratorSeeder extends Seeder
                 //'filter' => '',
                 'sort' => 5, 'updated_at' => $timestamp, 'created_at' => $timestamp
             ],
+
+            [
+                'title' => '系統參數',
+                'uri' => 'parameter-control',
+                'controller' => null,
+                'model' => null,
+                'class' => 'system',
+                'parent' => '0',
+                'link' => 'javascript:void(0);',
+                'icon' => 'icon-filter',
+                //'filter' => '',
+                'sort' => 6, 'updated_at' => $timestamp, 'created_at' => $timestamp
+            ],
+            [
+                'title' => '參數項目',
+                'uri' => 'parameter-item',
+                'controller' => null,
+                'model' => 'ParameterItem',
+                'class' => 'system',
+                'parent' => 'parameter-control',
+                'link' => 'parameter-item',
+                'icon' => null,
+                //'filter' => '',
+                'sort' => 1, 'updated_at' => $timestamp, 'created_at' => $timestamp
+            ],
+            [
+                'title' => '參數群組',
+                'uri' => 'parameter-group',
+                'controller' => null,
+                'model' => 'ParameterGroup',
+                'class' => 'system',
+                'parent' => 'parameter-control',
+                'link' => 'parameter-group',
+                'icon' => null,
+                //'filter' => '',
+                'sort' => 2, 'updated_at' => $timestamp, 'created_at' => $timestamp
+            ],
+
             [
                 'title' => '操作紀錄',
                 'uri' => 'system-log',
@@ -171,7 +209,7 @@ class AdministratorSeeder extends Seeder
                 'link' => 'system-log',
                 'icon' => 'icon-warning',
                 //'filter' => '',
-                'sort' => 6, 'updated_at' => $timestamp, 'created_at' => $timestamp
+                'sort' => 7, 'updated_at' => $timestamp, 'created_at' => $timestamp
             ],
         ];
         DB::table('administrator_menu')->insert($administratorMenuData);

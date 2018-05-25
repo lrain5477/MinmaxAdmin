@@ -144,6 +144,27 @@ class RbacSeeder extends Seeder
                 'name' => 'firewallDestroy', 'label' => '刪除', 'display_name' => '防火牆 [刪除]', 'description' => '防火牆 [刪除]',
                 'active' => '1', 'updated_at' => $timestamp, 'created_at' => $timestamp,
             ],
+
+            [
+                'guard' => 'admin', 'group' => 'parameterItem',
+                'name' => 'parameterItemShow', 'label' => '瀏覽', 'display_name' => '參數項目 [瀏覽]', 'description' => '參數項目 [瀏覽]',
+                'active' => '1', 'updated_at' => $timestamp, 'created_at' => $timestamp,
+            ],
+            [
+                'guard' => 'admin', 'group' => 'parameterItem',
+                'name' => 'parameterItemCreate', 'label' => '新增', 'display_name' => '參數項目 [新增]', 'description' => '參數項目 [新增]',
+                'active' => '1', 'updated_at' => $timestamp, 'created_at' => $timestamp,
+            ],
+            [
+                'guard' => 'admin', 'group' => 'parameterItem',
+                'name' => 'parameterItemEdit', 'label' => '編輯', 'display_name' => '參數項目 [編輯]', 'description' => '參數項目 [編輯]',
+                'active' => '1', 'updated_at' => $timestamp, 'created_at' => $timestamp,
+            ],
+            [
+                'guard' => 'admin', 'group' => 'parameterItem',
+                'name' => 'parameterItemDestroy', 'label' => '刪除', 'display_name' => '參數項目 [刪除]', 'description' => '參數項目 [刪除]',
+                'active' => '1', 'updated_at' => $timestamp, 'created_at' => $timestamp,
+            ],
         ];
         DB::table('permissions')->insert($permissionsData);
 

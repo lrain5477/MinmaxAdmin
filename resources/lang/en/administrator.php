@@ -88,6 +88,7 @@ return [
             'all_result' => 'All Results',
             'all_guard' => 'All Guards',
             'all_rule' => 'All Rules',
+            'all_admin' => 'All Admin',
         ],
         'back' => 'Back',
         'root' => 'Root',
