@@ -59,7 +59,7 @@ class Presenter
     public function getViewSelection($model, $column) {
         $modelName = class_basename($model);
         $columnLabel = __("models.{$modelName}.{$column}");
-        $fieldValue = isset($model->$column) ? __("models.{$modelName}.selection.{$column}.{$model->$column}") : '';
+        $fieldValue = isset($model->$column) ? ($this->fieldSelection[$column][$model->$column] ?? __("models.{$modelName}.selection.{$column}.{$model->$column}")) : '';
 
         $componentData = [
             'id' => "{$modelName}-{$column}",
