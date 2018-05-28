@@ -23,7 +23,7 @@ class Presenter
     public function getViewNormalText($model, $column, $value = '') {
         $modelName = class_basename($model);
         $columnLabel = __("models.{$modelName}.{$column}");
-        $fieldValue = $value === '' ? (isset($model->$column) ? $model->$column : '') : $value;
+        $fieldValue = $value === '' ? (isset($model->$column) ? nl2br(trim(strip_tags($model->$column))) : '') : $value;
 
         $componentData = [
             'id' => "{$modelName}-{$column}",
