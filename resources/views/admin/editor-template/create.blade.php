@@ -13,7 +13,7 @@
 @section('forms')
     @inject('modelPresenter', 'App\Presenters\Admin\EditorTemplatePresenter')
 
-    {!! $modelPresenter->getFieldHidden($formData, 'lang') !!}
+    {!! $modelPresenter->getFieldHidden($formData, 'lang', app()->getLocale()) !!}
 
     <fieldset id="baseFieldSet">
         <legend class="legend h6 mb-4"><i class="icon-angle-double-down2 mr-2"></i>@lang('admin.form.fieldSet.default')</legend>
