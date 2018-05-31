@@ -33,7 +33,7 @@
                 @endforeach
             @else
                 @foreach($listOptions['options'] as $listKey => $listLabel)
-                <option value="{{ $listKey }}" {{ $required === true && $loop->first ? 'selected' : '' }}>{{ $listLabel }}</option>
+                <option value="{{ $listKey }}" {{ $required === true && $loop->parent->first && $loop->first ? 'selected' : '' }}>{{ $listLabel }}</option>
                 @endforeach
             @endif
             </optgroup>
