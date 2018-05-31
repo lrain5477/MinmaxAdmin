@@ -27,7 +27,7 @@ class GoogleAnalyticsClient
     public function __construct()
     {
         $this->setService(config('analytics.service_account_credentials_json'));
-        $this->setViewId(env('ANALYTICS_VIEW_ID', null));
+        $this->setViewId(config('analytics.view_id'));
     }
 
     /**

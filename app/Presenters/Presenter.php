@@ -74,8 +74,8 @@ class Presenter
         $modelName = class_basename($model);
         $columnLabel = __("models.{$modelName}.{$column}");
         $columnAlt = "{$column}_alt";
-        $imageList = isset($model->$column) ? explode(env('SEPARATE_STRING', ','), $model->$column) : [];
-        $altList = isset($model->$columnAlt) ? explode(env('SEPARATE_STRING', ','), $model->$columnAlt) : [];
+        $imageList = isset($model->$column) ? explode(config('app.separate_string'), $model->$column) : [];
+        $altList = isset($model->$columnAlt) ? explode(config('app.separate_string'), $model->$columnAlt) : [];
 
         $images = collect([]);
         foreach($imageList as $key => $item) {
@@ -413,8 +413,8 @@ class Presenter
 
         $modelName = class_basename($model);
         $columnLabel = __("models.{$modelName}.{$column}");
-        $imageList = isset($model->$column) ? explode(env('SEPARATE_STRING', ','), $model->$column) : [];
-        $altList = isset($model->{"{$column}_alt"}) ? explode(env('SEPARATE_STRING', ','), $model->{"{$column}_alt"}) : [];
+        $imageList = isset($model->$column) ? explode(config('app.separate_string'), $model->$column) : [];
+        $altList = isset($model->{"{$column}_alt"}) ? explode(config('app.separate_string'), $model->{"{$column}_alt"}) : [];
 
         $images = collect([]);
         foreach($imageList as $key => $item) {
@@ -448,7 +448,7 @@ class Presenter
 
         $modelName = class_basename($model);
         $columnLabel = __("models.{$modelName}.{$column}");
-        $fileList = isset($model->$column) ? explode(env('SEPARATE_STRING', ','), $model->$column) : [];
+        $fileList = isset($model->$column) ? explode(config('app.separate_string'), $model->$column) : [];
 
         $componentData = [
             'id' => "{$modelName}-{$column}",

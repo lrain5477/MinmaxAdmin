@@ -17,6 +17,20 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Application Author
+    |--------------------------------------------------------------------------
+    |
+    | This value is the author of your application. This value is used at
+    | copyright information. Set this in your ".env" file.
+    |
+    */
+
+    'author' => env('APP_AUTHOR'),
+
+    'author_url' => env('APP_AUTHOR_URL'),
+
+    /*
+    |--------------------------------------------------------------------------
     | Application Environment
     |--------------------------------------------------------------------------
     |
@@ -107,6 +121,19 @@ return [
     'key' => env('APP_KEY'),
 
     'cipher' => 'AES-256-CBC',
+
+    /*
+    |--------------------------------------------------------------------------
+    | Custom Project Parameters
+    |--------------------------------------------------------------------------
+    |
+    | Those parameters are used for project. Usually they are set at .env file.
+    |
+    */
+
+    'separate_string' => env('SEPARATE_STRING', '#}spec%$'),
+
+    'thumbnail_size' => env('THUMBNAIL_SIZE', '(80|120|300)'),
 
     /*
     |--------------------------------------------------------------------------

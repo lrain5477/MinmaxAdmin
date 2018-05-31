@@ -80,7 +80,7 @@
 
             <div class="login-footer">
                 <div class="login-copyright mb-3">
-                    <p>Copyright © {{ env('APP_AUTHOR') }} {{ date('Y') }}</p>
+                    <p>Copyright © {{ config('app.author') }} {{ date('Y') }}</p>
                 </div>
             </div>
         </div>

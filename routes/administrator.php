@@ -33,8 +33,8 @@ Route::middleware(['auth:administrator'])->group(function() {
         $thumbnailPath = \App\Helpers\ImageHelper::makeThumbnail($imagePath, $width, $height);
         return response(Storage::get($thumbnailPath), 200)->header('Content-Type', Storage::mimeType($thumbnailPath));
     })->where([
-        'width' => env('THUMBNAIL_SIZE'),
-        'height' => env('THUMBNAIL_SIZE'),
+        'width' => config('app.thumbnail_size'),
+        'height' => config('app.thumbnail_size'),
         'imagePath' => '.+\.(jpg|png|gif)$'
     ])->name('thumbnail');
 

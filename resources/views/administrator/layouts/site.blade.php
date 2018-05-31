@@ -34,7 +34,7 @@
     @include('administrator.layouts._sidebar')
 
     <footer class="page-footer small p-2">
-        <p class="mb-0">{{ date('Y') }} © {{ env('APP_AUTHOR') }}. design by <a href="{{ env('APP_AUTHOR_URL') }}" target="_blank">{{ env('APP_AUTHOR') }}</a></p>
+        <p class="mb-0">{{ date('Y') }} © {{ config('app.author') }}. design by <a href="{{ config('app.author_url') }}" target="_blank">{{ config('app.author') }}</a></p>
     </footer>
 </div>
 
