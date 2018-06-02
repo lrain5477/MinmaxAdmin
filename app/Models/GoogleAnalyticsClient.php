@@ -419,7 +419,7 @@ class GoogleAnalyticsClient
 
                         return [
                             'source' => $source,
-                            'date' => $item[1],
+                            'date' => substr($item[1], 0, 4) . '-' . substr($item[1], 4, 2) . '-' . substr($item[1], 6, 2),
                             'count' => $item[2]
                         ];
                     })
@@ -429,11 +429,13 @@ class GoogleAnalyticsClient
                         $endDate = (int) date('Ymd', time());
 
                         for($date = $startDate; $date <= $endDate; $date++) {
-                            if($item->contains('date', '=', (string) $date)) continue;
+                            $dateString = substr(strval($date), 0, 4) . '-' . substr(strval($date), 4, 2) . '-' . substr(strval($date), 6, 2);
+
+                            if($item->contains('date', '=', $dateString)) continue;
 
                             $item->push([
                                 'source' => $key,
-                                'date' => (string) $date,
+                                'date' => $dateString,
                                 'count' => '0'
                             ]);
                         }
@@ -448,7 +450,7 @@ class GoogleAnalyticsClient
                             case 'direct':
                                 $directCollection = $item->map(function ($item) {
                                     return [
-                                        'date' => Carbon::parse($item['date'])->format('Y-m-d\T16:00:00.000\Z'),
+                                        'date' => date('Y-m-d\T16:00:00.000\Z', strtotime($item['date'])),
                                         'value' => (int)$item['count']
                                     ];
                                 })->toJson(JSON_UNESCAPED_UNICODE);
@@ -457,7 +459,7 @@ class GoogleAnalyticsClient
                             case 'organic':
                                 $organicCollection = $item->map(function ($item) {
                                     return [
-                                        'date' => Carbon::parse($item['date'])->format('Y-m-d\T16:00:00.000\Z'),
+                                        'date' => date('Y-m-d\T16:00:00.000\Z', strtotime($item['date'])),
                                         'value' => (int)$item['count']
                                     ];
                                 })->toJson(JSON_UNESCAPED_UNICODE);
@@ -466,7 +468,7 @@ class GoogleAnalyticsClient
                             case 'referral':
                                 $referralCollection = $item->map(function ($item) {
                                     return [
-                                        'date' => Carbon::parse($item['date'])->format('Y-m-d\T16:00:00.000\Z'),
+                                        'date' => date('Y-m-d\T16:00:00.000\Z', strtotime($item['date'])),
                                         'value' => (int)$item['count']
                                     ];
                                 })->toJson(JSON_UNESCAPED_UNICODE);
