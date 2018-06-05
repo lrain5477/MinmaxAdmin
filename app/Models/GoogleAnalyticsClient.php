@@ -345,50 +345,48 @@ class GoogleAnalyticsClient
      */
     public function putSourceMedium($days = 30)
     {
-        if(!Cache::has("sourceMedium{$days}")) {
-            $response = Cache::remember("sourceMedium{$days}", config('analytics.cache_lifetime_in_minutes'), function () use ($days) {
-                return $this->query('ga', [
-                    'startTime' => strtotime("-{$days} days"),
-                    'endTime' => time(),
-                    'metrics' => 'ga:sessions',
-                    'others' => [
-                        'dimensions' => 'ga:medium',
-                        'sort' => '-ga:sessions',
-                    ]
-                ]);
-            });
+        $response = Cache::remember("sourceMedium{$days}", config('analytics.cache_lifetime_in_minutes'), function () use ($days) {
+            return $this->query('ga', [
+                'startTime' => strtotime("-{$days} days"),
+                'endTime' => time(),
+                'metrics' => 'ga:sessions',
+                'others' => [
+                    'dimensions' => 'ga:medium',
+                    'sort' => '-ga:sessions',
+                ]
+            ]);
+        });
 
-            $sourceData = collect($response->rows ?? [])
-                ->map(function ($item) {
-                    switch($item[0]) {
-                        case 'organic':
-                            $source = 'organic';
-                            break;
-                        case 'referral':
-                            $source = 'referral';
-                            break;
-                        default:
-                            $source = 'direct';
-                            break;
-                    }
+        $sourceData = collect($response->rows ?? [])
+            ->map(function ($item) {
+                switch($item[0]) {
+                    case 'organic':
+                        $source = 'organic';
+                        break;
+                    case 'referral':
+                        $source = 'referral';
+                        break;
+                    default:
+                        $source = 'direct';
+                        break;
+                }
 
-                    return [
-                        'source' => $source,
-                        'count' => (int) $item[1]
-                    ];
-                })
-                ->groupBy('source')
-                ->map(function($item, $key) {
-                    return [
-                        'source' => __(\Request::route()->middleware()[0] . '.dashboard.medium.json_' . $key),
-                        'count' => collect($item)->sum('count')
-                    ];
-                })
-                ->values()
-                ->toJson(JSON_UNESCAPED_UNICODE);
+                return [
+                    'source' => $source,
+                    'count' => (int) $item[1]
+                ];
+            })
+            ->groupBy('source')
+            ->map(function($item, $key) {
+                return [
+                    'source' => __(\Request::route()->middleware()[0] . '.dashboard.medium.json_' . $key),
+                    'count' => collect($item)->sum('count')
+                ];
+            })
+            ->values()
+            ->toJson(JSON_UNESCAPED_UNICODE);
 
-            File::put(public_path('admin/data/live-analytics-traffic.json'), $sourceData);
-        }
+        File::put(public_path('admin/data/live-analytics-traffic.json'), $sourceData);
     }
 
     /**
