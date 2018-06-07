@@ -31,7 +31,7 @@ Route::middleware(['auth:administrator'])->group(function() {
     Route::get('thumbnail/{width}x{height}/{imagePath}', function($width, $height, $imagePath) {
         if($width != $height) abort(404);
         $thumbnailPath = \App\Helpers\ImageHelper::makeThumbnail($imagePath, $width, $height);
-        return response(Storage::get($thumbnailPath), 200)->header('Content-Type', Storage::mimeType($thumbnailPath));
+        return Storage::response($thumbnailPath);
     })->where([
         'width' => config('app.thumbnail_size'),
         'height' => config('app.thumbnail_size'),
@@ -52,7 +52,7 @@ Route::middleware(['auth:administrator'])->group(function() {
             })
             ->toJson(JSON_UNESCAPED_UNICODE);
 
-        return "CKEDITOR.addTemplates('default', { templates: {$templates} });";
+        return "CKEDITOR.addTemplates('{$category}', { templates: {$templates} });";
     })->name('editorTemplate');
 
     // elFinder

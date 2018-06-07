@@ -75,7 +75,20 @@ return array(
     |
     */
 
-    'options' => [],
+    'options' => [
+        'bind' => [
+            'upload.presave' => [
+                'Plugin.AutoResize.onUpLoadPreSave'
+            ]
+        ],
+        'plugin' => [
+            'AutoResize' => [
+                'enable' => true,
+                'maxWidth'  => 2000,
+                'quality' => 95
+            ]
+        ]
+    ],
     
     /*
     |--------------------------------------------------------------------------
@@ -86,6 +99,8 @@ return array(
     | See https://github.com/Studio-42/elFinder/wiki/Connector-configuration-options-2.1#root-options
     |
     */
-    'root_options' => [],
+    'root_options' => [
+        'uploadMaxSize' => '2M'
+    ],
 
 );

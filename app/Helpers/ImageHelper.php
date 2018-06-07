@@ -56,22 +56,28 @@ class ImageHelper
                     if($image === null) return null;
 
                     $thumbnail = imagecreatetruecolor($newWidth, $newHeight);
-                    imagecopyresized($thumbnail, $image, 0, 0, 0, 0, $newWidth, $newHeight, $width, $height);
 
-                    $storgeStatus = false;
+                    $storageStatus = false;
                     switch ($fileExtension) {
                         case 'jpg':
-                            $storgeStatus = imagejpeg($thumbnail, Storage::path($thumbnailPath), $quality);
+                            imagecopyresized($thumbnail, $image, 0, 0, 0, 0, $newWidth, $newHeight, $width, $height);
+                            $storageStatus = imagejpeg($thumbnail, Storage::path($thumbnailPath), $quality);
                             break;
                         case 'png':
-                            $storgeStatus = imagepng($thumbnail, Storage::path($thumbnailPath));
+                            imagesavealpha($thumbnail, true);
+                            imagefill($thumbnail, 0, 0, imagecolorallocatealpha($thumbnail, 0, 0, 0, 127));
+                            imagecopyresampled($thumbnail, $image, 0, 0, 0, 0, $newWidth, $newHeight, $width, $height);
+                            $storageStatus = imagepng($thumbnail, Storage::path($thumbnailPath));
                             break;
                         case 'gif':
-                            $storgeStatus = imagegif($thumbnail, Storage::path($thumbnailPath));
+                            imagesavealpha($thumbnail, true);
+                            imagefill($thumbnail, 0, 0, imagecolorallocatealpha($thumbnail, 0, 0, 0, 127));
+                            imagecopyresampled($thumbnail, $image, 0, 0, 0, 0, $newWidth, $newHeight, $width, $height);
+                            $storageStatus = imagegif($thumbnail, Storage::path($thumbnailPath));
                             break;
                     }
 
-                    if($storgeStatus)
+                    if($storageStatus)
                         return $thumbnailPath;
 
                     return null;
