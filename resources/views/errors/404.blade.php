@@ -49,7 +49,10 @@
 <div class="flex-center position-ref full-height">
     <div class="content">
         @if(is_null($exception->getMessage()) || $exception->getMessage() === '')
-        <div class="title">@lang((request()->route()->getAction()['middleware'][0] ?? 'administrator') . '.page_not_found.message')</div>
+        @php
+        $guard = is_null(request()->route()) ? 'administrator' : (request()->route()->getAction()['middleware'][0] ?? 'administrator');
+        @endphp
+        <div class="title">@lang($guard . '.page_not_found.message')</div>
         @else
         <div class="title">{{ $exception->getMessage() }}</div>
         @endif
