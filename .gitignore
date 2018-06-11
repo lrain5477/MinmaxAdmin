@@ -1,14 +1,42 @@
+# Project Files
 /node_modules
 /public/hot
 /public/storage
 /storage/*.key
 /vendor
-/.idea
-/.vscode
-/.vagrant
-_ide_helper.php
 Homestead.json
 Homestead.yaml
 npm-debug.log
 yarn-error.log
 .env
+
+# Develop station setting
+/.idea
+/.vscode
+/.vagrant
+_ide_helper.php
+
+# Thumbnail cache files
+[Tt]humbs.db
+ehthumbs.db
+ehthumbs_vista.db
+._*
+
+# Dump file
+*.stackdump
+
+# Folder config file
+[Dd]esktop.ini
+.Trash-*
+.DS_Store
+.AppleDouble
+.AppleDesktop
+.LSOverride
+.directory
+
+# Disk system file
+$RECYCLE.BIN/
+.nfs*
+
+# shortcuts
+*.lnk
