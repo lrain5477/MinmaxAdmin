@@ -1,0 +1,14 @@
+<?php
+
+namespace DummyNamespace;
+
+class DummyClassPresenter extends Presenter
+{
+    public function __construct()
+    {
+        parent::__construct();
+
+        $this->fieldSelection = [
+        ];
+    }
+}
