@@ -201,6 +201,66 @@ return [
                 '0' => 'Off',
             ],
         ],
+        'hint' => [
+            'icon' => 'Please check <a target="_blank" href="/admin/css/fonts/flag/index.html">Icon List</a> for usage.',
+        ],
+    ],
+
+    'WorldCountry' => [
+        'guid' => 'GUID',
+        'lang' => 'Language',
+        'title' => 'Country Name',
+        'code' => 'Country Code',
+        'name' => 'Display Name',
+        'icon' => 'Icon Class',
+        'active' => 'Active',
+        'created_at' => 'Created At',
+        'updated_at' => 'Updated At',
+        'selection' => [
+            'active' => [
+                '1' => 'On',
+                '0' => 'Off',
+            ],
+        ],
+        'hint' => [
+            'icon' => 'Please check <a target="_blank" href="/admin/css/fonts/flag/index.html">Icon List</a> for usage.',
+        ],
+    ],
+
+    'WorldState' => [
+        'guid' => 'GUID',
+        'lang' => 'Language',
+        'country_id' => 'Country',
+        'title' => 'State Name',
+        'code' => 'State Code',
+        'name' => 'Display Name',
+        'active' => 'Active',
+        'created_at' => 'Created At',
+        'updated_at' => 'Updated At',
+        'selection' => [
+            'active' => [
+                '1' => 'On',
+                '0' => 'Off',
+            ],
+        ],
+    ],
+
+    'WorldCity' => [
+        'guid' => 'GUID',
+        'lang' => 'Language',
+        'state_id' => 'State',
+        'title' => 'City Name',
+        'code' => 'City Code',
+        'name' => 'Display Name',
+        'active' => 'Active',
+        'created_at' => 'Created At',
+        'updated_at' => 'Updated At',
+        'selection' => [
+            'active' => [
+                '1' => 'On',
+                '0' => 'Off',
+            ],
+        ],
     ],
 
     'Firewall' => [

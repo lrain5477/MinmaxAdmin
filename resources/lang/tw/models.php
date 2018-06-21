@@ -201,6 +201,66 @@ return [
                 '0' => '停用',
             ],
         ],
+        'hint' => [
+            'icon' => '請參考連結選擇您所需要的圖示 <a target="_blank" href="/admin/css/fonts/flag/index.html">圖示列表</a>',
+        ],
+    ],
+
+    'WorldCountry' => [
+        'guid' => 'GUID',
+        'lang' => '語系',
+        'title' => '國家名稱',
+        'code' => '國家代碼',
+        'name' => '顯示文字',
+        'icon' => '圖示代碼',
+        'active' => '狀態',
+        'created_at' => '建立時間',
+        'updated_at' => '更新時間',
+        'selection' => [
+            'active' => [
+                '1' => '啟用',
+                '0' => '停用',
+            ],
+        ],
+        'hint' => [
+            'icon' => '請參考連結選擇您所需要的圖示 <a target="_blank" href="/admin/css/fonts/flag/index.html">圖示列表</a>',
+        ],
+    ],
+
+    'WorldState' => [
+        'guid' => 'GUID',
+        'lang' => '語系',
+        'country_id' => '國家',
+        'title' => '州區名稱',
+        'code' => '州區代碼',
+        'name' => '顯示文字',
+        'active' => '狀態',
+        'created_at' => '建立時間',
+        'updated_at' => '更新時間',
+        'selection' => [
+            'active' => [
+                '1' => '啟用',
+                '0' => '停用',
+            ],
+        ],
+    ],
+
+    'WorldCity' => [
+        'guid' => 'GUID',
+        'lang' => '語系',
+        'state_id' => '州區',
+        'title' => '城市名稱',
+        'code' => '城市代碼',
+        'name' => '顯示文字',
+        'active' => '狀態',
+        'created_at' => '建立時間',
+        'updated_at' => '更新時間',
+        'selection' => [
+            'active' => [
+                '1' => '啟用',
+                '0' => '停用',
+            ],
+        ],
     ],
 
     'Firewall' => [

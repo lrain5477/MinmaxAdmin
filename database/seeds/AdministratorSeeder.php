@@ -125,18 +125,68 @@ class AdministratorSeeder extends Seeder
                 //'filter' => '',
                 'sort' => 2, 'updated_at' => $timestamp, 'created_at' => $timestamp
             ],
+
+            [
+                'title' => '全球化管理',
+                'uri' => 'world-control',
+                'controller' => null,
+                'model' => null,
+                'class' => 'system',
+                'parent' => '0',
+                'link' => 'javascript:void(0);',
+                'icon' => 'icon-sphere',
+                //'filter' => '',
+                'sort' => 3, 'updated_at' => $timestamp, 'created_at' => $timestamp
+            ],
             [
                 'title' => '語系管理',
                 'uri' => 'language',
                 'controller' => null,
                 'model' => 'Language',
                 'class' => 'system',
-                'parent' => '0',
+                'parent' => 'world-control',
                 'link' => 'language',
-                'icon' => 'icon-globe',
+                'icon' => null,
+                //'filter' => '',
+                'sort' => 1, 'updated_at' => $timestamp, 'created_at' => $timestamp
+            ],
+            [
+                'title' => '國家管理',
+                'uri' => 'world-country',
+                'controller' => null,
+                'model' => 'WorldCountry',
+                'class' => 'system',
+                'parent' => 'world-control',
+                'link' => 'world-country',
+                'icon' => null,
+                //'filter' => '',
+                'sort' => 2, 'updated_at' => $timestamp, 'created_at' => $timestamp
+            ],
+            [
+                'title' => '行政區域',
+                'uri' => 'world-state',
+                'controller' => null,
+                'model' => 'WorldState',
+                'class' => 'system',
+                'parent' => 'world-control',
+                'link' => 'world-state',
+                'icon' => null,
                 //'filter' => '',
                 'sort' => 3, 'updated_at' => $timestamp, 'created_at' => $timestamp
             ],
+            [
+                'title' => '城市管理',
+                'uri' => 'world-city',
+                'controller' => null,
+                'model' => 'WorldCity',
+                'class' => 'system',
+                'parent' => 'world-control',
+                'link' => 'world-city',
+                'icon' => null,
+                //'filter' => '',
+                'sort' => 4, 'updated_at' => $timestamp, 'created_at' => $timestamp
+            ],
+
             [
                 'title' => '網站基本資訊',
                 'uri' => 'web-data',
