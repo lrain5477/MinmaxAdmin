@@ -141,7 +141,7 @@ jQuery(document).ready(function () {
         errorPlacement: function(error, element) {},
         highlight: function(element){ $(element).css({'border': '1px dotted #ff0000'}); },
         unhighlight: function(element){ $(element).css({"border": ''}); },
-        submitHandler: function(form) { $("#loginForm").submit(); }
+        submitHandler: function(form) { form.submit(); }
     });
 
     Login();

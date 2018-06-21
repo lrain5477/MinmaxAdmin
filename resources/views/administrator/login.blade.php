@@ -55,25 +55,6 @@
                                 </div>
                             </div>
                         </div>
-
-                        <div class="col-auto">
-                            <div class="forgot-password"><a class="forget-password" id="forget-password" href="javascript:;">@lang('administrator.login.forget')</a></div>
-                        </div>
-                    </div>
-                </form>
-
-                <form class="forget-form validator" action="javascript:;" method="post" data-toggle="validator">
-                    @csrf
-                    <h3 class="text-danger">@lang('administrator.login.forget')</h3>
-                    <p>@lang('administrator.login.info.forget')</p>
-
-                    <div class="form-group">
-                        <input class="form-control placeholder-no-fix form-group" type="text" autocomplete="off" placeholder="Email" name="email">
-                    </div>
-
-                    <div class="form-actions">
-                        <button class="btn btn-outline-secondary btn-outline" id="back-btn" type="button">@lang('administrator.login.back_button')</button>
-                        <button class="btn btn-danger uppercase pull-right" type="submit">@lang('administrator.login.forget_submit')</button>
                     </div>
                 </form>
             </div>
@@ -141,10 +122,8 @@ jQuery(document).ready(function () {
         errorPlacement: function(error, element) {},
         highlight: function(element){ $(element).css({'border': '1px dotted #ff0000'}); },
         unhighlight: function(element){ $(element).css({"border": ''}); },
-        submitHandler: function(form) { $("#loginForm").submit(); }
+        submitHandler: function(form) { form.submit(); }
     });
-
-    Login();
 });
 </script>
 </body>
