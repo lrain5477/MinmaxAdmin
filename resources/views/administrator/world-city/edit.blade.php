@@ -6,7 +6,7 @@
     <fieldset id="baseFieldSet">
         <legend class="legend h6 mb-4"><i class="icon-angle-double-down2 mr-2"></i>@lang('administrator.form.fieldSet.default')</legend>
 
-        {!! $modelPresenter->getFieldSelect($formData, 'state_id', true) !!}
+        {!! $modelPresenter->getFieldGroupSelect($formData, 'state_id', true) !!}
 
         {!! $modelPresenter->getFieldText($formData, 'title', true) !!}
 

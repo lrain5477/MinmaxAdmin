@@ -19,7 +19,7 @@ class WorldCityPresenter extends Presenter
                     return [
                         'group' => $item->name,
                         'options' => $item
-                            ->worldCity()
+                            ->worldState()
                             ->orderBy('code')
                             ->get(['guid', 'name'])
                             ->mapWithKeys(function($item) {

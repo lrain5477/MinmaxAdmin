@@ -17,7 +17,7 @@
     <fieldset id="baseFieldSet">
         <legend class="legend h6 mb-4"><i class="icon-angle-double-down2 mr-2"></i>@lang('administrator.form.fieldSet.default')</legend>
 
-        {!! $modelPresenter->getViewNormalText($formData, 'country_id', $formData->worldCountry->name) !!}
+        {!! $modelPresenter->getViewNormalText($formData, 'state_id', $formData->worldState->worldCountry->name . ' / ' . $formData->worldState->name) !!}
 
         {!! $modelPresenter->getViewNormalText($formData, 'title') !!}
 
