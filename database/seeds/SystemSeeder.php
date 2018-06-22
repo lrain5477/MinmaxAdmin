@@ -1,5 +1,6 @@
 <?php
 
+use App\Helpers\SeederHelper;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Str;
 
@@ -38,6 +39,12 @@ class SystemSeeder extends Seeder
         ];
         DB::table('world_country')->insert($countryData);
 
+        foreach ($languageData as $language) {
+            if($language['codes'] === $defaultLanguage) continue;
+            $languageInsert = collect($countryData)->map(function($item) use ($language) { $item['lang'] = $language['codes']; return $item; })->toArray();
+            DB::table('world_country')->insert($languageInsert);
+        }
+
         $stateData = [
             ['guid' => $stateGuid01 = Str::uuid(), 'lang' => $defaultLanguage, 'country_id' => $countryGuid01, 'title' => '基隆市', 'code' => 'TW-KL', 'name' => '基隆市', 'updated_at' => $timestamp, 'created_at' => $timestamp],
             ['guid' => $stateGuid02 = Str::uuid(), 'lang' => $defaultLanguage, 'country_id' => $countryGuid01, 'title' => '臺北市', 'code' => 'TW-TP', 'name' => '臺北市', 'updated_at' => $timestamp, 'created_at' => $timestamp],
@@ -65,6 +72,12 @@ class SystemSeeder extends Seeder
             //['guid' => $stateGuid24 = Str::uuid(), 'lang' => $defaultLanguage, 'country_id' => $countryGuid01, 'title' => '釣魚臺', 'code' => 'TW-DYS', 'name' => '釣魚臺', 'updated_at' => $timestamp, 'created_at' => $timestamp],
         ];
         DB::table('world_state')->insert($stateData);
+
+        foreach ($languageData as $language) {
+            if($language['codes'] === $defaultLanguage) continue;
+            $languageInsert = collect($stateData)->map(function($item) use ($language) { $item['lang'] = $language['codes']; return $item; })->toArray();
+            DB::table('world_state')->insert($languageInsert);
+        }
 
         $cityData = [
             ['guid' => Str::uuid(), 'lang' => $defaultLanguage, 'state_id' => $stateGuid01, 'title' => '仁愛區', 'code' => '200', 'name' => '仁愛區', 'updated_at' => $timestamp, 'created_at' => $timestamp],
@@ -444,6 +457,12 @@ class SystemSeeder extends Seeder
         ];
         DB::table('world_city')->insert($cityData);
 
+        foreach ($languageData as $language) {
+            if($language['codes'] === $defaultLanguage) continue;
+            $languageInsert = collect($cityData)->map(function($item) use ($language) { $item['lang'] = $language['codes']; return $item; })->toArray();
+            DB::table('world_city')->insert($languageInsert);
+        }
+
         $webData = [
             [
                 'guid' => Str::uuid(),
@@ -558,39 +577,34 @@ class SystemSeeder extends Seeder
 
         foreach ($languageData as $language) {
             if($language['codes'] === $defaultLanguage) continue;
-            $languageInsert = collect($webData)->map(function($item, $key) use ($language) {
-                $item['lang'] = $language['codes'];
-                return $item;
-            })->toArray();
+            $languageInsert = collect($webData)->map(function($item) use ($language) { $item['lang'] = $language['codes']; return $item; })->toArray();
             DB::table('web_data')->insert($languageInsert);
         }
 
-        $parameterGroupData = [
-            ['guid' => $parameterGroupGuid1 = Str::uuid(), 'code' => 'active', 'title' => '狀態', 'admin' => '0', 'active' => '1', 'updated_at' => $timestamp, 'created_at' => $timestamp],
-            ['guid' => $parameterGroupGuid2 = Str::uuid(), 'code' => 'result', 'title' => '操作結果', 'admin' => '0', 'active' => '1', 'updated_at' => $timestamp, 'created_at' => $timestamp],
-            ['guid' => $parameterGroupGuid3 = Str::uuid(), 'code' => 'rule', 'title' => '防火牆規則', 'admin' => '0', 'active' => '1', 'updated_at' => $timestamp, 'created_at' => $timestamp],
-            ['guid' => $parameterGroupGuid4 = Str::uuid(), 'code' => 'admin', 'title' => '管理權限', 'admin' => '0', 'active' => '1', 'updated_at' => $timestamp, 'created_at' => $timestamp],
-        ];
-        DB::table('parameter_group')->insert($parameterGroupData);
-
-        $parameterItemData = [
-            ['guid' => Str::uuid(), 'lang' => $defaultLanguage, 'group' => $parameterGroupGuid1, 'title' => '啟用', 'value' => '1', 'class' => 'danger', 'sort' => 1, 'active' => '1', 'updated_at' => $timestamp, 'created_at' => $timestamp],
-            ['guid' => Str::uuid(), 'lang' => $defaultLanguage, 'group' => $parameterGroupGuid1, 'title' => '停用', 'value' => '0', 'class' => 'secondary', 'sort' => 2, 'active' => '1', 'updated_at' => $timestamp, 'created_at' => $timestamp],
-            ['guid' => Str::uuid(), 'lang' => $defaultLanguage, 'group' => $parameterGroupGuid2, 'title' => '成功', 'value' => '1', 'class' => 'success', 'sort' => 1, 'active' => '1', 'updated_at' => $timestamp, 'created_at' => $timestamp],
-            ['guid' => Str::uuid(), 'lang' => $defaultLanguage, 'group' => $parameterGroupGuid2, 'title' => '失敗', 'value' => '0', 'class' => 'danger', 'sort' => 2, 'active' => '1', 'updated_at' => $timestamp, 'created_at' => $timestamp],
-            ['guid' => Str::uuid(), 'lang' => $defaultLanguage, 'group' => $parameterGroupGuid3, 'title' => '允許', 'value' => '1', 'class' => 'success', 'sort' => 1, 'active' => '1', 'updated_at' => $timestamp, 'created_at' => $timestamp],
-            ['guid' => Str::uuid(), 'lang' => $defaultLanguage, 'group' => $parameterGroupGuid3, 'title' => '禁止', 'value' => '0', 'class' => 'danger', 'sort' => 2, 'active' => '1', 'updated_at' => $timestamp, 'created_at' => $timestamp],
-            ['guid' => Str::uuid(), 'lang' => $defaultLanguage, 'group' => $parameterGroupGuid4, 'title' => '可用', 'value' => '1', 'class' => 'success', 'sort' => 1, 'active' => '1', 'updated_at' => $timestamp, 'created_at' => $timestamp],
-            ['guid' => Str::uuid(), 'lang' => $defaultLanguage, 'group' => $parameterGroupGuid4, 'title' => '禁止', 'value' => '0', 'class' => 'danger', 'sort' => 2, 'active' => '1', 'updated_at' => $timestamp, 'created_at' => $timestamp],
-        ];
-        DB::table('parameter_item')->insert($parameterItemData);
+        $parametersData = SeederHelper::getParametersArray([
+            'active' => [
+                'title' => '狀態',
+                'parameters' => ['1' => '啟用,danger', '0' => '停用,secondary']
+            ],
+            'result' => [
+                'title' => '操作結果',
+                'parameters' => ['1' => '成功,success', '0' => '失敗,danger']
+            ],
+            'rule' => [
+                'title' => '防火牆規則',
+                'parameters' => ['1' => '允許,success', '0' => '禁止,danger']
+            ],
+            'admin' => [
+                'title' => '管理權限',
+                'parameters' => ['1' => '可用,success', '0' => '禁止,danger']
+            ],
+        ]);
+        DB::table('parameter_group')->insert($parametersData['groups']);
+        DB::table('parameter_item')->insert($parametersData['parameters']);
 
         foreach ($languageData as $language) {
             if($language['codes'] === $defaultLanguage) continue;
-            $languageInsert = collect($parameterItemData)->map(function($item, $key) use ($language) {
-                $item['lang'] = $language['codes'];
-                return $item;
-            })->toArray();
+            $languageInsert = collect($parametersData['parameters'])->map(function($item) use ($language) { $item['lang'] = $language['codes']; return $item; })->toArray();
             DB::table('parameter_item')->insert($languageInsert);
         }
 
