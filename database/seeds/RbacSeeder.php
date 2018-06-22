@@ -23,16 +23,16 @@ class RbacSeeder extends Seeder
                 'active' => '1', 'updated_at' => $timestamp, 'created_at' => $timestamp,
             ],
         ];
-        $permissionsData = array_merge($permissionsData, SeederHelper::getPermissionArray('merchantWebData', '經銷商網站基本資料', ['U']));
-        $permissionsData = array_merge($permissionsData, SeederHelper::getPermissionArray('frontWebData', '前台網站基本資料', ['U']));
-        $permissionsData = array_merge($permissionsData, SeederHelper::getPermissionArray('editorTemplate', '編輯器模板管理'));
-        $permissionsData = array_merge($permissionsData, SeederHelper::getPermissionArray('admin', '管理員帳戶'));
-        $permissionsData = array_merge($permissionsData, SeederHelper::getPermissionArray('merchant', '經銷商帳戶'));
-        $permissionsData = array_merge($permissionsData, SeederHelper::getPermissionArray('role', '群組管理'));
-        $permissionsData = array_merge($permissionsData, SeederHelper::getPermissionArray('adminLoginLog', '後台系統登入紀錄', ['R']));
-        $permissionsData = array_merge($permissionsData, SeederHelper::getPermissionArray('merchantLoginLog', '經銷商系統登入紀錄', ['R']));
-        $permissionsData = array_merge($permissionsData, SeederHelper::getPermissionArray('firewall', '防火牆'));
-        $permissionsData = array_merge($permissionsData, SeederHelper::getPermissionArray('parameterItem', '參數項目'));
+        $permissionsData = array_merge($permissionsData, SeederHelper::getPermissionArray('admin', 'merchantWebData', '經銷商網站基本資料', ['U']));
+        $permissionsData = array_merge($permissionsData, SeederHelper::getPermissionArray('admin', 'frontWebData', '前台網站基本資料', ['U']));
+        $permissionsData = array_merge($permissionsData, SeederHelper::getPermissionArray('admin', 'editorTemplate', '編輯器模板管理'));
+        $permissionsData = array_merge($permissionsData, SeederHelper::getPermissionArray('admin', 'admin', '管理員帳戶'));
+        $permissionsData = array_merge($permissionsData, SeederHelper::getPermissionArray('admin', 'merchant', '經銷商帳戶'));
+        $permissionsData = array_merge($permissionsData, SeederHelper::getPermissionArray('admin', 'role', '群組管理'));
+        $permissionsData = array_merge($permissionsData, SeederHelper::getPermissionArray('admin', 'adminLoginLog', '後台系統登入紀錄', ['R']));
+        $permissionsData = array_merge($permissionsData, SeederHelper::getPermissionArray('admin', 'merchantLoginLog', '經銷商系統登入紀錄', ['R']));
+        $permissionsData = array_merge($permissionsData, SeederHelper::getPermissionArray('admin', 'firewall', '防火牆'));
+        $permissionsData = array_merge($permissionsData, SeederHelper::getPermissionArray('admin', 'parameterItem', '參數項目'));
         DB::table('permissions')->insert($permissionsData);
 
         /** 新增權限角色 **/
