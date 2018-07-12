@@ -13,7 +13,7 @@
         <div class="file-list" id="{{ $id }}-list">
             @foreach($files as $file)
             <div class="alert alert-info alert-dismissible fade show ui-sortable-handle" role="alert">
-                <input type="hidden" name="{{ $name }}[]" value="$file" required />
+                <input type="hidden" name="{{ $name }}[]" value="{{ $file }}" required />
                 {{ $file }} <a href="{{ asset($file) }}" class="alert-link" target="_blank"><i class="icon-popout"></i></a>
                 <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
             </div>
