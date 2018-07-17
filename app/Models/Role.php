@@ -6,12 +6,22 @@ use Cache;
 use Illuminate\Cache\TaggableStore;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * Class Role
+ * @property integer $id
+ * @property string $guard
+ * @property string $name
+ * @property string $display_name
+ * @property string $description
+ * @property integer $active
+ * @property \Illuminate\Support\Carbon $created_at
+ * @property \Illuminate\Support\Carbon $updated_at
+ * @property \Illuminate\Database\Eloquent\Collection $perms
+ */
 class Role extends Model
 {
     protected $table = 'roles';
-    protected $fillable = [
-        'guard', 'name', 'display_name', 'description',
-    ];
+    protected $guarded = [];
 
     public static function getIndexKey()
     {

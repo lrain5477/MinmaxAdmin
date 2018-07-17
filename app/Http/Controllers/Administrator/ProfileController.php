@@ -13,6 +13,10 @@ use Auth;
 use Breadcrumbs;
 use Validator;
 
+/**
+ * Class ProfileController
+ * @property \App\Models\Administrator $adminData
+ */
 class ProfileController extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
@@ -45,7 +49,7 @@ class ProfileController extends BaseController
                 'uri' => $this->uri,
                 'title' => __('administrator.header.profile'),
                 'parent' => '0',
-            ]])->map(function($item, $key) { return (object) $item; })->first();
+            ]])->map(function($item) { return (object) $item; })->first();
 
             // 設定 帳號資料
             $this->adminData = Auth::guard('administrator')->user();

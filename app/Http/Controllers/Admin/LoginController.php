@@ -59,8 +59,8 @@ class LoginController extends BaseController
 
         // 防火牆
         $firewallData = Firewall::where(['guard' => 'admin', 'active' => 1])->get();
-        $firewallBlack = $firewallData->where('rule', 0)->map(function($item, $key) { return $item->ip; })->toArray();
-        $firewallWhite = $firewallData->where('rule', 1)->map(function($item, $key) { return $item->ip; })->toArray();
+        $firewallBlack = $firewallData->where('rule', 0)->map(function($item) { return $item->ip; })->toArray();
+        $firewallWhite = $firewallData->where('rule', 1)->map(function($item) { return $item->ip; })->toArray();
         $firewallWhite = count($firewallWhite) > 0 ? $firewallWhite : [\Request::ip()];
 
         $this->validate($request, [
@@ -69,6 +69,7 @@ class LoginController extends BaseController
                 'string',
                 'max:16',
                 Rule::exists('admin', $this->username())->where(function($query) {
+                    /** @var \Illuminate\Database\Query\Builder $query */
                     $query->where('active', '=', 1);
                 }),
             ],

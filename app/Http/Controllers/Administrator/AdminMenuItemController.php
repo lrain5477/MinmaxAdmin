@@ -3,8 +3,6 @@
 namespace App\Http\Controllers\Administrator;
 
 use App\Models\AdminMenuItem;
-use App\Models\WebData;
-use App\Repositories\Administrator\Repository;
 use Breadcrumbs;
 use Illuminate\Http\Request;
 
@@ -52,6 +50,7 @@ class AdminMenuItemController extends Controller
 
         if($request->has('filter') || $request->has('equal')) {
             $datatables->filter(function($query) use ($request) {
+                /** @var \Illuminate\Database\Query\Builder $query */
                 $whereQuery = '';
                 $whereValue = [];
                 if($request->has('filter')) {
@@ -84,7 +83,7 @@ class AdminMenuItemController extends Controller
         }
 
         return $datatables
-            ->setTransformer(app()->make('App\\Transformers\\Administrator\\' . $this->pageData->model . 'Transformer', ['uri' => $this->uri]))
+            ->setTransformer(app()->make('App\\Transformers\\Administrator\\' . $this->pageData->getAttribute('model') . 'Transformer', ['uri' => $this->uri]))
             ->make(true);
     }
 }

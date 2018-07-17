@@ -22,6 +22,10 @@ use Breadcrumbs;
 use Route;
 use Validator;
 
+/**
+ * Class Controller
+ * @property \App\Models\Admin $adminData
+ */
 class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
@@ -366,6 +370,7 @@ class Controller extends BaseController
 
         if($request->has('filter') || $request->has('equal')) {
             $datatables->filter(function($query) use ($request) {
+                /** @var \Illuminate\Database\Query\Builder $query */
                 $whereQuery = '';
                 $whereValue = [];
                 if($request->has('filter')) {
@@ -428,11 +433,11 @@ class Controller extends BaseController
                     ?? __("models.{$this->pageData->getAttribute('model')}.selection.{$request->input('column')}.{$request->input('switchTo')}"),
                 'newClass' => 'badge-' . ($this->parameterData[$request->input('column')][$request->input('switchTo')]['class']
                     ?? ($request->input('switchTo') == 1 ? 'danger' : 'secondary')),
-            ], 200)->header('Content-Type', 'application/json');
+            ], 200, ['Content-Type' => 'application/json']);
         } else {
             LogHelper::system('admin', $this->uri, 'update', $request->input('id'), $this->adminData->username, 0, __('admin.form.message.edit_error'));
 
-            return response(['msg' => 'error'], 400)->header('Content-Type', 'application/json');
+            return response(['msg' => 'error'], 400, ['Content-Type' => 'application/json']);
         }
     }
 
@@ -453,11 +458,11 @@ class Controller extends BaseController
         if($this->modelRepository->update(['active' => $inputData['active']], function($query) use ($inputData) { $query->whereIn($this->modelRepository->getIndexKey(), $inputData['selID']); })) {
             LogHelper::system('admin', $this->uri, 'update', implode(',', $inputData['selID']), $this->adminData->username, 1, __('admin.form.message.edit_success'));
 
-            return response(['msg' => 'success'], 200)->header('Content-Type', 'application/json');
+            return response(['msg' => 'success'], 200, ['Content-Type' => 'application/json']);
         } else {
             LogHelper::system('admin', $this->uri, 'update', implode(',', $inputData['selID']), $this->adminData->username, 0, __('admin.form.message.edit_error'));
 
-            return response(['msg' => 'error'], 400)->header('Content-Type', 'application/json');
+            return response(['msg' => 'error'], 400, ['Content-Type' => 'application/json']);
         }
     }
 
@@ -474,9 +479,9 @@ class Controller extends BaseController
         if($this->modelRepository->save([$request->input('column') => $request->input('index')], [[$this->modelRepository->getIndexKey(), '=', $request->input('id')]])) {
             LogHelper::system('admin', $this->uri, 'update', $request->input('id'), $this->adminData->username, 1, __('admin.form.message.edit_success'));
 
-            return response(['msg' => 'success'], 200)->header('Content-Type', 'application/json');
+            return response(['msg' => 'success'], 200, ['Content-Type' => 'application/json']);
         } else {
-            return response(['msg' => 'error'], 400)->header('Content-Type', 'application/json');
+            return response(['msg' => 'error'], 400, ['Content-Type' => 'application/json']);
         }
     }
 }

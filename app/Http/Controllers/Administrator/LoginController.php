@@ -57,9 +57,11 @@ class LoginController extends BaseController
                 'string',
                 'max:16',
                 Rule::exists('administrator', $this->username())->where(function($query) {
+                    /** @var \Illuminate\Database\Query\Builder $query */
                     $query
                         ->where('active', '=', 1)
                         ->where(function($query) {
+                            /** @var \Illuminate\Database\Query\Builder $query */
                             $query
                                 ->whereNull('allow_ip')
                                 ->orWhere('allow_ip', 'like', '%\'' . \Request::ip() . '\'%');

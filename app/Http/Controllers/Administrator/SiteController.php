@@ -2,14 +2,23 @@
 
 namespace App\Http\Controllers\Administrator;
 
-use Analytics;
-use App\Models\WebData;
+use App\Models\GoogleAnalyticsClient;
 use App\Repositories\Administrator\Repository;
-use Illuminate\Support\Carbon;
-use Spatie\Analytics\Period;
 
 class SiteController extends Controller
 {
+    protected $gaClient;
+
+    public function __construct(Repository $modelRepository, GoogleAnalyticsClient $gaClient)
+    {
+        parent::__construct($modelRepository);
+
+        $this->middleware(function($request, $next) use ($gaClient) {
+            $this->gaClient = $gaClient;
+            return $next($request);
+        });
+    }
+
     /**
      * Display Dashboard.
      *
@@ -24,13 +33,13 @@ class SiteController extends Controller
         $this->viewData['contactAmount'] = 0;
 
         // Google Analytics
-        $this->viewData['currentVisitor'] = '-';
-        $this->viewData['pageViewsPerSession'] = '-';
-        $this->viewData['avgTimeOnPage'] = '--:--:--';
-        $this->viewData['exitRate'] = '-';
-        $this->viewData['browserUsage'] = [];
-        $this->viewData['todayVisitor'] = '-';
-        $this->viewData['referrerKeyword'] = [];
+        $this->viewData['currentVisitor'] = $this->gaClient->getActiveVisitors();
+        $this->viewData['pageViewsPerSession'] = $this->gaClient->getPageViewsPerSession();
+        $this->viewData['avgTimeOnPage'] = $this->gaClient->getAvgTimeOnPage();
+        $this->viewData['exitRate'] = $this->gaClient->getExitRate();
+        $this->viewData['browserUsage'] = $this->gaClient->getTopBrowsers();
+        $this->viewData['todayVisitor'] = $this->gaClient->getTodayTotalVisitors();
+        $this->viewData['referrerKeyword'] = $this->gaClient->getReferrerKeyword();
 
         return view('administrator.site.index', $this->viewData);
     }

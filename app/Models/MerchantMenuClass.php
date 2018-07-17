@@ -4,18 +4,21 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * Class MerchantMenuClass
+ * @property integer $id
+ * @property string $guid
+ * @property string $title
+ * @property integer $sort
+ * @property integer $active
+ * @property \Illuminate\Support\Carbon $created_at
+ * @property \Illuminate\Support\Carbon $updated_at
+ * @property \Illuminate\Database\Eloquent\Collection $merchantMenuItem
+ */
 class MerchantMenuClass extends Model
 {
     protected $table = 'merchant_menu_class';
-
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
-    protected $fillable = [
-        'guid', 'title', 'sort', 'active',
-    ];
+    protected $guarded = [];
 
     public static function getIndexKey()
     {

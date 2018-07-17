@@ -4,18 +4,27 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * Class AdministratorMenu
+ * @property integer $id
+ * @property string $title
+ * @property string $uri
+ * @property string $controller
+ * @property string $model
+ * @property string $class
+ * @property string $parent
+ * @property string $link
+ * @property string $icon
+ * @property string $filter
+ * @property integer $sort
+ * @property \Illuminate\Support\Carbon $created_at
+ * @property \Illuminate\Support\Carbon $updated_at
+ * @property \App\Models\AdministratorMenu $administratorMenu
+ */
 class AdministratorMenu extends Model
 {
     protected $table = 'administrator_menu';
-
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
-    protected $fillable = [
-        'title', 'uri', 'model', 'class', 'parent', 'link', 'icon', 'filter', 'sort',
-    ];
+    protected $guarded = [];
 
     public static function getIndexKey()
     {

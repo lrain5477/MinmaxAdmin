@@ -26,6 +26,7 @@ class ParameterItemController extends Controller
 
         if($request->has('filter') || $request->has('equal')) {
             $datatables->filter(function($query) use ($request) {
+                /** @var \Illuminate\Database\Query\Builder $query */
                 $whereQuery = '';
                 $whereValue = [];
                 if($request->has('filter')) {

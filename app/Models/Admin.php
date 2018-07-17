@@ -8,6 +8,20 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use InvalidArgumentException;
 
+/**
+ * Class Admin
+ * @property integer $id
+ * @property string $guid
+ * @property string $username
+ * @property string $password
+ * @property string $remember_token
+ * @property string $name
+ * @property string $email
+ * @property integer $active
+ * @property \Illuminate\Support\Carbon $created_at
+ * @property \Illuminate\Support\Carbon $updated_at
+ * @property \Illuminate\Database\Eloquent\Collection $roles
+ */
 class Admin extends Authenticatable
 {
     use Notifiable;

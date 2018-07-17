@@ -4,8 +4,6 @@ namespace App\Http\Controllers\Administrator;
 
 use App\Models\Permission;
 use App\Models\PermissionRole;
-use App\Models\WebData;
-use App\Repositories\Administrator\Repository;
 use Breadcrumbs;
 use Illuminate\Http\Request;
 use Validator;

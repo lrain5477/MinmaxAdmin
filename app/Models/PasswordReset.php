@@ -4,14 +4,24 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * Class PasswordReset
+ * @property integer $id
+ * @property string $guard
+ * @property string $email
+ * @property string $token
+ * @property \Illuminate\Support\Carbon $expired_at
+ * @property \Illuminate\Support\Carbon $created_at
+ * @property \App\Models\Member $member
+ */
 class PasswordReset extends Model
 {
-    protected $table = 'm_password_reset';
-    protected $fillable = [
-        'email', 'token', 'expired_at'
-    ];
+    protected $table = 'password_resets';
+    protected $dates = ['expired_at', 'created_at'];
 
-    public function setUpdatedAtAttribute($value) {}
+    protected $guarded = [];
+
+    const UPDATED_AT = null;
 
     public function member() {
         return $this->hasOne('App\Models\Member', 'email', 'email');

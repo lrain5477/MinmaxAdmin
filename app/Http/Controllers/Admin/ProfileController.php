@@ -16,6 +16,10 @@ use Auth;
 use Breadcrumbs;
 use Validator;
 
+/**
+ * Class ProfileController
+ * @property \App\Models\Admin $adminData
+ */
 class ProfileController extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
@@ -64,7 +68,7 @@ class ProfileController extends BaseController
                 'uri' => $this->uri,
                 'title' => __('admin.header.profile'),
                 'parent' => '0',
-            ]])->map(function($item, $key) { return (object) $item; })->first();
+            ]])->map(function($item) { return (object) $item; })->first();
             $this->viewData['pageData'] = $this->pageData;
 
             // 設定 帳號資料

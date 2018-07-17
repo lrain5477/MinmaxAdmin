@@ -4,18 +4,25 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * Class ParameterItem
+ * @property integer $id
+ * @property string $guid
+ * @property string $lang
+ * @property string $group
+ * @property string $title
+ * @property string $value
+ * @property string $class
+ * @property integer $sort
+ * @property integer $active
+ * @property \Illuminate\Support\Carbon $created_at
+ * @property \Illuminate\Support\Carbon $updated_at
+ * @property \App\Models\ParameterGroup $parameterGroup
+ */
 class ParameterItem extends Model
 {
     protected $table = 'parameter_item';
-
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
-    protected $fillable = [
-        'guid', 'lang', 'group', 'title', 'value', 'class', 'sort', 'active',
-    ];
+    protected $guarded = [];
 
     public static function getIndexKey()
     {

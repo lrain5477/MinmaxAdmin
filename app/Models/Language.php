@@ -4,13 +4,23 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * Class Language
+ * @property integer $id
+ * @property string $guid
+ * @property string $title
+ * @property string $codes
+ * @property string $name
+ * @property string $icon
+ * @property integer $sort
+ * @property integer $active
+ * @property \Illuminate\Support\Carbon $created_at
+ * @property \Illuminate\Support\Carbon $updated_at
+ */
 class Language extends Model
 {
     protected $table = 'language';
-
-    protected $fillable = [
-        'guid', 'title', 'codes', 'name', 'icon', 'sort', 'active'
-    ];
+    protected $guarded = [];
 
     public static function getIndexKey()
     {

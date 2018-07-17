@@ -4,12 +4,24 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * Class SystemLog
+ * @property integer $id
+ * @property string $guard
+ * @property string $uri
+ * @property string $action
+ * @property string $guid
+ * @property string $username
+ * @property string $ip
+ * @property string $note
+ * @property integer $result
+ * @property \Illuminate\Support\Carbon $created_at
+ * @property \Illuminate\Support\Carbon $updated_at
+ */
 class SystemLog extends Model
 {
     protected $table = 'system_log';
-    protected $fillable = [
-        'guard', 'uri', 'action', 'guid', 'username', 'ip', 'note', 'result',
-    ];
+    protected $guarded = [];
 
     public static function getIndexKey()
     {

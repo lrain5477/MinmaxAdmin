@@ -4,14 +4,25 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * Class WorldCountry
+ * @property string $guid
+ * @property string $lang
+ * @property string $title
+ * @property string $code
+ * @property string $name
+ * @property string $icon
+ * @property integer $active
+ * @property \Illuminate\Support\Carbon $created_at
+ * @property \Illuminate\Support\Carbon $updated_at
+ * @property \Illuminate\Database\Eloquent\Collection $worldState
+ */
 class WorldCountry extends Model
 {
     protected $table = 'world_country';
     protected $primaryKey = 'guid';
     public $incrementing = false;
-    protected $fillable = [
-        'guid', 'lang', 'title', 'code', 'name', 'icon', 'active'
-    ];
+    protected $guarded = [];
 
     public static function getIndexKey()
     {

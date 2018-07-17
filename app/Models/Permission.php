@@ -4,6 +4,20 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * Class Permission
+ * @property integer $id
+ * @property string $guard
+ * @property string $name
+ * @property string $group
+ * @property string $label
+ * @property string $display_name
+ * @property string $description
+ * @property integer $active
+ * @property \Illuminate\Support\Carbon $created_at
+ * @property \Illuminate\Support\Carbon $updated_at
+ * @property \Illuminate\Database\Eloquent\Collection $roles
+ */
 class Permission extends Model
 {
     protected $table = 'permissions';

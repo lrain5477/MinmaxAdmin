@@ -4,6 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * Class RoleMerchant
+ * @property string $user_id
+ * @property integer $role_id
+ * @property \App\Models\Merchant $merchant
+ */
 class RoleMerchant extends Model
 {
     protected $table = 'role_user';
