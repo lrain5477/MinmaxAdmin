@@ -72,6 +72,20 @@ class CreateWorldTable extends Migration
             $table->foreign(['state_id', 'lang'])->references(['guid', 'lang'])->on('world_state')
                 ->onUpdate('cascade')->onDelete('cascade');
         });
+
+        // 銀行
+        Schema::create('bank', function (Blueprint $table) {
+            $table->string('guid', 64);
+            $table->string('lang', 100);
+            $table->string('country_id', 64)->comment('國家ID');
+            $table->string('title', 128)->comment('銀行名稱');
+            $table->string('code', 16)->comment('銀行代碼');
+            $table->string('name', 128)->comment('顯示文字');
+            $table->enum('active', [1, 0])->default(1)->comment('狀態');
+            $table->timestamps();
+
+            $table->primary(['guid', 'lang']);
+        });
     }
 
     /**
@@ -81,6 +95,7 @@ class CreateWorldTable extends Migration
      */
     public function down()
     {
+        Schema::dropIfExists('bank');
         Schema::dropIfExists('world_city');
         Schema::dropIfExists('world_state');
         Schema::dropIfExists('world_country');
