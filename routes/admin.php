@@ -52,7 +52,7 @@ Route::middleware(['auth:admin'])->group(function($route) {
             })
             ->toJson(JSON_UNESCAPED_UNICODE);
 
-        return "CKEDITOR.addTemplates('{$category}', { templates: {$templates} });";
+        return "CKEDITOR.addTemplates('default', { templates: {$templates} });";
     })->name('editorTemplate');
 
     // elFinder
