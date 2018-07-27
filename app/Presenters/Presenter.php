@@ -462,4 +462,37 @@ class Presenter
 
         return view("{$this->guardName}.form-components.file", $componentData);
     }
+
+    public function getFieldUploadFile($model, $column, $required = false, $options = []) {
+        if(is_array($required)) {
+            $options = $required;
+            $required = false;
+        }
+
+        $modelName = class_basename($model);
+        $columnLabel = __("models.{$modelName}.{$column}");
+        $fileList = isset($model->$column) ? explode(config('app.separate_string'), $model->$column) : [];
+        $filenameList = [];
+        foreach($fileList as $fileKey => $fileItem) {
+            if(!\File::exists(public_path($fileItem))) {
+                unset($fileList[$fileKey]);
+            } else {
+                $filenameList[] = \File::basename(public_path($fileItem));
+            }
+        }
+
+        $componentData = [
+            'id' => "{$modelName}-{$column}",
+            'label' => $columnLabel,
+            'name' => "{$modelName}[uploads][{$column}]",
+            'required' => $required,
+            'hint' => isset($options['hint']) && $options['hint'] == true ? __("models.{$modelName}.hint.{$column}") : '',
+            'limit' => isset($options['limit']) ? $options['limit'] : 0,
+            'path' => $options['path'] ?? 'uploads',
+            'file' => implode(config('app.separate_string'), $fileList),
+            'filename' => implode(', ', $filenameList),
+        ];
+
+        return view("{$this->guardName}.form-components.file-upload", $componentData);
+    }
 }

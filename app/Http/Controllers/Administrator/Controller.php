@@ -218,14 +218,31 @@ class Controller extends BaseController
      */
     public function store(Request $request)
     {
-        $validator = Validator::make($request->input($this->pageData->getAttribute('model')), $this->modelRepository->getRules() ?? []);
+        $inputSet = $request->input($this->pageData->getAttribute('model'));
+
+        $validator = Validator::make($inputSet, $this->modelRepository->getRules() ?? []);
 
         if($validator->passes()) {
-            $input = $request->input($this->pageData->getAttribute('model'));
             $formDataKey = $this->modelRepository->getIndexKey();
             if($formDataKey !== 'id') $input[$formDataKey] = Str::uuid();
 
-            if($modelData = $this->modelRepository->create($input)) {
+            foreach($inputSet['uploads'] as $columnKey => $columnInput) {
+                $inputSet[$columnKey] = $columnInput['origin'] ?? null;
+                $filePath = 'files/' . ($columnInput['path'] ?? 'uploads');
+                $fileList = [];
+                foreach($request->file($this->pageData->getAttribute('model') . '.uploads.' . $columnKey . '.file') ?? [] as $fileItem) {
+                    /** @var \Illuminate\Http\UploadedFile $fileItem */
+                    if($fileItem) {
+                        $fileName = microtime() . rand(100000, 999999) . '.' . $fileItem->getClientOriginalExtension();
+                        $fileItem->move(public_path($filePath), $fileName);
+                        $fileList[] = $filePath . '/' . $fileName;
+                    }
+                }
+                $inputSet[$columnKey] = count($fileList) > 0 ? implode(config('app.separate_string'), $fileList) : $inputSet[$columnKey];
+            }
+            if(isset($inputSet['uploads'])) unset($inputSet['uploads']);
+
+            if($modelData = $this->modelRepository->create($inputSet)) {
                 // 多語系複製
                 if($this->modelRepository->isMultiLanguage()) {
                     foreach ($this->languageData as $language) {
@@ -286,13 +303,31 @@ class Controller extends BaseController
      */
     public function update($id, Request $request)
     {
+        $inputSet = $request->input($this->pageData->getAttribute('model'));
+
         $validator = Validator::make($request->input($this->pageData->getAttribute('model')), $this->modelRepository->getRules() ?? []);
 
         if($validator->passes()) {
             $where = [$this->modelRepository->getIndexKey() => $id];
             if($this->modelRepository->isMultiLanguage()) $where['lang'] = app()->getLocale();
 
-            if($this->modelRepository->save($request->input($this->pageData->getAttribute('model')), $where)) {
+            foreach($inputSet['uploads'] as $columnKey => $columnInput) {
+                $inputSet[$columnKey] = $columnInput['origin'] ?? null;
+                $filePath = 'files/' . ($columnInput['path'] ?? 'uploads');
+                $fileList = [];
+                foreach($request->file($this->pageData->getAttribute('model') . '.uploads.' . $columnKey . '.file') ?? [] as $fileItem) {
+                    /** @var \Illuminate\Http\UploadedFile $fileItem */
+                    if($fileItem) {
+                        $fileName = microtime() . rand(100000, 999999) . '.' . $fileItem->getClientOriginalExtension();
+                        $fileItem->move(public_path($filePath), $fileName);
+                        $fileList[] = $filePath . '/' . $fileName;
+                    }
+                }
+                $inputSet[$columnKey] = count($fileList) > 0 ? implode(config('app.separate_string'), $fileList) : $inputSet[$columnKey];
+            }
+            if(isset($inputSet['uploads'])) unset($inputSet['uploads']);
+
+            if($this->modelRepository->save($inputSet, $where)) {
                 return redirect()->route('administrator.edit', [$this->uri, $id])->with('success', __('administrator.form.message.edit_success'));
             }
 
@@ -303,7 +338,7 @@ class Controller extends BaseController
     }
 
     /**
-     * Model Update
+     * Model Destroy
      *
      * @param string $id
      * @return $this|\Illuminate\Http\RedirectResponse
@@ -405,13 +440,9 @@ class Controller extends BaseController
             $inputData[$value->name] = ($value->name == 'selID') ? explode(',', substr($value->value, 0, -1)) : $value->value;
         }
 
-        if($this->modelRepository->update(['active' => $inputData['active']], function($query) use ($inputData) { $query->whereIn($this->modelRepository->getIndexKey(), $inputData['selID']); })) {
-            //LogHelper::systemLog(Auth::guard('administrator')->user()->username, 'Update ' . $this->modelName . '(' . implode(',', $inputData['selID']) . ') chk to ' . $inputData['chk'], 'Success');
-
+        if($this->modelRepository->update(['active' => $inputData['active']], function($query) use ($inputData) { /** @var \Illuminate\Database\Query\Builder $query */ $query->whereIn($this->modelRepository->getIndexKey(), $inputData['selID']); })) {
             return response(['msg' => 'success'], 200, ['Content-Type' => 'application/json']);
         } else {
-            //LogHelper::systemLog(Auth::guard('administrator')->user()->username, 'Update ' . $this->modelName . '(' . implode(',', $inputData['selID']) . ') chk to ' . $inputData['chk'], 'Failed');
-
             return response(['msg' => 'error'], 400, ['Content-Type' => 'application/json']);
         }
     }
@@ -425,8 +456,6 @@ class Controller extends BaseController
         ]);
 
         if($this->modelRepository->save([$request->input('column') => $request->input('index')], [[$this->modelRepository->getIndexKey(), '=', $request->input('id')]])) {
-            //LogHelper::systemLog(Auth::guard('administrator')->user()->username, 'Update ' . $this->modelName . '(' . $request->input('id') . ') sorting to ' . $request->input('index'), 'Success');
-
             return response(['msg' => 'success'], 200, ['Content-Type' => 'application/json']);
         } else {
             return response(['msg' => 'error'], 400, ['Content-Type' => 'application/json']);

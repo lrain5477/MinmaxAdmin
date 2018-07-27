@@ -127,6 +127,13 @@ return [
             'media_image' => 'Choose Image',
             'media_file' => 'Choose File',
         ],
+        'file' => [
+            'default_text' => 'File Upload',
+            'browser' => 'Browse',
+            'remove_file' => 'Remove uploaded file',
+            'limit_title' => 'Over selected limit.',
+            'limit_text' => 'You can only select :limit file',
+        ],
         'message' => [
             'create_success' => 'Create a new data success.',
             'create_error' => 'Failed to create a new data.',

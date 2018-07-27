@@ -233,14 +233,31 @@ class Controller extends BaseController
     {
         if($this->adminData->can(PermissionHelper::replacePermissionName($this->pageData->permission_key, 'Create')) === false) return abort(404);
 
-        $validator = Validator::make($request->input($this->pageData->getAttribute('model')), $this->modelRepository->getRules() ?? []);
+        $inputSet = $request->input($this->pageData->getAttribute('model'));
+
+        $validator = Validator::make($inputSet, $this->modelRepository->getRules() ?? []);
 
         if($validator->passes()) {
-            $input = $request->input($this->pageData->getAttribute('model'));
             $formDataKey = $this->modelRepository->getIndexKey();
-            if($formDataKey !== 'id') $input[$formDataKey] = Str::uuid();
+            if($formDataKey !== 'id') $inputSet[$formDataKey] = Str::uuid();
 
-            if($modelData = $this->modelRepository->create($input)) {
+            foreach($inputSet['uploads'] as $columnKey => $columnInput) {
+                $inputSet[$columnKey] = $columnInput['origin'] ?? null;
+                $filePath = 'files/' . ($columnInput['path'] ?? 'uploads');
+                $fileList = [];
+                foreach($request->file($this->pageData->getAttribute('model') . '.uploads.' . $columnKey . '.file') ?? [] as $fileItem) {
+                    /** @var \Illuminate\Http\UploadedFile $fileItem */
+                    if($fileItem) {
+                        $fileName = microtime() . rand(100000, 999999) . '.' . $fileItem->getClientOriginalExtension();
+                        $fileItem->move(public_path($filePath), $fileName);
+                        $fileList[] = $filePath . '/' . $fileName;
+                    }
+                }
+                $inputSet[$columnKey] = count($fileList) > 0 ? implode(config('app.separate_string'), $fileList) : $inputSet[$columnKey];
+            }
+            if(isset($inputSet['uploads'])) unset($inputSet['uploads']);
+
+            if($modelData = $this->modelRepository->create($inputSet)) {
                 LogHelper::system('admin', $this->uri, 'store', $modelData->$formDataKey, $this->adminData->username, 1, __('admin.form.message.create_success'));
 
                 // 多語系複製
@@ -314,13 +331,31 @@ class Controller extends BaseController
     {
         if($this->adminData->can(PermissionHelper::replacePermissionName($this->pageData->permission_key, 'Edit')) === false) return abort(404);
 
-        $validator = Validator::make($request->input($this->pageData->getAttribute('model')), $this->modelRepository->getRules() ?? []);
+        $inputSet = $request->input($this->pageData->getAttribute('model'));
+
+        $validator = Validator::make($inputSet, $this->modelRepository->getRules() ?? []);
 
         if($validator->passes()) {
             $where = [$this->modelRepository->getIndexKey() => $id];
             if($this->modelRepository->isMultiLanguage()) $where['lang'] = app()->getLocale();
 
-            if($this->modelRepository->save($request->input($this->pageData->getAttribute('model')), $where)) {
+            foreach($inputSet['uploads'] as $columnKey => $columnInput) {
+                $inputSet[$columnKey] = $columnInput['origin'] ?? null;
+                $filePath = 'files/' . ($columnInput['path'] ?? 'uploads');
+                $fileList = [];
+                foreach($request->file($this->pageData->getAttribute('model') . '.uploads.' . $columnKey . '.file') ?? [] as $fileItem) {
+                    /** @var \Illuminate\Http\UploadedFile $fileItem */
+                    if($fileItem) {
+                        $fileName = microtime() . rand(100000, 999999) . '.' . $fileItem->getClientOriginalExtension();
+                        $fileItem->move(public_path($filePath), $fileName);
+                        $fileList[] = $filePath . '/' . $fileName;
+                    }
+                }
+                $inputSet[$columnKey] = count($fileList) > 0 ? implode(config('app.separate_string'), $fileList) : $inputSet[$columnKey];
+            }
+            if(isset($inputSet['uploads'])) unset($inputSet['uploads']);
+
+            if($this->modelRepository->save($inputSet, $where)) {
                 LogHelper::system('admin', $this->uri, 'update', $id, $this->adminData->username, 1, __('admin.form.message.edit_success'));
                 return redirect()->route('admin.edit', [$this->uri, $id])->with('success', __('admin.form.message.edit_success'));
             }
@@ -455,7 +490,7 @@ class Controller extends BaseController
             $inputData[$value->name] = ($value->name == 'selID') ? explode(',', substr($value->value, 0, -1)) : $value->value;
         }
 
-        if($this->modelRepository->update(['active' => $inputData['active']], function($query) use ($inputData) { $query->whereIn($this->modelRepository->getIndexKey(), $inputData['selID']); })) {
+        if($this->modelRepository->update(['active' => $inputData['active']], function($query) use ($inputData) { /** @var \Illuminate\Database\Query\Builder $query */ $query->whereIn($this->modelRepository->getIndexKey(), $inputData['selID']); })) {
             LogHelper::system('admin', $this->uri, 'update', implode(',', $inputData['selID']), $this->adminData->username, 1, __('admin.form.message.edit_success'));
 
             return response(['msg' => 'success'], 200, ['Content-Type' => 'application/json']);

@@ -127,6 +127,13 @@ return [
             'media_image' => '媒體庫',
             'media_file' => '選擇檔案',
         ],
+        'file' => [
+            'default_text' => '檔案上傳',
+            'browser' => '瀏覽',
+            'remove_file' => '移除已上傳的檔案',
+            'limit_title' => '超過選擇上限',
+            'limit_text' => '您最多只能選擇 :limit 個檔案',
+        ],
         'message' => [
             'create_success' => '您新增的資料儲存成功。',
             'create_error' => '您的新增資料操作失敗。',
