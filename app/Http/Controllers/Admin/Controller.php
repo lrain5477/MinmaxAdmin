@@ -241,7 +241,7 @@ class Controller extends BaseController
             $formDataKey = $this->modelRepository->getIndexKey();
             if($formDataKey !== 'id') $inputSet[$formDataKey] = Str::uuid();
 
-            foreach($inputSet['uploads'] as $columnKey => $columnInput) {
+            foreach($inputSet['uploads'] ?? [] as $columnKey => $columnInput) {
                 $inputSet[$columnKey] = $columnInput['origin'] ?? null;
                 $filePath = 'files/' . ($columnInput['path'] ?? 'uploads');
                 $fileList = [];
@@ -339,7 +339,7 @@ class Controller extends BaseController
             $where = [$this->modelRepository->getIndexKey() => $id];
             if($this->modelRepository->isMultiLanguage()) $where['lang'] = app()->getLocale();
 
-            foreach($inputSet['uploads'] as $columnKey => $columnInput) {
+            foreach($inputSet['uploads'] ?? [] as $columnKey => $columnInput) {
                 $inputSet[$columnKey] = $columnInput['origin'] ?? null;
                 $filePath = 'files/' . ($columnInput['path'] ?? 'uploads');
                 $fileList = [];
