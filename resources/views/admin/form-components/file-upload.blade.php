@@ -19,6 +19,19 @@
     <small class="form-text text-muted ml-sm-auto col-sm-10">{!! $hint !!}</small>
     @endif
 </div>
+@if($file != '')
+<div class="form-group row" id="{{ $id }}-list">
+    <div class="col-sm-10 offset-sm-2">
+        <div class="file-list">
+            @foreach(explode(config('app.separate_string'), $file) as $fileItem)
+                <div class="alert alert-info alert-dismissible fade show ui-sortable-handle" role="alert">
+                    {{ $fileItem }} <a href="{{ asset($fileItem) }}" class="alert-link" target="_blank"><i class="icon-popout"></i></a>
+                </div>
+            @endforeach
+        </div>
+    </div>
+</div>
+@endif
 
 @push('scripts')
 <script>
@@ -43,9 +56,11 @@
             if($(this).prop('checked')) {
                 $('#{{ $id }}-origin').val('');
                 $('#{{ $id }}-label').text('@lang('admin.form.file.default_text')');
+                $('#{{ $id }}-list').hide();
             } else {
                 $('#{{ $id }}-origin').val('{{ $file }}');
                 $('#{{ $id }}-label').text('{{ $filename }}');
+                $('#{{ $id }}-list').show();
             }
         });
         @endif
