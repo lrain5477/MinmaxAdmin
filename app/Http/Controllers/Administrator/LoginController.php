@@ -69,7 +69,7 @@ class LoginController extends BaseController
                 }),
             ],
             'password' => 'required|string',
-            'captcha' => ['required', Rule::in([session('administratorCaptcha')])],
+            'captcha' => ['required', Rule::in([session('administrator_captcha')])],
         ]);
     }
 

@@ -10,7 +10,7 @@
 </head>
 <body class="login">
 <div class="wrapper user-login">
-    <div class="login-logo"><img class="mr-2" src="{{ asset('admin/images/logo.png') }}"><span>MINMAX</span></div>
+    <div class="login-logo"><img class="mr-2" src="{{ asset('admin/images/logo.png') }}"><span>{{ config('app.author') }}</span></div>
     <div class="row no-gutters">
         <div class="col-lg-6 login-container">
             <div class="login-content">
@@ -36,7 +36,7 @@
 
                         <div class="col-sm captcha">
                             <input class="form-control form-group" type="text" autocomplete="off" placeholder="@lang('admin.login.captcha')" name="captcha" id="captcha" maxlength="4">
-                            <img src="{{ route('admin.loginCaptcha') }}" style="width:100px;height:auto;" id="rand-img" name="rand-img">
+                            <img src="{{ route('admin.captcha', ['name' => 'login']) }}" style="width:100px;height:auto;" id="rand-img" name="rand-img">
                             <button class="btn btn-" type="button" id="getCaptcha" name="getCaptcha"><i class="icon-rotate"></i></button>
                         </div>
                     </div>
@@ -56,13 +56,13 @@
                             </div>
                         </div>
 
-                        <div class="col-auto">
+                        {{--<div class="col-auto">
                             <div class="forgot-password"><a class="forget-password" id="forget-password" href="javascript:;">@lang('admin.login.forget')</a></div>
-                        </div>
+                        </div>--}}
                     </div>
                 </form>
 
-                <form class="forget-form validator" action="javascript:;" method="post" data-toggle="validator">
+                {{--<form class="forget-form validator" action="javascript:;" method="post" data-toggle="validator">
                     @csrf
                     <h3 class="text-danger">@lang('admin.login.forget')</h3>
                     <p>@lang('admin.login.info.forget')</p>
@@ -75,7 +75,7 @@
                         <button class="btn btn-outline-secondary btn-outline" id="back-btn" type="button">@lang('admin.login.back_button')</button>
                         <button class="btn btn-danger uppercase pull-right" type="submit">@lang('admin.login.forget_submit')</button>
                     </div>
-                </form>
+                </form>--}}
             </div>
 
             <div class="login-footer">
@@ -118,7 +118,7 @@
 <script>
 jQuery(document).ready(function () {
     $('#getCaptcha').click(function(){
-        $('#rand-img').attr('src', '{{ route('admin.loginCaptcha') }}' + '/' + (new Date()).getMilliseconds());
+        $('#rand-img').attr('src', '{{ route('admin.captcha', ['name' => 'login']) }}' + '/' + (new Date()).getMilliseconds());
     });
 
     $("#loginForm").validate({
@@ -141,7 +141,7 @@ jQuery(document).ready(function () {
         errorPlacement: function(error, element) {},
         highlight: function(element){ $(element).css({'border': '1px dotted #ff0000'}); },
         unhighlight: function(element){ $(element).css({"border": ''}); },
-        submitHandler: function(form) { form.submit(); }
+        submitHandler: function(form) { $('#subBtn').prop('disabled', true).text('登入中'); form.submit(); }
     });
 
     Login();

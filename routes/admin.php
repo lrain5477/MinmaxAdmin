@@ -12,9 +12,7 @@
 */
 
 // 登入登出
-Route::get('login/captcha/{id?}', function($id = '') {
-    return \App\Helpers\CaptchaHelper::createCaptcha($id, 'adminCaptcha');
-})->name('loginCaptcha');
+Route::get('captcha/{name}/{id?}', 'HelperController@getCaptcha')->name('captcha');
 Route::post('login', 'LoginController@login');
 Route::get('login', 'LoginController@showLoginForm')->name('login');
 Route::get('logout', 'LoginController@logout')->name('logout');
@@ -28,32 +26,14 @@ Route::middleware(['auth:admin'])->group(function($route) {
     Route::put('profile', 'ProfileController@update');
 
     // 圖片縮圖
-    Route::get('thumbnail/{width}x{height}/{imagePath}', function($width, $height, $imagePath) {
-        if($width != $height) abort(404);
-        $thumbnailPath = \App\Helpers\ImageHelper::makeThumbnail($imagePath, $width, $height);
-        return Storage::response($thumbnailPath);
-    })->where([
+    Route::get('thumbnail/{width}x{height}/{imagePath}', 'HelperController@getThumbnail')->where([
         'width' => config('app.thumbnail_size'),
         'height' => config('app.thumbnail_size'),
         'imagePath' => '.+\.(jpg|png|gif)$'
     ])->name('thumbnail');
 
     // EditorTemplate
-    Route::get('editor/template/{category}.js', function($category) {
-        $templates = \App\Models\EditorTemplate::where(['guard' => 'admin', 'lang' => app()->getLocale(), 'category' => $category, 'active' => '1'])
-            ->orderBy('sort')
-            ->get(['title', 'description', 'editor'])
-            ->map(function($item) {
-                return [
-                    'title' => $item->title,
-                    'description' => $item->description,
-                    'html' => $item->editor,
-                ];
-            })
-            ->toJson(JSON_UNESCAPED_UNICODE);
-
-        return "CKEDITOR.addTemplates('default', { templates: {$templates} });";
-    })->name('editorTemplate');
+    Route::get('editor/template/{category}.js', 'HelperController@getEditorTemplate')->name('editorTemplate');
 
     // elFinder
     Route::prefix('elfinder')->group(function() {

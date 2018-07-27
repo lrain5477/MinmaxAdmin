@@ -10,7 +10,7 @@
 </head>
 <body class="login">
 <div class="wrapper user-login">
-    <div class="login-logo"><img class="mr-2" src="{{ asset('admin/images/logo.png') }}"><span>MINMAX</span></div>
+    <div class="login-logo"><img class="mr-2" src="{{ asset('admin/images/logo.png') }}"><span>{{ config('app.author') }}</span></div>
     <div class="row no-gutters">
         <div class="col-lg-6 login-container">
             <div class="login-content">
@@ -36,7 +36,7 @@
 
                         <div class="col-sm captcha">
                             <input class="form-control form-group" type="text" autocomplete="off" placeholder="@lang('administrator.login.captcha')" name="captcha" id="captcha" maxlength="4">
-                            <img src="{{ route('administrator.loginCaptcha') }}" style="width:100px;height:auto;" id="rand-img" name="rand-img">
+                            <img src="{{ route('administrator.captcha', ['name' => 'login']) }}" style="width:100px;height:auto;" id="rand-img" name="rand-img">
                             <button class="btn btn-" type="button" id="getCaptcha" name="getCaptcha"><i class="icon-rotate"></i></button>
                         </div>
                     </div>
@@ -99,7 +99,7 @@
 <script>
 jQuery(document).ready(function () {
     $('#getCaptcha').click(function(){
-        $('#rand-img').attr('src', '{{ route('administrator.loginCaptcha') }}' + '/' + (new Date()).getMilliseconds());
+        $('#rand-img').attr('src', '{{ route('administrator.captcha', ['name' => 'login']) }}' + '/' + (new Date()).getMilliseconds());
     });
 
     $("#loginForm").validate({
@@ -122,7 +122,7 @@ jQuery(document).ready(function () {
         errorPlacement: function(error, element) {},
         highlight: function(element){ $(element).css({'border': '1px dotted #ff0000'}); },
         unhighlight: function(element){ $(element).css({"border": ''}); },
-        submitHandler: function(form) { form.submit(); }
+        submitHandler: function(form) { $('#subBtn').prop('disabled', true).text('登入中'); form.submit(); }
     });
 });
 </script>
