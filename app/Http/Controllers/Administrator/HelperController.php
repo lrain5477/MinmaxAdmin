@@ -15,7 +15,7 @@ class HelperController extends BaseController
 {
     public function getCaptcha($name, $id = null)
     {
-        return CaptchaHelper::createCaptcha('administrator_' . $name, 4, $id);
+        return CaptchaHelper::createCaptcha('administrator_captcha_' . $name, 4, $id);
     }
 
     public function getThumbnail($width, $height, $imagePath)

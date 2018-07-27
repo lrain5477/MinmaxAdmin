@@ -74,7 +74,7 @@ class LoginController extends BaseController
                 }),
             ],
             'password' => 'required|string',
-            'captcha' => ['required', Rule::in([session('admin_login')])],
+            'captcha' => ['required', Rule::in([session('admin_captcha_login')])],
             'ip' => [
                 Rule::in($firewallWhite),
                 Rule::notIn($firewallBlack),
