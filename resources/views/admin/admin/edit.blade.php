@@ -16,8 +16,6 @@
     <fieldset id="baseFieldSet">
         <legend class="legend h6 mb-4"><i class="icon-angle-double-down2 mr-2"></i>@lang('admin.form.fieldSet.default')</legend>
 
-        {!! $modelPresenter->getFieldRoleSelect($formData, 'role_id', true) !!}
-
         {!! $modelPresenter->getFieldText($formData, 'username', true) !!}
 
         {!! $modelPresenter->getFieldPassword($formData, 'password', false, ['size' => 4, 'hint' => true]) !!}
@@ -41,6 +39,8 @@
 
     <fieldset class="mt-4" id="advFieldSet">
         <legend class="legend h6 mb-4"><i class="icon-angle-double-down2 mr-2"></i>@lang('admin.form.fieldSet.advanced')</legend>
+
+        {!! $modelPresenter->getFieldRoleSelect($formData, 'role_id', true) !!}
 
         {!! $modelPresenter->getFieldRadio($formData, 'active', true, ['inline' => true]) !!}
 

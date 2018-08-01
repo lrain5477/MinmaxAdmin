@@ -41,7 +41,7 @@ class AdminTransformer extends Transformer
             'username' => $this->getGridText($model->username),
             'name' => $this->getGridText($model->name),
             'email' => $this->getGridText($model->email),
-            'role_id' => $this->getGridText($model->roles()->first()->display_name),
+            'role_id' => $this->getGridText($model->roles->map(function($item) { return $item->display_name; })->implode(', ')),
             'active' => $this->getGridSwitch($model->guid, 'active', $model->active),
             'action' => $this->getGridActions($model->guid),
         ];

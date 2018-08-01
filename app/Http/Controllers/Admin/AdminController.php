@@ -31,7 +31,11 @@ class AdminController extends Controller
             try {
                 \DB::beginTransaction();
 
-                RoleAdmin::create(['role_id' =>$input['role_id'], 'user_id' => $input['guid']]);
+                $roleInsert = [];
+                foreach($input['role_id'] ?? [] as $roleItem) $roleInsert[] = ['role_id' => $roleItem, 'user_id' => $input['guid']];
+                if(count($roleInsert) > 0) {
+                    RoleAdmin::insert($roleInsert);
+                }
                 unset($input['role_id']);
                 $modelData = $this->modelRepository->create($input);
 
@@ -79,7 +83,12 @@ class AdminController extends Controller
             try {
                 \DB::beginTransaction();
 
-                RoleAdmin::where('user_id', $id)->update(['role_id' => $input['role_id']]);
+                RoleAdmin::where('user_id', $id)->delete();
+                $roleInsert = [];
+                foreach($input['role_id'] ?? [] as $roleItem) $roleInsert[] = ['role_id' => $roleItem, 'user_id' => $id];
+                if(count($roleInsert) > 0) {
+                    RoleAdmin::insert($roleInsert);
+                }
                 unset($input['role_id']);
                 $this->modelRepository->save($input, [$this->modelRepository->getIndexKey() => $id]);
 

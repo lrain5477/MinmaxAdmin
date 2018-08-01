@@ -19,8 +19,6 @@
     <fieldset id="baseFieldSet">
         <legend class="legend h6 mb-4"><i class="icon-angle-double-down2 mr-2"></i>@lang('admin.form.fieldSet.default')</legend>
 
-        {!! $modelPresenter->getViewNormalText($formData, 'role_id', $formData->roles()->first()->display_name) !!}
-
         {!! $modelPresenter->getViewNormalText($formData, 'username') !!}
 
         {!! $modelPresenter->getViewNormalText($formData, 'name') !!}
@@ -31,6 +29,8 @@
 
     <fieldset class="mt-4" id="advFieldSet">
         <legend class="legend h6 mb-4"><i class="icon-angle-double-down2 mr-2"></i>@lang('admin.form.fieldSet.advanced')</legend>
+
+        {!! $modelPresenter->getViewNormalText($formData, 'role_id', $formData->roles->map(function($item) { return $item->display_name; })->implode(', ')) !!}
 
         {!! $modelPresenter->getViewSelection($formData, 'active') !!}
 

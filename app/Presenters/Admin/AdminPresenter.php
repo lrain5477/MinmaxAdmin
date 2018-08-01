@@ -46,21 +46,26 @@ class AdminPresenter extends Presenter
 
         $modelName = class_basename($model);
         $columnLabel = __("models.{$modelName}.{$column}");
-        $fieldValue = is_null($model->roles()->first()) ? '' : $model->roles()->first()->id;
+        $fieldValues = $model->roles
+            ->map(function($item) {
+                /** @var \App\Models\Role $item */
+                return $item->id;
+            })
+            ->toArray();
 
         $componentData = [
             'id' => "{$modelName}-{$column}",
             'label' => $columnLabel,
-            'name' => "{$modelName}[{$column}]",
-            'value' => $fieldValue,
+            'name' => "{$modelName}[{$column}][]",
+            'values' => $fieldValues,
             'required' => $required,
             'title' => isset($options['title']) ? $options['title'] : '',
-            'search' => isset($options['search']) ? $options['search'] : false,
-            'size' => isset($options['size']) ? $options['size'] : 3,
+            'group' => isset($options['group']) ? $options['group'] : false,
+            'size' => isset($options['size']) ? $options['size'] : 10,
             'hint' => isset($options['hint']) && $options['hint'] == true ? __("models.{$modelName}.hint.{$column}") : '',
             'listData' => isset($this->fieldSelection[$column]) ? $this->fieldSelection[$column] : [],
         ];
 
-        return view("{$this->guardName}.form-components.select", $componentData);
+        return view("{$this->guardName}.form-components.multi-select", $componentData);
     }
 }
