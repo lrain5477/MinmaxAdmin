@@ -11,9 +11,12 @@ class AdminPresenter extends Presenter
         parent::__construct();
 
         $this->fieldSelection = [
-            'role_id' => Role::orderBy('display_name')->get()->mapWithKeys(function($item, $key) {
-                return [$item->id => $item->display_name];
-            }),
+            'role_id' => Role::orderBy('display_name')
+                ->get()
+                ->mapWithKeys(function($item, $key) {
+                    return [$item->id => $item->display_name];
+                })
+                ->toArray(),
             'active' => $this->parameterSet
                 ->firstWhere('code', '=', 'active')
                 ->parameterItem()
@@ -27,6 +30,13 @@ class AdminPresenter extends Presenter
         ];
     }
 
+    /**
+     * @param \App\Models\Admin $model
+     * @param string $column
+     * @param mixed $required
+     * @param array $options
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function getFieldRoleSelect($model, $column, $required = false, $options = [])
     {
         if(is_array($required)) {
