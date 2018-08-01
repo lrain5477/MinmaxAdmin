@@ -67,7 +67,7 @@ class RoleController extends Controller
                 \DB::beginTransaction();
 
                 $this->modelRepository->save($request->input($this->pageData->getAttribute('model')), [$this->modelRepository->getIndexKey() => $id]);
-                $permissionData = $request->input('PermissionRole');
+                $permissionData = $request->input('PermissionRole', []);
                 $permissionRoleData = [];
                 foreach ($permissionData as $permission_id) {
                     $permissionRoleData[] = [
