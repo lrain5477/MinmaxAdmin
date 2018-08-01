@@ -61,6 +61,6 @@
 
     <div class="text-center my-4 form-btn-group">
         <input class="btn btn-main" type="submit" id="submitBut" value="@lang('administrator.form.button.send')">
-        <input class="btn btn-default" type="reset" value="@lang('administrator.form.button.reset')">
+        <input class="btn btn-default" type="reset" value="@lang('administrator.form.button.reset')" onclick="window.location.reload(true)">
     </div>
 @endsection
