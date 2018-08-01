@@ -355,6 +355,37 @@ class Presenter
         return view("{$this->guardName}.form-components.group-select", $componentData);
     }
 
+    public function getFieldMultiSelect($model, $column, $required = false, $options = []) {
+        if(is_array($required)) {
+            $options = $required;
+            $required = false;
+        }
+
+        $modelName = class_basename($model);
+        $columnLabel = __("models.{$modelName}.{$column}");
+        $fieldValues = isset($model->$column)
+            ? (is_array($model->$column)
+                ? $model->$column
+                : explode(config('app.separate_string'), $model->$column)
+            )
+            : [];
+
+        $componentData = [
+            'id' => "{$modelName}-{$column}",
+            'label' => $columnLabel,
+            'name' => "{$modelName}[{$column}][]",
+            'values' => $fieldValues,
+            'required' => $required,
+            'title' => isset($options['title']) ? $options['title'] : '',
+            'group' => isset($options['group']) ? $options['group'] : false,
+            'size' => isset($options['size']) ? $options['size'] : 10,
+            'hint' => isset($options['hint']) && $options['hint'] == true ? __("models.{$modelName}.hint.{$column}") : '',
+            'listData' => isset($this->fieldSelection[$column]) ? $this->fieldSelection[$column] : [],
+        ];
+
+        return view("{$this->guardName}.form-components.multi-select", $componentData);
+    }
+
     public function getFieldCheckbox($model, $column, $required = false, $options = []) {
         if(is_array($required)) {
             $options = $required;
