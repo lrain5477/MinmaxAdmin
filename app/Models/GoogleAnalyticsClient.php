@@ -12,6 +12,11 @@ use Illuminate\Support\Collection;
 class GoogleAnalyticsClient
 {
     /**
+     * @var string $guard
+     */
+    protected $guard;
+
+    /**
      * @var Google_Service_Analytics $service
      */
     protected $service;
@@ -26,6 +31,7 @@ class GoogleAnalyticsClient
      */
     public function __construct()
     {
+        $this->guard = 'admin';
         $this->setService(config('analytics.service_account_credentials_json'));
         $this->setViewId(config('analytics.view_id'));
     }
@@ -52,6 +58,14 @@ class GoogleAnalyticsClient
     public function setViewId($viewId)
     {
         $this->viewId = $viewId;
+    }
+
+    /**
+     * @param string $guard
+     */
+    public function setGuard($guard)
+    {
+        $this->guard = $guard;
     }
 
     /**
@@ -331,7 +345,7 @@ class GoogleAnalyticsClient
             ->groupBy('source')
             ->map(function($item, $key) use ($sourceSummary) {
                 return [
-                    'source' => __(\Request::route()->middleware()[0] . '.dashboard.medium.' . $key),
+                    'source' => __($this->guard . '.dashboard.medium.' . $key),
                     'count' => collect($item)->sum('count'),
                     'rate' => $sourceSummary == 0 ? '0.00' : number_format(collect($item)->sum('count') * 100 / $sourceSummary, 2)
                 ];
@@ -379,7 +393,7 @@ class GoogleAnalyticsClient
             ->groupBy('source')
             ->map(function($item, $key) {
                 return [
-                    'source' => __(\Request::route()->middleware()[0] . '.dashboard.medium.json_' . $key),
+                    'source' => __($this->guard . '.dashboard.medium.json_' . $key),
                     'count' => collect($item)->sum('count')
                 ];
             })
