@@ -11,6 +11,7 @@ class ResetPassword extends Mailable
 {
     use Queueable, SerializesModels;
 
+    protected $webData;
     protected $passwordToken;
 
     /**
@@ -21,6 +22,7 @@ class ResetPassword extends Mailable
      */
     public function __construct($passwordToken)
     {
+        $this->webData = WebData::where(['website_key' => 'web'])->first();
         $this->passwordToken = $passwordToken;
     }
 
@@ -31,13 +33,11 @@ class ResetPassword extends Mailable
      */
     public function build()
     {
-        $webData = WebData::first();
-
         return $this->view('emails.member.reset-password')
-            ->subject('忘記密碼重設通知信')
+            ->subject('忘記密碼重設通知函')
             ->with([
-                'webData' => $webData,
-                'resetToken' => $this->passwordToken,
+                'webData' => $this->webData,
+                'resetUrl' => url("reset-password/{$this->passwordToken}"),
             ]);
     }
 }
