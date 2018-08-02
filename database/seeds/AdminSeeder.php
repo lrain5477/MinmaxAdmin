@@ -32,7 +32,8 @@ class AdminSeeder extends Seeder
         DB::table('admin')->insert($adminData);
 
         $roleUserData = [
-            ['role_id' => '1', 'user_id' => $adminGuid]
+            ['role_id' => '1', 'user_id' => $adminGuid],
+            ['role_id' => '2', 'user_id' => $adminGuid]
         ];
         DB::table('role_user')->insert($roleUserData);
 

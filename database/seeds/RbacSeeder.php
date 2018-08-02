@@ -41,6 +41,10 @@ class RbacSeeder extends Seeder
                 'guard' => 'admin', 'name' => 'systemAdmin', 'display_name' => '系統管理員', 'description' => '系統管理員',
                 'active' => '1', 'updated_at' => $timestamp, 'created_at' => $timestamp,
             ],
+            [
+                'guard' => 'admin', 'name' => 'systemEmail', 'display_name' => '信件接收', 'description' => '此群組無特別權限，此群組成員可收到系統信。',
+                'active' => '1', 'updated_at' => $timestamp, 'created_at' => $timestamp,
+            ],
         ];
         DB::table('roles')->insert($rolesData);
 
