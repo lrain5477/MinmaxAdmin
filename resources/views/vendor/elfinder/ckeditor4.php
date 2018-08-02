@@ -70,7 +70,7 @@
                         <?php } ?>
                     },
                     getFileCallback : function(file) {
-                        window.opener.CKEDITOR.tools.callFunction(funcNum, '/' + file.path.replace(/\\/g, '/'));
+                        window.opener.CKEDITOR.tools.callFunction(funcNum, file.url.replace(/\\/g, '/'));
                         window.close();
                     }
                 }).elfinder('instance');
