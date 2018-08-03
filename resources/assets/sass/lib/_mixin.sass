@@ -1,0 +1,62 @@
+@charset "UTF-8"
+
+//-----------------icon svg-----------------
+// icommon 引入
+%icon
+	position: relative
+	display: block
+	font-family: 'icomoon'
+	speak: none
+	font-weight: normal
+	font-variant: normal
+	text-transform: none
+	line-height: 1
+
+// icon
+@mixin icon($content, $position:"")
+	@if $position == ""
+		@extend %icon
+		content: $content
+	@else if $position == before
+		&::before
+		@extend %icon
+		content: $content
+	@else if $position == after
+		&::after
+		@extend %icon
+		content: $content
+
+// 大小,兩個參數,若只給一個就是正方形
+@mixin size($w,$h:$w)
+	width: $w
+	height: $h
+
+// triangle
+@mixin triangle($w,$h,$color,$direction)
+	width: 0
+	height: 0
+	border-style : solid
+	border-width: $h $w
+
+	@if $direction == top
+		border-color: $color transparent transparent transparent
+	@if $direction == right
+		border-color: transparent $color transparent transparent
+	@if $direction == bottom
+		border-color: transparent transparent $color transparent
+	@if $direction == left
+		border-color: transparent transparent transparent $color
+
+@mixin ellipsis($clamp:3)
+	@if $clamp == 1
+		text-overflow: ellipsis
+		-o-text-overflow: ellipsis
+		white-space: nowrap
+		overflow: hidden
+
+	@else
+		overflow : hidden
+		text-overflow: ellipsis
+		display: -webkit-box
+		-webkit-line-clamp: $clamp
+		-webkit-box-orient: vertical
