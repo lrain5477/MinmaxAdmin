@@ -26,4 +26,5 @@ CKEDITOR.editorConfig = function( config ) {
     config.shiftEnterMode = CKEDITOR.ENTER_P;
     config.htmlEncodeOutput = false;
     config.font_names = 'Open Sans;Roboto Slab;Rokkitt;Arial;Arial Black;Comic Sans MS;Courier New;Tahoma;Times New Roman;Verdana';
+    config.image_prefillDimensions = false;
 };
