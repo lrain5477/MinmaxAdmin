@@ -11,6 +11,7 @@
 |
 */
 
-Route::get('/', function() {
-    abort(404);
-})->name('home');
+Route::get('/', function () {
+    $viewData = [];
+    return View::make('web.sites.index', $viewData);
+});
