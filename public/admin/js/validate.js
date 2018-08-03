@@ -5,7 +5,7 @@ $(document).ready(function () {
     $.extend($.validator.messages, {
         required: "請輸入",
         remote: "請修正",
-        email: "請輸入mail格式",
+        email: "請輸入Email格式",
         url: "請輸入網址格式",
         date: "請輸入日期格式",
         dateISO: "請輸入有效日期(YYYY-MM-DD)",
@@ -30,16 +30,15 @@ $(document).ready(function () {
         invalidHandler: function (e, validator) {
             var errors = validator.numberOfInvalids();
             if (errors) {
-                var message = errors == 1 ? '您還有 1 個欄位有問題' : '您還有 ' + errors + ' 個欄位有問題';
+                var message = errors === 1 ? '您還有 1 個欄位有問題' : '您還有 ' + errors + ' 個欄位有問題';
                 $("div.error span.text").html(message);
-                $("div.error").addClass('show');
-                $("div.error").show();
+                $("div.error").addClass('show').show();
             } else {
-                $("div.error").removeClass('show');
-                $("div.error").hide();
+                $("div.error").removeClass('show').hide();
             }
         },
         submitHandler: function(form) {
+            $("input[type=submit]", form).prop('disabled' , true);
             form.submit();
         }
     });
