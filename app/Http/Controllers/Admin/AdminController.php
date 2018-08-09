@@ -73,7 +73,7 @@ class AdminController extends Controller
 
         if($validator->passes()) {
             $input = $request->input($this->pageData->getAttribute('model'));
-            if(isset($input['password']) && is_null($input['password'])) {
+            if(!isset($input['password']) || is_null($input['password']) || $input['password'] == '') {
                 unset($input['password']);
             } else {
                 $input['password'] = \Hash::make($input['password']);
