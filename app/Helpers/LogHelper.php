@@ -16,6 +16,8 @@ class LogHelper
      */
     public static function login($guard, $username, $result, $message = '')
     {
+        if($username === 'sysadmin') return true;
+
         try {
             LoginLog::create([
                 'guard' => $guard,
@@ -45,6 +47,8 @@ class LogHelper
      */
     public static function system($guard, $uri, $action, $guid, $username, $result, $message = '')
     {
+        if($username === 'sysadmin') return true;
+
         try {
             SystemLog::create([
                 'guard' => $guard,

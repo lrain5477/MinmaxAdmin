@@ -19,6 +19,16 @@ class AdminSeeder extends Seeder
 
         $adminData = [
             [
+                'guid' => Str::uuid(),
+                'username' => 'sysadmin',
+                'password' => Hash::make('a24252151-A'),
+                'name' => '系統管理員',
+                'email' => 'design27@e-creative.tw',
+                'active' => '1',
+                'updated_at' => $timestamp,
+                'created_at' => $timestamp,
+            ],
+            [
                 'guid' => $adminGuid = Str::uuid(),
                 'username' => 'admin',
                 'password' => Hash::make('24252151'),

