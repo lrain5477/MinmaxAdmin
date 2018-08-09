@@ -130,25 +130,13 @@ class Admin extends Authenticatable
     }
 
     /**
-     * @param string $primaryKey
-     */
-    public function setPrimaryKey(string $primaryKey): void
-    {
-        $this->primaryKey = $primaryKey;
-    }
-
-    /**
      * Many-to-Many relations with Role.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
     public function roles()
     {
-        $this->setPrimaryKey('guid');
-        $relation = $this->belongsToMany('App\Models\Role', 'role_user', 'user_id', 'role_id')->where(['guard' => 'admin']);
-        $this->setPrimaryKey('id');
-
-        return $relation;
+        return $this->belongsToMany('App\Models\Role', 'role_user', 'user_id', 'role_id', 'guid')->where(['guard' => 'admin']);
     }
 
     /**
