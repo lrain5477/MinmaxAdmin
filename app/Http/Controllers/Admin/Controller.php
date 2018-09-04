@@ -7,7 +7,7 @@ use App\Helpers\PermissionHelper;
 use App\Models\Admin;
 use App\Models\AdminMenuClass;
 use App\Models\AdminMenuItem;
-use App\Models\Language;
+use App\Models\WorldLanguage;
 use App\Models\ParameterGroup;
 use App\Models\WebData;
 use App\Repositories\Admin\Repository;
@@ -34,7 +34,7 @@ class Controller extends BaseController
      * @var string $uri
      * @var array $viewData
      * @var Admin $adminData
-     * @var Language $languageData
+     * @var WorldLanguage $languageData
      * @var array $parameterData
      * @var AdminMenuItem $pageData
      * @var string $modelName
@@ -57,19 +57,6 @@ class Controller extends BaseController
             /**
              * @var \Illuminate\Http\Request $request
              */
-
-            // 取得 語系資料
-            $this->languageData = Language::all();
-            $this->viewData['languageData'] = $this->languageData->where('active', '1');
-
-            // 設定 語系
-            if($request->has('language') && $this->languageData->where('codes', $request->get('language'))->where('active', '1')->count() > 0) {
-                session(['adminLanguage' => $request->get('language')]);
-                session()->save();
-            }
-            if(session()->has('adminLanguage') && !is_null(session('adminLanguage'))) {
-                app()->setLocale(session('adminLanguage'));
-            }
 
             // 設定 URI
             if($request->route()->hasParameter('uri')) {
