@@ -17,7 +17,7 @@ Route::post('login', 'LoginController@login');
 Route::get('login', 'LoginController@showLoginForm')->name('login');
 Route::get('logout', 'LoginController@logout')->name('logout');
 
-Route::middleware(['auth:admin'])->group(function($route) {
+Route::group(['middleware' => 'auth:admin'], function($route) {
     // 首頁
     Route::get('/', 'SiteController@index')->name('home');
 
@@ -36,7 +36,7 @@ Route::middleware(['auth:admin'])->group(function($route) {
     Route::get('editor/template/{category}.js', 'HelperController@getEditorTemplate')->name('editorTemplate');
 
     // elFinder
-    Route::prefix('elfinder')->group(function() {
+    Route::group(['prefix' => 'elfinder'], function() {
         Route::get('/',  ['as' => 'elfinder.index', 'uses' =>'CustomElfinderController@showIndex']);
         Route::any('connector', ['as' => 'elfinder.connector', 'uses' => 'CustomElfinderController@showConnector']);
         Route::get('ckeditor', ['as' => 'elfinder.ckeditor', 'uses' => 'CustomElfinderController@showCKeditor4']);
