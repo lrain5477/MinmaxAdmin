@@ -2,7 +2,7 @@
 
 namespace App\Transformers\Administrator;
 
-use App\Models\Language;
+use App\Models\WorldLanguage;
 
 class LanguageTransformer extends Transformer
 {
@@ -12,11 +12,11 @@ class LanguageTransformer extends Transformer
     ];
 
     /**
-     * @param Language $model
+     * @param WorldLanguage $model
      * @return array
      * @throws \Throwable
      */
-    public function transform(Language $model)
+    public function transform(WorldLanguage $model)
     {
         return [
             'guid' => $this->getGridCheckBox($model->guid),

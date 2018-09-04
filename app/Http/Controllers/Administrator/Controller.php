@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Administrator;
 
 use App\Models\Administrator;
 use App\Models\AdministratorMenu;
-use App\Models\Language;
+use App\Models\WorldLanguage;
 use App\Models\ParameterGroup;
 use App\Models\WebData;
 use App\Repositories\Administrator\Repository;
@@ -31,7 +31,7 @@ class Controller extends BaseController
      * @var string $uri
      * @var array $viewData
      * @var Administrator $adminData
-     * @var Language $languageData
+     * @var WorldLanguage $languageData
      * @var array $parameterData
      * @var AdministratorMenu $pageData
      * @var string $modelName
@@ -57,7 +57,7 @@ class Controller extends BaseController
              */
 
             // 取得 語系資料
-            $this->languageData = Language::all();
+            $this->languageData = WorldLanguage::all();
             $this->viewData['languageData'] = $this->languageData->where('active', '1');
 
             // 設定 語系

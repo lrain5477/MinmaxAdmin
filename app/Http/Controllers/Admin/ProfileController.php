@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Helpers\LogHelper;
 use App\Models\AdminMenuClass;
-use App\Models\Language;
+use App\Models\WorldLanguage;
 use App\Models\WebData;
 use App\Repositories\Admin\ProfileRepository;
 use Illuminate\Http\Request;
@@ -42,7 +42,7 @@ class ProfileController extends BaseController
              */
 
             // 取得 語系資料
-            $this->languageData = Language::all();
+            $this->languageData = WorldLanguage::all();
             $this->viewData['languageData'] = $this->languageData->where('active', '1');
 
             // 設定 語系

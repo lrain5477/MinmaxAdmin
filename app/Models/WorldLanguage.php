@@ -17,9 +17,9 @@ use Illuminate\Database\Eloquent\Model;
  * @property \Illuminate\Support\Carbon $created_at
  * @property \Illuminate\Support\Carbon $updated_at
  */
-class Language extends Model
+class WorldLanguage extends Model
 {
-    protected $table = 'language';
+    protected $table = 'world_language';
     protected $guarded = [];
 
     public static function getIndexKey()
