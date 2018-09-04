@@ -2,130 +2,54 @@
 
 namespace App\Repositories\Admin;
 
-class Repository
+use Closure;
+
+/**
+ * Abstract class Repository
+ */
+abstract class Repository
 {
-    /**
-     * @var string $modelClassName
-     */
-    protected $modelClassName = null;
+    const MODEL = null;
 
     /**
-     * @param $modelClassName
+     * Search by primary key
+     *
+     * @param $id
+     * @return mixed
      */
-    public function setModelClassName($modelClassName)
+    public function find($id)
     {
-        $this->modelClassName = $modelClassName;
+        return $this->query()->findOrFail($id);
     }
 
-    /**
-     * @return array
-     */
-    public function getRules()
+    public function all($column, $operator = null, $value = null, $boolean = 'and')
     {
-        return call_user_func_array("App\\Models\\{$this->modelClassName}::rules", []) ?? null;
-    }
+        if ($column instanceof Closure) {
+            $query = $this->query();
 
-    public function getIndexKey()
-    {
-        return call_user_func_array("App\\Models\\{$this->modelClassName}::getIndexKey", []) ?? null;
-    }
+            $column($query);
 
-    /**
-     * Return if this model's table with column `lang` and need to use.
-     * @return bool
-     */
-    public function isMultiLanguage()
-    {
-        return call_user_func_array("App\\Models\\{$this->modelClassName}::isMultiLanguage", []) ?? false;
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Model
-     */
-    public function new()
-    {
-        return app()->make("App\\Models\\{$this->modelClassName}") ?? null;
-    }
-
-    /**
-     * @param array $where
-     * @return \Illuminate\Database\Query\Builder
-     */
-    public function query($where = [])
-    {
-        return call_user_func_array("App\\Models\\{$this->modelClassName}::where", [$where]) ?? null;
-    }
-
-    /**
-     * @param array $where
-     * @return \Illuminate\Database\Eloquent\Model
-     */
-    public function one($where = [])
-    {
-        return call_user_func_array("App\\Models\\{$this->modelClassName}::where", [$where])->first() ?? null;
-    }
-
-    /**
-     * @param array $where
-     * @return \Illuminate\Support\Collection
-     */
-    public function all($where = [])
-    {
-        return call_user_func_array("App\\Models\\{$this->modelClassName}::where", [$where])->get() ?? null;
-    }
-
-    /**
-     * @param array $data
-     * @return \Illuminate\Database\Eloquent\Model
-     */
-    public function create($data)
-    {
-        foreach($data as $key => $value) {
-            if(is_null($value)) unset($data[$key]);
-            if(is_array($value)) $data[$key] = implode(config('app.separate_string'), $value);
-        }
-        return call_user_func_array("App\\Models\\{$this->modelClassName}::create", [$data]) ?? null;
-    }
-
-    /**
-     * @param array $data
-     * @param array $where
-     * @return bool
-     */
-    public function save($data, $where = [])
-    {
-        $thisRow = $this->one($where);
-
-        foreach($data as $key => $value) {
-            $thisRow->$key = is_array($value) ? implode(config('app.separate_string'), $value) : $value;
-        }
-
-        return $thisRow->save();
-    }
-
-    /**
-     * @param array $data
-     * @param array $where
-     * @return bool
-     */
-    public function update($data, $where = [])
-    {
-        foreach($data as $key => $value) {
-            if(is_array($value)) $data[$key] = implode(config('app.separate_string'), $value);
-        }
-        return call_user_func_array("App\\Models\\{$this->modelClassName}::where", [$where])->update($data) ?? false;
-    }
-
-    /**
-     * @param array $where
-     * @return bool
-     */
-    public function delete($where = [])
-    {
-        try {
-            return call_user_func_array("App\\Models\\{$this->modelClassName}::where", [$where])->delete();
-        } catch (\Exception $e) {
-            return false;
+            return $query->addNestedWhereQuery($query->getQuery(), $boolean)->get();
+        } else {
+            return $this->query()->where(...func_get_args())->get();
         }
     }
+
+    /**
+     * Create a model query builder
+     *
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function query()
+    {
+        return call_user_func(static::MODEL.'::query');
+    }
+
+    /**
+     * Set attributes into model entity
+     *
+     * @param array $attributes
+     * @return mixed
+     */
+    abstract protected function serialization(array $attributes);
 }
