@@ -25,7 +25,7 @@ class CreateAdminTable extends Migration
             $table->string('icon', 64)->nullable()->comment('圖示 Class');
             $table->string('permission_key', 128)->nullable()->comment('權限綁定代碼');
             $table->string('filter', 255)->nullable()->comment('資料過濾 (where)');
-            $table->json('keeps')->nullable()->comment('不可刪除 ID');
+            $table->text('keeps')->nullable()->comment('不可刪除 ID');
             $table->unsignedInteger('sort')->default(1)->comment('排序');
             $table->enum('active', [1, 0])->default(1)->comment('狀態');
             $table->timestamps();
