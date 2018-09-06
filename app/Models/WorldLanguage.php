@@ -7,9 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 /**
  * Class Language
  * @property integer $id
- * @property string $guid
  * @property string $title
- * @property string $codes
+ * @property string $code
  * @property string $name
  * @property string $icon
  * @property integer $sort
@@ -22,29 +21,13 @@ class WorldLanguage extends Model
     protected $table = 'world_language';
     protected $guarded = [];
 
-    public static function getIndexKey()
+    public function worldCountry()
     {
-        return 'guid';
+        return $this->hasMany('App\Models\WorldCountry', 'language_id', 'id');
     }
 
-    /**
-     * Return if this model's table with column `lang` and need to use.
-     * @return bool
-     */
-    public static function isMultiLanguage()
+    public function getNameAttribute()
     {
-        return false;
-    }
-
-    public static function rules()
-    {
-        return [
-            'title' => 'required|string',
-            'codes' => 'required|string',
-            'name' => 'required|string',
-            'icon' => 'required|string',
-            'sort' => 'required|integer',
-            'active' => 'required|in:1,0',
-        ];
+        return langDB($this->getAttributeFromArray('name'));
     }
 }
