@@ -16,7 +16,7 @@ class AdminSeeder extends Seeder
         $timestamp = date('Y-m-d H:i:s');
         // $languageData = DB::table('world_language')->where('active', '1')->get(['code']);
         $webData = DB::table('web_data')->get(['guid', 'guard']);
-        $menuClass = ['default', 'modules', 'system'];
+        $menuClass = ['default', 'module', 'system'];
 
         $adminData = [
             [
@@ -49,6 +49,38 @@ class AdminSeeder extends Seeder
 //        DB::table('role_user')->insert($roleUserData);
 
         $adminMenuData = [
+            // Default
+            [
+                'guid' => uuidl(),
+                'title' => '系統首頁',
+                'uri' => '',
+                'controller' => 'SiteController',
+                'model' => null,
+                'class' => $menuClass[0],
+                'parent_id' => null,
+                'link' => '/',
+                'icon' => 'icon-home3',
+                'permission_key' => null,
+                'sort' => 1, 'active' => '1', 'updated_at' => $timestamp, 'created_at' => $timestamp
+            ],
+            [
+                'guid' => uuidl(),
+                'title' => '前臺首頁',
+                'uri' => 'web',
+                'controller' => null,
+                'model' => null,
+                'class' => $menuClass[0],
+                'parent_id' => null,
+                'link' => config('app.url'),
+                'icon' => 'icon-home3',
+                'permission_key' => null,
+                'sort' => 2, 'active' => '1', 'updated_at' => $timestamp, 'created_at' => $timestamp
+            ],
+
+            // Module
+            // TODO: Put project menu here.
+
+            // System
             [
                 'guid' => $menuGuid1 = uuidl(),
                 'title' => '控制臺',
@@ -60,7 +92,7 @@ class AdminSeeder extends Seeder
                 'link' => null,
                 'icon' => 'icon-cog',
                 'permission_key' => null,
-                'sort' => 1, 'active' => '1', 'updated_at' => $timestamp, 'created_at' => $timestamp
+                'sort' => 3, 'active' => '1', 'updated_at' => $timestamp, 'created_at' => $timestamp
             ],
             [
                 'guid' => uuidl(),
@@ -87,7 +119,7 @@ class AdminSeeder extends Seeder
                 'link' => null,
                 'icon' => 'icon-person_pin',
                 'permission_key' => null,
-                'sort' => 2, 'active' => '1', 'updated_at' => $timestamp, 'created_at' => $timestamp
+                'sort' => 4, 'active' => '1', 'updated_at' => $timestamp, 'created_at' => $timestamp
             ],
             [
                 'guid' => uuidl(),
@@ -140,7 +172,7 @@ class AdminSeeder extends Seeder
                 'link' => null,
                 'icon' => 'icon-shield',
                 'permission_key' => null,
-                'sort' => 3, 'active' => '1', 'updated_at' => $timestamp, 'created_at' => $timestamp
+                'sort' => 5, 'active' => '1', 'updated_at' => $timestamp, 'created_at' => $timestamp
             ],
             [
                 'guid' => uuidl(),
