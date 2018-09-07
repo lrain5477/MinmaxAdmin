@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Admin;
 use App\Helpers\LogHelper;
 use App\Models\Firewall;
 use App\Models\WebData;
+use App\Repositories\Admin\FirewallRepository;
+use App\Repositories\Admin\WebDataRepository;
 use Auth;
 use Cache;
 use Illuminate\Cache\TaggableStore;
@@ -28,12 +30,29 @@ class LoginController extends BaseController
     protected $redirectTo = '/siteadmin';
 
     /**
+     * @var \App\Models\WebData $webData
+     */
+    protected $webData;
+
+    /** @var \Illuminate\Database\Eloquent\Collection|\App\Models\Firewall[] */
+    protected $firewallData;
+
+    /**
      * Create a new controller instance.
      *
+     * @param  WebDataRepository $webDataRepository
+     * @param  FirewallRepository $firewallRepository
      * @return void
      */
-    public function __construct()
+    public function __construct(WebDataRepository $webDataRepository, FirewallRepository $firewallRepository)
     {
+        // 設定 網站資料
+        $this->webData = $webDataRepository->getData() ?? abort(404);
+        if ($this->webData->active != '1') abort(404, $this->webData->offline_text);
+
+        // 設定 防火牆資料
+        $this->firewallData = $firewallRepository->all(['guard' => 'admin', 'active' => 1]);
+
         $this->middleware('guest')->except('logout');
     }
 
@@ -44,7 +63,7 @@ class LoginController extends BaseController
      */
     public function showLoginForm()
     {
-        return view('admin.login', ['webData' => WebData::where(['lang' => app()->getLocale(), 'website_key' => 'admin'])->first()]);
+        return view('admin.login', ['webData' => $this->webData]);
     }
 
     /**
@@ -59,13 +78,12 @@ class LoginController extends BaseController
             return $this->attemptLogin($request);
         }
 
-        $request->merge(['ip' => \Request::ip()]);
+        $request->merge(['ip' => $request->ip()]);
 
         // 防火牆
-        $firewallData = Firewall::where(['guard' => 'admin', 'active' => 1])->get();
-        $firewallBlack = $firewallData->where('rule', 0)->map(function($item) { return $item->ip; })->toArray();
-        $firewallWhite = $firewallData->where('rule', 1)->map(function($item) { return $item->ip; })->toArray();
-        $firewallWhite = count($firewallWhite) > 0 ? $firewallWhite : [\Request::ip()];
+        $firewallBlack = $this->firewallData->where('rule', 0)->map(function($item) { return $item->ip; })->toArray();
+        $firewallWhite = $this->firewallData->where('rule', 1)->map(function($item) { return $item->ip; })->toArray();
+        $firewallWhite = count($firewallWhite) > 0 ? $firewallWhite : [$request->ip()];
 
         $this->validate($request, [
             $this->username() => [

@@ -3,20 +3,17 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Models\GoogleAnalyticsClient;
-use App\Repositories\Admin\Repository;
+use Illuminate\Http\Request;
 
 class SiteController extends Controller
 {
     protected $gaClient;
 
-    public function __construct(Repository $modelRepository, GoogleAnalyticsClient $gaClient)
+    public function __construct(Request $request, GoogleAnalyticsClient $gaClient)
     {
-        parent::__construct($modelRepository);
+        parent::__construct($request);
 
-        $this->middleware(function($request, $next) use ($gaClient) {
-            $this->gaClient = $gaClient;
-            return $next($request);
-        });
+        $this->gaClient = $gaClient;
     }
 
     /**

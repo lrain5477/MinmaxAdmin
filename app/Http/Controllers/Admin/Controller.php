@@ -4,105 +4,95 @@ namespace App\Http\Controllers\Admin;
 
 use App\Helpers\LogHelper;
 use App\Helpers\PermissionHelper;
-use App\Models\Admin;
-use App\Models\AdminMenu;
-use App\Models\AdminMenuItem;
-use App\Models\WorldLanguage;
-use App\Models\SystemParameter;
-use App\Models\WebData;
 use App\Repositories\Admin\AdminMenuRepository;
-use App\Repositories\Admin\Repository;
+use App\Repositories\Admin\WebDataRepository;
+use App\Repositories\Admin\WorldLanguageRepository;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Support\Str;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-use Auth;
 use Breadcrumbs;
-use Route;
 use Validator;
 
 /**
  * Class Controller
- * @property \App\Models\Admin $adminData
  */
 class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
-    /**
-     * @var string $uri
-     * @var array $viewData
-     * @var Admin $adminData
-     * @var WorldLanguage $languageData
-     * @var array $parameterData
-     * @var AdminMenuItem $pageData
-     * @var string $modelName
-     * @var Repository $modelRepository
-     */
+    /** @var string $uri */
     protected $uri;
-    protected $viewData;
-    protected $adminData;
+
+    /** @var string $uri */
+    protected $rootUri = 'siteadmin';
+
+    /** @var \Illuminate\Support\Collection|\App\Models\WorldLanguage[] $languageData */
     protected $languageData;
-    protected $parameterData;
+
+    /** @var array $viewData */
+    protected $viewData;
+
+    /** @var array $systemMenu */
+    protected $systemMenu;
+
+    /** @var \App\Models\WebData $webData */
+    protected $webData;
+
+    /** @var \App\Models\AdminMenu $pageData */
     protected $pageData;
-    protected $modelName;
+
+    /** @var \App\Models\Admin $adminData */
+    protected $adminData;
+
     protected $modelRepository;
 
-    public function __construct()
+    public function __construct(Request $request)
     {
-        //$this->modelRepository = $modelRepository;
+        // 設定 語言資料
+        $this->languageData = \Cache::rememberForever('languageSet', function() {
+            return (new WorldLanguageRepository())
+                ->all(function($query) {
+                    /** @var \Illuminate\Database\Query\Builder $query */
+                    $query->where('active', '1')->orderBy('sort');
+                });
+        });
+
+        // 設定 網站資料
+        $this->webData = (new WebDataRepository())->getData() ?? abort(404);
+        if ($this->webData->active != '1') abort(404, $this->webData->offline_text);
+
+        // 設定 Uri
+        $this->uri = explode('/', $request->path())[$this->languageData->count() > 1 ? 2 : 1] ?? '';
 
         // 設定 選單資料
-        $this->viewData['systemMenu'] = (new AdminMenuRepository())->all();
+        $this->systemMenu = (new AdminMenuRepository())->getMenu();
 
-        dd($this->viewData['systemMenu']);
+        // 設定 頁面資料
+        $this->pageData = (new AdminMenuRepository())->one(['uri' => $this->uri, 'active' => 1]);
 
-        $this->middleware(function($request, $next) {
-            /**
-             * @var \Illuminate\Http\Request $request
-             */
+        // 設定 帳號資料
+        $this->adminData = $request->user('admin');
 
-            // 設定 URI
-            if($request->route()->hasParameter('uri')) {
-                $this->uri = $request->route()->parameter('uri');
-                Route::current()->forgetParameter('uri');
-            } else {
-                $this->uri = explode('/', $request->route()->uri())[1] ?? $this->uri;
-            }
-
-            // 設定 網站資料
-            $this->viewData['webData'] = WebData::where(['lang' => app()->getLocale(), 'website_key' => 'admin', 'active' => 1])->first()
-                ?? abort(404, WebData::where(['lang' => app()->getLocale(), 'website_key' => 'admin'])->first()->offline_text ?? '');
-
-            // 設定 選單資料
-            $this->viewData['menuData'] = AdminMenu::where(['active' => 1])->orderBy('sort')->get();
-
-            // 設定 頁面資料
-            if($this->uri) {
-                $this->pageData = AdminMenuItem::where(['lang' => app()->getLocale(), 'uri' => $this->uri, 'active' => 1])->first() ?? null;
-                $this->viewData['pageData'] = $this->pageData;
-            }
-
-            // 設定 帳號資料
-            $this->adminData = Auth::guard('admin')->user();
-            $this->viewData['adminData'] = $this->adminData;
-
-            // 設定 模型注入
-            if($this->pageData) {
-                $this->modelRepository->setModelClassName($this->pageData->getAttribute('model') ?? null);
-            } elseif($request->route()->uri() !== 'siteadmin') {
-                abort(404);
-            }
-
-            return $next($request);
-        });
+        // 設定 viewData
+        $this->setViewData();
     }
 
     public function test()
     {
-        dd('test end.');
+        dd($this->adminData);
+    }
+
+    protected function setViewData()
+    {
+        $this->viewData['languageData'] = $this->languageData;
+        $this->viewData['webData'] = $this->webData;
+        $this->viewData['systemMenu'] = $this->systemMenu;
+        $this->viewData['pageData'] = $this->pageData;
+        $this->viewData['adminData'] = $this->adminData;
+        $this->viewData['rootUri'] = $this->rootUri . '/' . ($this->languageData->count() > 1 ? app()->getLocale() : '');
     }
 
     /**

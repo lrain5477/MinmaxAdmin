@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use App\Models\WorldLanguage;
+use App\Repositories\Admin\WorldLanguageRepository;
 use Cache;
 use Closure;
 
@@ -22,15 +23,16 @@ class AdminLanguage
     {
         /** @var \Illuminate\Database\Eloquent\Collection $languageSet */
         $languageSet = Cache::rememberForever('languageSet', function() {
-            return WorldLanguage::where('active', '1')->orderBy('sort')->get();
+            return (new WorldLanguageRepository)
+                ->all(function($query) {
+                    $query->where('active', '1')->orderBy('sort');
+                });
         });
-
-        $request->attributes->add(['languageSet' => $languageSet]);
 
         if ($languageSet->count() < 2) {
             if ($language = $languageSet->first()) {
                 /** @var WorldLanguage $language */
-                app()->setLocale($language->codes);
+                app()->setLocale($language->code);
             }
             return $next($request);
         }
