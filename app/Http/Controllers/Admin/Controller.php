@@ -5,11 +5,12 @@ namespace App\Http\Controllers\Admin;
 use App\Helpers\LogHelper;
 use App\Helpers\PermissionHelper;
 use App\Models\Admin;
-use App\Models\AdminMenuClass;
+use App\Models\AdminMenu;
 use App\Models\AdminMenuItem;
 use App\Models\WorldLanguage;
-use App\Models\ParameterGroup;
+use App\Models\SystemParameter;
 use App\Models\WebData;
+use App\Repositories\Admin\AdminMenuRepository;
 use App\Repositories\Admin\Repository;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Http\Request;
@@ -49,9 +50,14 @@ class Controller extends BaseController
     protected $modelName;
     protected $modelRepository;
 
-    public function __construct(Repository $modelRepository)
+    public function __construct()
     {
-        $this->modelRepository = $modelRepository;
+        //$this->modelRepository = $modelRepository;
+
+        // 設定 選單資料
+        $this->viewData['systemMenu'] = (new AdminMenuRepository())->all();
+
+        dd($this->viewData['systemMenu']);
 
         $this->middleware(function($request, $next) {
             /**
@@ -66,35 +72,12 @@ class Controller extends BaseController
                 $this->uri = explode('/', $request->route()->uri())[1] ?? $this->uri;
             }
 
-            // 設定 系統參數
-            $this->parameterData = ParameterGroup::where(['active' => 1])
-                ->get(['guid', 'code'])
-                ->mapWithKeys(function($item) {
-                    /** @var ParameterGroup $item */
-                    return [
-                        $item->code => $item
-                            ->parameterItem()
-                            ->get(['guid', 'title', 'value', 'class'])
-                            ->mapWithKeys(function($item) {
-                                /** @var \App\Models\ParameterItem $item */
-                                return [
-                                    $item->value => [
-                                        'title' => $item->getAttribute('title'),
-                                        'class' => $item->getAttribute('class')
-                                    ]
-                                ];
-                            })
-                            ->toArray()
-                    ];
-                })->toArray();
-            $this->viewData['parameterData'] = $this->parameterData;
-
             // 設定 網站資料
             $this->viewData['webData'] = WebData::where(['lang' => app()->getLocale(), 'website_key' => 'admin', 'active' => 1])->first()
                 ?? abort(404, WebData::where(['lang' => app()->getLocale(), 'website_key' => 'admin'])->first()->offline_text ?? '');
 
             // 設定 選單資料
-            $this->viewData['menuData'] = AdminMenuClass::where(['active' => 1])->orderBy('sort')->get();
+            $this->viewData['menuData'] = AdminMenu::where(['active' => 1])->orderBy('sort')->get();
 
             // 設定 頁面資料
             if($this->uri) {
@@ -115,6 +98,11 @@ class Controller extends BaseController
 
             return $next($request);
         });
+    }
+
+    public function test()
+    {
+        dd('test end.');
     }
 
     /**

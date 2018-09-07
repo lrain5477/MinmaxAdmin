@@ -21,13 +21,13 @@ class WorldLanguage extends Model
     protected $table = 'world_language';
     protected $guarded = [];
 
-    public function worldCountry()
-    {
-        return $this->hasMany('App\Models\WorldCountry', 'language_id', 'id');
-    }
-
     public function getNameAttribute()
     {
         return langDB($this->getAttributeFromArray('name'));
+    }
+
+    public function worldCountry()
+    {
+        return $this->hasMany('App\Models\WorldCountry', 'language_id', 'id');
     }
 }

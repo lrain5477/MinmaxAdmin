@@ -20,7 +20,7 @@ class CreateAdminTable extends Migration
             $table->string('controller', 128)->nullable()->comment('Controller 名稱');
             $table->string('model', 64)->nullable()->comment('Model 名稱');
             $table->string('class', 64)->comment('類別');
-            $table->string('parent', 255)->default('0')->comment('上層目錄');
+            $table->string('parent_id', 64)->nullable()->comment('上層目錄');
             $table->string('link')->nullable()->comment('項目連結');
             $table->string('icon', 64)->nullable()->comment('圖示 Class');
             $table->string('permission_key', 128)->nullable()->comment('權限綁定代碼');

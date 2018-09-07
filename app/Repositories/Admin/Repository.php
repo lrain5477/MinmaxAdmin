@@ -41,7 +41,7 @@ abstract class Repository
      * @param  string  $boolean
      * @return \Illuminate\Database\Eloquent\Collection
      */
-    public function all($column, $operator = null, $value = null, $boolean = 'and')
+    public function all($column = null, $operator = null, $value = null, $boolean = 'and')
     {
         if ($column instanceof Closure) {
             $query = $this->query();
@@ -49,6 +49,8 @@ abstract class Repository
             $column($query);
 
             return $query->addNestedWhereQuery($query->getQuery(), $boolean)->get();
+        } elseif (is_null($column)) {
+            return $this->query()->get();
         } else {
             return $this->query()->where(...func_get_args())->get();
         }

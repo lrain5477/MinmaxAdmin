@@ -46,11 +46,6 @@ return [
             'provider' => 'admin',
         ],
 
-        'merchant' => [
-            'driver' => 'session',
-            'provider' => 'merchant',
-        ],
-
         'web' => [
             'driver' => 'session',
             'provider' => 'member',
@@ -90,14 +85,9 @@ return [
             'model' => App\Models\Admin::class,
         ],
 
-        'merchant' => [
-            'driver' => 'eloquent',
-            'model' => App\Models\Administrator::class,
-        ],
-
         'member' => [
             'driver' => 'eloquent',
-            'model' => App\Models\Administrator::class,
+            'model' => App\Models\Admin::class,
         ],
     ],
 
@@ -119,19 +109,13 @@ return [
     'passwords' => [
         'admin' => [
             'provider' => 'admin',
-            'table' => 'admin_password_resets',
-            'expire' => 10,
-        ],
-
-        'merchant' => [
-            'provider' => 'merchant',
-            'table' => 'merchant_password_resets',
+            'table' => 'password_resets',
             'expire' => 10,
         ],
 
         'member' => [
-            'provider' => 'users',
-            'table' => 'member_password_resets',
+            'provider' => 'member',
+            'table' => 'password_resets',
             'expire' => 10,
         ],
     ],

@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Helpers\LogHelper;
-use App\Models\AdminMenuClass;
+use App\Models\AdminMenu;
 use App\Models\WorldLanguage;
 use App\Models\WebData;
 use App\Repositories\Admin\ProfileRepository;
@@ -60,7 +60,7 @@ class ProfileController extends BaseController
             $this->viewData['webData'] = WebData::where(['lang' => app()->getLocale(), 'website_key' => 'admin', 'active' => 1])->first() ?? abort(404);
 
             // 設定 選單資料
-            $this->viewData['menuData'] = AdminMenuClass::where(['active' => 1])->orderBy('sort')->get();
+            $this->viewData['menuData'] = AdminMenu::where(['active' => 1])->orderBy('sort')->get();
 
             // 設定 頁面資料
             $this->pageData =  collect([[

@@ -35,15 +35,34 @@ class RouteServiceProvider extends ServiceProvider
      */
     public function map()
     {
-        $this->mapApiRoutes();
+        $languageMap = \Cache::rememberForever('langId', function() {
+            try {
+                $langTable = \DB::table('world_language')
+                    ->where('active', '1')
+                    ->orderBy('sort')
+                    ->select(['id', 'code'])
+                    ->get();
+                return $langTable
+                    ->mapWithKeys(function ($item) { return [$item->code => $item->id]; })
+                    ->toArray();
+            } catch (\Exception $e) {
+                return [];
+            }
+        });
 
-        $this->mapWebRoutes();
-
-        $this->mapAdminRoutes();
-
-        $this->mapAdministratorRoutes();
-
-        //
+        if (count($languageMap) < 2) {
+            $this->mapApiRoutes();
+            $this->mapWebRoutes();
+            $this->mapAdminRoutes();
+            $this->mapAdministratorRoutes();
+        } else {
+            foreach ($languageMap as $langCode => $langId) {
+                $this->mapApiRoutes($langCode);
+                $this->mapWebRoutes($langCode);
+                $this->mapAdminRoutes($langCode);
+                $this->mapAdministratorRoutes($langCode);
+            }
+        }
     }
 
     /**
@@ -51,29 +70,21 @@ class RouteServiceProvider extends ServiceProvider
      *
      * These routes all receive session state, CSRF protection, etc.
      *
+     * @param  string $langPrefix
      * @return void
      */
-    protected function mapWebRoutes()
+    protected function mapWebRoutes($langPrefix = null)
     {
-        Route::middleware('web')
-             ->namespace($this->namespace . '\Web')
-             ->group(base_path('routes/web.php'));
-    }
-
-    /**
-     * Define the "merchant" routes for the application.
-     *
-     * These routes all receive session state, CSRF protection, etc.
-     *
-     * @return void
-     */
-    protected function mapMerchantRoutes()
-    {
-        Route::prefix('merchant')
-            ->middleware('merchant')
-            ->name('merchant.')
-            ->namespace($this->namespace . '\Merchant')
-            ->group(base_path('routes/merchant.php'));
+        if ($langPrefix) {
+            Route::prefix($langPrefix)
+                ->middleware('web')
+                ->namespace($this->namespace . '\Web')
+                ->group(base_path('routes/web.php'));
+        } else {
+            Route::middleware('web')
+                ->namespace($this->namespace . '\Web')
+                ->group(base_path('routes/web.php'));
+        }
     }
 
     /**
@@ -81,11 +92,12 @@ class RouteServiceProvider extends ServiceProvider
      *
      * These routes all receive session state, CSRF protection, etc.
      *
+     * @param  string $langPrefix
      * @return void
      */
-    protected function mapAdminRoutes()
+    protected function mapAdminRoutes($langPrefix = null)
     {
-        Route::prefix('siteadmin')
+        Route::prefix('siteadmin' . (is_null($langPrefix) ? '' : "/{$langPrefix}"))
             ->middleware('admin')
             ->name('admin.')
             ->namespace($this->namespace . '\Admin')
@@ -97,11 +109,12 @@ class RouteServiceProvider extends ServiceProvider
      *
      * These routes all receive session state, CSRF protection, etc.
      *
+     * @param  string $langPrefix
      * @return void
      */
-    protected function mapAdministratorRoutes()
+    protected function mapAdministratorRoutes($langPrefix = null)
     {
-        Route::prefix('administrator')
+        Route::prefix('administrator' . (is_null($langPrefix) ? '' : "/{$langPrefix}"))
             ->middleware('administrator')
             ->name('administrator.')
             ->namespace($this->namespace . '\Administrator')
@@ -113,11 +126,12 @@ class RouteServiceProvider extends ServiceProvider
      *
      * These routes are typically stateless.
      *
+     * @param  string $langPrefix
      * @return void
      */
-    protected function mapApiRoutes()
+    protected function mapApiRoutes($langPrefix = null)
     {
-        Route::prefix('api')
+        Route::prefix('api' . (is_null($langPrefix) ? '' : "/{$langPrefix}"))
              ->middleware('api')
              ->namespace($this->namespace)
              ->group(base_path('routes/api.php'));

@@ -2,7 +2,7 @@
 
 namespace App\Transformers\Admin;
 
-use App\Models\ParameterGroup;
+use App\Models\SystemParameter;
 use Illuminate\Support\Carbon;
 use League\Fractal\TransformerAbstract;
 
@@ -29,7 +29,7 @@ class Transformer extends TransformerAbstract
     {
         $this->uri = $uri;
 
-        $parameterGroup = ParameterGroup::where(['active' => 1])
+        $parameterGroup = SystemParameter::where(['active' => 1])
             ->get(['guid', 'code', 'title'])
             ->filter(function($item) {
                 return in_array($item->code, $this->parameterSet);

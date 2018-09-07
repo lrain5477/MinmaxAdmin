@@ -6,8 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * Class WorldCity
- * @property string $guid
- * @property string $lang
+ * @property integer $id
  * @property string $state_id
  * @property string $title
  * @property string $code
@@ -20,37 +19,15 @@ use Illuminate\Database\Eloquent\Model;
 class WorldCity extends Model
 {
     protected $table = 'world_city';
-    protected $primaryKey = 'guid';
-    public $incrementing = false;
     protected $guarded = [];
 
-    public static function getIndexKey()
+    public function getNameAttribute()
     {
-        return 'guid';
-    }
-
-    /**
-     * Return if this model's table with column `lang` and need to use.
-     * @return bool
-     */
-    public static function isMultiLanguage()
-    {
-        return true;
-    }
-
-    public static function rules()
-    {
-        return [
-            'state_id' => 'required|string|exists:world_state,guid',
-            'title' => 'required|string',
-            'code' => 'required|string',
-            'name' => 'nullable|string',
-            'active' => 'required|in:1,0',
-        ];
+        return langDB($this->getAttributeFromArray('name'));
     }
 
     public function worldState()
     {
-        return $this->hasOne('App\Models\WorldState', 'guid', 'state_id')->where(['lang' => app()->getLocale()]);
+        return $this->hasOne('App\Models\WorldState', 'id', 'state_id');
     }
 }

@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Administrator;
 use App\Models\Administrator;
 use App\Models\AdministratorMenu;
 use App\Models\WorldLanguage;
-use App\Models\ParameterGroup;
+use App\Models\SystemParameter;
 use App\Models\WebData;
 use App\Repositories\Administrator\Repository;
 use Illuminate\Foundation\Bus\DispatchesJobs;
@@ -78,10 +78,10 @@ class Controller extends BaseController
             }
 
             // 設定 系統參數
-            $this->parameterData = ParameterGroup::where(['active' => 1])
+            $this->parameterData = SystemParameter::where(['active' => 1])
                 ->get(['guid', 'code'])
                 ->mapWithKeys(function($item) {
-                    /** @var ParameterGroup $item */
+                    /** @var SystemParameter $item */
                     return [
                         $item->code => $item
                             ->parameterItem()

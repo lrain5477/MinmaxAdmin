@@ -5,17 +5,20 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * Class Firewall
+ * Class SystemParameter
  * @property integer $id
- * @property string $guard
- * @property string $ip
- * @property integer $rule
+ * @property string $code
+ * @property string $title
+ * @property array $options
  * @property integer $active
  * @property \Illuminate\Support\Carbon $created_at
  * @property \Illuminate\Support\Carbon $updated_at
  */
-class Firewall extends Model
+class SystemParameter extends Model
 {
-    protected $table = 'firewall';
+    protected $table = 'system_parameter';
     protected $guarded = [];
+    protected $casts = [
+        'options' => 'array',
+    ];
 }

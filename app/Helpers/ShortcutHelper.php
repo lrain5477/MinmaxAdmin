@@ -137,7 +137,7 @@ if (! function_exists('saveLang')) {
 
 if (! function_exists('deleteLang')) {
     /**
-     * Save (update or insert) a local content to database via key.
+     * Delete local contents via key or key set.
      *
      * @param  array  $keys
      * @param  string  $langKey
@@ -165,5 +165,34 @@ if (! function_exists('deleteLang')) {
         } catch (\Exception $e) {}
 
         return false;
+    }
+}
+
+if (! function_exists('systemParam')) {
+    /**
+     * Get system parameter via key.
+     *
+     * @param  string  $key
+     * @return string|array
+     */
+    function systemParam($key = null)
+    {
+        $params = Cache::rememberForever('systemParams', function () {
+            return \App\Models\SystemParameter::query()
+                ->where('active', '1')
+                ->orderBy('sort')
+                ->get()
+                ->groupBy('code')
+                ->map(function ($item) {
+                    return collect($item->options)
+                        ->groupBy('value')
+                        ->map(function ($item) {
+                            return ['title' => $item['label'], 'class' => $item['class']];
+                        });
+                })
+                ->toArray();
+        });
+
+        return is_null($key) ? $params : array_get($params, $key, $key);
     }
 }

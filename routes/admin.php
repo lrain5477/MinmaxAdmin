@@ -11,13 +11,15 @@
 |
 */
 
+Route::get('test', 'Controller@test');
+
 // 登入登出
 Route::get('captcha/{name}/{id?}', 'HelperController@getCaptcha')->name('captcha');
 Route::post('login', 'LoginController@login');
 Route::get('login', 'LoginController@showLoginForm')->name('login');
 Route::get('logout', 'LoginController@logout')->name('logout');
 
-Route::group(['middleware' => 'auth:admin'], function($route) {
+Route::group(['middleware' => 'auth:admin'], function() {
     // 首頁
     Route::get('/', 'SiteController@index')->name('home');
 

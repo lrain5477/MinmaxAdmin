@@ -6,9 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * Class Bank
- * @property string $guid
- * @property string $lang
- * @property string $country_id
+ * @property integer $id
+ * @property integer $country_id
  * @property string $title
  * @property string $code
  * @property string $name
@@ -20,37 +19,15 @@ use Illuminate\Database\Eloquent\Model;
 class Bank extends Model
 {
     protected $table = 'bank';
-    protected $primaryKey = 'guid';
-    public $incrementing = false;
     protected $guarded = [];
 
-    public static function getIndexKey()
+    public function getNameAttribute()
     {
-        return 'guid';
-    }
-
-    /**
-     * Return if this model's table with column `lang` and need to use.
-     * @return bool
-     */
-    public static function isMultiLanguage()
-    {
-        return true;
-    }
-
-    public static function rules()
-    {
-        return [
-            'country_id' => 'required|exists:world_country,guid',
-            'title' => 'required|string',
-            'code' => 'required|string',
-            'name' => 'nullable|string',
-            'active' => 'required|in:1,0',
-        ];
+        return langDB($this->getAttributeFromArray('name'));
     }
 
     public function worldCountry()
     {
-        return $this->belongsTo('App\Models\WorldCountry', 'guid', 'country_id')->where(['lang' => app()->getLocale()]);
+        return $this->belongsTo('App\Models\WorldCountry', 'id', 'country_id');
     }
 }

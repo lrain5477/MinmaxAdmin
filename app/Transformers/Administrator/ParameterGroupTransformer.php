@@ -2,7 +2,7 @@
 
 namespace App\Transformers\Administrator;
 
-use App\Models\ParameterGroup;
+use App\Models\SystemParameter;
 
 class ParameterGroupTransformer extends Transformer
 {
@@ -13,11 +13,11 @@ class ParameterGroupTransformer extends Transformer
     ];
 
     /**
-     * @param ParameterGroup $model
+     * @param SystemParameter $model
      * @return array
      * @throws \Throwable
      */
-    public function transform(ParameterGroup $model)
+    public function transform(SystemParameter $model)
     {
         return [
             'code' => $this->getGridText($model->code),

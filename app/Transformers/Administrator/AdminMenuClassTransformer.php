@@ -2,7 +2,7 @@
 
 namespace App\Transformers\Administrator;
 
-use App\Models\AdminMenuClass;
+use App\Models\AdminMenu;
 
 class AdminMenuClassTransformer extends Transformer
 {
@@ -12,11 +12,11 @@ class AdminMenuClassTransformer extends Transformer
     ];
 
     /**
-     * @param AdminMenuClass $model
+     * @param AdminMenu $model
      * @return array
      * @throws \Throwable
      */
-    public function transform(AdminMenuClass $model)
+    public function transform(AdminMenu $model)
     {
         return [
             'title' => $this->getGridText($model->title),

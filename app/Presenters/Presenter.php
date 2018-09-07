@@ -2,7 +2,7 @@
 
 namespace App\Presenters;
 
-use App\Models\ParameterGroup;
+use App\Models\SystemParameter;
 use Illuminate\Support\Collection;
 
 class Presenter
@@ -17,7 +17,7 @@ class Presenter
 
     public function __construct()
     {
-        $this->parameterSet = ParameterGroup::where(['active' => 1])->get(['guid', 'code', 'title']);
+        $this->parameterSet = SystemParameter::where(['active' => 1])->get(['guid', 'code', 'title']);
     }
 
     public function getViewNormalText($model, $column, $value = '') {

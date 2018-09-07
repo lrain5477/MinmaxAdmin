@@ -2,9 +2,6 @@
 
 namespace App\Helpers;
 
-use App\Models\LoginLog;
-use App\Models\SystemLog;
-
 class LogHelper
 {
     /**
@@ -19,20 +16,20 @@ class LogHelper
         if($username === 'sysadmin') return true;
 
         try {
-            LoginLog::create([
+            $insertResult = \DB::table('login_log')->insert([
                 'guard' => $guard,
                 'username' => $username,
-                'ip' => \Request::ip(),
+                'ip' => request()->ip(),
                 'note' => $message,
                 'result' => $result,
             ]);
 
-            LogHelper::system($guard, 'login', 'login', '', $username, $result, $message);
+            if ($insertResult && static::system($guard, 'login', 'login', '', $username, $result, $message)) {
+                return true;
+            }
+        } catch (\Exception $e) {}
 
-            return true;
-        } catch (\Exception $e) {
-            return false;
-        }
+        return false;
     }
 
     /**
@@ -50,20 +47,18 @@ class LogHelper
         if($username === 'sysadmin') return true;
 
         try {
-            SystemLog::create([
+            return \DB::table('system_log')->insert([
                 'guard' => $guard,
                 'uri' => $uri,
                 'action' => $action,
                 'guid' => $guid,
                 'username' => $username,
-                'ip' => \Request::ip(),
-                'note' => $message,
+                'ip' => request()->ip(),
+                'remark' => $message,
                 'result' => $result,
             ]);
+        } catch (\Exception $e) {}
 
-            return true;
-        } catch (\Exception $e) {
-            return false;
-        }
+        return false;
     }
 }

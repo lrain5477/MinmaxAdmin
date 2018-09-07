@@ -13,28 +13,14 @@ class CreateSystemTable extends Migration
      */
     public function up()
     {
-        // 參數群組
-        Schema::create('parameter_group', function (Blueprint $table) {
+        // 系統參數
+        Schema::create('system_parameter', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('code', 32)->unique()->comment('群組代碼');
-            $table->string('title', 32)->comment('群組名稱');
+            $table->string('code', 32)->unique()->comment('參數代碼');
+            $table->string('title', 32)->comment('參數名稱');
+            $table->text('options')->nullable()->comment('選項設定');       // {[label, value, class]}
             $table->enum('active', [1, 0])->default(0)->comment('狀態');  // 1:啟用 0:停用
             $table->timestamps();
-        });
-
-        // 參數項目
-        Schema::create('parameter_item', function (Blueprint $table) {
-            $table->increments('id');
-            $table->unsignedInteger('group_id')->comment('群組ID');
-            $table->string('label')->comment('標題');
-            $table->string('value')->comment('參數值');
-            $table->string('class')->nullable()->comment('Class 名稱');
-            $table->unsignedInteger('sort')->default(1)->comment('排序');
-            $table->enum('active', [1, 0])->default(0)->comment('狀態');  // 1:啟用 0:停用
-            $table->timestamps();
-
-            $table->foreign('group_id')->references('id')->on('parameter_group')
-                ->onUpdate('cascade')->onDelete('cascade');
         });
 
         // 網站資訊
@@ -48,10 +34,10 @@ class CreateSystemTable extends Migration
             $table->text('company')->nullable()->comment('公司資訊');   // {name, name_en, id}
             $table->text('contact')->nullable()->comment('聯絡資訊');   // {[phone, fax, email, address, map, lng, lat]}
             $table->text('social')->nullable()->comment('社群連結');    // {facebook, youtube, instagram}
-            $table->text('seo')->comment('搜尋引擎');    // {meta_description, meta_keywords, og_image}
+            $table->text('seo')->comment('搜尋引擎');                   // {meta_description, meta_keywords, og_image}
             $table->text('google_analytics')->nullable()->comment('Google Analytics');
-            $table->enum('active', [1, 0])->default(1)->comment('網站狀態');
             $table->text('offline_text')->nullable()->comment('網站離線訊息');
+            $table->enum('active', [1, 0])->default(1)->comment('網站狀態');
             $table->timestamps();
         });
 
@@ -77,7 +63,7 @@ class CreateSystemTable extends Migration
             $table->string('ip', 39)->comment('IP 位置');
             $table->text('remark')->nullable()->comment('文字說明');
             $table->enum('result', [1, 0])->comment('狀態');
-            $table->timestamps();
+            $table->timestamp('created_at')->useCurrent();
         });
 
         // 登入紀錄
@@ -87,12 +73,13 @@ class CreateSystemTable extends Migration
             $table->string('ip', 39)->comment('IP 位置');
             $table->text('remark')->nullable()->comment('文字說明');
             $table->enum('result', [1, 0])->comment('狀態');
-            $table->timestamps();
+            $table->timestamp('created_at')->useCurrent();
         });
 
         // 文字編輯器模板
         Schema::create('editor_template', function (Blueprint $table) {
             $table->increments('id');
+            $table->string('guard', 32)->comment('平台');
             $table->string('category', 64)->comment('使用類別');
             $table->string('title', 100)->comment('名稱');
             $table->text('description')->comment('敘述');
@@ -115,7 +102,6 @@ class CreateSystemTable extends Migration
         Schema::dropIfExists('system_log');
         Schema::dropIfExists('firewall');
         Schema::dropIfExists('web_data');
-        Schema::dropIfExists('parameter_item');
-        Schema::dropIfExists('parameter_group');
+        Schema::dropIfExists('system_parameter');
     }
 }

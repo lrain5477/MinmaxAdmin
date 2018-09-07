@@ -2,7 +2,7 @@
 
 namespace App\Presenters\Administrator;
 
-use App\Models\AdminMenuClass;
+use App\Models\AdminMenu;
 use App\Models\AdminMenuItem;
 
 class AdminMenuItemPresenter extends Presenter
@@ -22,7 +22,7 @@ class AdminMenuItemPresenter extends Presenter
                     return [$item->value => $item->title];
                 })
                 ->toArray(),
-            'class' => AdminMenuClass::orderBy('sort')->get(['guid', 'title'])->mapWithKeys(function($item) {
+            'class' => AdminMenu::orderBy('sort')->get(['guid', 'title'])->mapWithKeys(function($item) {
                 return [$item->guid => $item->title];
             })->toArray(),
             'parent' => AdminMenuItem::where(['lang' => app()->getLocale()])->orderByRaw(\DB::raw('parent asc, sort asc'))->get(['guid', 'title', 'parent'])->mapWithKeys(function($item) {

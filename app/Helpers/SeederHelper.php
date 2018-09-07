@@ -64,6 +64,9 @@ class SeederHelper
     {
         $timestamp = date('Y-m-d H:i:s');
 
+        $lastRow = \DB::table('parameter_group')->latest('id')->first();
+        $currentGuid = is_null($lastRow) ? 1 : ($lastRow->id + 1);
+
         $parameterSet = [
             'groups' => [],
             'parameters' => []
@@ -71,21 +74,17 @@ class SeederHelper
 
         foreach($parameters as $groupCode => $groupItem) {
             if(isset($groupItem['title']) && isset($groupItem['parameters']) && count($groupItem['parameters']) > 0) {
-                $groupGuid = Str::uuid();
-                $parameterSet['groups'][] = [
-                    'guid' => $groupGuid, 'code' => $groupCode, 'title' => $groupItem['title'],
-                    'admin' => (string) $adminUse, 'active' => '1', 'updated_at' => $timestamp, 'created_at' => $timestamp
-                ];
+                $groupGuid = $currentGuid++;
+                $parameterSet['groups'][] = ['code' => $groupCode, 'title' => $groupItem['title'], 'active' => '1', 'created_at' => $timestamp, 'updated_at' => $timestamp];
 
                 $sortIndex = 1;
                 foreach($groupItem['parameters'] as $parameterValue => $parameterItem) {
                     $parameterItem = explode(',', $parameterItem);
-                    $parameterTitle = $parameterItem[0] ?? null;
+                    $parameterLabel = $parameterItem[0] ?? null;
                     $parameterClass = $parameterItem[1] ?? null;
                     $parameterSet['parameters'][] = [
-                        'guid' => Str::uuid(), 'lang' => $defaultLanguage,
-                        'group' => $groupGuid, 'title' => $parameterTitle, 'value' => $parameterValue, 'class' => $parameterClass,
-                        'sort' => $sortIndex++, 'active' => '1', 'updated_at' => $timestamp, 'created_at' => $timestamp
+                        'group_id' => $groupGuid, 'label' => $parameterLabel, 'value' => $parameterValue, 'class' => $parameterClass,
+                        'sort' => $sortIndex++, 'active' => '1', 'created_at' => $timestamp, 'updated_at' => $timestamp
                     ];
                 }
             }

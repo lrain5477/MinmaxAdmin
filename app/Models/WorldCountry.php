@@ -6,50 +6,35 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * Class WorldCountry
- * @property string $guid
- * @property string $lang
+ * @property integer $id
  * @property string $title
  * @property string $code
  * @property string $name
  * @property string $icon
+ * @property integer $language_id
  * @property integer $active
  * @property \Illuminate\Support\Carbon $created_at
  * @property \Illuminate\Support\Carbon $updated_at
+ * @property \App\Models\WorldLanguage $worldLanguage
  * @property \Illuminate\Database\Eloquent\Collection $worldState
  */
 class WorldCountry extends Model
 {
     protected $table = 'world_country';
-    protected $primaryKey = 'guid';
-    public $incrementing = false;
     protected $guarded = [];
 
-    public static function getIndexKey()
+    public function getNameAttribute()
     {
-        return 'guid';
+        return langDB($this->getAttributeFromArray('name'));
     }
 
-    /**
-     * Return if this model's table with column `lang` and need to use.
-     * @return bool
-     */
-    public static function isMultiLanguage()
+    public function worldLanguage()
     {
-        return true;
-    }
-
-    public static function rules()
-    {
-        return [
-            'title' => 'required|string',
-            'code' => 'required|string',
-            'name' => 'nullable|string',
-            'active' => 'required|in:1,0',
-        ];
+        return $this->hasOne('App\Models\WorldLanguage', 'id', 'language_id');
     }
 
     public function worldState()
     {
-        return $this->hasMany('App\Models\WorldState', 'country_id', 'guid')->where(['lang' => app()->getLocale()]);
+        return $this->hasMany('App\Models\WorldState', 'country_id', 'id');
     }
 }

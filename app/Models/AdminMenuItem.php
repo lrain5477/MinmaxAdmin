@@ -24,7 +24,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property integer $active
  * @property \Illuminate\Support\Carbon $created_at
  * @property \Illuminate\Support\Carbon $updated_at
- * @property \App\Models\AdminMenuClass $adminMenuClass
+ * @property \App\Models\AdminMenu $adminMenuClass
  * @property \App\Models\AdminMenuItem $adminMenuItem
  */
 class AdminMenuItem extends Model
@@ -59,7 +59,7 @@ class AdminMenuItem extends Model
     }
 
     public function adminMenuClass() {
-        return $this->hasOne('App\Models\AdminMenuClass', 'guid', 'class');
+        return $this->hasOne('App\Models\AdminMenu', 'guid', 'class');
     }
 
     public function adminMenuItem($getChildren = false) {

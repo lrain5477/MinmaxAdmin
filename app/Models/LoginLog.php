@@ -13,24 +13,14 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $note
  * @property integer $result
  * @property \Illuminate\Support\Carbon $created_at
- * @property \Illuminate\Support\Carbon $updated_at
  */
 class LoginLog extends Model
 {
     protected $table = 'login_log';
+    protected $primaryKey = null;
     protected $guarded = [];
 
-    public static function getIndexKey()
-    {
-        return 'id';
-    }
+    const UPDATED_AT = null;
 
-    /**
-     * Return if this model's table with column `lang` and need to use.
-     * @return bool
-     */
-    public static function isMultiLanguage()
-    {
-        return false;
-    }
+    public $incrementing = false;
 }

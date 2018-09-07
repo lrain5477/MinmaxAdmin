@@ -2,7 +2,7 @@
 
 namespace App\Presenters\Administrator;
 
-use App\Models\ParameterGroup;
+use App\Models\SystemParameter;
 
 class ParameterItemPresenter extends Presenter
 {
@@ -21,10 +21,10 @@ class ParameterItemPresenter extends Presenter
                     return [$item->value => $item->title];
                 })
                 ->toArray(),
-            'group' => ParameterGroup::where(['active' => 1])
+            'group' => SystemParameter::where(['active' => 1])
                 ->get(['guid', 'title'])
                 ->mapWithKeys(function($item) {
-                    /** @var ParameterGroup $item **/
+                    /** @var SystemParameter $item **/
                     return [$item->guid => $item->title];
                 })
                 ->toArray(),

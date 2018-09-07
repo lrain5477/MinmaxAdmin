@@ -6,6 +6,7 @@ use App\Models\WorldLanguage;
 
 /**
  * Class WorldLanguageRepository
+ * @method WorldLanguage create($attributes)
  * @method WorldLanguage save($model, $attributes)
  */
 class WorldLanguageRepository extends Repository

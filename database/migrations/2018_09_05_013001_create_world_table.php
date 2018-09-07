@@ -74,6 +74,8 @@ class CreateWorldTable extends Migration
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent();
 
+            $table->unique(['language_id', 'key']);
+
             $table->foreign('language_id')->references('id')->on('world_language')
                 ->onUpdate('cascade')->onDelete('cascade');
         });
