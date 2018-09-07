@@ -33,26 +33,54 @@ abstract class Repository
     }
 
     /**
+     * Search by condition
+     *
+     * @param  string|array|Closure  $column
+     * @param  string  $operator
+     * @param  mixed  $value
+     * @param  string  $boolean
+     * @return \Illuminate\Database\Eloquent\Model
+     */
+    public function one($column = null, $operator = null, $value = null, $boolean = 'and')
+    {
+        $query = $this->query();
+
+        if ($column instanceof Closure) {
+            $subQuery = $this->query();
+
+            $column($subQuery);
+
+            return $query->addNestedWhereQuery($subQuery->getQuery(), $boolean)->first();
+        } elseif (is_null($column)) {
+            return $query->first();
+        } else {
+            return $query->where(...func_get_args())->first();
+        }
+    }
+
+    /**
      * Search to a collection with condition
      *
      * @param  string|array|Closure  $column
      * @param  string  $operator
      * @param  mixed  $value
      * @param  string  $boolean
-     * @return \Illuminate\Database\Eloquent\Collection
+     * @return \Illuminate\Database\Eloquent\Collection|\Illuminate\Database\Eloquent\Model[]
      */
     public function all($column = null, $operator = null, $value = null, $boolean = 'and')
     {
+        $query = $this->query();
+
         if ($column instanceof Closure) {
-            $query = $this->query();
+            $subQuery = $this->query();
 
-            $column($query);
+            $column($subQuery);
 
-            return $query->addNestedWhereQuery($query->getQuery(), $boolean)->get();
+            return $query->addNestedWhereQuery($subQuery->getQuery(), $boolean)->get();
         } elseif (is_null($column)) {
-            return $this->query()->get();
+            return $query->get();
         } else {
-            return $this->query()->where(...func_get_args())->get();
+            return $query->where(...func_get_args())->get();
         }
     }
 

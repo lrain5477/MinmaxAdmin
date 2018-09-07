@@ -6,8 +6,11 @@ use App\Models\WorldCountry;
 
 /**
  * Class WorldCountryRepository
+ * @method WorldCountry find($id)
+ * @method WorldCountry one($column = null, $operator = null, $value = null, $boolean = 'and')
  * @method WorldCountry create($attributes)
  * @method WorldCountry save($model, $attributes)
+ * @method WorldCountry|\Illuminate\Database\Eloquent\Builder query()
  */
 class WorldCountryRepository extends Repository
 {

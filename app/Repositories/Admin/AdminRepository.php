@@ -6,8 +6,11 @@ use App\Models\Admin;
 
 /**
  * Class AdminRepository
+ * @method Admin find($id)
+ * @method Admin one($column = null, $operator = null, $value = null, $boolean = 'and')
  * @method Admin create($attributes)
  * @method Admin save($model, $attributes)
+ * @method Admin|\Illuminate\Database\Eloquent\Builder query()
  */
 class AdminRepository extends Repository
 {

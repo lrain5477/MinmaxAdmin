@@ -6,8 +6,11 @@ use App\Models\WorldCity;
 
 /**
  * Class WorldCityRepository
+ * @method WorldCity find($id)
+ * @method WorldCity one($column = null, $operator = null, $value = null, $boolean = 'and')
  * @method WorldCity create($attributes)
  * @method WorldCity save($model, $attributes)
+ * @method WorldCity|\Illuminate\Database\Eloquent\Builder query()
  */
 class WorldCityRepository extends Repository
 {

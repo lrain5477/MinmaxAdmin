@@ -6,8 +6,11 @@ use App\Models\WebData;
 
 /**
  * Class WebDataRepository
+ * @method WebData find($id)
+ * @method WebData one($column = null, $operator = null, $value = null, $boolean = 'and')
  * @method WebData create($attributes)
  * @method WebData save($model, $attributes)
+ * @method WebData|\Illuminate\Database\Eloquent\Builder query()
  */
 class WebDataRepository extends Repository
 {
@@ -22,5 +25,14 @@ class WebDataRepository extends Repository
     protected function getTable()
     {
         return 'web_data';
+    }
+
+    /**
+     * @param string $guard
+     * @return WebData
+     */
+    public function getData($guard = null)
+    {
+        return $this->one('guard', $guard ?? 'admin');
     }
 }
