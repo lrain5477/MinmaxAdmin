@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Laratrust\Traits\LaratrustUserTrait;
 
 /**
  * Class Admin
@@ -19,6 +20,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
  */
 class Admin extends Authenticatable
 {
+    use LaratrustUserTrait;
     use Notifiable;
 
     protected $table = 'admin';

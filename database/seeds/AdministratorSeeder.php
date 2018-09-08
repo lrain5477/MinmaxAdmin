@@ -12,7 +12,6 @@ class AdministratorSeeder extends Seeder
      */
     public function run()
     {
-        $defaultLanguage = 'tw';
         $timestamp = date('Y-m-d H:i:s');
 
         $administratorData = [
@@ -29,6 +28,21 @@ class AdministratorSeeder extends Seeder
         DB::table('administrator')->insert($administratorData);
 
         $administratorMenuData = [
+            // Default
+            [
+                'guid' => uuidl(),
+                'title' => '系統首頁',
+                'uri' => '',
+                'controller' => 'SiteController',
+                'model' => null,
+                'class' => 'default',
+                'parent_id' => null,
+                'link' => '/',
+                'icon' => 'icon-home3',
+                'sort' => 1, 'updated_at' => $timestamp, 'created_at' => $timestamp
+            ],
+
+            // System
             [
                 'guid' => $menuGuid1 = uuidl(),
                 'title' => '控制臺',
@@ -236,7 +250,6 @@ class AdministratorSeeder extends Seeder
                 'icon' => null,
                 'sort' => 4, 'updated_at' => $timestamp, 'created_at' => $timestamp
             ],
-
 
             [
                 'guid' => $menuGuid5 = uuidl(),

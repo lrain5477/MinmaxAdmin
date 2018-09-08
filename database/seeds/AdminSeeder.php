@@ -1,5 +1,6 @@
 <?php
 
+use App\Helpers\SeederHelper;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Str;
 
@@ -23,7 +24,7 @@ class AdminSeeder extends Seeder
                 'guid' => Str::uuid(),
                 'username' => 'sysadmin',
                 'password' => Hash::make('a24252151-A'),
-                'name' => '系統管理員',
+                'name' => '超級管理員',
                 'email' => 'info@e-creative.tw',
                 'active' => '1',
                 'updated_at' => $timestamp,
@@ -42,11 +43,35 @@ class AdminSeeder extends Seeder
         ];
         DB::table('admin')->insert($adminData);
 
-//        $roleUserData = [
-//            ['role_id' => '1', 'user_id' => $adminGuid],
-//            ['role_id' => '2', 'user_id' => $adminGuid]
-//        ];
-//        DB::table('role_user')->insert($roleUserData);
+        // 新增權限角色
+        $rolesData = [
+            [
+                'guard' => 'admin', 'name' => 'systemAdmin', 'display_name' => '系統管理員',
+                'description' => '系統管理員', 'updated_at' => $timestamp, 'created_at' => $timestamp,
+            ],
+            [
+                'guard' => 'admin', 'name' => 'systemEmail', 'display_name' => '信件接收',
+                'description' => '此群組無特別權限，該群組成員可收到系統信。', 'updated_at' => $timestamp, 'created_at' => $timestamp,
+            ],
+        ];
+        DB::table('roles')->insert($rolesData);
+
+        // 建立權限物件
+        $permissionsData = [
+            [
+                'guard' => 'admin', 'group' => 'system',
+                'name' => 'systemUpload', 'label' => '上傳', 'display_name' => '系統操作 [上傳]', 'description' => '系統操作 [上傳]',
+                'active' => '1', 'updated_at' => $timestamp, 'created_at' => $timestamp,
+            ],
+        ];
+        $permissionsData = array_merge($permissionsData, SeederHelper::getPermissionArray('admin', 'webData', '網站基本資訊', ['U']));
+        $permissionsData = array_merge($permissionsData, SeederHelper::getPermissionArray('admin', 'admin', '管理員帳戶'));
+        $permissionsData = array_merge($permissionsData, SeederHelper::getPermissionArray('admin', 'role', '群組管理'));
+        $permissionsData = array_merge($permissionsData, SeederHelper::getPermissionArray('admin', 'loginLog', '後臺登入紀錄', ['R']));
+        $permissionsData = array_merge($permissionsData, SeederHelper::getPermissionArray('admin', 'systemLog', '後臺操作紀錄', ['R']));
+        $permissionsData = array_merge($permissionsData, SeederHelper::getPermissionArray('admin', 'firewall', '防火牆'));
+        $permissionsData = array_merge($permissionsData, SeederHelper::getPermissionArray('admin', 'sysParameter', '參數項目'));
+        DB::table('permissions')->insert($permissionsData);
 
         $adminMenuData = [
             // Default
@@ -189,7 +214,7 @@ class AdminSeeder extends Seeder
             ],
             [
                 'guid' => uuidl(),
-                'title' => '防火墙',
+                'title' => '防火牆',
                 'uri' => 'firewall',
                 'controller' => 'FirewallController',
                 'model' => 'Firewall',

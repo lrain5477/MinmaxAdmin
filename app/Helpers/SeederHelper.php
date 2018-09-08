@@ -2,21 +2,49 @@
 
 namespace App\Helpers;
 
-use Illuminate\Support\Str;
-
 class SeederHelper
 {
     /**
-     * @param string $guard can using 'admin', 'merchant', 'web'
-     * @param string $groupName
-     * @param string $groupTitle
-     * @param array $permissions
+     * @param  string $table
+     * @param  array $dataSet
+     * @param  array|string $columns
+     * @param  int $languageAmount
      * @return array
      */
-    public static function getPermissionArray($guard = 'admin', $groupName, $groupTitle, $permissions = ['C', 'R', 'U', 'D'])
+    public static function getExchangeLanguageResource($table, $dataSet, $columns, $languageAmount = 1)
     {
-        $timestamp = date('Y-m-d H:i:s');
+        $timestamp    = date('Y-m-d H:i:s');
+        $columns      = is_array($columns) ? $columns : [$columns];
+        $resourceData = [];
 
+        foreach ($dataSet as $key => $item) {
+            foreach ($columns as $column) {
+                for ($id = 1; $id <= $languageAmount; $id++) {
+                    array_push($resourceData, [
+                        'language_id' => $id,
+                        'key' => $table . '.' . $column . '.' . ($key + 1),
+                        'text' => $item[$column] ?? '',
+                        'created_at' => $timestamp,
+                        'updated_at' => $timestamp
+                    ]);
+                }
+                $dataSet[$key][$column] = $table . '.' . $column . '.' . ($key + 1);
+            }
+        }
+
+        return ['data' => $dataSet ?? [], 'resource' => $resourceData ?? []];
+    }
+
+    /**
+     * @param  string $guard can using 'admin', 'web'
+     * @param  string $groupName
+     * @param  string $groupTitle
+     * @param  array $permissions
+     * @return array
+     */
+    public static function getPermissionArray($guard, $groupName, $groupTitle, $permissions = ['C', 'R', 'U', 'D'])
+    {
+        $timestamp       = date('Y-m-d H:i:s');
         $permissionArray = [];
 
         if(in_array('R', $permissions)) {
@@ -52,44 +80,5 @@ class SeederHelper
         }
 
         return $permissionArray;
-    }
-
-    /**
-     * @param array $parameters
-     * @param int $adminUse
-     * @param string $defaultLanguage
-     * @return array
-     */
-    public static function getParametersArray($parameters, $adminUse = 0, $defaultLanguage = 'tw')
-    {
-        $timestamp = date('Y-m-d H:i:s');
-
-        $lastRow = \DB::table('parameter_group')->latest('id')->first();
-        $currentGuid = is_null($lastRow) ? 1 : ($lastRow->id + 1);
-
-        $parameterSet = [
-            'groups' => [],
-            'parameters' => []
-        ];
-
-        foreach($parameters as $groupCode => $groupItem) {
-            if(isset($groupItem['title']) && isset($groupItem['parameters']) && count($groupItem['parameters']) > 0) {
-                $groupGuid = $currentGuid++;
-                $parameterSet['groups'][] = ['code' => $groupCode, 'title' => $groupItem['title'], 'active' => '1', 'created_at' => $timestamp, 'updated_at' => $timestamp];
-
-                $sortIndex = 1;
-                foreach($groupItem['parameters'] as $parameterValue => $parameterItem) {
-                    $parameterItem = explode(',', $parameterItem);
-                    $parameterLabel = $parameterItem[0] ?? null;
-                    $parameterClass = $parameterItem[1] ?? null;
-                    $parameterSet['parameters'][] = [
-                        'group_id' => $groupGuid, 'label' => $parameterLabel, 'value' => $parameterValue, 'class' => $parameterClass,
-                        'sort' => $sortIndex++, 'active' => '1', 'created_at' => $timestamp, 'updated_at' => $timestamp
-                    ];
-                }
-            }
-        }
-
-        return $parameterSet;
     }
 }

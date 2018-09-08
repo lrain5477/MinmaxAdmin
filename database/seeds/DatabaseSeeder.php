@@ -11,10 +11,11 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
+        $this->call(WorldSeeder::class);
         $this->call(SystemSeeder::class);
         $this->call(AdministratorSeeder::class);
-        //$this->call(RbacSeeder::class);
-        //$this->call(ModulesSeeder::class);
         $this->call(AdminSeeder::class);
+        //$this->call(ProjectSeeder::class);
+        $this->call(LaratrustSeeder::class);
     }
 }
