@@ -1,5 +1,4 @@
 "use strict";
-//console.log(1);
 var $wrapper = $(".wrapper");
 var $pageHeader = $(".page-header");
 var $pageContent = $(".page-content");
@@ -24,7 +23,7 @@ $('.nicescroll-bar').each(function() {
 });
 
 /* 行動版本預設選單關閉 */
-if (width < 1620) {
+if (width < 1280) {
     $wrapper.addClass('slide-nav-close');
 }
 

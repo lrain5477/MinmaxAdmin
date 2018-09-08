@@ -97,19 +97,18 @@
     </div>
 </div>
 
-<!-- * lib-->
+{{-- * lib--}}
 <script src="{{ asset('admin/js/lib/jquery.min.js') }}"></script>
 <script src="{{ asset('admin/js/lib/env.js') }}"></script>
 <script src="{{ asset('admin/js/lib/popper.min.js') }}"></script>
-<!-- * * bootstrap4-->
+{{-- * * bootstrap4--}}
 <script src="{{ asset('components/bootstrap4/bootstrap.min.js') }}"></script>
-<!-- * * imgLiquid 圖片縮圖-->
+{{-- * * imgLiquid 圖片縮圖--}}
 <script src="{{ asset('components/imgLiquid-master/imgLiquid-min.js') }}"></script>
-<!-- * * swiper 圖片輪播-->
+{{-- * * swiper 圖片輪播--}}
 <script src="{{ asset('components/swiper/js/swiper.min.js') }}"></script>
-<script src="{{ asset('components/swiper/js/swiper.esm.bundle.js') }}"></script>
 <script src="{{ asset('components/sweetalert/sweetalert.min.js') }}"></script>
-<!-- * * validate 表單驗證-->
+{{-- * * validate 表單驗證--}}
 <script src="{{ asset('components/validate/jquery.validate.js') }}"></script>
 <script src="{{ asset('components/validate/additional-methods.js') }}"></script>
 
