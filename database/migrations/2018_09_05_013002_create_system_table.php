@@ -19,7 +19,7 @@ class CreateSystemTable extends Migration
             $table->string('code', 32)->unique()->comment('參數代碼');
             $table->string('title', 32)->comment('參數名稱');
             $table->text('options')->nullable()->comment('選項設定');       // {[label, value, class]}
-            $table->enum('active', [1, 0])->default(0)->comment('狀態');  // 1:啟用 0:停用
+            $table->enum('active', [1, 0])->default(1)->comment('狀態');  // 1:啟用 0:停用
             $table->timestamps();
         });
 
