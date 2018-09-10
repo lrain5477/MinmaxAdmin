@@ -11,8 +11,6 @@
 |
 */
 
-Route::get('test', 'Controller@test');
-
 // 登入登出
 Route::get('captcha/{name}/{id?}', 'HelperController@getCaptcha')->name('captcha');
 Route::post('login', 'LoginController@login');
@@ -20,6 +18,59 @@ Route::get('login', 'LoginController@showLoginForm')->name('login');
 Route::get('logout', 'LoginController@logout')->name('logout');
 
 Route::group(['middleware' => 'auth:admin'], function() {
+
+    /**
+     *--------------------------------------------------------------------------
+     * 依系統選單建立 CRUD 自動規則。
+     * 若有額外的路由，可以增加於 $actionList 或於下方獨立增加路由。
+     *--------------------------------------------------------------------------
+     */
+
+    try {
+        $prefixNamespace = 'Admin';
+        $routeNamespace = "App\\Http\\Controllers\\{$prefixNamespace}";
+        $menuList = \App\Models\AdminMenu::query()
+            ->whereNotNull('controller')
+            ->where('uri', '!=', 'home-' . strtolower($prefixNamespace))
+            ->get();
+        $actionList = [
+            'post ajaxDataTable /ajax/datatables',
+            'post ajaxSwitch /ajax/switch',
+            'post ajaxMultiSwitch /ajax/switch-multi',
+            'post ajaxSort /ajax/sort',
+            'post edit /{id}/edit',
+            'get edit /{id}/edit',
+            'get create /create',
+            'get show /{id}',
+            'put update /{id}',
+            'delete destroy /{id}',
+            'post store ',
+            'get index ',
+        ];
+        foreach ($menuList as $menuItem) {
+            if (class_exists("{$routeNamespace}\\{$menuItem->controller}")) {
+                foreach ($actionList as $actionItem) {
+                    $actionType   = explode(' ', $actionItem)[0] ?? null;
+                    $actionMethod = explode(' ', $actionItem)[1] ?? null;
+                    $actionUri    = explode(' ', $actionItem)[2] ?? null;
+                    if (!is_null($actionType)
+                        && !is_null($actionMethod)
+                        && !is_null($actionUri)
+                        && method_exists("{$routeNamespace}\\{$menuItem->controller}", $actionMethod)) {
+                        Route::{$actionType}($menuItem->uri . $actionUri, "{$menuItem->controller}@{$actionMethod}");
+                    }
+                }
+            }
+        }
+    } catch (\Exception $e) {}
+
+    /**
+     *--------------------------------------------------------------------------
+     * 自訂義路由 / 獨立路由。
+     * 此處路由 URI 若有與前方自動化路由重複，則會覆蓋前面。
+     *--------------------------------------------------------------------------
+     */
+
     // 首頁
     Route::get('/', 'SiteController@index')->name('home');
 
@@ -43,70 +94,4 @@ Route::group(['middleware' => 'auth:admin'], function() {
         Route::any('connector', ['as' => 'elfinder.connector', 'uses' => 'CustomElfinderController@showConnector']);
         Route::get('ckeditor', ['as' => 'elfinder.ckeditor', 'uses' => 'CustomElfinderController@showCKeditor4']);
     });
-
-    /*
-    |--------------------------------------------------------------------------
-    | 如果前面沒有特別設定路由，將會走下方 CRUD 自動規則
-    | 若是直接繼承 Controller 類別，基本上不需要特別設定路由
-    |--------------------------------------------------------------------------
-    */
-
-    // 指定 CRUD 路由
-    try {
-        foreach (\App\Models\AdminMenu::query()->whereNotNull('controller')->get() as $menuItem) {
-            if (!is_null($menuItem->controller) && class_exists("App\\Http\\Controllers\\Admin\\{$menuItem->controller}")) {
-                if (method_exists("App\\Http\\Controllers\\Admin\\{$menuItem->controller}", 'ajaxDataTable')) {
-                    Route::post($menuItem->uri . '/ajax/datatables', "{$menuItem->controller}@ajaxDataTable");
-                }
-                if (method_exists("App\\Http\\Controllers\\Admin\\{$menuItem->controller}", 'ajaxSwitch')) {
-                    Route::post($menuItem->uri . '/ajax/switch', "{$menuItem->controller}@ajaxSwitch");
-                }
-                if (method_exists("App\\Http\\Controllers\\Admin\\{$menuItem->controller}", 'ajaxMultiSwitch')) {
-                    Route::post($menuItem->uri . '/ajax/switch-multi', "{$menuItem->controller}@ajaxMultiSwitch");
-                }
-                if (method_exists("App\\Http\\Controllers\\Admin\\{$menuItem->controller}", 'ajaxSort')) {
-                    Route::post($menuItem->uri . '/ajax/sort', "{$menuItem->controller}@ajaxSort");
-                }
-                if (method_exists("App\\Http\\Controllers\\Admin\\{$menuItem->controller}", 'edit')) {
-                    Route::post($menuItem->uri . '/{id}/edit', "{$menuItem->controller}@edit");
-                }
-                if (method_exists("App\\Http\\Controllers\\Admin\\{$menuItem->controller}", 'edit')) {
-                    Route::get($menuItem->uri . '/{id}/edit', "{$menuItem->controller}@edit");
-                }
-                if (method_exists("App\\Http\\Controllers\\Admin\\{$menuItem->controller}", 'create')) {
-                    Route::get($menuItem->uri . '/create', "{$menuItem->controller}@create");
-                }
-                if (method_exists("App\\Http\\Controllers\\Admin\\{$menuItem->controller}", 'show')) {
-                    Route::get($menuItem->uri . '/{id}', "{$menuItem->controller}@show");
-                }
-                if (method_exists("App\\Http\\Controllers\\Admin\\{$menuItem->controller}", 'update')) {
-                    Route::put($menuItem->uri . '/{id}', "{$menuItem->controller}@update");
-                }
-                if (method_exists("App\\Http\\Controllers\\Admin\\{$menuItem->controller}", 'destroy')) {
-                    Route::delete($menuItem->uri . '/{id}', "{$menuItem->controller}@destroy");
-                }
-                if (method_exists("App\\Http\\Controllers\\Admin\\{$menuItem->controller}", 'store')) {
-                    Route::post($menuItem->uri, "{$menuItem->controller}@store");
-                }
-                if (method_exists("App\\Http\\Controllers\\Admin\\{$menuItem->controller}", 'index')) {
-                    Route::get($menuItem->uri, "{$menuItem->controller}@index");
-                }
-            }
-        }
-    } catch (\Exception $e) {}
-
-
-
-    // 基本 CRUD 路由
-    Route::post('{uri}/ajax/datatables', 'Controller@ajaxDataTable')->name('datatables');
-    Route::post('{uri}/ajax/switch', 'Controller@ajaxSwitch')->name('switch');
-    Route::post('{uri}/ajax/switch-multi', 'Controller@ajaxMultiSwitch')->name('multiSwitch');
-    Route::post('{uri}/ajax/sort', 'Controller@ajaxSort')->name('sort');
-    Route::get('{uri}/{id}/edit', 'Controller@edit')->name('edit');
-    Route::get('{uri}/create', 'Controller@create')->name('create');
-    Route::get('{uri}/{id}', 'Controller@show')->name('show');
-    Route::put('{uri}/{id}', 'Controller@update')->name('update');
-    Route::delete('{uri}/{id}', 'Controller@destroy')->name('destroy');
-    Route::post('{uri}', 'Controller@store')->name('store');
-    Route::get('{uri}', 'Controller@index')->name('index');
 });

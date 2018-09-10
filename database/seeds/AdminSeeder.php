@@ -78,7 +78,7 @@ class AdminSeeder extends Seeder
             [
                 'guid' => uuidl(),
                 'title' => '系統首頁',
-                'uri' => '',
+                'uri' => 'home-admin',
                 'controller' => 'SiteController',
                 'model' => null,
                 'class' => $menuClass[0],

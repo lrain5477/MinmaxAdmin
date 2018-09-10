@@ -32,7 +32,7 @@ class AdministratorSeeder extends Seeder
             [
                 'guid' => uuidl(),
                 'title' => '系統首頁',
-                'uri' => '',
+                'uri' => 'home-administrator',
                 'controller' => 'SiteController',
                 'model' => null,
                 'class' => 'default',
