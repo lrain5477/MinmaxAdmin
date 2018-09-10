@@ -82,12 +82,15 @@ if (! function_exists('langDB')) {
      * Get a local content from database via key.
      *
      * @param  string  $key
+     * @param  bool  $showKey
      * @param  string  $langKey
      * @return string
      */
-    function langDB($key, $langKey = null)
+    function langDB($key, $showKey = false, $langKey = null)
     {
         $langKey = $langKey ?? app()->getLocale();
+
+        if (config('app.env') != 'production') Cache::forget("langMap.{$langKey}");
 
         /** @var array $langMap */
         $langMap = Cache::rememberForever("langMap.{$langKey}", function() use ($langKey) {
@@ -105,7 +108,7 @@ if (! function_exists('langDB')) {
             }
         });
 
-        return $langMap[$key] ?? $key;
+        return $langMap[$key] ?? ($showKey ? $key : null);
     }
 }
 
@@ -180,18 +183,19 @@ if (! function_exists('systemParam')) {
         $params = Cache::rememberForever('systemParams', function () {
             return \App\Models\SystemParameter::query()
                 ->where('active', '1')
-                ->orderBy('sort')
                 ->get()
-                ->groupBy('code')
-                ->map(function ($item) {
-                    return collect($item->options)
-                        ->groupBy('value')
-                        ->map(function ($item) {
-                            return ['title' => $item['label'], 'class' => $item['class']];
-                        });
+                ->mapWithKeys(function ($item) {
+                    return [
+                        $item->code => collect($item->options)
+                            ->mapWithKeys(function ($item) {
+                                return [$item['value'] => ['title' => $item['label'], 'class' => $item['class']]];
+                            })
+                    ];
                 })
                 ->toArray();
         });
+
+        if (count($params) == 0) Cache::forget('systemParams');
 
         return is_null($key) ? $params : array_get($params, $key, $key);
     }

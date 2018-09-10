@@ -55,7 +55,7 @@ class LogHelper
                 'username' => $username,
                 'ip' => request()->ip(),
                 'remark' => $message,
-                'result' => $result,
+                'result' => strval($result),
             ]);
         } catch (\Exception $e) {}
 

@@ -12,8 +12,7 @@ return [
     */
 
     'Administrator' => [
-        'id' => 'ID',
-        'guid' => 'GUID',
+        'guid' => 'ID',
         'username' => '帳號',
         'password' => '密碼',
         'password_confirmation' => '密碼確認',
@@ -36,9 +35,7 @@ return [
     ],
 
     'Admin' => [
-        'id' => 'ID',
-        'guid' => 'GUID',
-        'role_id' => '權限群組',
+        'guid' => 'ID',
         'username' => '帳號',
         'password' => '密碼',
         'password_confirmation' => '密碼確認',
@@ -59,78 +56,17 @@ return [
         ],
     ],
 
-    'AdminMenuClass' => [
-        'id' => 'ID',
-        'guid' => 'GUID',
-        'title' => '類別名稱',
-        'sort' => '排序',
-        'active' => '狀態',
-        'created_at' => '建立時間',
-        'updated_at' => '更新時間',
-        'selection' => [
-            'active' => [
-                '1' => '啟用',
-                '0' => '停用',
-            ],
-        ],
-    ],
-
-    'AdminMenuItem' => [
-        'id' => 'ID',
-        'guid' => 'GUID',
-        'lang' => '語系',
+    'AdminMenu' => [
+        'guid' => 'ID',
         'title' => '選單名稱',
         'uri' => 'Uri',
         'controller' => 'Controller 名稱',
         'model' => 'Model 名稱',
         'class' => '類別',
-        'parent' => '上層目錄',
+        'parent_id' => '上層目錄',
         'link' => '項目連結',
         'icon' => '圖示 Class',
-        'filter' => '資料過濾 (where)',
-        'keeps' => '不可刪除 GUID',
-        'sort' => '排序',
-        'active' => '狀態',
-        'created_at' => '建立時間',
-        'updated_at' => '更新時間',
-        'selection' => [
-            'active' => [
-                '1' => '啟用',
-                '0' => '停用',
-            ],
-        ],
-        'hint' => [
-            'icon' => '僅 (根列表) 使用，請參考連結選擇您所需要的圖示 <a target="_blank" href="/admin/css/fonts/icon/demo.html">圖示列表</a>',
-        ],
-    ],
-
-    'MerchantMenuClass' => [
-        'id' => 'ID',
-        'guid' => 'GUID',
-        'title' => '類別名稱',
-        'sort' => '排序',
-        'active' => '狀態',
-        'created_at' => '建立時間',
-        'updated_at' => '更新時間',
-        'selection' => [
-            'active' => [
-                '1' => '啟用',
-                '0' => '停用',
-            ],
-        ],
-    ],
-
-    'MerchantMenuItem' => [
-        'id' => 'ID',
-        'guid' => 'GUID',
-        'lang' => '語系',
-        'title' => '選單名稱',
-        'uri' => 'Uri',
-        'model' => 'Model 名稱',
-        'class' => '類別',
-        'parent' => '上層目錄',
-        'link' => '項目連結',
-        'icon' => '圖示 Class',
+        'permission_key' => '權限綁定代碼',
         'filter' => '資料過濾 (where)',
         'keeps' => '不可刪除 GUID',
         'sort' => '排序',
@@ -168,8 +104,8 @@ return [
     'Permission' => [
         'id' => 'ID',
         'guard' => '平台',
-        'name' => '代碼',
         'group' => '群組',
+        'name' => '代碼',
         'label' => '標籤',
         'display_name' => '權限名稱',
         'description' => '敘述',
@@ -184,11 +120,10 @@ return [
         ],
     ],
 
-    'Language' => [
+    'WorldLanguage' => [
         'id' => 'ID',
-        'guid' => 'GUID',
-        'title' => '語系',
-        'codes' => '語系代碼',
+        'title' => '語系標題',
+        'code' => '語系代碼',
         'name' => '顯示文字',
         'icon' => '圖示代碼',
         'sort' => '排序',
@@ -207,12 +142,12 @@ return [
     ],
 
     'WorldCountry' => [
-        'guid' => 'GUID',
-        'lang' => '語系',
+        'id' => 'ID',
         'title' => '國家名稱',
         'code' => '國家代碼',
         'name' => '顯示文字',
         'icon' => '圖示代碼',
+        'language_id' => '語言',
         'active' => '狀態',
         'created_at' => '建立時間',
         'updated_at' => '更新時間',
@@ -228,8 +163,7 @@ return [
     ],
 
     'WorldState' => [
-        'guid' => 'GUID',
-        'lang' => '語系',
+        'id' => 'ID',
         'country_id' => '國家',
         'title' => '州區名稱',
         'code' => '州區代碼',
@@ -246,8 +180,7 @@ return [
     ],
 
     'WorldCity' => [
-        'guid' => 'GUID',
-        'lang' => '語系',
+        'id' => 'ID',
         'state_id' => '州區',
         'title' => '城市名稱',
         'code' => '城市代碼',
@@ -265,8 +198,7 @@ return [
 
     'Firewall' => [
         'id' => 'ID',
-        'guid' => 'GUID',
-        'guard' => '網站群組',
+        'guard' => '平台',
         'ip' => 'IP 位址',
         'rule' => '規則',
         'active' => '狀態',
@@ -285,37 +217,47 @@ return [
     ],
 
     'WebData' => [
-        'id' => 'ID',
-        'guid' => 'GUID',
-        'lang' => '語系',
+        'guid' => 'ID',
+        'guard' => '平台',
         'website_name' => '網站名稱',
         'system_email' => '系統信箱',
         'system_url' => '網站網址',
-        'company_name' => '公司名稱',
-        'company_name_en' => '公司英文名稱',
-        'company_id' => '統一編號',
-        'phone' => '客服電話',
-        'fax' => '傳真號碼',
-        'email' => '客服信箱',
-        'address' => '公司地址',
-        'map_lng' => '地圖經度',
-        'map_lat' => '地圖緯度',
-        'map_url' => '地址連結',
-        'link_facebook' => 'Facebook',
-        'link_instagram' => 'Instagram',
-        'link_twitter' => 'Twitter',
-        'link_gplus' => 'Google+',
-        'link_youtube' => 'Youtube',
-        'seo_description' => 'SEO 網站描述',
-        'seo_keywords' => 'SEO 關鍵字',
+        'system_logo' => '網站Logo',
+        'company' => [
+            'name' => '公司名稱',
+            'name_en' => '公司英文名稱',
+            'id' => '統一編號'
+        ],
+        'contact' => [
+            'phone' => '客服電話',
+            'fax' => '傳真號碼',
+            'email' => '客服信箱',
+            'address' => '公司地址',
+            'map' => '地址連結',
+            'lng' => '地圖經度',
+            'lat' => '地圖緯度',
+        ],
+        'social' => [
+            'facebook' => 'Facebook',
+            'instagram' => 'Instagram',
+            'twitter' => 'Twitter',
+            'gplus' => 'Google+',
+            'youtube' => 'Youtube',
+        ],
+        'seo' => [
+            'meta_description' => 'SEO 網站描述',
+            'meta_keywords' => 'SEO 關鍵字',
+        ],
         'google_analytics' => 'Google Analytics',
         'active' => '網站狀態',
         'offline_text' => '網站離線訊息',
         'created_at' => '建立時間',
         'updated_at' => '更新時間',
         'hint' => [
-            'seo_description' => '(Metadata Description) 利用簡短的說明讓人清楚的了解網站的主要內容、簡介方向等，搜尋引擎將會幫我們適當的顯示在介紹頁面上。',
-            'seo_keywords' => '(Metadata Keywords) 搜尋關鍵字:為了幫助搜尋引擎更容易搜尋到網站，你可以在這裡填寫相關的搜尋字詞，多組關鍵字以上請使用半形逗號區隔。',
+            'seo' => [
+                'meta_description' => '(Metadata Description) 利用簡短的說明讓人清楚的了解網站的主要內容、簡介方向等，搜尋引擎將會幫我們適當的顯示在介紹頁面上。',
+                'meta_keywords' => '(Metadata Keywords) 搜尋關鍵字:為了幫助搜尋引擎更容易搜尋到網站，你可以在這裡填寫相關的搜尋字詞，多組關鍵字以上請使用半形逗號區隔。',
+            ],
             'offline_text' => '當網站處於離線狀態時顯示給使用者看到的訊息。',
         ],
         'selection' => [
@@ -326,46 +268,22 @@ return [
         ],
     ],
 
-    'ParameterGroup' => [
+    'SystemParameter' => [
         'id' => 'ID',
-        'guid' => 'GUID',
         'code' => '群組代碼',
         'title' => '群組名稱',
-        'admin' => '管理權限',
+        'options' => [
+            'label' => '參數標籤',
+            'value' => '參數值',
+            'class' => '顏色 Class',
+        ],
         'active' => '狀態',
         'created_at' => '建立時間',
         'updated_at' => '更新時間',
-        'hint' => [
-            'admin' => '設定 admin 平台之管理員可否管理此分類之參數項目。',
-        ],
         'selection' => [
-            'admin' => [
-                '1' => '可用',
-                '0' => '禁止',
+            'options' => [
+                'class' => '請輸入該參數值所對應的 Bootstrap 元件類別識別名稱。例：badge-danger 請輸入 danger。',
             ],
-            'active' => [
-                '1' => '啟用',
-                '0' => '停用',
-            ],
-        ],
-    ],
-
-    'ParameterItem' => [
-        'id' => 'ID',
-        'guid' => 'GUID',
-        'lang' => '語系',
-        'group' => '群組',
-        'title' => '標題',
-        'value' => '參數值',
-        'class' => 'Class 名稱',
-        'sort' => '排序',
-        'active' => '狀態',
-        'created_at' => '建立時間',
-        'updated_at' => '更新時間',
-        'hint' => [
-            'class' => '請輸入該參數值所對應的 Bootstrap 元件類別識別名稱。例：badge-danger 請輸入 danger。',
-        ],
-        'selection' => [
             'active' => [
                 '1' => '啟用',
                 '0' => '停用',
@@ -375,8 +293,6 @@ return [
 
     'EditorTemplate' => [
         'id' => 'ID',
-        'guid' => 'GUID',
-        'lang' => '語系',
         'guard' => '平台',
         'category' => '使用類別',
         'title' => '名稱',
@@ -386,9 +302,6 @@ return [
         'active' => '狀態',
         'created_at' => '建立時間',
         'updated_at' => '更新時間',
-        'hint' => [
-            'pic' => '建議尺寸：240px * 240px。圖片類型：jpg、png、gif。',
-        ],
         'selection' => [
             'active' => [
                 '1' => '啟用',

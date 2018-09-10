@@ -29,6 +29,9 @@ class Controller extends BaseController
     /** @var string $uri */
     protected $rootUri = 'siteadmin';
 
+    /** @var bool $ajaxRequest */
+    protected $ajaxRequest = false;
+
     /** @var \Illuminate\Support\Collection|\App\Models\WorldLanguage[] $languageData */
     protected $languageData;
 
@@ -47,6 +50,7 @@ class Controller extends BaseController
     /** @var \App\Models\Admin $adminData */
     protected $adminData;
 
+    /** @var \App\Repositories\Admin\Repository $modelRepository */
     protected $modelRepository;
 
     public function __construct(Request $request)
@@ -101,6 +105,31 @@ class Controller extends BaseController
         $this->viewData['rootUri'] = $this->rootUri . '/' . ($this->languageData->count() > 1 ? app()->getLocale() : '');
     }
 
+    protected function checkPermissionCreate()
+    {
+        if($this->adminData->can(PermissionHelper::replacePermissionName($this->pageData->permission_key, 'Create')) === false) abort(404);
+    }
+
+    protected function checkPermissionShow()
+    {
+        if($this->adminData->can(PermissionHelper::replacePermissionName($this->pageData->permission_key, 'Show')) === false) abort(404);
+    }
+
+    protected function checkPermissionEdit()
+    {
+        if($this->adminData->can(PermissionHelper::replacePermissionName($this->pageData->permission_key, 'Edit')) === false) abort(404);
+    }
+
+    protected function checkPermissionDestroy()
+    {
+        if($this->adminData->can(PermissionHelper::replacePermissionName($this->pageData->permission_key, 'Destroy')) === false) abort(404);
+    }
+
+    protected function checkValidate()
+    {
+        app('App\\Http\\Requests\\Admin\\' . $this->pageData->getAttribute('model') . 'Request');
+    }
+
     /**
      * DataGrid List
      *
@@ -115,7 +144,7 @@ class Controller extends BaseController
         Breadcrumbs::register('index', function ($breadcrumbs) {
             /** @var \DaveJamesMiller\Breadcrumbs\BreadcrumbsGenerator $breadcrumbs */
             $breadcrumbs->parent('admin.home');
-            $breadcrumbs->push($this->pageData->title, route('admin.index', [$this->uri]));
+            $breadcrumbs->push($this->pageData->title);
         });
 
         try {
@@ -136,10 +165,7 @@ class Controller extends BaseController
     {
         if($this->adminData->can(PermissionHelper::replacePermissionName($this->pageData->permission_key, 'Show')) === false) return abort(404);
 
-        $where = [$this->modelRepository->getIndexKey() => $id];
-        if($this->modelRepository->isMultiLanguage()) $where['lang'] = app()->getLocale();
-
-        $this->viewData['formData'] = $this->modelRepository->one($where);
+        $this->viewData['formData'] = $this->modelRepository->find($id);
 
         // 設定麵包屑導航
         Breadcrumbs::register('view', function ($breadcrumbs) {
@@ -147,7 +173,7 @@ class Controller extends BaseController
              * @var \DaveJamesMiller\Breadcrumbs\BreadcrumbsGenerator $breadcrumbs
              */
             $breadcrumbs->parent('admin.home');
-            $breadcrumbs->push($this->pageData->title, route('admin.index', [$this->uri]));
+            $breadcrumbs->push($this->pageData->title, url($this->rootUri . '/' . ($this->languageData->count() > 1 ? app()->getLocale() : '')));
             $breadcrumbs->push(__('admin.form.view'));
         });
 
@@ -259,15 +285,10 @@ class Controller extends BaseController
      */
     public function edit($id)
     {
-        dd($id);
-
-        if($this->adminData->can(PermissionHelper::replacePermissionName($this->pageData->permission_key, 'Edit')) === false) return abort(404);
-
-        $where = [$this->modelRepository->getIndexKey() => $id];
-        if($this->modelRepository->isMultiLanguage()) $where['lang'] = app()->getLocale();
+        $this->checkPermissionEdit();
 
         $this->viewData['formDataId'] = $id;
-        $this->viewData['formData'] = $this->modelRepository->one($where);
+        $this->viewData['formData'] = $this->modelRepository->find($id);
 
         // 設定麵包屑導航
         Breadcrumbs::register('edit', function ($breadcrumbs) {
@@ -278,7 +299,7 @@ class Controller extends BaseController
             $breadcrumbs->push(
                 $this->pageData->title,
                 $this->adminData->can(PermissionHelper::replacePermissionName($this->pageData->permission_key, 'Show')) === true
-                    ? route('admin.index', [$this->uri])
+                    ? url($this->rootUri . '/' . ($this->languageData->count() > 1 ? app()->getLocale() . '/' : '') . $this->uri)
                     : null
             );
             $breadcrumbs->push(__('admin.form.edit'));
@@ -300,43 +321,39 @@ class Controller extends BaseController
      */
     public function update($id, Request $request)
     {
-        if($this->adminData->can(PermissionHelper::replacePermissionName($this->pageData->permission_key, 'Edit')) === false) return abort(404);
+        $this->checkPermissionEdit();
+
+        $this->checkValidate();
+
+        $model = $this->modelRepository->find($id) ?? abort(404);
 
         $inputSet = $request->input($this->pageData->getAttribute('model'));
 
-        $validator = Validator::make($inputSet, $this->modelRepository->getRules() ?? []);
-
-        if($validator->passes()) {
-            $where = [$this->modelRepository->getIndexKey() => $id];
-            if($this->modelRepository->isMultiLanguage()) $where['lang'] = app()->getLocale();
-
-            foreach($inputSet['uploads'] ?? [] as $columnKey => $columnInput) {
-                $inputSet[$columnKey] = $columnInput['origin'] ?? null;
-                $filePath = 'files/' . ($columnInput['path'] ?? 'uploads');
-                $fileList = [];
-                foreach($request->file($this->pageData->getAttribute('model') . '.uploads.' . $columnKey . '.file') ?? [] as $fileItem) {
-                    /** @var \Illuminate\Http\UploadedFile $fileItem */
-                    if($fileItem) {
-                        $fileName = microtime() . rand(100000, 999999) . '.' . $fileItem->getClientOriginalExtension();
-                        $fileItem->move(public_path($filePath), $fileName);
-                        $fileList[] = $filePath . '/' . $fileName;
-                    }
+        // 處理檔案上傳
+        foreach ($inputSet['uploads'] ?? [] as $columnKey => $columnInput) {
+            $inputSet[$columnKey] = $columnInput['origin'] ?? null;
+            $filePath = 'files/' . ($columnInput['path'] ?? 'uploads');
+            $fileList = [];
+            foreach ($request->file($this->pageData->getAttribute('model') . '.uploads.' . $columnKey . '.file') ?? [] as $fileItem) {
+                /** @var \Illuminate\Http\UploadedFile $fileItem */
+                if ($fileItem) {
+                    $fileName = microtime() . rand(100000, 999999) . '.' . $fileItem->getClientOriginalExtension();
+                    $fileItem->move(public_path($filePath), $fileName);
+                    $fileList[] = $filePath . '/' . $fileName;
                 }
-                $inputSet[$columnKey] = count($fileList) > 0 ? implode(config('app.separate_string'), $fileList) : $inputSet[$columnKey];
             }
-            if(isset($inputSet['uploads'])) unset($inputSet['uploads']);
+            $inputSet[$columnKey] = count($fileList) > 0 ? $fileList : $inputSet[$columnKey];
+        }
+        if (isset($inputSet['uploads'])) unset($inputSet['uploads']);
 
-            if($this->modelRepository->save($inputSet, $where)) {
-                LogHelper::system('admin', $this->uri, 'update', $id, $this->adminData->username, 1, __('admin.form.message.edit_success'));
-                return redirect()->route('admin.edit', [$this->uri, $id])->with('success', __('admin.form.message.edit_success'));
-            }
-
-            LogHelper::system('admin', $this->uri, 'update', $id, $this->adminData->username, 0, __('admin.form.message.edit_error'));
-            return redirect()->route('admin.edit', [$this->uri, $id])->withErrors([__('admin.form.message.edit_error')])->withInput();
+        // 儲存更新資料
+        if ($this->modelRepository->save($model, $inputSet)) {
+            LogHelper::system('admin', $this->uri, 'update', $id, $this->adminData->username, 1, __('admin.form.message.edit_success'));
+            return redirect()->route("admin.{$this->uri}.edit", [$id])->with('success', __('admin.form.message.edit_success'));
         }
 
-        LogHelper::system('admin', $this->uri, 'update', $id, $this->adminData->username, 0, $validator->errors()->first());
-        return redirect()->route('admin.edit', [$this->uri, $id])->withErrors($validator)->withInput();
+        LogHelper::system('admin', $this->uri, 'update', $id, $this->adminData->username, 0, __('admin.form.message.edit_error'));
+        return redirect()->route("admin.{$this->uri}.edit", [$id])->withErrors([__('admin.form.message.edit_error')])->withInput();
     }
 
     /**

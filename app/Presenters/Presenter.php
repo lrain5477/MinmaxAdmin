@@ -12,12 +12,11 @@ class Presenter
     /** @var Collection $parameterSet **/
     protected $parameterSet;
     protected $columnClass = [];
-    protected $fieldRequired = [];
     protected $fieldSelection = [];
 
     public function __construct()
     {
-        $this->parameterSet = SystemParameter::where(['active' => 1])->get(['guid', 'code', 'title']);
+        \Cache::forget('systemParams');
     }
 
     public function getViewNormalText($model, $column, $value = '') {
@@ -59,7 +58,7 @@ class Presenter
     public function getViewSelection($model, $column) {
         $modelName = class_basename($model);
         $columnLabel = __("models.{$modelName}.{$column}");
-        $fieldValue = isset($model->$column) ? ($this->fieldSelection[$column][$model->$column] ?? __("models.{$modelName}.selection.{$column}.{$model->$column}")) : '';
+        $fieldValue = isset($model->$column) ? ($this->parameterSet[$column][$model->$column] ?? __("models.{$modelName}.selection.{$column}.{$model->$column}")) : '';
 
         $componentData = [
             'id' => "{$modelName}-{$column}",
@@ -97,7 +96,8 @@ class Presenter
         return view("{$this->guardName}.view-components.image-list", $componentData);
     }
 
-    public function getFieldNormalText($model, $column, $plaintText = false) {
+    public function getFieldNormalText($model, $column, $plaintText = false)
+    {
         $modelName = class_basename($model);
         $columnLabel = __("models.{$modelName}.{$column}");
         $fieldValue = isset($model->$column) ? $model->$column : '';
@@ -112,104 +112,153 @@ class Presenter
         return view("{$this->guardName}.form-components.normal-text", $componentData);
     }
 
-    public function getFieldText($model, $column, $required = false, $options = []) {
-        if(is_array($required)) {
-            $options = $required;
-            $required = false;
-        }
-
+    /**
+     * @param  \Illuminate\Database\Eloquent\Model $model
+     * @param  string $column
+     * @param  array $options
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function getFieldText($model, $column, $options = [])
+    {
         $modelName = class_basename($model);
         $columnLabel = __("models.{$modelName}.{$column}");
-        $fieldValue = isset($model->$column) ? $model->$column : '';
+        $fieldName = isset($options['name']) ? $options['name'] : "{$modelName}[{$column}]";
+        $fieldValue = $model->getAttribute($column) ?? '';
+        $hintPath = "models.{$modelName}.hint.{$column}";
+
+        if (isset($options['subColumn'])) {
+            $columnLabel = __("models.{$modelName}.{$column}.{$options['subColumn']}");
+            $fieldName .= "[{$options['subColumn']}]";
+            $fieldValue = $fieldValue->{$options['subColumn']} ?? '';
+            $hintPath .= ".{$options['subColumn']}";
+        }
 
         $componentData = [
             'id' => "{$modelName}-{$column}",
             'label' => $columnLabel,
-            'name' => "{$modelName}[{$column}]",
+            'name' => $fieldName,
             'value' => $fieldValue,
-            'required' => $required,
+            'required' => isset($options['required']) ? $options['required'] : false,
             'icon' => isset($options['icon']) ? $options['icon'] : '',
             'size' => isset($options['size']) ? $options['size'] : 10,
             'placeholder' => isset($options['placeholder']) ? $options['placeholder'] : '',
-            'hint' => isset($options['hint']) && $options['hint'] == true ? __("models.{$modelName}.hint.{$column}") : '',
+            'hint' => isset($options['hint']) && $options['hint'] == true ? __($hintPath) : '',
         ];
 
         return view("{$this->guardName}.form-components.text", $componentData);
     }
 
-    public function getFieldEmail($model, $column, $required = false, $options = []) {
-        if(is_array($required)) {
-            $options = $required;
-            $required = false;
-        }
-
+    /**
+     * @param  \Illuminate\Database\Eloquent\Model $model
+     * @param  string $column
+     * @param  array $options
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function getFieldEmail($model, $column, $options = [])
+    {
         $modelName = class_basename($model);
         $columnLabel = __("models.{$modelName}.{$column}");
-        $fieldValue = isset($model->$column) ? $model->$column : '';
+        $fieldName = isset($options['name']) ? $options['name'] : "{$modelName}[{$column}]";
+        $fieldValue = $model->getAttribute($column) ?? '';
+        $hintPath = "models.{$modelName}.hint.{$column}";
+
+        if (isset($options['subColumn'])) {
+            $columnLabel = __("models.{$modelName}.{$column}.{$options['subColumn']}");
+            $fieldName .= "[{$options['subColumn']}]";
+            $fieldValue = $fieldValue->{$options['subColumn']} ?? '';
+            $hintPath .= ".{$options['subColumn']}";
+        }
 
         $componentData = [
             'id' => "{$modelName}-{$column}",
             'label' => $columnLabel,
-            'name' => "{$modelName}[{$column}]",
+            'name' => $fieldName,
             'value' => $fieldValue,
-            'required' => $required,
+            'required' => isset($options['required']) ? $options['required'] : false,
             'icon' => isset($options['icon']) ? $options['icon'] : '',
             'size' => isset($options['size']) ? $options['size'] : 10,
             'placeholder' => isset($options['placeholder']) ? $options['placeholder'] : '',
-            'hint' => isset($options['hint']) && $options['hint'] == true ? __("models.{$modelName}.hint.{$column}") : '',
+            'hint' => isset($options['hint']) && $options['hint'] == true ? __($hintPath) : '',
         ];
 
         return view("{$this->guardName}.form-components.email", $componentData);
     }
 
-    public function getFieldTel($model, $column, $required = false, $options = []) {
-        if(is_array($required)) {
-            $options = $required;
-            $required = false;
-        }
-
+    /**
+     * @param  \Illuminate\Database\Eloquent\Model $model
+     * @param  string $column
+     * @param  array $options
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function getFieldTel($model, $column, $options = [])
+    {
         $modelName = class_basename($model);
         $columnLabel = __("models.{$modelName}.{$column}");
-        $fieldValue = isset($model->$column) ? $model->$column : '';
+        $fieldName = isset($options['name']) ? $options['name'] : "{$modelName}[{$column}]";
+        $fieldValue = $model->getAttribute($column) ?? '';
+        $hintPath = "models.{$modelName}.hint.{$column}";
+
+        if (isset($options['subColumn'])) {
+            $columnLabel = __("models.{$modelName}.{$column}.{$options['subColumn']}");
+            $fieldName .= "[{$options['subColumn']}]";
+            $fieldValue = $fieldValue->{$options['subColumn']} ?? '';
+            $hintPath .= ".{$options['subColumn']}";
+        }
 
         $componentData = [
             'id' => "{$modelName}-{$column}",
             'label' => $columnLabel,
-            'name' => "{$modelName}[{$column}]",
+            'name' => $fieldName,
             'value' => $fieldValue,
-            'required' => $required,
+            'required' => isset($options['required']) ? $options['required'] : false,
             'icon' => isset($options['icon']) ? $options['icon'] : '',
             'size' => isset($options['size']) ? $options['size'] : 10,
             'placeholder' => isset($options['placeholder']) ? $options['placeholder'] : '',
-            'hint' => isset($options['hint']) && $options['hint'] == true ? __("models.{$modelName}.hint.{$column}") : '',
+            'hint' => isset($options['hint']) && $options['hint'] == true ? __($hintPath) : '',
         ];
 
         return view("{$this->guardName}.form-components.tel", $componentData);
     }
 
-    public function getFieldPassword($model, $column, $required = false, $options = []) {
-        if(is_array($required)) {
-            $options = $required;
-            $required = false;
-        }
-
+    /**
+     * @param  \Illuminate\Database\Eloquent\Model $model
+     * @param  string $column
+     * @param  array $options
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function getFieldPassword($model, $column, $options = [])
+    {
         $modelName = class_basename($model);
         $columnLabel = __("models.{$modelName}.{$column}");
+        $fieldName = isset($options['name']) ? $options['name'] : "{$modelName}[{$column}]";
+        $hintPath = "models.{$modelName}.hint.{$column}";
+
+        if (isset($options['subColumn'])) {
+            $columnLabel = __("models.{$modelName}.{$column}.{$options['subColumn']}");
+            $fieldName .= "[{$options['subColumn']}]";
+            $hintPath .= ".{$options['subColumn']}";
+        }
 
         $componentData = [
             'id' => "{$modelName}-{$column}",
             'label' => $columnLabel,
-            'name' => "{$modelName}[{$column}]",
-            'required' => $required,
+            'name' => $fieldName,
+            'required' => isset($options['required']) ? $options['required'] : false,
             'icon' => isset($options['icon']) ? $options['icon'] : '',
             'size' => isset($options['size']) ? $options['size'] : 10,
             'placeholder' => isset($options['placeholder']) ? $options['placeholder'] : '',
-            'hint' => isset($options['hint']) && $options['hint'] == true ? __("models.{$modelName}.hint.{$column}") : '',
+            'hint' => isset($options['hint']) && $options['hint'] == true ? __($hintPath) : '',
         ];
 
         return view("{$this->guardName}.form-components.password", $componentData);
     }
 
+    /**
+     * @param  \Illuminate\Database\Eloquent\Model $model
+     * @param  string $column
+     * @param  string|null $defaultValue
+     * @return string
+     */
     public function getFieldHidden($model, $column, $defaultValue = null) {
         $modelName = class_basename($model);
         $fieldValue = isset($model->$column) ? $model->$column : $defaultValue;
@@ -217,85 +266,120 @@ class Presenter
         return "<input type=\"hidden\" name=\"{$modelName}[{$column}]\" value=\"{$fieldValue}\" />";
     }
 
-    public function getFieldDatePicker($model, $column, $required = false, $options = []) {
-        if(is_array($required)) {
-            $options = $required;
-            $required = false;
-        }
-
+    /**
+     * @param  \Illuminate\Database\Eloquent\Model $model
+     * @param  string $column
+     * @param  array $options
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function getFieldDatePicker($model, $column, $options = [])
+    {
         $modelName = class_basename($model);
         $columnLabel = __("models.{$modelName}.{$column}");
+        $fieldName = isset($options['name']) ? $options['name'] : "{$modelName}[{$column}]";
+        $fieldValue = $model->getAttribute($column) ?? '';
+        $hintPath = "models.{$modelName}.hint.{$column}";
         $pickerType = isset($options['type']) ? $options['type'] : 'birthdate';
 
         switch($pickerType) {
             case 'birthdateTime':
-                $fieldValue = isset($model->$column) ? date('Y-m-d H:i:s', strtotime($model->$column)) : '';
+                $valueTimeFormat = 'Y-m-d H:i:s';
                 break;
             default:
-                $fieldValue = isset($model->$column) ? date('Y-m-d', strtotime($model->$column)) : '';
+                $valueTimeFormat = 'Y-m-d';
                 break;
+        }
+
+
+        if (isset($options['subColumn'])) {
+            $columnLabel = __("models.{$modelName}.{$column}.{$options['subColumn']}");
+            $fieldName .= "[{$options['subColumn']}]";
+            $fieldValue = $fieldValue->{$options['subColumn']} ?? '';
+            $hintPath .= ".{$options['subColumn']}";
         }
 
         $componentData = [
             'id' => "{$modelName}-{$column}",
             'label' => $columnLabel,
-            'name' => "{$modelName}[{$column}]",
-            'value' => $fieldValue,
-            'required' => $required,
+            'name' => $fieldName,
+            'value' => !is_null($fieldValue) && $fieldValue != '' ? date($valueTimeFormat, strtotime($fieldValue)) : '',
+            'required' => isset($options['required']) ? $options['required'] : false,
             'icon' => isset($options['icon']) ? $options['icon'] : '',
             'type' => $pickerType,
             'size' => isset($options['size']) ? $options['size'] : 3,
             'placeholder' => isset($options['placeholder']) ? $options['placeholder'] : '',
-            'hint' => isset($options['hint']) && $options['hint'] == true ? __("models.{$modelName}.hint.{$column}") : '',
+            'hint' => isset($options['hint']) && $options['hint'] == true ? __($hintPath) : '',
         ];
 
         return view("{$this->guardName}.form-components.date-picker", $componentData);
     }
 
-    public function getFieldTextarea($model, $column, $required = false, $options = []) {
-        if(is_array($required)) {
-            $options = $required;
-            $required = false;
-        }
-
+    /**
+     * @param  \Illuminate\Database\Eloquent\Model $model
+     * @param  string $column
+     * @param  array $options
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function getFieldTextarea($model, $column, $options = [])
+    {
         $modelName = class_basename($model);
         $columnLabel = __("models.{$modelName}.{$column}");
-        $fieldValue = isset($model->$column) ? $model->$column : '';
+        $fieldName = isset($options['name']) ? $options['name'] : "{$modelName}[{$column}]";
+        $fieldValue = $model->getAttribute($column) ?? '';
+        $hintPath = "models.{$modelName}.hint.{$column}";
+
+        if (isset($options['subColumn'])) {
+            $columnLabel = __("models.{$modelName}.{$column}.{$options['subColumn']}");
+            $fieldName .= "[{$options['subColumn']}]";
+            $fieldValue = $fieldValue->{$options['subColumn']} ?? '';
+            $hintPath .= ".{$options['subColumn']}";
+        }
 
         $componentData = [
             'id' => "{$modelName}-{$column}",
             'label' => $columnLabel,
-            'name' => "{$modelName}[{$column}]",
+            'name' => $fieldName,
             'value' => $fieldValue,
-            'required' => $required,
+            'required' => isset($options['required']) ? $options['required'] : false,
             'size' => isset($options['size']) ? $options['size'] : 10,
             'rows' => isset($options['rows']) ? $options['rows'] : 5,
             'placeholder' => isset($options['placeholder']) ? $options['placeholder'] : '',
-            'hint' => isset($options['hint']) && $options['hint'] == true ? __("models.{$modelName}.hint.{$column}") : '',
+            'hint' => isset($options['hint']) && $options['hint'] == true ? __($hintPath) : '',
         ];
 
         return view("{$this->guardName}.form-components.textarea", $componentData);
     }
 
-    public function getFieldEditor($model, $column, $required = false, $options = []) {
-        if(is_array($required)) {
-            $options = $required;
-            $required = false;
-        }
-
+    /**
+     * @param  \Illuminate\Database\Eloquent\Model $model
+     * @param  string $column
+     * @param  array $options
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function getFieldEditor($model, $column, $options = [])
+    {
         $modelName = class_basename($model);
         $columnLabel = __("models.{$modelName}.{$column}");
-        $fieldValue = isset($model->$column) ? $model->$column : '';
+        $fieldName = isset($options['name']) ? $options['name'] : "{$modelName}[{$column}]";
+        $fieldValue = $model->getAttribute($column) ?? '';
+        $hintPath = "models.{$modelName}.hint.{$column}";
+
+        if (isset($options['subColumn'])) {
+            $columnLabel = __("models.{$modelName}.{$column}.{$options['subColumn']}");
+            $fieldName .= "[{$options['subColumn']}]";
+            $fieldValue = $fieldValue->{$options['subColumn']} ?? '';
+            $hintPath .= ".{$options['subColumn']}";
+        }
 
         $componentData = [
             'id' => "{$modelName}-{$column}",
             'label' => $columnLabel,
-            'name' => "{$modelName}[{$column}]",
+            'name' => $fieldName,
             'value' => $fieldValue,
-            'required' => $required,
+            'required' => isset($options['required']) ? $options['required'] : false,
             'size' => isset($options['size']) ? $options['size'] : 10,
             'height' => isset($options['height']) ? $options['height'] : '250px',
-            'hint' => isset($options['hint']) && $options['hint'] == true ? __("models.{$modelName}.hint.{$column}") : '',
+            'hint' => isset($options['hint']) && $options['hint'] == true ? __($hintPath) : '',
             'stylesheet' => isset($options['stylesheet']) ? $options['stylesheet'] : null,
             'template' => isset($options['template']) ? $options['template'] : null,
         ];
@@ -303,145 +387,197 @@ class Presenter
         return view("{$this->guardName}.form-components.editor", $componentData);
     }
 
-    public function getFieldSelect($model, $column, $required = false, $options = []) {
-        if(is_array($required)) {
-            $options = $required;
-            $required = false;
-        }
-
+    /**
+     * @param  \Illuminate\Database\Eloquent\Model $model
+     * @param  string $column
+     * @param  array $options
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function getFieldSelect($model, $column, $options = [])
+    {
         $modelName = class_basename($model);
         $columnLabel = __("models.{$modelName}.{$column}");
-        $fieldValue = isset($model->$column) ? $model->$column : '';
+        $fieldName = isset($options['name']) ? $options['name'] : "{$modelName}[{$column}]";
+        $fieldValue = $model->getAttribute($column) ?? '';
+        $hintPath = "models.{$modelName}.hint.{$column}";
+
+        if (isset($options['subColumn'])) {
+            $columnLabel = __("models.{$modelName}.{$column}.{$options['subColumn']}");
+            $fieldName .= "[{$options['subColumn']}]";
+            $fieldValue = $fieldValue->{$options['subColumn']} ?? '';
+            $hintPath .= ".{$options['subColumn']}";
+        }
 
         $componentData = [
             'id' => "{$modelName}-{$column}",
             'label' => $columnLabel,
-            'name' => "{$modelName}[{$column}]",
+            'name' => $fieldName,
             'value' => $fieldValue,
-            'required' => $required,
+            'required' => isset($options['required']) ? $options['required'] : false,
             'title' => isset($options['title']) ? $options['title'] : '',
             'search' => isset($options['search']) ? $options['search'] : false,
             'size' => isset($options['size']) ? $options['size'] : 3,
-            'hint' => isset($options['hint']) && $options['hint'] == true ? __("models.{$modelName}.hint.{$column}") : '',
-            'listData' => isset($this->fieldSelection[$column]) ? $this->fieldSelection[$column] : [],
+            'hint' => isset($options['hint']) && $options['hint'] == true ? __($hintPath) : '',
+            'listData' => isset($this->parameterSet[$column]) ? $this->parameterSet[$column] : [],
         ];
 
         return view("{$this->guardName}.form-components.select", $componentData);
     }
 
-    public function getFieldGroupSelect($model, $column, $required = false, $options = []) {
-        if(is_array($required)) {
-            $options = $required;
-            $required = false;
-        }
-
+    /**
+     * @param  \Illuminate\Database\Eloquent\Model $model
+     * @param  string $column
+     * @param  array $options
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function getFieldGroupSelect($model, $column, $options = [])
+    {
         $modelName = class_basename($model);
         $columnLabel = __("models.{$modelName}.{$column}");
-        $fieldValue = isset($model->$column) ? $model->$column : '';
+        $fieldName = isset($options['name']) ? $options['name'] : "{$modelName}[{$column}]";
+        $fieldValue = $model->getAttribute($column) ?? '';
+        $hintPath = "models.{$modelName}.hint.{$column}";
+
+        if (isset($options['subColumn'])) {
+            $columnLabel = __("models.{$modelName}.{$column}.{$options['subColumn']}");
+            $fieldName .= "[{$options['subColumn']}]";
+            $fieldValue = $fieldValue->{$options['subColumn']} ?? '';
+            $hintPath .= ".{$options['subColumn']}";
+        }
 
         $componentData = [
             'id' => "{$modelName}-{$column}",
             'label' => $columnLabel,
-            'name' => "{$modelName}[{$column}]",
+            'name' => $fieldName,
             'value' => $fieldValue,
-            'required' => $required,
+            'required' => isset($options['required']) ? $options['required'] : false,
             'title' => isset($options['title']) ? $options['title'] : '',
             'search' => isset($options['search']) ? $options['search'] : false,
             'size' => isset($options['size']) ? $options['size'] : 3,
-            'hint' => isset($options['hint']) && $options['hint'] == true ? __("models.{$modelName}.hint.{$column}") : '',
-            'listData' => isset($this->fieldSelection[$column]) ? $this->fieldSelection[$column] : [],
+            'hint' => isset($options['hint']) && $options['hint'] == true ? __($hintPath) : '',
+            'listData' => isset($this->parameterSet[$column]) ? $this->parameterSet[$column] : [],
         ];
 
         return view("{$this->guardName}.form-components.group-select", $componentData);
     }
 
-    public function getFieldMultiSelect($model, $column, $required = false, $options = []) {
-        if(is_array($required)) {
-            $options = $required;
-            $required = false;
-        }
-
+    /**
+     * @param  \Illuminate\Database\Eloquent\Model $model
+     * @param  string $column
+     * @param  array $options
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function getFieldMultiSelect($model, $column, $options = [])
+    {
         $modelName = class_basename($model);
         $columnLabel = __("models.{$modelName}.{$column}");
-        $fieldValues = isset($model->$column)
-            ? (is_array($model->$column)
-                ? $model->$column
-                : explode(config('app.separate_string'), $model->$column)
-            )
-            : [];
+        $fieldName = isset($options['name']) ? $options['name'] : "{$modelName}[{$column}]";
+        $fieldValue = $model->getAttribute($column) ?? '';
+        $hintPath = "models.{$modelName}.hint.{$column}";
+
+        if (isset($options['subColumn'])) {
+            $columnLabel = __("models.{$modelName}.{$column}.{$options['subColumn']}");
+            $fieldName .= "[{$options['subColumn']}]";
+            $fieldValue = $fieldValue->{$options['subColumn']} ?? '';
+            $hintPath .= ".{$options['subColumn']}";
+        }
 
         $componentData = [
             'id' => "{$modelName}-{$column}",
             'label' => $columnLabel,
-            'name' => "{$modelName}[{$column}][]",
-            'values' => $fieldValues,
-            'required' => $required,
+            'name' => "{$fieldName}[]",
+            'values' => $fieldValue,
+            'required' => isset($options['required']) ? $options['required'] : false,
             'title' => isset($options['title']) ? $options['title'] : '',
             'group' => isset($options['group']) ? $options['group'] : false,
             'size' => isset($options['size']) ? $options['size'] : 10,
-            'hint' => isset($options['hint']) && $options['hint'] == true ? __("models.{$modelName}.hint.{$column}") : '',
-            'listData' => isset($this->fieldSelection[$column]) ? $this->fieldSelection[$column] : [],
+            'hint' => isset($options['hint']) && $options['hint'] == true ? __($hintPath) : '',
+            'listData' => isset($this->parameterSet[$column]) ? $this->parameterSet[$column] : [],
         ];
 
         return view("{$this->guardName}.form-components.multi-select", $componentData);
     }
 
-    public function getFieldCheckbox($model, $column, $required = false, $options = []) {
-        if(is_array($required)) {
-            $options = $required;
-            $required = false;
-        }
-
+    /**
+     * @param  \Illuminate\Database\Eloquent\Model $model
+     * @param  string $column
+     * @param  array $options
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function getFieldCheckbox($model, $column, $options = [])
+    {
         $modelName = class_basename($model);
         $columnLabel = __("models.{$modelName}.{$column}");
-        $fieldValue = isset($model->$column) ? explode(',', $model->$column) : [];
+        $fieldName = isset($options['name']) ? $options['name'] : "{$modelName}[{$column}]";
+        $fieldValue = $model->getAttribute($column) ?? '';
+        $hintPath = "models.{$modelName}.hint.{$column}";
+
+        if (isset($options['subColumn'])) {
+            $columnLabel = __("models.{$modelName}.{$column}.{$options['subColumn']}");
+            $fieldName .= "[{$options['subColumn']}]";
+            $fieldValue = $fieldValue->{$options['subColumn']} ?? '';
+            $hintPath .= ".{$options['subColumn']}";
+        }
 
         $componentData = [
             'id' => "{$modelName}-{$column}",
             'label' => $columnLabel,
-            'name' => "{$modelName}[{$column}][]",
+            'name' => "{$fieldName}[]",
             'value' => $fieldValue,
-            'required' => $required,
+            'required' => isset($options['required']) ? $options['required'] : false,
             'inline' => isset($options['inline']) ? $options['inline'] : false,
             'color' => isset($options['color']) ? $options['color'] : '',
-            'hint' => isset($options['hint']) && $options['hint'] == true ? __("models.{$modelName}.hint.{$column}") : '',
-            'listData' => isset($this->fieldSelection[$column]) ? $this->fieldSelection[$column] : [],
+            'hint' => isset($options['hint']) && $options['hint'] == true ? __($hintPath) : '',
+            'listData' => isset($this->parameterSet[$column]) ? $this->parameterSet[$column] : [],
         ];
 
         return view("{$this->guardName}.form-components.checkbox", $componentData);
     }
 
-    public function getFieldRadio($model, $column, $required = false, $options = []) {
-        if(is_array($required)) {
-            $options = $required;
-            $required = false;
-        }
-
+    /**
+     * @param  \Illuminate\Database\Eloquent\Model $model
+     * @param  string $column
+     * @param  array $options
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function getFieldRadio($model, $column, $options = [])
+    {
         $modelName = class_basename($model);
         $columnLabel = __("models.{$modelName}.{$column}");
-        $fieldValue = isset($model->$column) ? $model->$column : '';
+        $fieldName = isset($options['name']) ? $options['name'] : "{$modelName}[{$column}]";
+        $fieldValue = $model->getAttribute($column) ?? '';
+        $hintPath = "models.{$modelName}.hint.{$column}";
+
+        if (isset($options['subColumn'])) {
+            $columnLabel = __("models.{$modelName}.{$column}.{$options['subColumn']}");
+            $fieldName .= "[{$options['subColumn']}]";
+            $fieldValue = $fieldValue->{$options['subColumn']} ?? '';
+            $hintPath .= ".{$options['subColumn']}";
+        }
 
         $componentData = [
             'id' => "{$modelName}-{$column}",
             'label' => $columnLabel,
-            'name' => "{$modelName}[{$column}]",
+            'name' => $fieldName,
             'value' => $fieldValue,
-            'required' => $required,
+            'required' => isset($options['required']) ? $options['required'] : false,
             'inline' => isset($options['inline']) ? $options['inline'] : false,
             'color' => isset($options['color']) ? $options['color'] : '',
-            'hint' => isset($options['hint']) && $options['hint'] == true ? __("models.{$modelName}.hint.{$column}") : '',
-            'listData' => isset($this->fieldSelection[$column]) ? $this->fieldSelection[$column] : [],
+            'hint' => isset($options['hint']) && $options['hint'] == true ? __($hintPath) : '',
+            'listData' => isset($this->parameterSet[$column]) ? $this->parameterSet[$column] : [],
         ];
 
         return view("{$this->guardName}.form-components.radio", $componentData);
     }
 
-    public function getFieldMediaImage($model, $column, $required = false, $options = []) {
-        if(is_array($required)) {
-            $options = $required;
-            $required = false;
-        }
-
+    /**
+     * @param  \Illuminate\Database\Eloquent\Model $model
+     * @param  string $column
+     * @param  array $options
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function getFieldMediaImage($model, $column, $options = [])
+    {
         $modelName = class_basename($model);
         $columnLabel = __("models.{$modelName}.{$column}");
         $imageList = isset($model->$column) ? explode(config('app.separate_string'), $model->$column) : [];
@@ -462,7 +598,7 @@ class Presenter
             'label' => $columnLabel,
             'name' => "{$modelName}[{$column}]",
             'altName' => "{$modelName}[{$column}_alt]",
-            'required' => $required,
+            'required' => isset($options['required']) ? $options['required'] : false,
             'limit' => isset($options['limit']) ? $options['limit'] : 0,
             'hint' => isset($options['hint']) && $options['hint'] == true ? __("models.{$modelName}.hint.{$column}") : '',
             'images' => $images,

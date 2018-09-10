@@ -38,7 +38,6 @@ Route::group(['middleware' => 'auth:administrator'], function() {
             'post ajaxSwitch /ajax/switch',
             'post ajaxMultiSwitch /ajax/switch-multi',
             'post ajaxSort /ajax/sort',
-            'post edit /{id}/edit',
             'get edit /{id}/edit',
             'get create /create',
             'get show /{id}',
@@ -57,7 +56,7 @@ Route::group(['middleware' => 'auth:administrator'], function() {
                         && !is_null($actionMethod)
                         && !is_null($actionUri)
                         && method_exists("{$routeNamespace}\\{$menuItem->controller}", $actionMethod)) {
-                        Route::{$actionType}($menuItem->uri . $actionUri, "{$menuItem->controller}@{$actionMethod}");
+                        Route::{$actionType}($menuItem->uri . $actionUri, "{$menuItem->controller}@{$actionMethod}")->name("{$menuItem->uri}.{$actionMethod}");
                     }
                 }
             }

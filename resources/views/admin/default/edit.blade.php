@@ -14,7 +14,7 @@
     <div class="panel-wrapper">
         <div class="panel-body">
             <form id="editForm" class="form-horizontal validate editForm"  name="editForm"
-                  action="{{ route('admin.update', [$pageData->uri, $formDataId]) }}"
+                  action="{{ route("admin.{$pageData->uri}.update", [$formDataId]) }}"
                   method="post"
                   enctype="multipart/form-data">
                 @method('PUT')

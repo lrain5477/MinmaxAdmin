@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Helpers\LogHelper;
-use App\Helpers\PermissionHelper;
+use App\Repositories\Admin\WebDataRepository;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
-use Validator;
 
 class WebDataController extends Controller
 {
+    public function __construct(Request $request, WebDataRepository $webDataRepository)
+    {
+        $this->modelRepository = $webDataRepository;
+
+        parent::__construct($request);
+    }
 }

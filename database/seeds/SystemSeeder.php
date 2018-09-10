@@ -98,7 +98,7 @@ class SystemSeeder extends Seeder
             [
                 'guid' => uuidl(),
                 'guard' => 'web',
-                'website_name' => '後臺管理系統',
+                'website_name' => '雲端數位科技',
                 'system_email' => config('mail.from.address'),
                 'system_url' => config('app.url'),
                 'system_logo' => json_encode([[

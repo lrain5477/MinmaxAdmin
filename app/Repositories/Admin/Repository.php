@@ -140,7 +140,7 @@ abstract class Repository
 
         $this->afterSave();
 
-        return $model;
+        return null;
     }
 
     /**

@@ -18,17 +18,18 @@ class SeederHelper
         $resourceData = [];
 
         foreach ($dataSet as $key => $item) {
+            $keyId = $item['guid'] ?? ($key + 1);
             foreach ($columns as $column) {
                 for ($id = 1; $id <= $languageAmount; $id++) {
                     array_push($resourceData, [
                         'language_id' => $id,
-                        'key' => $table . '.' . $column . '.' . ($key + 1),
+                        'key' => $table . '.' . $column . '.' . $keyId,
                         'text' => $item[$column] ?? '',
                         'created_at' => $timestamp,
                         'updated_at' => $timestamp
                     ]);
                 }
-                $dataSet[$key][$column] = $table . '.' . $column . '.' . ($key + 1);
+                $dataSet[$key][$column] = $table . '.' . $column . '.' . $keyId;
             }
         }
 
