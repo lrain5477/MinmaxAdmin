@@ -53,7 +53,7 @@ Route::group(['middleware' => 'auth:admin'], function() {
 
     // 指定 CRUD 路由
     try {
-        foreach (\App\Models\AdminMenuItem::all() as $menuItem) {
+        foreach (\App\Models\AdminMenu::query()->whereNotNull('controller')->get() as $menuItem) {
             if (!is_null($menuItem->controller) && class_exists("App\\Http\\Controllers\\Admin\\{$menuItem->controller}")) {
                 if (method_exists("App\\Http\\Controllers\\Admin\\{$menuItem->controller}", 'ajaxDataTable')) {
                     Route::post($menuItem->uri . '/ajax/datatables', "{$menuItem->controller}@ajaxDataTable");

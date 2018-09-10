@@ -28,7 +28,7 @@
             </a>
             <ul class="collapse collapse-level-1 {{ !is_null($pageData) && ($pageData->parent_id == $menuParent['guid']) ? 'show' : '' }}" id="Menu_{{ $menuParent['guid'] }}">
                 @foreach($menuParent['children'] as $menuChild)
-                @if(true || $adminData->can($menuChild['permission_key']))
+                @if(is_null($menuChild['permission_key']) || $adminData->can($menuChild['permission_key']))
                 <li><a class="{{ !is_null($pageData) && $pageData->uri == $menuChild['uri'] ? 'active' : '' }}"
                        href="{{ preg_match("/^http/", $menuChild['link']) === 1 ? $menuChild['link'] : url($rootUri . $menuChild['link']) }}"
                        target="{{ preg_match("/^http/", $menuChild['link']) === 1 ? '_blank' : '_self' }}">{{ $menuChild['title'] }}</a></li>
@@ -45,7 +45,7 @@
             }
             </script>
         </li>
-        @elseif($menuParent['link'] != '' && (true || $adminData->can($menuParent['permission_key'])))
+        @elseif($menuParent['link'] != '' && (is_null($menuParent['permission_key']) || $adminData->can($menuParent['permission_key'])))
         <li>
             <a class="{{ isset($pageData->uri) && $pageData->uri === $menuParent['uri'] ? 'active' : '' }}"
                href="{{ preg_match("/^http/", $menuParent['link']) === 1 ? $menuParent['link'] : url($rootUri . $menuParent['link']) }}"

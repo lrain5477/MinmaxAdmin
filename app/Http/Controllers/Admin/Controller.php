@@ -73,16 +73,22 @@ class Controller extends BaseController
         // 設定 頁面資料
         $this->pageData = (new AdminMenuRepository())->one(['uri' => $this->uri, 'active' => 1]);
 
-        // 設定 帳號資料
-        $this->adminData = $request->user('admin');
+        $this->middleware(function ($request, $next) {
+            /** @var Request $request */
 
-        // 設定 viewData
-        $this->setViewData();
+            // 設定 帳號資料
+            $this->adminData = $request->user('admin');
+
+            // 設定 viewData
+            $this->setViewData();
+
+            return $next($request);
+        });
     }
 
     public function test()
     {
-        dd($this->adminData);
+        dd($this->uri);
     }
 
     protected function setViewData()
@@ -107,9 +113,7 @@ class Controller extends BaseController
 
         // 設定麵包屑導航
         Breadcrumbs::register('index', function ($breadcrumbs) {
-            /**
-             * @var \DaveJamesMiller\Breadcrumbs\BreadcrumbsGenerator $breadcrumbs
-             */
+            /** @var \DaveJamesMiller\Breadcrumbs\BreadcrumbsGenerator $breadcrumbs */
             $breadcrumbs->parent('admin.home');
             $breadcrumbs->push($this->pageData->title, route('admin.index', [$this->uri]));
         });
@@ -255,6 +259,8 @@ class Controller extends BaseController
      */
     public function edit($id)
     {
+        dd($id);
+
         if($this->adminData->can(PermissionHelper::replacePermissionName($this->pageData->permission_key, 'Edit')) === false) return abort(404);
 
         $where = [$this->modelRepository->getIndexKey() => $id];
