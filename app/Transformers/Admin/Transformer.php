@@ -2,7 +2,6 @@
 
 namespace App\Transformers\Admin;
 
-use App\Models\SystemParameter;
 use Illuminate\Support\Carbon;
 use League\Fractal\TransformerAbstract;
 
@@ -29,33 +28,11 @@ class Transformer extends TransformerAbstract
     {
         $this->uri = $uri;
 
-        $parameterGroup = SystemParameter::where(['active' => 1])
-            ->get(['guid', 'code', 'title'])
-            ->filter(function($item) {
-                return in_array($item->code, $this->parameterSet);
-            })
-            ->values();
-
-        $this->parameters = collect($this->parameterSet)
-            ->map(function($item) use ($parameterGroup) {
-                return $parameterGroup->where('code', '=', $item)->count() > 0
-                    ? $parameterGroup
-                        ->firstWhere('code', '=', $item)
-                        ->parameterItem()
-                        ->get(['title', 'value', 'class'])
-                        ->mapWithKeys(function($item) {
-                            /** @var \App\Models\ParameterItem $item **/
-                            return [
-                                $item->value => [
-                                    'title' => $item->getAttribute('title'),
-                                    'class' => $item->getAttribute('class')
-                                ]
-                            ];
-                        })
-                        ->toArray()
-                    : [];
-            })
-            ->toArray();
+        foreach ($this->parameterSet as $item) {
+            if ($paramArray = systemParam($item)) {
+                $this->parameters[$item] = systemParam($item);
+            }
+        }
     }
 
     /**
@@ -69,7 +46,6 @@ class Transformer extends TransformerAbstract
 
     /**
      * @param string $value
-     * @param string $class
      * @param string $column
      * @return string
      * @throws \Throwable
@@ -173,7 +149,7 @@ class Transformer extends TransformerAbstract
                 'parameter' => $this->parameters[$column][$value] ?? null,
             ])->render();
         } else {
-            return $this->getGridText(__("models.{$this->model}.selection.{$column}.{$value}"));
+            return $this->getGridText($this->parameters[$column][$value]['title']);
         }
     }
 

@@ -1,3 +1,9 @@
+<?php
+/**
+ * @var \App\Models\AdminMenu $pageData
+ */
+?>
+
 @extends('admin.layouts.site')
 
 @section('breadcrumbs', Breadcrumbs::view('admin.layouts.breadcrumbs', 'create'))
@@ -16,7 +22,7 @@
             <div class="panel-wrapper">
                 <div class="panel-body">
                     <form id="createForm" class="form-horizontal validate createForm"  name="createForm"
-                          action="{{ route('admin.store', [$pageData->uri]) }}"
+                          action="{{ route("admin.{$pageData->uri}.store") }}"
                           method="post"
                           enctype="multipart/form-data">
                         @csrf

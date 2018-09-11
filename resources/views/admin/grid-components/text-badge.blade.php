@@ -7,7 +7,7 @@
  */
 ?>
 <div class="text-center">
-    <span class="badge badge-pill badge-{{ $parameter ? $parameter['class'] : 'secondary' }}">
-        {{ $parameter ? $parameter['title'] : __("models.{$model}.selection.{$column}.{$value}") }}
+    <span class="badge badge-pill badge-{{ $parameter['class'] ?? 'secondary' }}">
+        {{ $parameter['title'] ?? __("models.{$model}.selection.{$column}.{$value}") }}
     </span>
 </div>

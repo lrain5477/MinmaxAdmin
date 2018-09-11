@@ -1,3 +1,10 @@
+<?php
+/**
+ * @var \App\Models\AdminMenu $pageData
+ * @var integer|string $formDataId
+ */
+?>
+
 @extends('admin.layouts.site')
 
 @section('breadcrumbs', Breadcrumbs::view('admin.layouts.breadcrumbs', 'edit'))
@@ -14,7 +21,7 @@
     <div class="panel-wrapper">
         <div class="panel-body">
             <form id="editForm" class="form-horizontal validate editForm"  name="editForm"
-                  action="{{ route("admin.{$pageData->uri}.update", [$formDataId]) }}"
+                  action="{{ langRoute("admin.{$pageData->uri}.update", [$formDataId]) }}"
                   method="post"
                   enctype="multipart/form-data">
                 @method('PUT')

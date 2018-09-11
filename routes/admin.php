@@ -35,9 +35,8 @@ Route::group(['middleware' => 'auth:admin'], function() {
             ->get();
         $actionList = [
             'post ajaxDataTable /ajax/datatables',
-            'post ajaxSwitch /ajax/switch',
-            'post ajaxMultiSwitch /ajax/switch-multi',
-            'post ajaxSort /ajax/sort',
+            'patch ajaxSwitch /ajax/switch',
+            'patch ajaxSort /ajax/sort',
             'get edit /{id}/edit',
             'get create /create',
             'get show /{id}',

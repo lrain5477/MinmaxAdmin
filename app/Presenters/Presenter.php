@@ -2,16 +2,20 @@
 
 namespace App\Presenters;
 
-use App\Models\SystemParameter;
 use Illuminate\Support\Collection;
 
 class Presenter
 {
     /** @var string $guardName **/
     protected $guardName;
+
     /** @var Collection $parameterSet **/
     protected $parameterSet;
+
+    /** @var array $columnClass */
     protected $columnClass = [];
+
+    /** @var array $fieldSelection */
     protected $fieldSelection = [];
 
     public function __construct()
@@ -19,56 +23,83 @@ class Presenter
         \Cache::forget('systemParams');
     }
 
-    public function getViewNormalText($model, $column, $value = '') {
+    /**
+     * @param  \Illuminate\Database\Eloquent\Model $model
+     * @param  string $column
+     * @param  array $options
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function getViewNormalText($model, $column, $options = []) {
         $modelName = class_basename($model);
         $columnLabel = __("models.{$modelName}.{$column}");
-        $fieldValue = $value === '' ? (isset($model->$column) ? nl2br(trim(strip_tags($model->$column))) : '') : $value;
+        $defaultValue = $options['defaultValue'] ?? null;
+        $fieldValue = $defaultValue ?? ($model->getAttribute($column) ?? '');
+
+        if (isset($options['subColumn'])) {
+            $columnLabel = __("models.{$modelName}.{$column}.{$options['subColumn']}");
+            $fieldValue = $fieldValue->{$options['subColumn']} ?? '';
+        }
 
         $componentData = [
             'id' => "{$modelName}-{$column}",
             'label' => $columnLabel,
-            'value' => $fieldValue,
+            'value' => nl2br(trim(strip_tags($fieldValue))),
         ];
 
         return view("{$this->guardName}.view-components.normal-text", $componentData);
     }
 
-    public function getViewEditor($model, $column, $value = '', $options = []) {
-        if(is_array($value)) {
-            $options = $value;
-            $value = '';
-        }
-
+    /**
+     * @param  \Illuminate\Database\Eloquent\Model $model
+     * @param  string $column
+     * @param  array $options
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function getViewEditor($model, $column, $options = []) {
         $modelName = class_basename($model);
         $columnLabel = __("models.{$modelName}.{$column}");
-        $fieldValue = $value === '' ? (isset($model->$column) ? $model->$column : '') : $value;
+        $defaultValue = $options['defaultValue'] ?? null;
+        $fieldValue = $defaultValue ?? ($model->getAttribute($column) ?? '');
 
         $componentData = [
             'id' => "{$modelName}-{$column}",
             'label' => $columnLabel,
             'value' => $fieldValue,
-            'size' => isset($options['size']) ? $options['size'] : 10,
-            'height' => isset($options['height']) ? $options['height'] : '250px',
-            'stylesheet' => isset($options['stylesheet']) ? $options['stylesheet'] : null,
+            'size' => $options['size'] ?? 10,
+            'height' => $options['height'] ?? '250px',
+            'stylesheet' => $options['stylesheet'] ?? null,
         ];
 
         return view("{$this->guardName}.view-components.editor", $componentData);
     }
 
-    public function getViewSelection($model, $column) {
+    /**
+     * @param  \Illuminate\Database\Eloquent\Model $model
+     * @param  string $column
+     * @param  array $options
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function getViewSelection($model, $column, $options = []) {
         $modelName = class_basename($model);
         $columnLabel = __("models.{$modelName}.{$column}");
-        $fieldValue = isset($model->$column) ? ($this->parameterSet[$column][$model->$column] ?? __("models.{$modelName}.selection.{$column}.{$model->$column}")) : '';
+        $defaultValue = $options['defaultValue'] ?? null;
+        $fieldValue = $model->getAttribute($column) ?? '';
 
         $componentData = [
             'id' => "{$modelName}-{$column}",
             'label' => $columnLabel,
-            'value' => $fieldValue,
+            'value' => $defaultValue ?? ($this->parameterSet[$column][$fieldValue]['title'] ?? '(not exist)'),
         ];
 
         return view("{$this->guardName}.view-components.normal-text", $componentData);
     }
 
+    /**
+     * @param  \Illuminate\Database\Eloquent\Model $model
+     * @param  string $column
+     * @param  array $options
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function getViewMediaImage($model, $column, $options = []) {
         $modelName = class_basename($model);
         $columnLabel = __("models.{$modelName}.{$column}");
@@ -96,17 +127,28 @@ class Presenter
         return view("{$this->guardName}.view-components.image-list", $componentData);
     }
 
-    public function getFieldNormalText($model, $column, $plaintText = false)
+    /**
+     * @param  \Illuminate\Database\Eloquent\Model $model
+     * @param  string $column
+     * @param  array $options
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function getFieldNormalText($model, $column, $options = [])
     {
         $modelName = class_basename($model);
         $columnLabel = __("models.{$modelName}.{$column}");
-        $fieldValue = isset($model->$column) ? $model->$column : '';
+        $fieldValue = $model->getAttribute($column) ?? '';
+
+        if (isset($options['subColumn'])) {
+            $columnLabel = __("models.{$modelName}.{$column}.{$options['subColumn']}");
+            $fieldValue = $fieldValue->{$options['subColumn']} ?? '';
+        }
 
         $componentData = [
             'id' => "{$modelName}-{$column}",
             'label' => $columnLabel,
             'value' => $fieldValue,
-            'plaintText' => $plaintText,
+            'plaintText' => $options['plaintText'] ?? false,
         ];
 
         return view("{$this->guardName}.form-components.normal-text", $componentData);
@@ -122,7 +164,7 @@ class Presenter
     {
         $modelName = class_basename($model);
         $columnLabel = __("models.{$modelName}.{$column}");
-        $fieldName = isset($options['name']) ? $options['name'] : "{$modelName}[{$column}]";
+        $fieldName = $options['name'] ?? "{$modelName}[{$column}]";
         $fieldValue = $model->getAttribute($column) ?? '';
         $hintPath = "models.{$modelName}.hint.{$column}";
 
@@ -138,10 +180,10 @@ class Presenter
             'label' => $columnLabel,
             'name' => $fieldName,
             'value' => $fieldValue,
-            'required' => isset($options['required']) ? $options['required'] : false,
-            'icon' => isset($options['icon']) ? $options['icon'] : '',
-            'size' => isset($options['size']) ? $options['size'] : 10,
-            'placeholder' => isset($options['placeholder']) ? $options['placeholder'] : '',
+            'required' => $options['required'] ?? false,
+            'icon' => $options['icon'] ?? '',
+            'size' => $options['size'] ?? 10,
+            'placeholder' => $options['placeholder'] ?? '',
             'hint' => isset($options['hint']) && $options['hint'] == true ? __($hintPath) : '',
         ];
 
@@ -158,7 +200,7 @@ class Presenter
     {
         $modelName = class_basename($model);
         $columnLabel = __("models.{$modelName}.{$column}");
-        $fieldName = isset($options['name']) ? $options['name'] : "{$modelName}[{$column}]";
+        $fieldName = $options['name'] ?? "{$modelName}[{$column}]";
         $fieldValue = $model->getAttribute($column) ?? '';
         $hintPath = "models.{$modelName}.hint.{$column}";
 
@@ -174,10 +216,10 @@ class Presenter
             'label' => $columnLabel,
             'name' => $fieldName,
             'value' => $fieldValue,
-            'required' => isset($options['required']) ? $options['required'] : false,
-            'icon' => isset($options['icon']) ? $options['icon'] : '',
-            'size' => isset($options['size']) ? $options['size'] : 10,
-            'placeholder' => isset($options['placeholder']) ? $options['placeholder'] : '',
+            'required' => $options['required'] ?? false,
+            'icon' => $options['icon'] ?? '',
+            'size' => $options['size'] ?? 10,
+            'placeholder' => $options['placeholder'] ?? '',
             'hint' => isset($options['hint']) && $options['hint'] == true ? __($hintPath) : '',
         ];
 
@@ -194,7 +236,7 @@ class Presenter
     {
         $modelName = class_basename($model);
         $columnLabel = __("models.{$modelName}.{$column}");
-        $fieldName = isset($options['name']) ? $options['name'] : "{$modelName}[{$column}]";
+        $fieldName = $options['name'] ?? "{$modelName}[{$column}]";
         $fieldValue = $model->getAttribute($column) ?? '';
         $hintPath = "models.{$modelName}.hint.{$column}";
 
@@ -210,10 +252,10 @@ class Presenter
             'label' => $columnLabel,
             'name' => $fieldName,
             'value' => $fieldValue,
-            'required' => isset($options['required']) ? $options['required'] : false,
-            'icon' => isset($options['icon']) ? $options['icon'] : '',
-            'size' => isset($options['size']) ? $options['size'] : 10,
-            'placeholder' => isset($options['placeholder']) ? $options['placeholder'] : '',
+            'required' => $options['required'] ?? false,
+            'icon' => $options['icon'] ?? '',
+            'size' => $options['size'] ?? 10,
+            'placeholder' => $options['placeholder'] ?? '',
             'hint' => isset($options['hint']) && $options['hint'] == true ? __($hintPath) : '',
         ];
 
@@ -230,7 +272,7 @@ class Presenter
     {
         $modelName = class_basename($model);
         $columnLabel = __("models.{$modelName}.{$column}");
-        $fieldName = isset($options['name']) ? $options['name'] : "{$modelName}[{$column}]";
+        $fieldName = $options['name'] ?? "{$modelName}[{$column}]";
         $hintPath = "models.{$modelName}.hint.{$column}";
 
         if (isset($options['subColumn'])) {
@@ -243,10 +285,10 @@ class Presenter
             'id' => "{$modelName}-{$column}",
             'label' => $columnLabel,
             'name' => $fieldName,
-            'required' => isset($options['required']) ? $options['required'] : false,
-            'icon' => isset($options['icon']) ? $options['icon'] : '',
-            'size' => isset($options['size']) ? $options['size'] : 10,
-            'placeholder' => isset($options['placeholder']) ? $options['placeholder'] : '',
+            'required' => $options['required'] ?? false,
+            'icon' => $options['icon'] ?? '',
+            'size' => $options['size'] ?? 10,
+            'placeholder' => $options['placeholder'] ?? '',
             'hint' => isset($options['hint']) && $options['hint'] == true ? __($hintPath) : '',
         ];
 
@@ -261,7 +303,7 @@ class Presenter
      */
     public function getFieldHidden($model, $column, $defaultValue = null) {
         $modelName = class_basename($model);
-        $fieldValue = isset($model->$column) ? $model->$column : $defaultValue;
+        $fieldValue = $model->getAttribute($column) ?? $defaultValue;
 
         return "<input type=\"hidden\" name=\"{$modelName}[{$column}]\" value=\"{$fieldValue}\" />";
     }
@@ -276,10 +318,10 @@ class Presenter
     {
         $modelName = class_basename($model);
         $columnLabel = __("models.{$modelName}.{$column}");
-        $fieldName = isset($options['name']) ? $options['name'] : "{$modelName}[{$column}]";
+        $fieldName = $options['name'] ?? "{$modelName}[{$column}]";
         $fieldValue = $model->getAttribute($column) ?? '';
         $hintPath = "models.{$modelName}.hint.{$column}";
-        $pickerType = isset($options['type']) ? $options['type'] : 'birthdate';
+        $pickerType = $options['type'] ?? 'birthdate';
 
         switch($pickerType) {
             case 'birthdateTime':
@@ -303,11 +345,11 @@ class Presenter
             'label' => $columnLabel,
             'name' => $fieldName,
             'value' => !is_null($fieldValue) && $fieldValue != '' ? date($valueTimeFormat, strtotime($fieldValue)) : '',
-            'required' => isset($options['required']) ? $options['required'] : false,
-            'icon' => isset($options['icon']) ? $options['icon'] : '',
+            'required' => $options['required'] ?? false,
+            'icon' => $options['icon'] ?? '',
             'type' => $pickerType,
-            'size' => isset($options['size']) ? $options['size'] : 3,
-            'placeholder' => isset($options['placeholder']) ? $options['placeholder'] : '',
+            'size' => $options['size'] ?? 3,
+            'placeholder' => $options['placeholder'] ?? '',
             'hint' => isset($options['hint']) && $options['hint'] == true ? __($hintPath) : '',
         ];
 
@@ -324,7 +366,7 @@ class Presenter
     {
         $modelName = class_basename($model);
         $columnLabel = __("models.{$modelName}.{$column}");
-        $fieldName = isset($options['name']) ? $options['name'] : "{$modelName}[{$column}]";
+        $fieldName = $options['name'] ?? "{$modelName}[{$column}]";
         $fieldValue = $model->getAttribute($column) ?? '';
         $hintPath = "models.{$modelName}.hint.{$column}";
 
@@ -340,10 +382,10 @@ class Presenter
             'label' => $columnLabel,
             'name' => $fieldName,
             'value' => $fieldValue,
-            'required' => isset($options['required']) ? $options['required'] : false,
-            'size' => isset($options['size']) ? $options['size'] : 10,
-            'rows' => isset($options['rows']) ? $options['rows'] : 5,
-            'placeholder' => isset($options['placeholder']) ? $options['placeholder'] : '',
+            'required' => $options['required'] ?? false,
+            'size' => $options['size'] ?? 10,
+            'rows' => $options['rows'] ?? 5,
+            'placeholder' => $options['placeholder'] ?? '',
             'hint' => isset($options['hint']) && $options['hint'] == true ? __($hintPath) : '',
         ];
 
@@ -360,7 +402,7 @@ class Presenter
     {
         $modelName = class_basename($model);
         $columnLabel = __("models.{$modelName}.{$column}");
-        $fieldName = isset($options['name']) ? $options['name'] : "{$modelName}[{$column}]";
+        $fieldName = $options['name'] ?? "{$modelName}[{$column}]";
         $fieldValue = $model->getAttribute($column) ?? '';
         $hintPath = "models.{$modelName}.hint.{$column}";
 
@@ -376,12 +418,12 @@ class Presenter
             'label' => $columnLabel,
             'name' => $fieldName,
             'value' => $fieldValue,
-            'required' => isset($options['required']) ? $options['required'] : false,
-            'size' => isset($options['size']) ? $options['size'] : 10,
-            'height' => isset($options['height']) ? $options['height'] : '250px',
+            'required' => $options['required'] ?? false,
+            'size' => $options['size'] ?? 10,
+            'height' => $options['height'] ?? '250px',
             'hint' => isset($options['hint']) && $options['hint'] == true ? __($hintPath) : '',
-            'stylesheet' => isset($options['stylesheet']) ? $options['stylesheet'] : null,
-            'template' => isset($options['template']) ? $options['template'] : null,
+            'stylesheet' => $options['stylesheet'] ?? null,
+            'template' => $options['template'] ?? null,
         ];
 
         return view("{$this->guardName}.form-components.editor", $componentData);
@@ -397,7 +439,7 @@ class Presenter
     {
         $modelName = class_basename($model);
         $columnLabel = __("models.{$modelName}.{$column}");
-        $fieldName = isset($options['name']) ? $options['name'] : "{$modelName}[{$column}]";
+        $fieldName = $options['name'] ?? "{$modelName}[{$column}]";
         $fieldValue = $model->getAttribute($column) ?? '';
         $hintPath = "models.{$modelName}.hint.{$column}";
 
@@ -413,12 +455,12 @@ class Presenter
             'label' => $columnLabel,
             'name' => $fieldName,
             'value' => $fieldValue,
-            'required' => isset($options['required']) ? $options['required'] : false,
-            'title' => isset($options['title']) ? $options['title'] : '',
-            'search' => isset($options['search']) ? $options['search'] : false,
-            'size' => isset($options['size']) ? $options['size'] : 3,
+            'required' => $options['required'] ?? false,
+            'title' => $options['title'] ?? '',
+            'search' => $options['search'] ?? false,
+            'size' => $options['size'] ?? 3,
             'hint' => isset($options['hint']) && $options['hint'] == true ? __($hintPath) : '',
-            'listData' => isset($this->parameterSet[$column]) ? $this->parameterSet[$column] : [],
+            'listData' => $this->parameterSet[$column] ?? [],
         ];
 
         return view("{$this->guardName}.form-components.select", $componentData);
@@ -434,7 +476,7 @@ class Presenter
     {
         $modelName = class_basename($model);
         $columnLabel = __("models.{$modelName}.{$column}");
-        $fieldName = isset($options['name']) ? $options['name'] : "{$modelName}[{$column}]";
+        $fieldName = $options['name'] ?? "{$modelName}[{$column}]";
         $fieldValue = $model->getAttribute($column) ?? '';
         $hintPath = "models.{$modelName}.hint.{$column}";
 
@@ -450,12 +492,12 @@ class Presenter
             'label' => $columnLabel,
             'name' => $fieldName,
             'value' => $fieldValue,
-            'required' => isset($options['required']) ? $options['required'] : false,
-            'title' => isset($options['title']) ? $options['title'] : '',
-            'search' => isset($options['search']) ? $options['search'] : false,
-            'size' => isset($options['size']) ? $options['size'] : 3,
+            'required' => $options['required'] ?? false,
+            'title' => $options['title'] ?? '',
+            'search' => $options['search'] ?? false,
+            'size' => $options['size'] ?? 3,
             'hint' => isset($options['hint']) && $options['hint'] == true ? __($hintPath) : '',
-            'listData' => isset($this->parameterSet[$column]) ? $this->parameterSet[$column] : [],
+            'listData' => $this->parameterSet[$column] ?? [],
         ];
 
         return view("{$this->guardName}.form-components.group-select", $componentData);
@@ -471,7 +513,7 @@ class Presenter
     {
         $modelName = class_basename($model);
         $columnLabel = __("models.{$modelName}.{$column}");
-        $fieldName = isset($options['name']) ? $options['name'] : "{$modelName}[{$column}]";
+        $fieldName = $options['name'] ?? "{$modelName}[{$column}]";
         $fieldValue = $model->getAttribute($column) ?? '';
         $hintPath = "models.{$modelName}.hint.{$column}";
 
@@ -487,12 +529,12 @@ class Presenter
             'label' => $columnLabel,
             'name' => "{$fieldName}[]",
             'values' => $fieldValue,
-            'required' => isset($options['required']) ? $options['required'] : false,
-            'title' => isset($options['title']) ? $options['title'] : '',
-            'group' => isset($options['group']) ? $options['group'] : false,
-            'size' => isset($options['size']) ? $options['size'] : 10,
+            'required' => $options['required'] ?? false,
+            'title' => $options['title'] ?? '',
+            'group' => $options['group'] ?? false,
+            'size' => $options['size'] ?? 10,
             'hint' => isset($options['hint']) && $options['hint'] == true ? __($hintPath) : '',
-            'listData' => isset($this->parameterSet[$column]) ? $this->parameterSet[$column] : [],
+            'listData' => $this->parameterSet[$column] ?? [],
         ];
 
         return view("{$this->guardName}.form-components.multi-select", $componentData);
@@ -508,7 +550,7 @@ class Presenter
     {
         $modelName = class_basename($model);
         $columnLabel = __("models.{$modelName}.{$column}");
-        $fieldName = isset($options['name']) ? $options['name'] : "{$modelName}[{$column}]";
+        $fieldName = $options['name'] ?? "{$modelName}[{$column}]";
         $fieldValue = $model->getAttribute($column) ?? '';
         $hintPath = "models.{$modelName}.hint.{$column}";
 
@@ -524,11 +566,11 @@ class Presenter
             'label' => $columnLabel,
             'name' => "{$fieldName}[]",
             'value' => $fieldValue,
-            'required' => isset($options['required']) ? $options['required'] : false,
-            'inline' => isset($options['inline']) ? $options['inline'] : false,
-            'color' => isset($options['color']) ? $options['color'] : '',
+            'required' => $options['required'] ?? false,
+            'inline' => $options['inline'] ?? false,
+            'color' => $options['color'] ?? '',
             'hint' => isset($options['hint']) && $options['hint'] == true ? __($hintPath) : '',
-            'listData' => isset($this->parameterSet[$column]) ? $this->parameterSet[$column] : [],
+            'listData' => $this->parameterSet[$column] ?? [],
         ];
 
         return view("{$this->guardName}.form-components.checkbox", $componentData);
@@ -544,7 +586,7 @@ class Presenter
     {
         $modelName = class_basename($model);
         $columnLabel = __("models.{$modelName}.{$column}");
-        $fieldName = isset($options['name']) ? $options['name'] : "{$modelName}[{$column}]";
+        $fieldName = $options['name'] ?? "{$modelName}[{$column}]";
         $fieldValue = $model->getAttribute($column) ?? '';
         $hintPath = "models.{$modelName}.hint.{$column}";
 
@@ -560,11 +602,11 @@ class Presenter
             'label' => $columnLabel,
             'name' => $fieldName,
             'value' => $fieldValue,
-            'required' => isset($options['required']) ? $options['required'] : false,
-            'inline' => isset($options['inline']) ? $options['inline'] : false,
-            'color' => isset($options['color']) ? $options['color'] : '',
+            'required' => $options['required'] ?? false,
+            'inline' => $options['inline'] ?? false,
+            'color' => $options['color'] ?? '',
             'hint' => isset($options['hint']) && $options['hint'] == true ? __($hintPath) : '',
-            'listData' => isset($this->parameterSet[$column]) ? $this->parameterSet[$column] : [],
+            'listData' => $this->parameterSet[$column] ?? [],
         ];
 
         return view("{$this->guardName}.form-components.radio", $componentData);

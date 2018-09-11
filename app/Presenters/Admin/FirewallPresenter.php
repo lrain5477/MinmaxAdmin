@@ -8,31 +8,9 @@ class FirewallPresenter extends Presenter
     {
         parent::__construct();
 
-        $this->fieldSelection = [
-            'guard' => [
-                'admin' => 'admin',
-                'merchant' => 'merchant',
-            ],
-            'rule' => $this->parameterSet
-                ->firstWhere('code', '=', 'rule')
-                ->parameterItem()
-                ->where(['active' => 1])
-                ->get(['title', 'value'])
-                ->mapWithKeys(function($item) {
-                    /** @var \App\Models\ParameterItem $item **/
-                    return [$item->value => $item->title];
-                })
-                ->toArray(),
-            'active' => $this->parameterSet
-                ->firstWhere('code', '=', 'active')
-                ->parameterItem()
-                ->where(['active' => 1])
-                ->get(['title', 'value'])
-                ->mapWithKeys(function($item) {
-                    /** @var \App\Models\ParameterItem $item **/
-                    return [$item->value => $item->title];
-                })
-                ->toArray(),
+        $this->parameterSet = [
+            'rule' => systemParam('rule'),
+            'active' => systemParam('active'),
         ];
     }
 }

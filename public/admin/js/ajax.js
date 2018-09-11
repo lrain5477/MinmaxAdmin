@@ -121,7 +121,7 @@ $('#tableList').delegate(".badge-switch", "click", function(e){
     var switchTo = status == 1 ? 0 : 1;
 
     $.ajax({
-        type: 'POST',
+        type: 'PATCH',
         url: url,
         data: {id:id,column:column,oriValue:status,switchTo:switchTo},
         dataType:'json',
@@ -169,7 +169,7 @@ function updateSort(column, id) {
     var url = $('#' + column + '_' + id).attr('data-url');
 
     $.ajax({
-        type: 'POST',
+        type: 'PATCH',
         url: url,
         data: {id:id,column:column,index:index},
         dataType:'json',

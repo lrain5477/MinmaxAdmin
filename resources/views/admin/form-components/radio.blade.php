@@ -4,10 +4,10 @@
  * @var string $label
  * @var string $name
  * @var string $value
- * @var bool $required
  * @var array $listData
  *
  * Options
+ * @var bool $required
  * @var bool $inline
  * @var string $color
  * @var string $hint
@@ -29,7 +29,7 @@
         </div>
         @endforeach
     @else
-        @foreach($listData as $listKey => $listLabel)
+        @foreach($listData as $listKey => $listItem)
         <div class="custom-control custom-radio {{ $inline === true ? 'custom-control-inline' : '' }} {{ $color }}">
             <input class="custom-control-input" type="radio"
                    id="{{ $id }}-{{ $listKey }}"
@@ -37,7 +37,7 @@
                    value="{{ $listKey }}"
                    {{ $loop->first ? 'checked' : '' }}
                    {{ $required === true && $loop->first ? 'required' : '' }} />
-            <label class="custom-control-label" for="{{ $id }}-{{ $listKey }}">{{ $listLabel }}</label>
+            <label class="custom-control-label" for="{{ $id }}-{{ $listKey }}">{{ $listItem['title'] }}</label>
         </div>
         @endforeach
     @endif

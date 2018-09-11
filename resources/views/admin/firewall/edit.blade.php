@@ -1,9 +1,17 @@
+<?php
+/**
+ * @var \App\Models\Admin $adminData
+ * @var \App\Models\AdminMenu $pageData
+ * @var \App\Models\Firewall $formData
+ */
+?>
+
 @extends('admin.default.edit')
 
 @section('action-buttons')
 @if($adminData->can('firewallShow'))
 <div class="float-right">
-    <a class="btn btn-sm btn-light" href="{{ route('admin.index', [$pageData->uri]) }}" title="@lang('admin.form.back_list')">
+    <a class="btn btn-sm btn-light" href="{{ langRoute("admin.{$pageData->uri}.index") }}" title="@lang('admin.form.back_list')">
         <i class="icon-undo2"></i><span class="ml-1 d-none d-md-inline-block">@lang('admin.form.back_list')</span>
     </a>
 </div>
@@ -16,18 +24,16 @@
     <fieldset id="baseFieldSet">
         <legend class="legend h6 mb-4"><i class="icon-angle-double-down2 mr-2"></i>@lang('admin.form.fieldSet.default')</legend>
 
-        {!! $modelPresenter->getFieldSelect($formData, 'guard', true) !!}
+        {!! $modelPresenter->getFieldText($formData, 'ip', ['required' => true]) !!}
 
-        {!! $modelPresenter->getFieldText($formData, 'ip', true) !!}
-
-        {!! $modelPresenter->getFieldRadio($formData, 'rule', true, ['inline' => true]) !!}
+        {!! $modelPresenter->getFieldRadio($formData, 'rule', ['required' => true, 'inline' => true]) !!}
 
     </fieldset>
 
     <fieldset class="mt-4" id="advFieldSet">
         <legend class="legend h6 mb-4"><i class="icon-angle-double-down2 mr-2"></i>@lang('admin.form.fieldSet.advanced')</legend>
 
-        {!! $modelPresenter->getFieldRadio($formData, 'active', true, ['inline' => true]) !!}
+        {!! $modelPresenter->getFieldRadio($formData, 'active', ['required' => true, 'inline' => true]) !!}
 
     </fieldset>
 

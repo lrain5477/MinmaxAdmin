@@ -10,11 +10,9 @@ use App\Repositories\Admin\WorldLanguageRepository;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as BaseController;
-use Illuminate\Support\Str;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Breadcrumbs;
-use Validator;
 
 /**
  * Class Controller
@@ -105,29 +103,69 @@ class Controller extends BaseController
         $this->viewData['rootUri'] = $this->rootUri . '/' . ($this->languageData->count() > 1 ? app()->getLocale() : '');
     }
 
-    protected function checkPermissionCreate()
+    protected function checkPermissionCreate($type = 'web')
     {
-        if($this->adminData->can(PermissionHelper::replacePermissionName($this->pageData->permission_key, 'Create')) === false) abort(404);
+        switch ($type) {
+            case 'web':
+                $statusCode = 404; break;
+            case 'ajax':
+                $statusCode = 401; break;
+            default:
+                $statusCode = 500; break;
+        }
+        if($this->adminData->can(PermissionHelper::replacePermissionName($this->pageData->permission_key, 'Create')) === false) abort($statusCode);
     }
 
-    protected function checkPermissionShow()
+    protected function checkPermissionShow($type = 'web')
     {
-        if($this->adminData->can(PermissionHelper::replacePermissionName($this->pageData->permission_key, 'Show')) === false) abort(404);
+        switch ($type) {
+            case 'web':
+                $statusCode = 404; break;
+            case 'ajax':
+                $statusCode = 401; break;
+            default:
+                $statusCode = 500; break;
+        }
+        if($this->adminData->can(PermissionHelper::replacePermissionName($this->pageData->permission_key, 'Show')) === false) abort($statusCode);
     }
 
-    protected function checkPermissionEdit()
+    protected function checkPermissionEdit($type = 'web')
     {
-        if($this->adminData->can(PermissionHelper::replacePermissionName($this->pageData->permission_key, 'Edit')) === false) abort(404);
+        switch ($type) {
+            case 'web':
+                $statusCode = 404; break;
+            case 'ajax':
+                $statusCode = 401; break;
+            default:
+                $statusCode = 500; break;
+        }
+        if($this->adminData->can(PermissionHelper::replacePermissionName($this->pageData->permission_key, 'Edit')) === false) abort($statusCode);
     }
 
-    protected function checkPermissionDestroy()
+    protected function checkPermissionDestroy($type = 'web')
     {
-        if($this->adminData->can(PermissionHelper::replacePermissionName($this->pageData->permission_key, 'Destroy')) === false) abort(404);
+        switch ($type) {
+            case 'web':
+                $statusCode = 404; break;
+            case 'ajax':
+                $statusCode = 401; break;
+            default:
+                $statusCode = 500; break;
+        }
+        if($this->adminData->can(PermissionHelper::replacePermissionName($this->pageData->permission_key, 'Destroy')) === false) abort($statusCode);
     }
 
     protected function checkValidate()
     {
         app('App\\Http\\Requests\\Admin\\' . $this->pageData->getAttribute('model') . 'Request');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    protected function getQueryBuilder()
+    {
+        return $this->modelRepository->query();
     }
 
     /**
@@ -138,7 +176,7 @@ class Controller extends BaseController
      */
     public function index()
     {
-        if($this->adminData->can(PermissionHelper::replacePermissionName($this->pageData->permission_key, 'Show')) === false) return abort(404);
+        $this->checkPermissionShow();
 
         // 設定麵包屑導航
         Breadcrumbs::register('index', function ($breadcrumbs) {
@@ -163,7 +201,7 @@ class Controller extends BaseController
      */
     public function show($id)
     {
-        if($this->adminData->can(PermissionHelper::replacePermissionName($this->pageData->permission_key, 'Show')) === false) return abort(404);
+        $this->checkPermissionShow();
 
         $this->viewData['formData'] = $this->modelRepository->find($id);
 
@@ -173,7 +211,7 @@ class Controller extends BaseController
              * @var \DaveJamesMiller\Breadcrumbs\BreadcrumbsGenerator $breadcrumbs
              */
             $breadcrumbs->parent('admin.home');
-            $breadcrumbs->push($this->pageData->title, url($this->rootUri . '/' . ($this->languageData->count() > 1 ? app()->getLocale() : '')));
+            $breadcrumbs->push($this->pageData->title, langRoute("admin.{$this->uri}.index"));
             $breadcrumbs->push(__('admin.form.view'));
         });
 
@@ -192,9 +230,9 @@ class Controller extends BaseController
      */
     public function create()
     {
-        if($this->adminData->can(PermissionHelper::replacePermissionName($this->pageData->permission_key, 'Create')) === false) return abort(404);
+        $this->checkPermissionCreate();
 
-        $this->viewData['formData'] = $this->modelRepository->new();
+        $this->viewData['formData'] = $this->modelRepository->query()->getModel();
 
         // 設定麵包屑導航
         Breadcrumbs::register('create', function ($breadcrumbs) {
@@ -205,7 +243,7 @@ class Controller extends BaseController
             $breadcrumbs->push(
                 $this->pageData->title,
                 $this->adminData->can(PermissionHelper::replacePermissionName($this->pageData->permission_key, 'Show')) === true
-                    ? route('admin.index', [$this->uri])
+                    ? langRoute("admin.{$this->uri}.index")
                     : null
             );
             $breadcrumbs->push(__('admin.form.create'));
@@ -226,54 +264,37 @@ class Controller extends BaseController
      */
     public function store(Request $request)
     {
-        if($this->adminData->can(PermissionHelper::replacePermissionName($this->pageData->permission_key, 'Create')) === false) return abort(404);
+        $this->checkPermissionCreate();
+
+        $this->checkValidate();
 
         $inputSet = $request->input($this->pageData->getAttribute('model'));
 
-        $validator = Validator::make($inputSet, $this->modelRepository->getRules() ?? []);
-
-        if($validator->passes()) {
-            $formDataKey = $this->modelRepository->getIndexKey();
-            if($formDataKey !== 'id') $inputSet[$formDataKey] = Str::uuid();
-
-            foreach($inputSet['uploads'] ?? [] as $columnKey => $columnInput) {
-                $inputSet[$columnKey] = $columnInput['origin'] ?? null;
-                $filePath = 'files/' . ($columnInput['path'] ?? 'uploads');
-                $fileList = [];
-                foreach($request->file($this->pageData->getAttribute('model') . '.uploads.' . $columnKey . '.file') ?? [] as $fileItem) {
-                    /** @var \Illuminate\Http\UploadedFile $fileItem */
-                    if($fileItem) {
-                        $fileName = microtime() . rand(100000, 999999) . '.' . $fileItem->getClientOriginalExtension();
-                        $fileItem->move(public_path($filePath), $fileName);
-                        $fileList[] = $filePath . '/' . $fileName;
-                    }
+        // 處理檔案上傳
+        foreach ($inputSet['uploads'] ?? [] as $columnKey => $columnInput) {
+            $inputSet[$columnKey] = $columnInput['origin'] ?? null;
+            $filePath = 'files/' . ($columnInput['path'] ?? 'uploads');
+            $fileList = [];
+            foreach ($request->file($this->pageData->getAttribute('model') . '.uploads.' . $columnKey . '.file') ?? [] as $fileItem) {
+                /** @var \Illuminate\Http\UploadedFile $fileItem */
+                if ($fileItem) {
+                    $fileName = microtime() . rand(100000, 999999) . '.' . $fileItem->getClientOriginalExtension();
+                    $fileItem->move(public_path($filePath), $fileName);
+                    $fileList[] = $filePath . '/' . $fileName;
                 }
-                $inputSet[$columnKey] = count($fileList) > 0 ? implode(config('app.separate_string'), $fileList) : $inputSet[$columnKey];
             }
-            if(isset($inputSet['uploads'])) unset($inputSet['uploads']);
+            $inputSet[$columnKey] = count($fileList) > 0 ? $fileList : $inputSet[$columnKey];
+        }
+        if (isset($inputSet['uploads'])) unset($inputSet['uploads']);
 
-            if($modelData = $this->modelRepository->create($inputSet)) {
-                LogHelper::system('admin', $this->uri, 'store', $modelData->$formDataKey, $this->adminData->username, 1, __('admin.form.message.create_success'));
-
-                // 多語系複製
-                if($this->modelRepository->isMultiLanguage()) {
-                    foreach ($this->languageData as $language) {
-                        if($language->codes === app()->getLocale()) continue;
-                        $copyInsert = $modelData->replicate();
-                        $copyInsert->lang = $language->codes;
-                        $copyInsert->save();
-                    }
-                }
-
-                return redirect()->route('admin.edit', [$this->uri, $modelData->$formDataKey])->with('success', __('admin.form.message.create_success'));
-            }
-
-            LogHelper::system('admin', $this->uri, 'store', '', $this->adminData->username, 0, __('admin.form.message.create_error'));
-            return redirect()->route('admin.create', [$this->uri])->withErrors([__('admin.form.message.create_error')])->withInput();
+        // 儲存新建資料
+        if ($modelData = $this->modelRepository->create($inputSet)) {
+            LogHelper::system('admin', $request->path(), $request->method(), $modelData->getKey(), $this->adminData->username, 1, __('admin.form.message.create_success'));
+            return redirect(langRoute("admin.{$this->uri}.edit", [$modelData->getKey()]))->with('success', __('admin.form.message.create_success'));
         }
 
-        LogHelper::system('admin', $this->uri, 'store', '', $this->adminData->username, 0, $validator->errors()->first());
-        return redirect()->route('admin.create', [$this->uri])->withErrors($validator)->withInput();
+        LogHelper::system('admin', $request->path(), $request->method(), '', $this->adminData->username, 0, __('admin.form.message.create_error'));
+        return redirect(langRoute("admin.{$this->uri}.create"))->withErrors([__('admin.form.message.create_error')])->withInput();
     }
 
     /**
@@ -291,7 +312,7 @@ class Controller extends BaseController
         $this->viewData['formData'] = $this->modelRepository->find($id);
 
         // 設定麵包屑導航
-        Breadcrumbs::register('edit', function ($breadcrumbs) {
+        Breadcrumbs::register('edit', function ($breadcrumbs) use ($id) {
             /**
              * @var \DaveJamesMiller\Breadcrumbs\BreadcrumbsGenerator $breadcrumbs
              */
@@ -299,7 +320,7 @@ class Controller extends BaseController
             $breadcrumbs->push(
                 $this->pageData->title,
                 $this->adminData->can(PermissionHelper::replacePermissionName($this->pageData->permission_key, 'Show')) === true
-                    ? url($this->rootUri . '/' . ($this->languageData->count() > 1 ? app()->getLocale() . '/' : '') . $this->uri)
+                    ? langRoute("admin.{$this->uri}.edit", [$id])
                     : null
             );
             $breadcrumbs->push(__('admin.form.edit'));
@@ -348,30 +369,33 @@ class Controller extends BaseController
 
         // 儲存更新資料
         if ($this->modelRepository->save($model, $inputSet)) {
-            LogHelper::system('admin', $this->uri, 'update', $id, $this->adminData->username, 1, __('admin.form.message.edit_success'));
-            return redirect()->route("admin.{$this->uri}.edit", [$id])->with('success', __('admin.form.message.edit_success'));
+            LogHelper::system('admin', $request->path(), $request->method(), $id, $this->adminData->username, 1, __('admin.form.message.edit_success'));
+            return redirect(langRoute("admin.{$this->uri}.edit", [$id]))->with('success', __('admin.form.message.edit_success'));
         }
 
-        LogHelper::system('admin', $this->uri, 'update', $id, $this->adminData->username, 0, __('admin.form.message.edit_error'));
-        return redirect()->route("admin.{$this->uri}.edit", [$id])->withErrors([__('admin.form.message.edit_error')])->withInput();
+        LogHelper::system('admin', $request->path(), $request->method(), $id, $this->adminData->username, 0, __('admin.form.message.edit_error'));
+        return redirect(langRoute("admin.{$this->uri}.edit", [$id]))->withErrors([__('admin.form.message.edit_error')])->withInput();
     }
 
     /**
      * Model Destroy
      *
      * @param string $id
+     * @param Request $request
      * @return $this|\Illuminate\Http\RedirectResponse
      */
-    public function destroy($id)
+    public function destroy($id, Request $request)
     {
-        if($this->adminData->can(PermissionHelper::replacePermissionName($this->pageData->permission_key, 'Destroy')) === false) return abort(404);
+        $this->checkPermissionDestroy();
 
-        if($this->modelRepository->delete([$this->modelRepository->getIndexKey() => $id])) {
-            LogHelper::system('admin', $this->uri, 'destroy', $id, $this->adminData->username, 1, __('admin.form.message.delete_success'));
-            return redirect()->route('admin.index', [$this->uri])->with('success', __('admin.form.message.delete_success'));
+        if ($model = $this->modelRepository->find($id)) {
+            if ($this->modelRepository->delete($model)) {
+                LogHelper::system('admin', $request->path(), $request->method(), $id, $this->adminData->username, 1, __('admin.form.message.delete_success'));
+                return redirect()->route('admin.index', [$this->uri])->with('success', __('admin.form.message.delete_success'));
+            }
         }
 
-        LogHelper::system('admin', $this->uri, 'destroy', $id, $this->adminData->username, 0, __('admin.form.message.delete_error'));
+        LogHelper::system('admin', $request->path(), $request->method(), $id, $this->adminData->username, 0, __('admin.form.message.delete_error'));
         return redirect()->route('admin.index', [$this->uri])->withErrors([__('admin.form.message.delete_error')]);
     }
 
@@ -384,12 +408,11 @@ class Controller extends BaseController
      */
     public function ajaxDataTable(Request $request)
     {
-        if($this->adminData->can(PermissionHelper::replacePermissionName($this->pageData->permission_key, 'Show')) === false) return abort(403);
+        $this->checkPermissionShow('ajax');
 
-        $where = [];
-        if($this->modelRepository->isMultiLanguage()) $where['lang'] = app()->getLocale();
+        $queryBuilder = $this->getQueryBuilder();
 
-        $datatables = \DataTables::of($this->modelRepository->query($where));
+        $datatables = \DataTables::of($queryBuilder);
 
         if($request->has('filter') || $request->has('equal')) {
             $datatables->filter(function($query) use ($request) {
@@ -426,85 +449,59 @@ class Controller extends BaseController
         }
 
         return $datatables
-            ->setTransformer(app()->make('App\\Transformers\\Admin\\' . $this->pageData->getAttribute('model') . 'Transformer', ['uri' => $this->uri]))
+            ->setTransformer(app('App\\Transformers\\Admin\\' . $this->pageData->getAttribute('model') . 'Transformer', ['uri' => $this->uri]))
             ->make(true);
     }
 
     public function ajaxSwitch(Request $request)
     {
-        if($this->adminData->can(PermissionHelper::replacePermissionName($this->pageData->permission_key, 'Edit')) === false) return abort(403);
+        $this->checkPermissionEdit('ajax');
 
-        $validateResult = $request->validate([
+        $inputSet = $request->input();
+
+        $validator = validator($inputSet, [
             'id' => 'required',
             'column' => 'required',
             'oriValue' => 'required|in:0,1',
             'switchTo' => 'required|in:0,1',
         ]);
 
-        $where = [
-            $this->modelRepository->getIndexKey() => $request->input('id')
-        ];
-
-        if($this->modelRepository->update([$request->input('column') => $request->input('switchTo')], $where)) {
-            LogHelper::system('admin', $this->uri, 'update', $request->input('id'), $this->adminData->username, 1, __('admin.form.message.edit_success'));
-
-            return response([
-                'msg' => 'success',
-                'oriClass' => 'badge-' . ($this->parameterData[$request->input('column')][$request->input('oriValue')]['class']
-                    ?? ($request->input('oriValue') == 1 ? 'danger' : 'secondary')),
-                'newLabel' => $this->parameterData[$request->input('column')][$request->input('switchTo')]['title']
-                    ?? __("models.{$this->pageData->getAttribute('model')}.selection.{$request->input('column')}.{$request->input('switchTo')}"),
-                'newClass' => 'badge-' . ($this->parameterData[$request->input('column')][$request->input('switchTo')]['class']
-                    ?? ($request->input('switchTo') == 1 ? 'danger' : 'secondary')),
-            ], 200, ['Content-Type' => 'application/json']);
-        } else {
-            LogHelper::system('admin', $this->uri, 'update', $request->input('id'), $this->adminData->username, 0, __('admin.form.message.edit_error'));
-
-            return response(['msg' => 'error'], 400, ['Content-Type' => 'application/json']);
-        }
-    }
-
-    public function ajaxMultiSwitch(Request $request)
-    {
-        if($this->adminData->can(PermissionHelper::replacePermissionName($this->pageData->permission_key, 'Edit')) === false) return abort(403);
-
-        $validateResult = $request->validate([
-            'data' => 'required',
-        ]);
-
-        $input = json_decode(urldecode($request->input('data')));
-        $inputData = [];
-        foreach ($input as $value) {
-            $inputData[$value->name] = ($value->name == 'selID') ? explode(',', substr($value->value, 0, -1)) : $value->value;
+        if (!$validator->fails() && $model = $this->modelRepository->find($inputSet['id'])) {
+            if ($this->modelRepository->save($model, [$inputSet['column'] => $inputSet['switchTo']])) {
+                LogHelper::system('admin', $request->path(), $request->method(), $inputSet['id'], $this->adminData->username, 1, __('admin.form.message.edit_success'));
+                return response([
+                    'msg' => 'success',
+                    'oriClass' => 'badge-' . systemParam("{$inputSet['column']}.{$inputSet['oriValue']}.class"),
+                    'newLabel' => systemParam("{$inputSet['column']}.{$inputSet['switchTo']}.title"),
+                    'newClass' => 'badge-' . systemParam("{$inputSet['column']}.{$inputSet['switchTo']}.class"),
+                ], 200, ['Content-Type' => 'application/json']);
+            }
         }
 
-        if($this->modelRepository->update(['active' => $inputData['active']], function($query) use ($inputData) { /** @var \Illuminate\Database\Query\Builder $query */ $query->whereIn($this->modelRepository->getIndexKey(), $inputData['selID']); })) {
-            LogHelper::system('admin', $this->uri, 'update', implode(',', $inputData['selID']), $this->adminData->username, 1, __('admin.form.message.edit_success'));
-
-            return response(['msg' => 'success'], 200, ['Content-Type' => 'application/json']);
-        } else {
-            LogHelper::system('admin', $this->uri, 'update', implode(',', $inputData['selID']), $this->adminData->username, 0, __('admin.form.message.edit_error'));
-
-            return response(['msg' => 'error'], 400, ['Content-Type' => 'application/json']);
-        }
+        LogHelper::system('admin', $request->path(), $request->method(), $inputSet['id'], $this->adminData->username, 0, __('admin.form.message.edit_error'));
+        return response(['msg' => 'error'], 400, ['Content-Type' => 'application/json']);
     }
 
     public function ajaxSort(Request $request)
     {
-        if($this->adminData->can(PermissionHelper::replacePermissionName($this->pageData->permission_key, 'Edit')) === false) return abort(403);
+        $this->checkPermissionEdit('ajax');
 
-        $validateResult = $request->validate([
+        $inputSet = $request->input();
+
+        $validator = validator($inputSet, [
             'id' => 'required',
             'column' => 'required',
             'index' => 'required|integer',
         ]);
 
-        if($this->modelRepository->save([$request->input('column') => $request->input('index')], [[$this->modelRepository->getIndexKey(), '=', $request->input('id')]])) {
-            LogHelper::system('admin', $this->uri, 'update', $request->input('id'), $this->adminData->username, 1, __('admin.form.message.edit_success'));
-
-            return response(['msg' => 'success'], 200, ['Content-Type' => 'application/json']);
-        } else {
-            return response(['msg' => 'error'], 400, ['Content-Type' => 'application/json']);
+        if (!$validator->fails() && $model = $this->modelRepository->find($inputSet['id'])) {
+            if ($this->modelRepository->save($model, [$inputSet['column'] => $inputSet['index']])) {
+                LogHelper::system('admin', $request->path(), $request->method(), $inputSet['id'], $this->adminData->username, 1, __('admin.form.message.edit_success'));
+                return response(['msg' => 'success'], 200, ['Content-Type' => 'application/json']);
+            }
         }
+
+        LogHelper::system('admin', $request->path(), $request->method(), $inputSet['id'], $this->adminData->username, 0, __('admin.form.message.edit_error'));
+        return response(['msg' => 'error'], 400, ['Content-Type' => 'application/json']);
     }
 }

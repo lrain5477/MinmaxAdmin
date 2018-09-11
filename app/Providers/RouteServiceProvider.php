@@ -78,6 +78,7 @@ class RouteServiceProvider extends ServiceProvider
         if ($langPrefix) {
             Route::prefix($langPrefix)
                 ->middleware('web')
+                ->name("{$langPrefix}.")
                 ->namespace($this->namespace . '\Web')
                 ->group(base_path('routes/web.php'));
         } else {
@@ -99,7 +100,7 @@ class RouteServiceProvider extends ServiceProvider
     {
         Route::prefix('siteadmin' . (is_null($langPrefix) ? '' : "/{$langPrefix}"))
             ->middleware('admin')
-            ->name('admin.')
+            ->name('admin.' . (is_null($langPrefix) ? '' : "{$langPrefix}."))
             ->namespace($this->namespace . '\Admin')
             ->group(base_path('routes/admin.php'));
     }
@@ -116,7 +117,7 @@ class RouteServiceProvider extends ServiceProvider
     {
         Route::prefix('administrator' . (is_null($langPrefix) ? '' : "/{$langPrefix}"))
             ->middleware('administrator')
-            ->name('administrator.')
+            ->name('administrator.' . (is_null($langPrefix) ? '' : "{$langPrefix}."))
             ->namespace($this->namespace . '\Administrator')
             ->group(base_path('routes/administrator.php'));
     }
