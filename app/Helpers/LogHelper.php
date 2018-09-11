@@ -20,11 +20,11 @@ class LogHelper
                 'guard' => $guard,
                 'username' => $username,
                 'ip' => request()->ip(),
-                'note' => $message,
+                'remark' => $message,
                 'result' => $result,
             ]);
 
-            if ($insertResult && static::system($guard, 'login', 'login', '', $username, $result, $message)) {
+            if ($insertResult && static::system($guard, 'login', 'POST', $username, $username, $result, $message)) {
                 return true;
             }
         } catch (\Exception $e) {}

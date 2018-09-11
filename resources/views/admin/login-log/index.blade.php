@@ -1,3 +1,10 @@
+<?php
+/**
+ * @var \App\Models\Admin $adminData
+ * @var \App\Models\AdminMenu $pageData
+ */
+?>
+
 @extends('admin.default.index')
 
 @section('grid-filter')
@@ -5,7 +12,7 @@
     <div class="dataTablesSearch row no-gutters">
         <label class="col-auto mr-2"><i class="icon-search i-o align-middle h3 mb-0 p-0"></i>@lang('admin.grid.search')</label>
         <div class="col col-md-auto mr-1">
-            <input class="form-control form-control-sm table-search-input" type="search" placeholder="" aria-controls="tableList" id="sch_keyword" name="sch_keyword"/>
+            <input class="form-control form-control-sm table-search-input" type="search" placeholder="帳號、IP" aria-controls="tableList" id="sch_keyword" name="sch_keyword"/>
         </div>
     </div>
 </div>
@@ -16,8 +23,8 @@
         <div class="col col-md-auto ml-1">
             <select class="bs-select form-control sch_select" id="searchResult" name="searchResult" data-style="btn-outline-light btn-sm">
                 <option selected="selected" value="">@lang('admin.grid.selection.all_result')</option>
-                <option value="1">@lang('models.LoginLog.selection.result.1')</option>
-                <option value="0">@lang('models.LoginLog.selection.result.0')</option>
+                <option value="1">成功</option>
+                <option value="0">失敗</option>
             </select>
         </div>
     </div>
@@ -25,15 +32,14 @@
 @endsection
 
 @section('grid-table')
-<input type="hidden" id="model"  value="{{ $pageData->model }}">
-
 <table class="table table-responsive-md table-bordered table-striped table-hover table-checkable datatables" id="tableList">
     <thead>
     <tr role="row">
-        <th class="w-25">@lang('models.LoginLog.username')</th>
-        <th class="w-25">@lang('models.LoginLog.ip')</th>
-        <th>@lang('models.LoginLog.result')</th>
-        <th>@lang('models.LoginLog.created_at')</th>
+        <th class="w-25">帳號</th>
+        <th class="nosort">IP</th>
+        <th class="nosort">說明</th>
+        <th>狀態</th>
+        <th>時間戳</th>
     </tr>
     </thead>
     <tbody>
@@ -50,7 +56,7 @@
                 url: '/admin/js/lang/{{ app()->getLocale() }}/datatables.json'
             },
             ajax: {
-                url: '{{ route('admin.datatables', ['uri' => $pageData->uri]) }}',
+                url: '{{ langRoute("admin.{$pageData->uri}.ajaxDataTable") }}',
                 data: function (d) {
                     let searchKeyword = $('#sch_keyword').val();
                     d.filter = {
@@ -58,7 +64,6 @@
                         "ip": searchKeyword
                     };
                     d.equal = {
-                        "guard": 'admin',
                         "result": $('#searchResult').val()
                     };
                 }
@@ -66,11 +71,12 @@
             columns: [
                 {data: 'username', name: 'username'},
                 {data: 'ip', name: 'ip'},
-                {data: 'result', name: 'result'},
+                {data: 'remark', name: 'remark'},
+                {data: 'result', name: 'result', render: function(data) { return data === '1' ? '成功' : '失敗'; }},
                 {data: 'created_at', name: 'created_at'}
             ],
             order: [
-                [2, 'asc']
+                [4, 'desc']
             ]
         });
     });
