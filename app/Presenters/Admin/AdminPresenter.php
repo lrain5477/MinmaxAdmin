@@ -10,43 +10,31 @@ class AdminPresenter extends Presenter
     {
         parent::__construct();
 
-        $this->fieldSelection = [
-            'role_id' => Role::orderBy('display_name')
+        $this->parameterSet = [
+            'role_id' => Role::query()
+                ->orderBy('display_name')
                 ->get()
-                ->mapWithKeys(function($item, $key) {
+                ->mapWithKeys(function($item) {
                     return [$item->id => $item->display_name];
                 })
                 ->toArray(),
-            'active' => $this->parameterSet
-                ->firstWhere('code', '=', 'active')
-                ->parameterItem()
-                ->where(['active' => 1])
-                ->get(['title', 'value'])
-                ->mapWithKeys(function($item) {
-                    /** @var \App\Models\ParameterItem $item **/
-                    return [$item->value => $item->title];
-                })
-                ->toArray(),
+            'active' => systemParam('active'),
         ];
     }
 
     /**
      * @param \App\Models\Admin $model
      * @param string $column
-     * @param mixed $required
      * @param array $options
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function getFieldRoleSelect($model, $column, $required = false, $options = [])
+    public function getFieldRoleSelect($model, $column, $options = [])
     {
-        if(is_array($required)) {
-            $options = $required;
-            $required = false;
-        }
-
         $modelName = class_basename($model);
         $columnLabel = __("models.{$modelName}.{$column}");
-        $fieldValues = $model->roles
+        $fieldValues = $model
+            ->roles()
+            ->get()
             ->map(function($item) {
                 /** @var \App\Models\Role $item */
                 return $item->id;
@@ -58,12 +46,12 @@ class AdminPresenter extends Presenter
             'label' => $columnLabel,
             'name' => "{$modelName}[{$column}][]",
             'values' => $fieldValues,
-            'required' => $required,
-            'title' => isset($options['title']) ? $options['title'] : '',
-            'group' => isset($options['group']) ? $options['group'] : false,
-            'size' => isset($options['size']) ? $options['size'] : 10,
+            'required' => $options['required'] ?? false,
+            'title' => $options['title'] ?? '',
+            'group' => $options['group'] ?? false,
+            'size' => $options['size'] ?? 10,
             'hint' => isset($options['hint']) && $options['hint'] == true ? __("models.{$modelName}.hint.{$column}") : '',
-            'listData' => isset($this->fieldSelection[$column]) ? $this->fieldSelection[$column] : [],
+            'listData' => $this->parameterSet[$column] ?? [],
         ];
 
         return view("{$this->guardName}.form-components.multi-select", $componentData);

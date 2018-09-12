@@ -480,12 +480,12 @@ class Controller extends BaseController
         if ($model = $this->modelRepository->find($id)) {
             if ($this->modelRepository->delete($model)) {
                 LogHelper::system('admin', $request->path(), $request->method(), $id, $this->adminData->username, 1, __('admin.form.message.delete_success'));
-                return redirect()->route('admin.index', [$this->uri])->with('success', __('admin.form.message.delete_success'));
+                return redirect(langRoute("admin.{$this->uri}.index"))->with('success', __('admin.form.message.delete_success'));
             }
         }
 
         LogHelper::system('admin', $request->path(), $request->method(), $id, $this->adminData->username, 0, __('admin.form.message.delete_error'));
-        return redirect()->route('admin.index', [$this->uri])->withErrors([__('admin.form.message.delete_error')]);
+        return redirect(langRoute("admin.{$this->uri}.index"))->withErrors([__('admin.form.message.delete_error')]);
     }
 
     /**

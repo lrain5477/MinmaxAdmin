@@ -1,9 +1,17 @@
+<?php
+/**
+ * @var \App\Models\Admin $adminData
+ * @var \App\Models\AdminMenu $pageData
+ * @var \App\Models\Admin $formData
+ */
+?>
+
 @extends('admin.default.edit')
 
 @section('action-buttons')
 @if($adminData->can('adminShow'))
 <div class="float-right">
-    <a class="btn btn-sm btn-light" href="{{ route('admin.index', [$pageData->uri]) }}" title="@lang('admin.form.back_list')">
+    <a class="btn btn-sm btn-light" href="{{ langRoute("admin.{$pageData->uri}.index") }}" title="@lang('admin.form.back_list')">
         <i class="icon-undo2"></i><span class="ml-1 d-none d-md-inline-block">@lang('admin.form.back_list')</span>
     </a>
 </div>
@@ -16,9 +24,9 @@
     <fieldset id="baseFieldSet">
         <legend class="legend h6 mb-4"><i class="icon-angle-double-down2 mr-2"></i>@lang('admin.form.fieldSet.default')</legend>
 
-        {!! $modelPresenter->getFieldText($formData, 'username', true) !!}
+        {!! $modelPresenter->getFieldText($formData, 'username', ['required' => true]) !!}
 
-        {!! $modelPresenter->getFieldPassword($formData, 'password', false, ['size' => 4, 'hint' => true]) !!}
+        {!! $modelPresenter->getFieldPassword($formData, 'password', ['size' => 4, 'hint' => true]) !!}
 
         <div class="form-group row">
             <label class="col-sm-2 col-form-label" for="Admin-password_confirmation">@lang('models.Admin.password_confirmation')</label>
@@ -31,7 +39,7 @@
             <small class="form-text text-muted ml-sm-auto col-sm-10">@lang('models.Admin.hint.password_confirmation')</small>
         </div>
 
-        {!! $modelPresenter->getFieldText($formData, 'name', true) !!}
+        {!! $modelPresenter->getFieldText($formData, 'name', ['required' => true]) !!}
 
         {!! $modelPresenter->getFieldEmail($formData, 'email') !!}
 
@@ -40,9 +48,9 @@
     <fieldset class="mt-4" id="advFieldSet">
         <legend class="legend h6 mb-4"><i class="icon-angle-double-down2 mr-2"></i>@lang('admin.form.fieldSet.advanced')</legend>
 
-        {!! $modelPresenter->getFieldRoleSelect($formData, 'role_id', true) !!}
+        {!! $modelPresenter->getFieldRoleSelect($formData, 'role_id', ['required' => true]) !!}
 
-        {!! $modelPresenter->getFieldRadio($formData, 'active', true, ['inline' => true]) !!}
+        {!! $modelPresenter->getFieldRadio($formData, 'active', ['required' => true, 'inline' => true]) !!}
 
     </fieldset>
 

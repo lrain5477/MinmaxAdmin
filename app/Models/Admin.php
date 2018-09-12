@@ -32,23 +32,54 @@ class Admin extends Authenticatable
 
     public $incrementing = false;
 
-    public function permissions()
+    /**
+     * Tries to return all the cached roles of the user.
+     * If it can't bring the roles from the cache,
+     * it brings them back from the DB.
+     *
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function cachedRoles()
     {
-        $permissions = $this->morphToMany(
-            Config::get('laratrust.models.permission'),
-            'user',
-            Config::get('laratrust.tables.permission_user'),
-            Config::get('laratrust.foreign_keys.user'),
-            Config::get('laratrust.foreign_keys.permission')
-        );
+        $cacheKey = 'laratrust_roles_for_user_' . $this->getKey();
 
-        if (Config::get('laratrust.use_teams')) {
-            $permissions->withPivot(Config::get('laratrust.foreign_keys.team'));
+        if (! Config::get('laratrust.use_cache')) {
+            return $this->roles()->where('active', '1')->get();
         }
 
-        return $permissions->where('active', '1');
+        return \Cache::remember($cacheKey, Config::get('cache.ttl', 60), function () {
+            return $this->roles()->where('active', '1')->get()->toArray();
+        });
     }
 
+    /**
+     * Tries to return all the cached permissions of the user
+     * and if it can't bring the permissions from the cache,
+     * it brings them back from the DB.
+     *
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function cachedPermissions()
+    {
+        $cacheKey = 'laratrust_permissions_for_user_' . $this->getKey();
+
+        if (! Config::get('laratrust.use_cache')) {
+            return $this->permissions()->where('active', '1')->get();
+        }
+
+        return \Cache::remember($cacheKey, Config::get('cache.ttl', 60), function () {
+            return $this->permissions()->where('active', '1')->get()->toArray();
+        });
+    }
+
+    /**
+     * Check if user has a permission by its name.
+     *
+     * @param  string|array  $permission Permission string or array of permissions.
+     * @param  string|bool  $team      Team name or requiredAll roles.
+     * @param  bool  $requireAll All permissions in the array are required.
+     * @return bool
+     */
     public function can($permission, $team = null, $requireAll = false)
     {
         if ($this->username === 'sysadmin') return true;

@@ -44,6 +44,7 @@ return [
         'active' => '狀態',
         'created_at' => '建立時間',
         'updated_at' => '更新時間',
+        'role_id' => '群組',
         'selection' => [
             'active' => [
                 '1' => '啟用',
