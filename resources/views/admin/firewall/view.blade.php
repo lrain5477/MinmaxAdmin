@@ -2,7 +2,7 @@
 /**
  * @var \App\Models\Admin $adminData
  * @var \App\Models\AdminMenu $pageData
- * @var \App\Models\WebData $formData
+ * @var \App\Models\Firewall $formData
  */
 ?>
 
