@@ -23,6 +23,7 @@ $(document).ready(function () {
     });
     jQuery.validator.setDefaults({
         debug: true,
+        ignore: ".ignore-valid",
         errorClass: "is-invalid",
         validClass: "is-valid",
         errorElement: "div",

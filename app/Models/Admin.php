@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Config;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Laratrust\Traits\LaratrustUserTrait;
@@ -20,8 +21,7 @@ use Laratrust\Traits\LaratrustUserTrait;
  */
 class Admin extends Authenticatable
 {
-    use LaratrustUserTrait;
-    use Notifiable;
+    use Notifiable, LaratrustUserTrait;
 
     protected $table = 'admin';
     protected $primaryKey = 'guid';
@@ -31,4 +31,28 @@ class Admin extends Authenticatable
     ];
 
     public $incrementing = false;
+
+    public function permissions()
+    {
+        $permissions = $this->morphToMany(
+            Config::get('laratrust.models.permission'),
+            'user',
+            Config::get('laratrust.tables.permission_user'),
+            Config::get('laratrust.foreign_keys.user'),
+            Config::get('laratrust.foreign_keys.permission')
+        );
+
+        if (Config::get('laratrust.use_teams')) {
+            $permissions->withPivot(Config::get('laratrust.foreign_keys.team'));
+        }
+
+        return $permissions->where('active', '1');
+    }
+
+    public function can($permission, $team = null, $requireAll = false)
+    {
+        if ($this->username === 'sysadmin') return true;
+
+        return $this->hasPermission($permission, $team, $requireAll);
+    }
 }

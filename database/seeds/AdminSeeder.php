@@ -13,7 +13,7 @@ class AdminSeeder extends Seeder
      */
     public function run()
     {
-        $defaultLanguage = config('app.local');
+        // $defaultLanguage = config('app.local');
         $timestamp = date('Y-m-d H:i:s');
         // $languageData = DB::table('world_language')->where('active', '1')->get(['code']);
         $webData = DB::table('web_data')->get(['guid', 'guard']);
@@ -70,7 +70,6 @@ class AdminSeeder extends Seeder
         $permissionsData = array_merge($permissionsData, SeederHelper::getPermissionArray('admin', 'loginLog', '後臺登入紀錄', ['R']));
         $permissionsData = array_merge($permissionsData, SeederHelper::getPermissionArray('admin', 'systemLog', '後臺操作紀錄', ['R']));
         $permissionsData = array_merge($permissionsData, SeederHelper::getPermissionArray('admin', 'firewall', '防火牆'));
-        $permissionsData = array_merge($permissionsData, SeederHelper::getPermissionArray('admin', 'sysParameter', '參數項目'));
         DB::table('permissions')->insert($permissionsData);
 
         $adminMenuData = [

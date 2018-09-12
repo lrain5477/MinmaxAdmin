@@ -8,7 +8,7 @@ class RoleTransformer extends Transformer
 {
     protected $model = 'Role';
     protected $parameterSet = [
-        'active' => 'active',
+        'active',
     ];
 
     /**
@@ -19,9 +19,9 @@ class RoleTransformer extends Transformer
     {
         parent::__construct($uri);
 
-        if(\Auth::guard('admin')->user()->can('roleShow')) $this->permissions[] = 'R';
-        if(\Auth::guard('admin')->user()->can('roleEdit')) $this->permissions[] = 'U';
-        if(\Auth::guard('admin')->user()->can('roleDestroy')) $this->permissions[] = 'D';
+        if(request()->user('admin')->can('roleShow')) $this->permissions[] = 'R';
+        if(request()->user('admin')->can('roleEdit')) $this->permissions[] = 'U';
+        if(request()->user('admin')->can('roleDestroy')) $this->permissions[] = 'D';
     }
 
     /**
@@ -32,7 +32,6 @@ class RoleTransformer extends Transformer
     public function transform(Role $model)
     {
         return [
-            'guard' => $this->getGridText($model->guard),
             'name' => $this->getGridText($model->name),
             'display_name' => $this->getGridText($model->display_name),
             'active' => $this->getGridSwitch($model->id, 'active', $model->active),

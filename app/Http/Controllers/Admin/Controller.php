@@ -88,11 +88,6 @@ class Controller extends BaseController
         });
     }
 
-    public function test()
-    {
-        dd($this->uri);
-    }
-
     protected function setViewData()
     {
         $this->viewData['languageData'] = $this->languageData;
@@ -155,6 +150,68 @@ class Controller extends BaseController
         if($this->adminData->can(PermissionHelper::replacePermissionName($this->pageData->permission_key, 'Destroy')) === false) abort($statusCode);
     }
 
+    /**
+     * @throws \DaveJamesMiller\Breadcrumbs\Exceptions\DuplicateBreadcrumbException
+     */
+    protected function buildBreadcrumbsIndex()
+    {
+        Breadcrumbs::register('index', function ($breadcrumbs) {
+            /** @var \DaveJamesMiller\Breadcrumbs\BreadcrumbsGenerator $breadcrumbs */
+            $breadcrumbs->parent('admin.home');
+            $breadcrumbs->push($this->pageData->title);
+        });
+    }
+
+    /**
+     * @throws \DaveJamesMiller\Breadcrumbs\Exceptions\DuplicateBreadcrumbException
+     */
+    protected function buildBreadcrumbsShow()
+    {
+        Breadcrumbs::register('view', function ($breadcrumbs) {
+            /** @var \DaveJamesMiller\Breadcrumbs\BreadcrumbsGenerator $breadcrumbs */
+            $breadcrumbs->parent('admin.home');
+            $breadcrumbs->push($this->pageData->title, langRoute("admin.{$this->uri}.index"));
+            $breadcrumbs->push(__('admin.form.view'));
+        });
+    }
+
+    /**
+     * @throws \DaveJamesMiller\Breadcrumbs\Exceptions\DuplicateBreadcrumbException
+     */
+    protected function buildBreadcrumbsCreate()
+    {
+        Breadcrumbs::register('create', function ($breadcrumbs) {
+            /** @var \DaveJamesMiller\Breadcrumbs\BreadcrumbsGenerator $breadcrumbs */
+            $breadcrumbs->parent('admin.home');
+            $breadcrumbs->push(
+                $this->pageData->title,
+                $this->adminData->can(PermissionHelper::replacePermissionName($this->pageData->permission_key, 'Show')) === true
+                    ? langRoute("admin.{$this->uri}.index")
+                    : null
+            );
+            $breadcrumbs->push(__('admin.form.create'));
+        });
+    }
+
+    /**
+     * @param  string|integer $id
+     * @throws \DaveJamesMiller\Breadcrumbs\Exceptions\DuplicateBreadcrumbException
+     */
+    protected function buildBreadcrumbsEdit($id)
+    {
+        Breadcrumbs::register('edit', function ($breadcrumbs) use ($id) {
+            /** @var \DaveJamesMiller\Breadcrumbs\BreadcrumbsGenerator $breadcrumbs */
+            $breadcrumbs->parent('admin.home');
+            $breadcrumbs->push(
+                $this->pageData->title,
+                $this->adminData->can(PermissionHelper::replacePermissionName($this->pageData->permission_key, 'Show')) === true
+                    ? langRoute("admin.{$this->uri}.show", [$id])
+                    : null
+            );
+            $breadcrumbs->push(__('admin.form.edit'));
+        });
+    }
+
     protected function checkValidate()
     {
         app('App\\Http\\Requests\\Admin\\' . $this->pageData->getAttribute('model') . 'Request');
@@ -169,6 +226,89 @@ class Controller extends BaseController
     }
 
     /**
+     * Upload files and return new input set.
+     *
+     * @param  array $inputSet
+     * @param  Request $request
+     * @return array
+     */
+    protected function doFileUpload($inputSet, $request)
+    {
+        foreach ($inputSet['uploads'] ?? [] as $columnKey => $columnInput) {
+            $inputSet[$columnKey] = $columnInput['origin'] ?? null;
+            $filePath = 'files/' . ($columnInput['path'] ?? 'uploads');
+            $fileList = [];
+            foreach ($request->file($this->pageData->getAttribute('model') . '.uploads.' . $columnKey . '.file', []) as $fileItem) {
+                /** @var \Illuminate\Http\UploadedFile $fileItem */
+                if ($fileItem) {
+                    $fileName = microtime() . rand(100000, 999999) . '.' . strtolower($fileItem->getClientOriginalExtension());
+                    $fileItem->move(public_path($filePath), $fileName);
+                    $fileList[] = $filePath . '/' . $fileName;
+                }
+            }
+            $inputSet[$columnKey] = count($fileList) > 0 ? $fileList : $inputSet[$columnKey];
+        }
+        if (isset($inputSet['uploads'])) unset($inputSet['uploads']);
+
+        return $inputSet;
+    }
+
+    /**
+     * Upload files and return new input set.
+     *
+     * @param  mixed $datatables
+     * @param  Request $request
+     * @return mixed
+     */
+    protected function doDatatableFilter($datatables, $request)
+    {
+        if($request->has('filter') || $request->has('equal')) {
+            $datatables->filter(function($query) use ($request) {
+                /** @var \Illuminate\Database\Query\Builder $query */
+                $whereQuery = '';
+                $whereValue = [];
+
+                if($request->has('filter')) {
+                    foreach ($request->input('filter') as $column => $value) {
+                        if (is_null($value) || $value === '') continue;
+
+                        $whereQuery .= ($whereQuery === '' ? '' : ' or ') . "{$column} like ?";
+                        $whereValue[] = "%{$value}%";
+                    }
+                    if($whereQuery !== '') $whereQuery = "({$whereQuery})";
+                }
+
+                if($request->has('equal')) {
+                    foreach($request->input('equal') as $column => $value) {
+                        if(is_null($value) || $value === '') continue;
+
+                        $whereQuery .= ($whereQuery === '' ? '' : ' and ') . "{$column} = ?";
+                        $whereValue[] = "{$value}";
+                    }
+                }
+
+                if($whereQuery !== '' && count($whereValue) > 0)
+                    $query->whereRaw("{$whereQuery}", $whereValue);
+            });
+        }
+
+        return $datatables;
+    }
+
+    /**
+     * Upload files and return new input set.
+     *
+     * @param  mixed $datatables
+     * @return mixed
+     */
+    protected function setDatatablesTransformer($datatables)
+    {
+        $datatables->setTransformer(app('App\\Transformers\\Admin\\' . $this->pageData->getAttribute('model') . 'Transformer', ['uri' => $this->uri]));
+
+        return $datatables;
+    }
+
+    /**
      * DataGrid List
      *
      * @return \Illuminate\Http\Response
@@ -178,12 +318,7 @@ class Controller extends BaseController
     {
         $this->checkPermissionShow();
 
-        // 設定麵包屑導航
-        Breadcrumbs::register('index', function ($breadcrumbs) {
-            /** @var \DaveJamesMiller\Breadcrumbs\BreadcrumbsGenerator $breadcrumbs */
-            $breadcrumbs->parent('admin.home');
-            $breadcrumbs->push($this->pageData->title);
-        });
+        $this->buildBreadcrumbsIndex();
 
         try {
             return view('admin.' . $this->uri . '.index', $this->viewData);
@@ -203,17 +338,9 @@ class Controller extends BaseController
     {
         $this->checkPermissionShow();
 
-        $this->viewData['formData'] = $this->modelRepository->find($id);
+        $this->viewData['formData'] = $this->modelRepository->find($id) ?? abort(404);
 
-        // 設定麵包屑導航
-        Breadcrumbs::register('view', function ($breadcrumbs) {
-            /**
-             * @var \DaveJamesMiller\Breadcrumbs\BreadcrumbsGenerator $breadcrumbs
-             */
-            $breadcrumbs->parent('admin.home');
-            $breadcrumbs->push($this->pageData->title, langRoute("admin.{$this->uri}.index"));
-            $breadcrumbs->push(__('admin.form.view'));
-        });
+        $this->buildBreadcrumbsShow();
 
         try {
             return view('admin.' . $this->uri . '.view', $this->viewData);
@@ -234,20 +361,7 @@ class Controller extends BaseController
 
         $this->viewData['formData'] = $this->modelRepository->query()->getModel();
 
-        // 設定麵包屑導航
-        Breadcrumbs::register('create', function ($breadcrumbs) {
-            /**
-             * @var \DaveJamesMiller\Breadcrumbs\BreadcrumbsGenerator $breadcrumbs
-             */
-            $breadcrumbs->parent('admin.home');
-            $breadcrumbs->push(
-                $this->pageData->title,
-                $this->adminData->can(PermissionHelper::replacePermissionName($this->pageData->permission_key, 'Show')) === true
-                    ? langRoute("admin.{$this->uri}.index")
-                    : null
-            );
-            $breadcrumbs->push(__('admin.form.create'));
-        });
+        $this->buildBreadcrumbsCreate();
 
         try {
             return view('admin.' . $this->uri . '.create', $this->viewData);
@@ -270,27 +384,21 @@ class Controller extends BaseController
 
         $inputSet = $request->input($this->pageData->getAttribute('model'));
 
-        // 處理檔案上傳
-        foreach ($inputSet['uploads'] ?? [] as $columnKey => $columnInput) {
-            $inputSet[$columnKey] = $columnInput['origin'] ?? null;
-            $filePath = 'files/' . ($columnInput['path'] ?? 'uploads');
-            $fileList = [];
-            foreach ($request->file($this->pageData->getAttribute('model') . '.uploads.' . $columnKey . '.file') ?? [] as $fileItem) {
-                /** @var \Illuminate\Http\UploadedFile $fileItem */
-                if ($fileItem) {
-                    $fileName = microtime() . rand(100000, 999999) . '.' . $fileItem->getClientOriginalExtension();
-                    $fileItem->move(public_path($filePath), $fileName);
-                    $fileList[] = $filePath . '/' . $fileName;
-                }
-            }
-            $inputSet[$columnKey] = count($fileList) > 0 ? $fileList : $inputSet[$columnKey];
-        }
-        if (isset($inputSet['uploads'])) unset($inputSet['uploads']);
+        $inputSet = $this->doFileUpload($inputSet, $request);
 
         // 儲存新建資料
-        if ($modelData = $this->modelRepository->create($inputSet)) {
-            LogHelper::system('admin', $request->path(), $request->method(), $modelData->getKey(), $this->adminData->username, 1, __('admin.form.message.create_success'));
-            return redirect(langRoute("admin.{$this->uri}.edit", [$modelData->getKey()]))->with('success', __('admin.form.message.create_success'));
+        try {
+            \DB::beginTransaction();
+
+            if ($modelData = $this->modelRepository->create($inputSet)) {
+                \DB::commit();
+                LogHelper::system('admin', $request->path(), $request->method(), $modelData->getKey(), $this->adminData->username, 1, __('admin.form.message.create_success'));
+                return redirect(langRoute("admin.{$this->uri}.edit", [$modelData->getKey()]))->with('success', __('admin.form.message.create_success'));
+            }
+
+            \DB::rollBack();
+        } catch (\Exception $e) {
+            \DB::rollBack();
         }
 
         LogHelper::system('admin', $request->path(), $request->method(), '', $this->adminData->username, 0, __('admin.form.message.create_error'));
@@ -309,22 +417,9 @@ class Controller extends BaseController
         $this->checkPermissionEdit();
 
         $this->viewData['formDataId'] = $id;
-        $this->viewData['formData'] = $this->modelRepository->find($id);
+        $this->viewData['formData'] = $this->modelRepository->find($id) ?? abort(404);
 
-        // 設定麵包屑導航
-        Breadcrumbs::register('edit', function ($breadcrumbs) use ($id) {
-            /**
-             * @var \DaveJamesMiller\Breadcrumbs\BreadcrumbsGenerator $breadcrumbs
-             */
-            $breadcrumbs->parent('admin.home');
-            $breadcrumbs->push(
-                $this->pageData->title,
-                $this->adminData->can(PermissionHelper::replacePermissionName($this->pageData->permission_key, 'Show')) === true
-                    ? langRoute("admin.{$this->uri}.edit", [$id])
-                    : null
-            );
-            $breadcrumbs->push(__('admin.form.edit'));
-        });
+        $this->buildBreadcrumbsEdit($id);
 
         try {
             return view('admin.' . $this->uri . '.edit', $this->viewData);
@@ -350,27 +445,21 @@ class Controller extends BaseController
 
         $inputSet = $request->input($this->pageData->getAttribute('model'));
 
-        // 處理檔案上傳
-        foreach ($inputSet['uploads'] ?? [] as $columnKey => $columnInput) {
-            $inputSet[$columnKey] = $columnInput['origin'] ?? null;
-            $filePath = 'files/' . ($columnInput['path'] ?? 'uploads');
-            $fileList = [];
-            foreach ($request->file($this->pageData->getAttribute('model') . '.uploads.' . $columnKey . '.file') ?? [] as $fileItem) {
-                /** @var \Illuminate\Http\UploadedFile $fileItem */
-                if ($fileItem) {
-                    $fileName = microtime() . rand(100000, 999999) . '.' . $fileItem->getClientOriginalExtension();
-                    $fileItem->move(public_path($filePath), $fileName);
-                    $fileList[] = $filePath . '/' . $fileName;
-                }
-            }
-            $inputSet[$columnKey] = count($fileList) > 0 ? $fileList : $inputSet[$columnKey];
-        }
-        if (isset($inputSet['uploads'])) unset($inputSet['uploads']);
+        $inputSet = $this->doFileUpload($inputSet, $request);
 
         // 儲存更新資料
-        if ($this->modelRepository->save($model, $inputSet)) {
-            LogHelper::system('admin', $request->path(), $request->method(), $id, $this->adminData->username, 1, __('admin.form.message.edit_success'));
-            return redirect(langRoute("admin.{$this->uri}.edit", [$id]))->with('success', __('admin.form.message.edit_success'));
+        try {
+            \DB::beginTransaction();
+
+            if ($this->modelRepository->save($model, $inputSet)) {
+                \DB::commit();
+                LogHelper::system('admin', $request->path(), $request->method(), $id, $this->adminData->username, 1, __('admin.form.message.edit_success'));
+                return redirect(langRoute("admin.{$this->uri}.edit", [$id]))->with('success', __('admin.form.message.edit_success'));
+            }
+
+            \DB::rollBack();
+        } catch (\Exception $e) {
+            \DB::rollBack();
         }
 
         LogHelper::system('admin', $request->path(), $request->method(), $id, $this->adminData->username, 0, __('admin.form.message.edit_error'));
@@ -403,7 +492,7 @@ class Controller extends BaseController
      * Grid data return for DataTables
      *
      * @param Request $request
-     * @return \Illuminate\Http\RedirectResponse
+     * @return \Illuminate\Http\Response
      * @throws \Throwable
      */
     public function ajaxDataTable(Request $request)
@@ -414,45 +503,17 @@ class Controller extends BaseController
 
         $datatables = \DataTables::of($queryBuilder);
 
-        if($request->has('filter') || $request->has('equal')) {
-            $datatables->filter(function($query) use ($request) {
-                /** @var \Illuminate\Database\Query\Builder $query */
-                $whereQuery = '';
-                $whereValue = [];
-                if($request->has('filter')) {
-                    foreach ($request->input('filter') as $column => $value) {
-                        if (is_null($value) || $value === '') continue;
-                        if ($whereQuery === '') {
-                            $whereQuery .= "{$column} like ?";
-                        } else {
-                            $whereQuery .= " or {$column} like ?";
-                        }
-                        $whereValue[] = "%{$value}%";
-                    }
-                    if($whereQuery !== '') $whereQuery = "({$whereQuery})";
-                }
-                if($request->has('equal')) {
-                    foreach($request->input('equal') as $column => $value) {
-                        if(is_null($value) || $value === '') continue;
-                        if($whereQuery === '') {
-                            $whereQuery .= "{$column} = ?";
-                        } else {
-                            $whereQuery .= " and {$column} = ?";
-                        }
-                        $whereValue[] = "{$value}";
-                    }
-                }
+        $datatables = $this->doDatatableFilter($datatables, $request);
 
-                if($whereQuery !== '' && count($whereValue) > 0)
-                    $query->whereRaw("{$whereQuery}", $whereValue);
-            });
-        }
+        $datatables = $this->setDatatablesTransformer($datatables);
 
-        return $datatables
-            ->setTransformer(app('App\\Transformers\\Admin\\' . $this->pageData->getAttribute('model') . 'Transformer', ['uri' => $this->uri]))
-            ->make(true);
+        return $datatables->make(true);
     }
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\Response
+     */
     public function ajaxSwitch(Request $request)
     {
         $this->checkPermissionEdit('ajax');
@@ -482,6 +543,10 @@ class Controller extends BaseController
         return response(['msg' => 'error'], 400, ['Content-Type' => 'application/json']);
     }
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\Response
+     */
     public function ajaxSort(Request $request)
     {
         $this->checkPermissionEdit('ajax');

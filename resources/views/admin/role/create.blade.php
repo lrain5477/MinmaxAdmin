@@ -1,9 +1,17 @@
+<?php
+/**
+ * @var \App\Models\Admin $adminData
+ * @var \App\Models\AdminMenu $pageData
+ * @var \App\Models\Role $formData
+ */
+?>
+
 @extends('admin.default.create')
 
 @section('action-buttons')
 @if($adminData->can('roleShow'))
 <div class="float-right">
-    <a class="btn btn-sm btn-light" href="{{ route('admin.index', [$pageData->uri]) }}" title="@lang('admin.form.back_list')">
+    <a class="btn btn-sm btn-light" href="{{ langRoute("admin.{$pageData->uri}.index") }}" title="@lang('admin.form.back_list')">
         <i class="icon-undo2"></i><span class="ml-1 d-none d-md-inline-block">@lang('admin.form.back_list')</span>
     </a>
 </div>
@@ -13,14 +21,14 @@
 @section('forms')
     @inject('modelPresenter', 'App\Presenters\Admin\RolePresenter')
 
+    {!! $modelPresenter->getFieldHidden($formData, 'guard', 'admin') !!}
+
     <fieldset id="baseFieldSet">
         <legend class="legend h6 mb-4"><i class="icon-angle-double-down2 mr-2"></i>@lang('admin.form.fieldSet.default')</legend>
 
-        {!! $modelPresenter->getFieldSelect($formData, 'guard', true) !!}
+        {!! $modelPresenter->getFieldText($formData, 'name', ['required' => true, 'size' => 4]) !!}
 
-        {!! $modelPresenter->getFieldText($formData, 'name', true, ['size' => 4]) !!}
-
-        {!! $modelPresenter->getFieldText($formData, 'display_name', true, ['size' => 4]) !!}
+        {!! $modelPresenter->getFieldText($formData, 'display_name', ['required' => true, 'size' => 4]) !!}
 
         {!! $modelPresenter->getFieldText($formData, 'description') !!}
 
@@ -29,7 +37,7 @@
     <fieldset class="mt-4" id="advFieldSet">
         <legend class="legend h6 mb-4"><i class="icon-angle-double-down2 mr-2"></i>@lang('admin.form.fieldSet.advanced')</legend>
 
-        {!! $modelPresenter->getFieldRadio($formData, 'active', true, ['inline' => true]) !!}
+        {!! $modelPresenter->getFieldRadio($formData, 'active', ['required' => true, 'inline' => true]) !!}
 
     </fieldset>
 

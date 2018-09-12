@@ -6,12 +6,13 @@ class LogHelper
 {
     /**
      * @param string $guard
+     * @param \Illuminate\Http\Request $request
      * @param string $username
      * @param integer $result is only 0 or 1
      * @param string $message
      * @return bool
      */
-    public static function login($guard, $username, $result, $message = '')
+    public static function login($guard, $request, $username, $result, $message = '')
     {
         if($username === 'sysadmin') return true;
 
@@ -24,7 +25,7 @@ class LogHelper
                 'result' => $result,
             ]);
 
-            if ($insertResult && static::system($guard, 'login', 'POST', $username, $username, $result, $message)) {
+            if ($insertResult && static::system($guard, $request->path(), $request->method(), $username, $username, $result, $message)) {
                 return true;
             }
         } catch (\Exception $e) {}
