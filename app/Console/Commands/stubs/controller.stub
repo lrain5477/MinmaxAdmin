@@ -1,0 +1,16 @@
+<?php
+
+namespace DummyNamespace;
+
+use App\Repositories\DummyRepositoryPath;
+use Illuminate\Http\Request;
+
+class DummyClass extends Controller
+{
+    public function __construct(Request $request, DummyRepositoryClass $DummyRepositoryVariable)
+    {
+        $this->modelRepository = $DummyRepositoryVariable;
+
+        parent::__construct($request);
+    }
+}

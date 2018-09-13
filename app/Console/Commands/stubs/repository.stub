@@ -1,0 +1,31 @@
+<?php
+
+namespace DummyNamespace;
+
+use App\Models\DummyModelClass;
+
+/**
+ * Class DummyClass
+ * @method DummyModelClass find($id)
+ * @method DummyModelClass one($column = null, $operator = null, $value = null, $boolean = 'and')
+ * @method DummyModelClass create($attributes)
+ * @method DummyModelClass save($model, $attributes)
+ * @method DummyModelClass|\Illuminate\Database\Eloquent\Builder query()
+ * @method DummyModelClass saveLanguage($model, $columns = [])
+ */
+class DummyClass extends Repository
+{
+    const MODEL = DummyModelClass::class;
+
+    // protected $languageColumns = [];
+
+    /**
+     * Get table name of this model
+     *
+     * @return string
+     */
+    protected function getTable()
+    {
+        return 'DummyTableName';
+    }
+}

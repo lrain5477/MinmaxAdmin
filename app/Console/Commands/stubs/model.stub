@@ -1,0 +1,14 @@
+<?php
+
+namespace DummyNamespace;
+
+use Illuminate\Database\Eloquent\Model;
+
+/**
+ * Class DummyClass
+ */
+class DummyClass extends Model
+{
+    protected $table = 'DummyTableName';
+    protected $guarded = [];
+}
