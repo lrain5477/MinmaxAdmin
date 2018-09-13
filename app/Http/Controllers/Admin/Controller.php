@@ -205,7 +205,7 @@ class Controller extends BaseController
             $breadcrumbs->push(
                 $this->pageData->title,
                 $this->adminData->can(PermissionHelper::replacePermissionName($this->pageData->permission_key, 'Show')) === true
-                    ? langRoute("admin.{$this->uri}.show", [$id])
+                    ? langRoute("admin.{$this->uri}.index")
                     : null
             );
             $breadcrumbs->push(__('admin.form.edit'));

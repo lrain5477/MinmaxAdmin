@@ -35,9 +35,8 @@ Route::group(['middleware' => 'auth:administrator'], function() {
             ->get();
         $actionList = [
             'post ajaxDataTable /ajax/datatables',
-            'post ajaxSwitch /ajax/switch',
-            'post ajaxMultiSwitch /ajax/switch-multi',
-            'post ajaxSort /ajax/sort',
+            'patch ajaxSwitch /ajax/switch',
+            'patch ajaxSort /ajax/sort',
             'get edit /{id}/edit',
             'get create /create',
             'get show /{id}',
@@ -89,8 +88,8 @@ Route::group(['middleware' => 'auth:administrator'], function() {
 
     // elFinder
     Route::group(['prefix' => 'elfinder'], function() {
-        Route::get('/',  ['as' => 'elfinder.index', 'uses' =>'CustomElfinderController@showIndex']);
-        Route::any('connector', ['as' => 'elfinder.connector', 'uses' => 'CustomElfinderController@showConnector']);
-        Route::get('ckeditor', ['as' => 'elfinder.ckeditor', 'uses' => 'CustomElfinderController@showCKeditor4']);
+        Route::get('/',  ['as' => 'elfinder.index', 'uses' =>'ElfinderController@showIndex']);
+        Route::any('connector', ['as' => 'elfinder.connector', 'uses' => 'ElfinderController@showConnector']);
+        Route::get('ckeditor', ['as' => 'elfinder.ckeditor', 'uses' => 'ElfinderController@showCKeditor4']);
     });
 });

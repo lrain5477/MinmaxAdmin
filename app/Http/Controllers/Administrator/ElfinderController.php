@@ -1,14 +1,14 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\Administrator;
 
-use Barryvdh\Elfinder\ElfinderController;
+use Barryvdh\Elfinder\ElfinderController as BaseElfinderController;
 
-class CustomElfinderController extends ElfinderController
+class ElfinderController extends BaseElfinderController
 {
     protected function getViewVars()
     {
-        $guard = 'admin';
+        $guard = 'administrator';
         $dir = 'components/elFinder';
         $locale = str_replace("-",  "_", $this->app->config->get('app.locale'));
         switch ($locale) {

@@ -88,8 +88,8 @@ Route::group(['middleware' => 'auth:admin'], function() {
 
     // elFinder
     Route::group(['prefix' => 'elfinder'], function() {
-        Route::get('/',  ['as' => 'elfinder.index', 'uses' =>'CustomElfinderController@showIndex']);
-        Route::any('connector', ['as' => 'elfinder.connector', 'uses' => 'CustomElfinderController@showConnector']);
-        Route::get('ckeditor', ['as' => 'elfinder.ckeditor', 'uses' => 'CustomElfinderController@showCKeditor4']);
+        Route::get('/',  ['as' => 'elfinder.index', 'uses' =>'ElfinderController@showIndex']);
+        Route::any('connector', ['as' => 'elfinder.connector', 'uses' => 'ElfinderController@showConnector']);
+        Route::get('ckeditor', ['as' => 'elfinder.ckeditor', 'uses' => 'ElfinderController@showCKeditor4']);
     });
 });

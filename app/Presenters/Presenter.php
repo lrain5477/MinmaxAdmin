@@ -181,7 +181,7 @@ class Presenter
             'icon' => $options['icon'] ?? '',
             'size' => $options['size'] ?? 10,
             'placeholder' => $options['placeholder'] ?? '',
-            'hint' => isset($options['hint']) && $options['hint'] == true ? __($hintPath) : '',
+            'hint' => isset($options['hint']) && $options['hint'] === true ? (is_string($options['hint']) ? $options['hint'] : __($hintPath)) : '',
         ];
 
         return view("{$this->guardName}.form-components.text", $componentData);
@@ -217,7 +217,7 @@ class Presenter
             'icon' => $options['icon'] ?? '',
             'size' => $options['size'] ?? 10,
             'placeholder' => $options['placeholder'] ?? '',
-            'hint' => isset($options['hint']) && $options['hint'] == true ? __($hintPath) : '',
+            'hint' => isset($options['hint']) && $options['hint'] === true ? (is_string($options['hint']) ? $options['hint'] : __($hintPath)) : '',
         ];
 
         return view("{$this->guardName}.form-components.email", $componentData);
@@ -253,7 +253,7 @@ class Presenter
             'icon' => $options['icon'] ?? '',
             'size' => $options['size'] ?? 10,
             'placeholder' => $options['placeholder'] ?? '',
-            'hint' => isset($options['hint']) && $options['hint'] == true ? __($hintPath) : '',
+            'hint' => isset($options['hint']) && $options['hint'] === true ? (is_string($options['hint']) ? $options['hint'] : __($hintPath)) : '',
         ];
 
         return view("{$this->guardName}.form-components.tel", $componentData);
@@ -286,7 +286,7 @@ class Presenter
             'icon' => $options['icon'] ?? '',
             'size' => $options['size'] ?? 10,
             'placeholder' => $options['placeholder'] ?? '',
-            'hint' => isset($options['hint']) && $options['hint'] == true ? __($hintPath) : '',
+            'hint' => isset($options['hint']) && $options['hint'] === true ? (is_string($options['hint']) ? $options['hint'] : __($hintPath)) : '',
         ];
 
         return view("{$this->guardName}.form-components.password", $componentData);
@@ -347,7 +347,7 @@ class Presenter
             'type' => $pickerType,
             'size' => $options['size'] ?? 3,
             'placeholder' => $options['placeholder'] ?? '',
-            'hint' => isset($options['hint']) && $options['hint'] == true ? __($hintPath) : '',
+            'hint' => isset($options['hint']) && $options['hint'] === true ? (is_string($options['hint']) ? $options['hint'] : __($hintPath)) : '',
         ];
 
         return view("{$this->guardName}.form-components.date-picker", $componentData);
@@ -383,7 +383,7 @@ class Presenter
             'size' => $options['size'] ?? 10,
             'rows' => $options['rows'] ?? 5,
             'placeholder' => $options['placeholder'] ?? '',
-            'hint' => isset($options['hint']) && $options['hint'] == true ? __($hintPath) : '',
+            'hint' => isset($options['hint']) && $options['hint'] === true ? (is_string($options['hint']) ? $options['hint'] : __($hintPath)) : '',
         ];
 
         return view("{$this->guardName}.form-components.textarea", $componentData);
@@ -418,7 +418,7 @@ class Presenter
             'required' => $options['required'] ?? false,
             'size' => $options['size'] ?? 10,
             'height' => $options['height'] ?? '250px',
-            'hint' => isset($options['hint']) && $options['hint'] == true ? __($hintPath) : '',
+            'hint' => isset($options['hint']) && $options['hint'] === true ? (is_string($options['hint']) ? $options['hint'] : __($hintPath)) : '',
             'stylesheet' => $options['stylesheet'] ?? null,
             'template' => $options['template'] ?? null,
         ];
@@ -456,7 +456,7 @@ class Presenter
             'title' => $options['title'] ?? '',
             'search' => $options['search'] ?? false,
             'size' => $options['size'] ?? 3,
-            'hint' => isset($options['hint']) && $options['hint'] == true ? __($hintPath) : '',
+            'hint' => isset($options['hint']) && $options['hint'] === true ? (is_string($options['hint']) ? $options['hint'] : __($hintPath)) : '',
             'listData' => $this->parameterSet[$column] ?? [],
         ];
 
@@ -493,7 +493,7 @@ class Presenter
             'title' => $options['title'] ?? '',
             'search' => $options['search'] ?? false,
             'size' => $options['size'] ?? 3,
-            'hint' => isset($options['hint']) && $options['hint'] == true ? __($hintPath) : '',
+            'hint' => isset($options['hint']) && $options['hint'] === true ? (is_string($options['hint']) ? $options['hint'] : __($hintPath)) : '',
             'listData' => $this->parameterSet[$column] ?? [],
         ];
 
@@ -530,7 +530,7 @@ class Presenter
             'title' => $options['title'] ?? '',
             'group' => $options['group'] ?? false,
             'size' => $options['size'] ?? 10,
-            'hint' => isset($options['hint']) && $options['hint'] == true ? __($hintPath) : '',
+            'hint' => isset($options['hint']) && $options['hint'] === true ? (is_string($options['hint']) ? $options['hint'] : __($hintPath)) : '',
             'listData' => $this->parameterSet[$column] ?? [],
         ];
 
@@ -566,7 +566,7 @@ class Presenter
             'required' => $options['required'] ?? false,
             'inline' => $options['inline'] ?? false,
             'color' => $options['color'] ?? '',
-            'hint' => isset($options['hint']) && $options['hint'] == true ? __($hintPath) : '',
+            'hint' => isset($options['hint']) && $options['hint'] === true ? (is_string($options['hint']) ? $options['hint'] : __($hintPath)) : '',
             'listData' => $this->parameterSet[$column] ?? [],
         ];
 
@@ -602,7 +602,7 @@ class Presenter
             'required' => $options['required'] ?? false,
             'inline' => $options['inline'] ?? false,
             'color' => $options['color'] ?? '',
-            'hint' => isset($options['hint']) && $options['hint'] == true ? __($hintPath) : '',
+            'hint' => isset($options['hint']) && $options['hint'] === true ? (is_string($options['hint']) ? $options['hint'] : __($hintPath)) : '',
             'listData' => $this->parameterSet[$column] ?? [],
         ];
 
@@ -619,65 +619,87 @@ class Presenter
     {
         $modelName = class_basename($model);
         $columnLabel = __("models.{$modelName}.{$column}");
-        $imageList = isset($model->$column) ? explode(config('app.separate_string'), $model->$column) : [];
-        $altList = isset($model->{"{$column}_alt"}) ? explode(config('app.separate_string'), $model->{"{$column}_alt"}) : [];
-
-        $images = collect([]);
-        foreach($imageList as $key => $item) {
-            if($item === '' || !\File::exists(public_path($item))) continue;
-
-            $images->push((object) [
-                'path' => $item,
-                'alt' => $altList[$key] ?? '',
-            ]);
+        $fieldName = $options['name'] ?? "{$modelName}[{$column}]";
+        $fieldValue = $model->getAttribute($column) ?? [];
+        $hintPath = "models.{$modelName}.hint.{$column}";
+        $lang = app()->getLocale();
+        switch ($lang) {
+            case 'tw':
+                $lang = 'zh_TW';
+                break;
+            case 'cn':
+                $lang = 'zh_CN';
+                break;
+            case 'jp':
+                $lang = 'ja';
+                break;
         }
 
         $componentData = [
             'id' => "{$modelName}-{$column}",
             'label' => $columnLabel,
-            'name' => "{$modelName}[{$column}]",
-            'altName' => "{$modelName}[{$column}_alt]",
-            'required' => isset($options['required']) ? $options['required'] : false,
-            'limit' => isset($options['limit']) ? $options['limit'] : 0,
-            'hint' => isset($options['hint']) && $options['hint'] == true ? __("models.{$modelName}.hint.{$column}") : '',
-            'images' => $images,
+            'name' => $fieldName,
+            'required' => $options['required'] ?? false,
+            'limit' => $options['limit'] ?? 0,
+            'hint' => isset($options['hint']) && $options['hint'] === true ? (is_string($options['hint']) ? $options['hint'] : __($hintPath)) : '',
+            'lang' => $lang,
+            'images' => $fieldValue,
         ];
 
         return view("{$this->guardName}.form-components.image", $componentData);
     }
 
-    public function getFieldMediaFile($model, $column, $required = false, $options = []) {
-        if(is_array($required)) {
-            $options = $required;
-            $required = false;
-        }
-
+    /**
+     * @param  \Illuminate\Database\Eloquent\Model $model
+     * @param  string $column
+     * @param  array $options
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function getFieldMediaFile($model, $column, $options = [])
+    {
         $modelName = class_basename($model);
         $columnLabel = __("models.{$modelName}.{$column}");
-        $fileList = isset($model->$column) ? explode(config('app.separate_string'), $model->$column) : [];
+        $fieldValue = $model->getAttribute($column) ?? [];
+        $hintPath = "models.{$modelName}.hint.{$column}";
+        $lang = app()->getLocale();
+        switch ($lang) {
+            case 'tw':
+                $lang = 'zh_TW';
+                break;
+            case 'cn':
+                $lang = 'zh_CN';
+                break;
+            case 'jp':
+                $lang = 'ja';
+                break;
+        }
 
         $componentData = [
             'id' => "{$modelName}-{$column}",
             'label' => $columnLabel,
             'name' => "{$modelName}[{$column}]",
-            'required' => $required,
-            'limit' => isset($options['limit']) ? $options['limit'] : 0,
-            'hint' => isset($options['hint']) && $options['hint'] == true ? __("models.{$modelName}.hint.{$column}") : '',
-            'files' => $fileList,
+            'required' => $options['required'] ?? false,
+            'limit' => $options['limit'] ?? 0,
+            'hint' => isset($options['hint']) && $options['hint'] === true ? (is_string($options['hint']) ? $options['hint'] : __($hintPath)) : '',
+            'lang' => $lang,
+            'files' => $fieldValue,
         ];
 
         return view("{$this->guardName}.form-components.file", $componentData);
     }
 
-    public function getFieldUploadFile($model, $column, $required = false, $options = []) {
-        if(is_array($required)) {
-            $options = $required;
-            $required = false;
-        }
-
+    /**
+     * @param  \Illuminate\Database\Eloquent\Model $model
+     * @param  string $column
+     * @param  array $options
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function getFieldUploadFile($model, $column, $options = [])
+    {
         $modelName = class_basename($model);
         $columnLabel = __("models.{$modelName}.{$column}");
-        $fileList = isset($model->$column) ? explode(config('app.separate_string'), $model->$column) : [];
+        $fileList = $model->getAttribute($column) ?? [];
+        $hintPath = "models.{$modelName}.hint.{$column}";
         $filenameList = [];
         foreach($fileList as $fileKey => $fileItem) {
             if(!\File::exists(public_path($fileItem))) {
@@ -691,9 +713,9 @@ class Presenter
             'id' => "{$modelName}-{$column}",
             'label' => $columnLabel,
             'name' => "{$modelName}[uploads][{$column}]",
-            'required' => $required,
-            'hint' => isset($options['hint']) && $options['hint'] == true ? __("models.{$modelName}.hint.{$column}") : '',
-            'limit' => isset($options['limit']) ? $options['limit'] : 0,
+            'required' => $options['required'] ?? false,
+            'limit' => $options['limit'] ?? 0,
+            'hint' => isset($options['hint']) && $options['hint'] === true ? (is_string($options['hint']) ? $options['hint'] : __($hintPath)) : '',
             'path' => $options['path'] ?? 'uploads',
             'file' => implode(config('app.separate_string'), $fileList),
             'filename' => implode(', ', $filenameList),

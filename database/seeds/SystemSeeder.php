@@ -26,7 +26,7 @@ class SystemSeeder extends Seeder
                 'system_email' => config('mail.from.address'),
                 'system_url' => config('app.url') . '/administrator',
                 'system_logo' => json_encode([[
-                    'path' => 'admin/images/logo-b.png',
+                    'path' => '/admin/images/logo-b.png',
                     'alt' => ''
                 ]]),
                 'company' => json_encode([
@@ -64,7 +64,7 @@ class SystemSeeder extends Seeder
                 'system_email' => config('mail.from.address'),
                 'system_url' => config('app.url') . '/siteadmin',
                 'system_logo' => json_encode([[
-                    'path' => 'admin/images/logo-b.png',
+                    'path' => '/admin/images/logo-b.png',
                     'alt' => ''
                 ]]),
                 'company' => json_encode([
@@ -102,7 +102,7 @@ class SystemSeeder extends Seeder
                 'system_email' => config('mail.from.address'),
                 'system_url' => config('app.url'),
                 'system_logo' => json_encode([[
-                    'path' => 'admin/images/logo-b.png',
+                    'path' => '/admin/images/logo-b.png',
                     'alt' => ''
                 ]]),
                 'company' => json_encode([
