@@ -18,14 +18,11 @@ class RedirectIfAuthenticated
      */
     public function handle($request, Closure $next, $guard = null)
     {
-        if(Request::is('administrator*') && Auth::guard('administrator')->check()) {
-            return redirect()->route('administrator.home');
+        if($request->is('administrator*') && Auth::guard('administrator')->check()) {
+            return redirect(langRoute('administrator.home'));
         }
         if(Request::is('siteadmin*') && Auth::guard('admin')->check()) {
-            return redirect()->route('admin.home');
-        }
-        if(Request::is('merchant*') && Auth::guard('merchant')->check()) {
-            return redirect()->route('merchant.home');
+            return redirect(langRoute('admin.home'));
         }
 
         return $next($request);

@@ -21,6 +21,7 @@ class AdminLanguage
      */
     public function handle($request, Closure $next)
     {
+
         /** @var \Illuminate\Database\Eloquent\Collection $languageSet */
         $languageSet = Cache::rememberForever('languageSet', function() {
             return (new WorldLanguageRepository)
@@ -38,7 +39,7 @@ class AdminLanguage
         }
 
         $uriSet = explode('/', $request->path());
-        if ($languageSet->where('codes', $uriSet[1])->count() == 1) {
+        if ($languageSet->where('code', $uriSet[1])->count() == 1) {
             app()->setLocale($uriSet[1]);
         } else {
             $uriSet[0] = app()->getLocale();
