@@ -93,7 +93,7 @@ class AdminRepository extends Repository
 
         if ($model->save()) {
             $model = $this->saveLanguage($model);
-            $model->syncRoles($roleSelected);
+            if (!(count($attributes) == 1 && isset($attributes['active']))) $model->syncRoles($roleSelected);
             return $model;
         }
 

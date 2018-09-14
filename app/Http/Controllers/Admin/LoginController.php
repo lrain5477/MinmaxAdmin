@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Helpers\LogHelper;
 use App\Repositories\Admin\FirewallRepository;
 use App\Repositories\Admin\WebDataRepository;
+use App\Repositories\Admin\WorldLanguageRepository;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 use Illuminate\Foundation\Bus\DispatchesJobs;
@@ -24,6 +25,9 @@ class LoginController extends BaseController
      */
     protected $redirectTo = '/siteadmin';
 
+    /** @var \Illuminate\Support\Collection|\App\Models\WorldLanguage[] $languageData */
+    protected $languageData;
+
     /**
      * @var \App\Models\WebData $webData
      */
@@ -41,12 +45,24 @@ class LoginController extends BaseController
      */
     public function __construct(WebDataRepository $webDataRepository, FirewallRepository $firewallRepository)
     {
+        // 設定 語言資料
+        $this->languageData = \Cache::rememberForever('languageSet', function() {
+            return (new WorldLanguageRepository())
+                ->all(function($query) {
+                    /** @var \Illuminate\Database\Query\Builder $query */
+                    $query->where('active', '1')->orderBy('sort');
+                });
+        });
+
         // 設定 網站資料
         $this->webData = $webDataRepository->getData() ?? abort(404);
         if ($this->webData->active != '1') abort(404, $this->webData->offline_text);
 
         // 設定 防火牆資料
         $this->firewallData = $firewallRepository->all(['guard' => 'admin', 'active' => 1]);
+
+        // 設定 導向網址
+        $this->redirectTo .= $this->languageData->count() > 1 ? ('/'.app()->getLocale()) : '';
 
         $this->middleware('guest')->except('logout');
     }

@@ -11,6 +11,7 @@ class SiteController extends Controller
 
     public function __construct(Request $request, GoogleAnalyticsClient $gaClient)
     {
+        \Cache::forget('languageSet');
         parent::__construct($request);
 
         $this->gaClient = $gaClient;

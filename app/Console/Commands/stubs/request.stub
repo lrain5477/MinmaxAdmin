@@ -64,10 +64,10 @@ class DummyClass extends FormRequest
         if ($validator->fails()) {
             switch ($this->method()) {
                 case 'POST':
-                    LogHelper::system('admin', $this->path(), $this->method(), '', $this->user()->username, 0, $validator->errors()->first());
+                    LogHelper::system('DummyGuardName', $this->path(), $this->method(), '', $this->user()->username, 0, $validator->errors()->first());
                     break;
                 case 'PUT':
-                    LogHelper::system('admin', $this->path(), $this->method(), $this->route('id'), $this->user()->username, 0, $validator->errors()->first());
+                    LogHelper::system('DummyGuardName', $this->path(), $this->method(), $this->route('id'), $this->user()->username, 0, $validator->errors()->first());
                     break;
             }
         }

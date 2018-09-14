@@ -155,7 +155,7 @@ class AdministratorSeeder extends Seeder
             ],
             [
                 'guid' => uuidl(),
-                'title' => '操作紀錄',
+                'title' => '防火牆',
                 'uri' => 'firewall',
                 'controller' => 'FirewallController',
                 'model' => 'Firewall',

@@ -9,7 +9,7 @@
 @section('action-buttons')
 @if($adminData->can('firewallCreate'))
 <div class="float-right">
-    <a class="btn btn-sm btn-main" href="{{ route("admin.{$pageData->uri}.create") }}" title="@lang('admin.form.create')">
+    <a class="btn btn-sm btn-main" href="{{ langRoute("admin.{$pageData->uri}.create") }}" title="@lang('admin.form.create')">
         <i class="icon-plus2"></i><span class="ml-1 d-none d-md-inline-block">@lang('admin.form.create')</span>
     </a>
 </div>

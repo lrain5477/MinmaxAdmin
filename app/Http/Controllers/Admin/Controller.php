@@ -95,7 +95,7 @@ class Controller extends BaseController
         $this->viewData['systemMenu'] = $this->systemMenu;
         $this->viewData['pageData'] = $this->pageData;
         $this->viewData['adminData'] = $this->adminData;
-        $this->viewData['rootUri'] = $this->rootUri . '/' . ($this->languageData->count() > 1 ? app()->getLocale() : '');
+        $this->viewData['rootUri'] = $this->rootUri . '/' . ($this->languageData->count() > 1 ? (app()->getLocale() . '/') : '');
     }
 
     protected function checkPermissionCreate($type = 'web')

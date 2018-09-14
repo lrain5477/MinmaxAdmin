@@ -59,9 +59,11 @@ class CrudMakeRequest extends GeneratorCommand
     protected function buildClass($name)
     {
         $repositoryName = preg_replace('/Request$/i', '', str_replace($this->getNamespace($name).'\\', '', $name));
+        $customPath = last(explode('\\', $this->getNamespace($name)));
 
         $replace = [
             'DummyAuthorizeName' => camel_case($repositoryName),
+            'DummyGuardName' => camel_case($customPath),
         ];
 
         return str_replace(

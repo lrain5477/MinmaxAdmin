@@ -29,31 +29,6 @@ class Handler extends ExceptionHandler
     ];
 
     /**
-     * Report or log an exception.
-     *
-     * This is a great spot to send exceptions to Sentry, Bugsnag, etc.
-     *
-     * @param  \Exception  $exception
-     * @return void
-     */
-    public function report(Exception $exception)
-    {
-        parent::report($exception);
-    }
-
-    /**
-     * Render an exception into an HTTP response.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Exception  $exception
-     * @return \Illuminate\Http\Response
-     */
-    public function render($request, Exception $exception)
-    {
-        return parent::render($request, $exception);
-    }
-
-    /**
      * Convert an authentication exception into a response.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -66,10 +41,14 @@ class Handler extends ExceptionHandler
             return response()->json(['message' => $exception->getMessage()], 401);
         }
 
-        if(Request::is('administrator*') || Request::is('siteadmin*') || Request::is('merchant*')) {
-            return redirect()->guest(route(\Route::current()->action['middleware'][0] . '.login'));
-        } else {
-            return redirect()->guest('home');
+        if ($request->is('administrator*')) {
+            return redirect(langRoute('administrator.login'));
         }
+
+        if ($request->is('siteadmin*')) {
+            return redirect(langRoute('admin.login'));
+        }
+
+        return redirect(langRoute('home'));
     }
 }

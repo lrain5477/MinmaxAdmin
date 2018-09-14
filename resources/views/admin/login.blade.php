@@ -36,7 +36,7 @@
 
                         <div class="col-sm captcha">
                             <input class="form-control form-group" type="text" autocomplete="off" placeholder="@lang('admin.login.captcha')" name="captcha" id="captcha" maxlength="4">
-                            <img src="{{ route('admin.captcha', ['name' => 'login']) }}" style="width:100px;height:auto;" id="rand-img" name="rand-img">
+                            <img src="{{ langRoute('admin.captcha', ['name' => 'login']) }}" style="width:100px;height:auto;" id="rand-img" name="rand-img">
                             <button class="btn btn-" type="button" id="getCaptcha" name="getCaptcha"><i class="icon-rotate"></i></button>
                         </div>
                     </div>
@@ -117,7 +117,7 @@
 <script>
 jQuery(document).ready(function () {
     $('#getCaptcha').click(function(){
-        $('#rand-img').attr('src', '{{ route('admin.captcha', ['name' => 'login']) }}' + '/' + (new Date()).getMilliseconds());
+        $('#rand-img').attr('src', '{{ langRoute('admin.captcha', ['name' => 'login']) }}' + '/' + (new Date()).getMilliseconds());
     });
 
     $("#loginForm").validate({
