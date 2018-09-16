@@ -100,19 +100,7 @@ class Presenter
     public function getViewMediaImage($model, $column, $options = []) {
         $modelName = class_basename($model);
         $columnLabel = __("models.{$modelName}.{$column}");
-        $columnAlt = "{$column}_alt";
-        $imageList = isset($model->$column) ? explode(config('app.separate_string'), $model->$column) : [];
-        $altList = isset($model->$columnAlt) ? explode(config('app.separate_string'), $model->$columnAlt) : [];
-
-        $images = collect([]);
-        foreach($imageList as $key => $item) {
-            if($item === '' || !\File::exists(public_path($item))) continue;
-
-            $images->push((object) [
-                'path' => $item,
-                'alt' => $altList[$key] ?? '',
-            ]);
-        }
+        $images = $model->getAttribute($column) ?? [];
 
         $componentData = [
             'id' => "{$modelName}-{$column}",

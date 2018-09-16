@@ -22,7 +22,7 @@
             <div class="panel-wrapper">
                 <div class="panel-body">
                     <form id="createForm" class="form-horizontal validate createForm"  name="createForm"
-                          action="{{ route("admin.{$pageData->uri}.store") }}"
+                          action="{{ langRoute("admin.{$pageData->uri}.store") }}"
                           method="post"
                           enctype="multipart/form-data">
                         @csrf

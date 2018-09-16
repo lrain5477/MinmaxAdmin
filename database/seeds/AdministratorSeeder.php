@@ -109,10 +109,10 @@ class AdministratorSeeder extends Seeder
                 'title' => '後臺帳戶管理',
                 'uri' => 'admin',
                 'controller' => 'AdminController',
-                'model' => 'Permission',
+                'model' => 'Admin',
                 'class' => 'system',
                 'parent_id' => $menuGuid2,
-                'link' => 'permission',
+                'link' => 'admin',
                 'icon' => null,
                 'sort' => 1, 'updated_at' => $timestamp, 'created_at' => $timestamp
             ],

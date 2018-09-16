@@ -2,130 +2,244 @@
 
 namespace App\Http\Controllers\Administrator;
 
-use App\Models\Administrator;
-use App\Models\AdministratorMenu;
-use App\Models\WorldLanguage;
-use App\Models\SystemParameter;
-use App\Models\WebData;
-use App\Repositories\Administrator\Repository;
+use App\Helpers\LogHelper;
+use App\Repositories\Administrator\AdministratorMenuRepository;
+use App\Repositories\Administrator\WebDataRepository;
+use App\Repositories\Administrator\WorldLanguageRepository;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as BaseController;
-use Illuminate\Support\Str;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-use Auth;
 use Breadcrumbs;
-use Route;
-use Validator;
 
 /**
  * Class Controller
- * @property \App\Models\Administrator $adminData
  */
 class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
-    /**
-     * @var string $uri
-     * @var array $viewData
-     * @var Administrator $adminData
-     * @var WorldLanguage $languageData
-     * @var array $parameterData
-     * @var AdministratorMenu $pageData
-     * @var string $modelName
-     * @var Repository $modelRepository
-     */
+    /** @var string $uri */
     protected $uri;
-    protected $viewData;
-    protected $adminData;
+
+    /** @var string $uri */
+    protected $rootUri = 'administrator';
+
+    /** @var \Illuminate\Support\Collection|\App\Models\WorldLanguage[] $languageData */
     protected $languageData;
-    protected $parameterData;
-    protected $menuData;
+
+    /** @var array $viewData */
+    protected $viewData;
+
+    /** @var array $systemMenu */
+    protected $systemMenu;
+
+    /** @var \App\Models\WebData $webData */
+    protected $webData;
+
+    /** @var \App\Models\AdministratorMenu $pageData */
     protected $pageData;
-    protected $modelName;
+
+    /** @var \App\Models\Administrator $adminData */
+    protected $adminData;
+
+    /** @var \App\Repositories\Administrator\Repository $modelRepository */
     protected $modelRepository;
 
-    public function __construct(Repository $modelRepository)
+    public function __construct(Request $request)
     {
-        $this->modelRepository = $modelRepository;
+        // 設定 語言資料
+        $this->languageData = \Cache::rememberForever('languageSet', function() {
+            return (new WorldLanguageRepository())
+                ->all(function($query) {
+                    /** @var \Illuminate\Database\Query\Builder $query */
+                    $query->where('active', '1')->orderBy('sort');
+                });
+        });
 
-        $this->middleware(function($request, $next) {
-            /**
-             * @var \Illuminate\Http\Request $request
-             */
+        // 設定 網站資料
+        $this->webData = (new WebDataRepository())->getData() ?? abort(404);
+        if ($this->webData->active != '1') abort(404, $this->webData->offline_text);
 
-            // 取得 語系資料
-            $this->languageData = WorldLanguage::all();
-            $this->viewData['languageData'] = $this->languageData->where('active', '1');
+        // 設定 Uri
+        $this->uri = explode('/', $request->path())[$this->languageData->count() > 1 ? 2 : 1] ?? '';
 
-            // 設定 語系
-            if($request->has('language') && $this->languageData->where('codes', $request->get('language'))->where('active', '1')->count() > 0) {
-                session(['administratorLanguage' => $request->get('language')]);
-                session()->save();
-            }
-            if(session()->has('administratorLanguage') && !is_null(session('administratorLanguage'))) {
-                app()->setLocale(session('administratorLanguage'));
-            }
+        // 設定 選單資料
+        $this->systemMenu = (new AdministratorMenuRepository())->getMenu();
 
-            // 設定 URI
-            if($request->route()->hasParameter('uri')) {
-                $this->uri = $request->route()->parameter('uri');
-                Route::current()->forgetParameter('uri');
-            } else {
-                $this->uri = explode('/', $request->route()->uri())[1] ?? $this->uri;
-            }
+        // 設定 頁面資料
+        $this->pageData = (new AdministratorMenuRepository())->one(['uri' => $this->uri]);
 
-            // 設定 系統參數
-            $this->parameterData = SystemParameter::where(['active' => 1])
-                ->get(['guid', 'code'])
-                ->mapWithKeys(function($item) {
-                    /** @var SystemParameter $item */
-                    return [
-                        $item->code => $item
-                            ->parameterItem()
-                            ->get(['guid', 'title', 'value', 'class'])
-                            ->mapWithKeys(function($item) {
-                                /** @var \App\Models\ParameterItem $item */
-                                return [
-                                    $item->value => [
-                                        'title' => $item->getAttribute('title'),
-                                        'class' => $item->getAttribute('class')
-                                    ]
-                                ];
-                            })
-                            ->toArray()
-                    ];
-                })->toArray();
-            $this->viewData['parameterData'] = $this->parameterData;
-
-            // 設定 網站資料
-            $this->viewData['webData'] = WebData::where(['lang' => app()->getLocale(), 'website_key' => 'administrator'])->first();
-
-            // 設定 選單資料
-            $this->menuData = AdministratorMenu::where(['parent' => '0'])->orderBy('sort')->get()->sortBy('class');
-            $this->viewData['menuData'] = $this->menuData;
-
-            // 設定 頁面資料
-            if($this->uri) {
-                $this->pageData = AdministratorMenu::where(['uri' => $this->uri])->first();
-                $this->viewData['pageData'] = $this->pageData;
-            }
+        $this->middleware(function ($request, $next) {
+            /** @var Request $request */
 
             // 設定 帳號資料
-            $this->adminData = Auth::guard('administrator')->user();
-            $this->viewData['adminData'] = $this->adminData;
+            $this->adminData = $request->user('administrator');
 
-            // 設定 模型注入
-            if($this->pageData) {
-                $this->modelRepository->setModelClassName($this->pageData->getAttribute('model') ?? null);
-            } elseif($request->route()->uri() !== 'administrator') {
-                abort(404);
-            }
+            // 設定 viewData
+            $this->setViewData();
 
             return $next($request);
         });
+    }
+
+    protected function setViewData()
+    {
+        $this->viewData['languageData'] = $this->languageData;
+        $this->viewData['webData'] = $this->webData;
+        $this->viewData['systemMenu'] = $this->systemMenu;
+        $this->viewData['pageData'] = $this->pageData;
+        $this->viewData['adminData'] = $this->adminData;
+        $this->viewData['rootUri'] = $this->rootUri . '/' . ($this->languageData->count() > 1 ? app()->getLocale() : '');
+    }
+
+    /**
+     * @throws \DaveJamesMiller\Breadcrumbs\Exceptions\DuplicateBreadcrumbException
+     */
+    protected function buildBreadcrumbsIndex()
+    {
+        Breadcrumbs::register('index', function ($breadcrumbs) {
+            /** @var \DaveJamesMiller\Breadcrumbs\BreadcrumbsGenerator $breadcrumbs */
+            $breadcrumbs->parent('administrator.home');
+            $breadcrumbs->push($this->pageData->title);
+        });
+    }
+
+    /**
+     * @throws \DaveJamesMiller\Breadcrumbs\Exceptions\DuplicateBreadcrumbException
+     */
+    protected function buildBreadcrumbsShow()
+    {
+        Breadcrumbs::register('view', function ($breadcrumbs) {
+            /** @var \DaveJamesMiller\Breadcrumbs\BreadcrumbsGenerator $breadcrumbs */
+            $breadcrumbs->parent('administrator.home');
+            $breadcrumbs->push($this->pageData->title, langRoute("administrator.{$this->uri}.index"));
+            $breadcrumbs->push(__('administrator.form.view'));
+        });
+    }
+
+    /**
+     * @throws \DaveJamesMiller\Breadcrumbs\Exceptions\DuplicateBreadcrumbException
+     */
+    protected function buildBreadcrumbsCreate()
+    {
+        Breadcrumbs::register('create', function ($breadcrumbs) {
+            /** @var \DaveJamesMiller\Breadcrumbs\BreadcrumbsGenerator $breadcrumbs */
+            $breadcrumbs->parent('administrator.home');
+            $breadcrumbs->push($this->pageData->title, langRoute("administrator.{$this->uri}.index"));
+            $breadcrumbs->push(__('administrator.form.create'));
+        });
+    }
+
+    /**
+     * @param  string|integer $id
+     * @throws \DaveJamesMiller\Breadcrumbs\Exceptions\DuplicateBreadcrumbException
+     */
+    protected function buildBreadcrumbsEdit($id)
+    {
+        Breadcrumbs::register('edit', function ($breadcrumbs) use ($id) {
+            /** @var \DaveJamesMiller\Breadcrumbs\BreadcrumbsGenerator $breadcrumbs */
+            $breadcrumbs->parent('administrator.home');
+            $breadcrumbs->push($this->pageData->title, langRoute("administrator.{$this->uri}.index"));
+            $breadcrumbs->push(__('administrator.form.edit'));
+        });
+    }
+
+    protected function checkValidate()
+    {
+        app('App\\Http\\Requests\\Administrator\\' . $this->pageData->getAttribute('model') . 'Request');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    protected function getQueryBuilder()
+    {
+        return $this->modelRepository->query();
+    }
+
+    /**
+     * Upload files and return new input set.
+     *
+     * @param  array $inputSet
+     * @param  Request $request
+     * @return array
+     */
+    protected function doFileUpload($inputSet, $request)
+    {
+        foreach ($inputSet['uploads'] ?? [] as $columnKey => $columnInput) {
+            $inputSet[$columnKey] = $columnInput['origin'] ?? null;
+            $filePath = 'files/' . ($columnInput['path'] ?? 'uploads');
+            $fileList = [];
+            foreach ($request->file($this->pageData->getAttribute('model') . '.uploads.' . $columnKey . '.file', []) as $fileItem) {
+                /** @var \Illuminate\Http\UploadedFile $fileItem */
+                if ($fileItem) {
+                    $fileName = microtime() . rand(100000, 999999) . '.' . strtolower($fileItem->getClientOriginalExtension());
+                    $fileItem->move(public_path($filePath), $fileName);
+                    $fileList[] = $filePath . '/' . $fileName;
+                }
+            }
+            $inputSet[$columnKey] = count($fileList) > 0 ? $fileList : $inputSet[$columnKey];
+        }
+        if (isset($inputSet['uploads'])) unset($inputSet['uploads']);
+
+        return $inputSet;
+    }
+
+    /**
+     * Upload files and return new input set.
+     *
+     * @param  mixed $datatables
+     * @param  Request $request
+     * @return mixed
+     */
+    protected function doDatatableFilter($datatables, $request)
+    {
+        if($request->has('filter') || $request->has('equal')) {
+            $datatables->filter(function($query) use ($request) {
+                /** @var \Illuminate\Database\Query\Builder $query */
+                $whereQuery = '';
+                $whereValue = [];
+
+                if($request->has('filter')) {
+                    foreach ($request->input('filter') as $column => $value) {
+                        if (is_null($value) || $value === '') continue;
+
+                        $whereQuery .= ($whereQuery === '' ? '' : ' or ') . "{$column} like ?";
+                        $whereValue[] = "%{$value}%";
+                    }
+                    if($whereQuery !== '') $whereQuery = "({$whereQuery})";
+                }
+
+                if($request->has('equal')) {
+                    foreach($request->input('equal') as $column => $value) {
+                        if(is_null($value) || $value === '') continue;
+
+                        $whereQuery .= ($whereQuery === '' ? '' : ' and ') . "{$column} = ?";
+                        $whereValue[] = "{$value}";
+                    }
+                }
+
+                if($whereQuery !== '' && count($whereValue) > 0)
+                    $query->whereRaw("{$whereQuery}", $whereValue);
+            });
+        }
+
+        return $datatables;
+    }
+
+    /**
+     * Upload files and return new input set.
+     *
+     * @param  mixed $datatables
+     * @return mixed
+     */
+    protected function setDatatablesTransformer($datatables)
+    {
+        $datatables->setTransformer(app('App\\Transformers\\Administrator\\' . $this->pageData->getAttribute('model') . 'Transformer', ['uri' => $this->uri]));
+
+        return $datatables;
     }
 
     /**
@@ -136,14 +250,7 @@ class Controller extends BaseController
      */
     public function index()
     {
-        // 設定麵包屑導航
-        Breadcrumbs::register('index', function ($breadcrumbs) {
-            /**
-             * @var \DaveJamesMiller\Breadcrumbs\BreadcrumbsGenerator $breadcrumbs
-             */
-            $breadcrumbs->parent('administrator.home');
-            $breadcrumbs->push($this->pageData->title, route('administrator.index', [$this->uri]));
-        });
+        $this->buildBreadcrumbsIndex();
 
         try {
             return view('administrator.' . $this->uri . '.index', $this->viewData);
@@ -161,20 +268,9 @@ class Controller extends BaseController
      */
     public function show($id)
     {
-        $where = [$this->modelRepository->getIndexKey() => $id];
-        if($this->modelRepository->isMultiLanguage()) $where['lang'] = app()->getLocale();
+        $this->viewData['formData'] = $this->modelRepository->find($id) ?? abort(404);
 
-        $this->viewData['formData'] = $this->modelRepository->one($where);
-
-        // 設定麵包屑導航
-        Breadcrumbs::register('view', function ($breadcrumbs) {
-            /**
-             * @var \DaveJamesMiller\Breadcrumbs\BreadcrumbsGenerator $breadcrumbs
-             */
-            $breadcrumbs->parent('administrator.home');
-            $breadcrumbs->push($this->pageData->title, route('administrator.index', [$this->uri]));
-            $breadcrumbs->push(__('administrator.form.view'));
-        });
+        $this->buildBreadcrumbsShow();
 
         try {
             return view('administrator.' . $this->uri . '.view', $this->viewData);
@@ -191,17 +287,9 @@ class Controller extends BaseController
      */
     public function create()
     {
-        $this->viewData['formData'] = $this->modelRepository->new();
+        $this->viewData['formData'] = $this->modelRepository->query()->getModel();
 
-        // 設定麵包屑導航
-        Breadcrumbs::register('create', function ($breadcrumbs) {
-            /**
-             * @var \DaveJamesMiller\Breadcrumbs\BreadcrumbsGenerator $breadcrumbs
-             */
-            $breadcrumbs->parent('administrator.home');
-            $breadcrumbs->push($this->pageData->title, route('administrator.index', [$this->uri]));
-            $breadcrumbs->push(__('administrator.form.create'));
-        });
+        $this->buildBreadcrumbsCreate();
 
         try {
             return view('administrator.' . $this->uri . '.create', $this->viewData);
@@ -218,48 +306,29 @@ class Controller extends BaseController
      */
     public function store(Request $request)
     {
+        $this->checkValidate();
+
         $inputSet = $request->input($this->pageData->getAttribute('model'));
 
-        $validator = Validator::make($inputSet, $this->modelRepository->getRules() ?? []);
+        $inputSet = $this->doFileUpload($inputSet, $request);
 
-        if($validator->passes()) {
-            $formDataKey = $this->modelRepository->getIndexKey();
-            if($formDataKey !== 'id') $input[$formDataKey] = Str::uuid();
+        // 儲存新建資料
+        try {
+            \DB::beginTransaction();
 
-            foreach($inputSet['uploads'] ?? [] as $columnKey => $columnInput) {
-                $inputSet[$columnKey] = $columnInput['origin'] ?? null;
-                $filePath = 'files/' . ($columnInput['path'] ?? 'uploads');
-                $fileList = [];
-                foreach($request->file($this->pageData->getAttribute('model') . '.uploads.' . $columnKey . '.file') ?? [] as $fileItem) {
-                    /** @var \Illuminate\Http\UploadedFile $fileItem */
-                    if($fileItem) {
-                        $fileName = microtime() . rand(100000, 999999) . '.' . $fileItem->getClientOriginalExtension();
-                        $fileItem->move(public_path($filePath), $fileName);
-                        $fileList[] = $filePath . '/' . $fileName;
-                    }
-                }
-                $inputSet[$columnKey] = count($fileList) > 0 ? implode(config('app.separate_string'), $fileList) : $inputSet[$columnKey];
-            }
-            if(isset($inputSet['uploads'])) unset($inputSet['uploads']);
-
-            if($modelData = $this->modelRepository->create($inputSet)) {
-                // 多語系複製
-                if($this->modelRepository->isMultiLanguage()) {
-                    foreach ($this->languageData as $language) {
-                        if($language->codes === app()->getLocale()) continue;
-                        $copyInsert = $modelData->replicate();
-                        $copyInsert->lang = $language->codes;
-                        $copyInsert->save();
-                    }
-                }
-
-                return redirect()->route('administrator.edit', [$this->uri, $modelData->$formDataKey])->with('success', __('administrator.form.message.create_success'));
+            if ($modelData = $this->modelRepository->create($inputSet)) {
+                \DB::commit();
+                LogHelper::system('administrator', $request->path(), $request->method(), $modelData->getKey(), $this->adminData->username, 1, __('administrator.form.message.create_success'));
+                return redirect(langRoute("administrator.{$this->uri}.edit", [$modelData->getKey()]))->with('success', __('administrator.form.message.create_success'));
             }
 
-            return redirect()->route('administrator.create', [$this->uri])->withErrors([__('administrator.form.message.create_error')])->withInput();
+            \DB::rollBack();
+        } catch (\Exception $e) {
+            \DB::rollBack();
         }
 
-        return redirect()->route('administrator.create', [$this->uri])->withErrors($validator)->withInput();
+        LogHelper::system('administrator', $request->path(), $request->method(), '', $this->adminData->username, 0, __('administrator.form.message.create_error'));
+        return redirect(langRoute("administrator.{$this->uri}.create"))->withErrors([__('admin.form.message.create_error')])->withInput();
     }
 
     /**
@@ -271,21 +340,10 @@ class Controller extends BaseController
      */
     public function edit($id)
     {
-        $where = [$this->modelRepository->getIndexKey() => $id];
-        if($this->modelRepository->isMultiLanguage()) $where['lang'] = app()->getLocale();
-
         $this->viewData['formDataId'] = $id;
-        $this->viewData['formData'] = $this->modelRepository->one($where);
+        $this->viewData['formData'] = $this->modelRepository->find($id) ?? abort(404);
 
-        // 設定麵包屑導航
-        Breadcrumbs::register('edit', function ($breadcrumbs) {
-            /**
-             * @var \DaveJamesMiller\Breadcrumbs\BreadcrumbsGenerator $breadcrumbs
-             */
-            $breadcrumbs->parent('administrator.home');
-            $breadcrumbs->push($this->pageData->title, route('administrator.index', [$this->uri]));
-            $breadcrumbs->push(__('administrator.form.edit'));
-        });
+        $this->buildBreadcrumbsEdit($id);
 
         try {
             return view('administrator.' . $this->uri . '.edit', $this->viewData);
@@ -303,162 +361,126 @@ class Controller extends BaseController
      */
     public function update($id, Request $request)
     {
+        $this->checkValidate();
+
+        $model = $this->modelRepository->find($id) ?? abort(404);
+
         $inputSet = $request->input($this->pageData->getAttribute('model'));
 
-        $validator = Validator::make($request->input($this->pageData->getAttribute('model')), $this->modelRepository->getRules() ?? []);
+        $inputSet = $this->doFileUpload($inputSet, $request);
 
-        if($validator->passes()) {
-            $where = [$this->modelRepository->getIndexKey() => $id];
-            if($this->modelRepository->isMultiLanguage()) $where['lang'] = app()->getLocale();
+        // 儲存更新資料
+        try {
+            \DB::beginTransaction();
 
-            foreach($inputSet['uploads'] ?? [] as $columnKey => $columnInput) {
-                $inputSet[$columnKey] = $columnInput['origin'] ?? null;
-                $filePath = 'files/' . ($columnInput['path'] ?? 'uploads');
-                $fileList = [];
-                foreach($request->file($this->pageData->getAttribute('model') . '.uploads.' . $columnKey . '.file') ?? [] as $fileItem) {
-                    /** @var \Illuminate\Http\UploadedFile $fileItem */
-                    if($fileItem) {
-                        $fileName = microtime() . rand(100000, 999999) . '.' . $fileItem->getClientOriginalExtension();
-                        $fileItem->move(public_path($filePath), $fileName);
-                        $fileList[] = $filePath . '/' . $fileName;
-                    }
-                }
-                $inputSet[$columnKey] = count($fileList) > 0 ? implode(config('app.separate_string'), $fileList) : $inputSet[$columnKey];
-            }
-            if(isset($inputSet['uploads'])) unset($inputSet['uploads']);
-
-            if($this->modelRepository->save($inputSet, $where)) {
-                return redirect()->route('administrator.edit', [$this->uri, $id])->with('success', __('administrator.form.message.edit_success'));
+            if ($this->modelRepository->save($model, $inputSet)) {
+                \DB::commit();
+                LogHelper::system('administrator', $request->path(), $request->method(), $id, $this->adminData->username, 1, __('administrator.form.message.edit_success'));
+                return redirect(langRoute("administrator.{$this->uri}.edit", [$id]))->with('success', __('administrator.form.message.edit_success'));
             }
 
-            return redirect()->route('administrator.edit', [$this->uri, $id])->withErrors([__('administrator.form.message.edit_error')])->withInput();
+            \DB::rollBack();
+        } catch (\Exception $e) {
+            \DB::rollBack();
         }
 
-        return redirect()->route('administrator.edit', [$this->uri, $id])->withErrors($validator)->withInput();
+        LogHelper::system('administrator', $request->path(), $request->method(), $id, $this->adminData->username, 0, __('administrator.form.message.edit_error'));
+        return redirect(langRoute("administrator.{$this->uri}.edit", [$id]))->withErrors([__('administrator.form.message.edit_error')])->withInput();
     }
 
     /**
      * Model Destroy
      *
      * @param string $id
+     * @param Request $request
      * @return $this|\Illuminate\Http\RedirectResponse
      */
-    public function destroy($id)
+    public function destroy($id, Request $request)
     {
-        if($this->modelRepository->delete([$this->modelRepository->getIndexKey() => $id]))
-            return redirect()->route('administrator.index', [$this->uri])->with('success', __('administrator.form.message.delete_success'));
+        if ($model = $this->modelRepository->find($id)) {
+            if ($this->modelRepository->delete($model)) {
+                LogHelper::system('administrator', $request->path(), $request->method(), $id, $this->adminData->username, 1, __('administrator.form.message.delete_success'));
+                return redirect(langRoute("administrator.{$this->uri}.index"))->with('success', __('administrator.form.message.delete_success'));
+            }
+        }
 
-        return redirect()->route('administrator.index', [$this->uri])->withErrors([__('administrator.form.message.delete_error')]);
+        LogHelper::system('administrator', $request->path(), $request->method(), $id, $this->adminData->username, 0, __('administrator.form.message.delete_error'));
+        return redirect(langRoute("administrator.{$this->uri}.index"))->withErrors([__('administrator.form.message.delete_error')]);
     }
 
     /**
      * Grid data return for DataTables
      *
      * @param Request $request
-     * @return \Illuminate\Http\RedirectResponse
+     * @return \Illuminate\Http\Response
      * @throws \Throwable
      */
     public function ajaxDataTable(Request $request)
     {
-        $where = [];
-        if($this->modelRepository->isMultiLanguage()) $where['lang'] = app()->getLocale();
+        $queryBuilder = $this->getQueryBuilder();
 
-        $datatables = \DataTables::of($this->modelRepository->query($where));
+        $datatables = \DataTables::of($queryBuilder);
 
-        if($request->has('filter') || $request->has('equal')) {
-            $datatables->filter(function($query) use ($request) {
-                /** @var \Illuminate\Database\Query\Builder $query */
-                $whereQuery = '';
-                $whereValue = [];
-                if($request->has('filter')) {
-                    foreach ($request->input('filter') as $column => $value) {
-                        if (is_null($value) || $value === '') continue;
-                        if ($whereQuery === '') {
-                            $whereQuery .= "{$column} like ?";
-                        } else {
-                            $whereQuery .= " or {$column} like ?";
-                        }
-                        $whereValue[] = "%{$value}%";
-                    }
-                    if($whereQuery !== '') $whereQuery = "({$whereQuery})";
-                }
-                if($request->has('equal')) {
-                    foreach($request->input('equal') as $column => $value) {
-                        if(is_null($value) || $value === '') continue;
-                        if($whereQuery === '') {
-                            $whereQuery .= "{$column} = ?";
-                        } else {
-                            $whereQuery .= " and {$column} = ?";
-                        }
-                        $whereValue[] = "{$value}";
-                    }
-                }
+        $datatables = $this->doDatatableFilter($datatables, $request);
 
-                if($whereQuery !== '' && count($whereValue) > 0)
-                    $query->whereRaw("{$whereQuery}", $whereValue);
-            });
-        }
+        $datatables = $this->setDatatablesTransformer($datatables);
 
-        return $datatables
-            ->setTransformer(app()->make('App\\Transformers\\Administrator\\' . $this->pageData->getAttribute('model') . 'Transformer', ['uri' => $this->uri]))
-            ->make(true);
+        return $datatables->make(true);
     }
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\Response
+     */
     public function ajaxSwitch(Request $request)
     {
-        $validateResult = $request->validate([
+        $inputSet = $request->input();
+
+        $validator = validator($inputSet, [
             'id' => 'required',
             'column' => 'required',
             'oriValue' => 'required|in:0,1',
             'switchTo' => 'required|in:0,1',
         ]);
 
-        if($this->modelRepository->save([$request->input('column') => $request->input('switchTo')], [[$this->modelRepository->getIndexKey(), '=', $request->input('id')]])) {
-            return response([
-                'msg' => 'success',
-                'oriClass' => 'badge-' . ($this->parameterData[$request->input('column')][$request->input('oriValue')]['class']
-                    ?? ($request->input('oriValue') == 1 ? 'danger' : 'secondary')),
-                'newLabel' => $this->parameterData[$request->input('column')][$request->input('switchTo')]['title']
-                    ?? __("models.{$this->pageData->getAttribute('model')}.selection.{$request->input('column')}.{$request->input('switchTo')}"),
-                'newClass' => 'badge-' . ($this->parameterData[$request->input('column')][$request->input('switchTo')]['class']
-                    ?? ($request->input('switchTo') == 1 ? 'danger' : 'secondary')),
-            ], 200, ['Content-Type' => 'application/json']);
-        } else {
-            return response(['msg' => 'error'], 400, ['Content-Type' => 'application/json']);
+        if (!$validator->fails() && $model = $this->modelRepository->find($inputSet['id'])) {
+            if ($this->modelRepository->save($model, [$inputSet['column'] => $inputSet['switchTo']])) {
+                LogHelper::system('administrator', $request->path(), $request->method(), $inputSet['id'], $this->adminData->username, 1, __('administrator.form.message.edit_success'));
+                return response([
+                    'msg' => 'success',
+                    'oriClass' => 'badge-' . systemParam("{$inputSet['column']}.{$inputSet['oriValue']}.class"),
+                    'newLabel' => systemParam("{$inputSet['column']}.{$inputSet['switchTo']}.title"),
+                    'newClass' => 'badge-' . systemParam("{$inputSet['column']}.{$inputSet['switchTo']}.class"),
+                ], 200, ['Content-Type' => 'application/json']);
+            }
         }
+
+        LogHelper::system('administrator', $request->path(), $request->method(), $inputSet['id'], $this->adminData->username, 0, __('administrator.form.message.edit_error'));
+        return response(['msg' => 'error'], 400, ['Content-Type' => 'application/json']);
     }
 
-    public function ajaxMultiSwitch(Request $request)
-    {
-        $validateResult = $request->validate([
-            'data' => 'required',
-        ]);
-
-        $input = json_decode(urldecode($request->input('data')));
-        $inputData = [];
-        foreach ($input as $value) {
-            $inputData[$value->name] = ($value->name == 'selID') ? explode(',', substr($value->value, 0, -1)) : $value->value;
-        }
-
-        if($this->modelRepository->update(['active' => $inputData['active']], function($query) use ($inputData) { /** @var \Illuminate\Database\Query\Builder $query */ $query->whereIn($this->modelRepository->getIndexKey(), $inputData['selID']); })) {
-            return response(['msg' => 'success'], 200, ['Content-Type' => 'application/json']);
-        } else {
-            return response(['msg' => 'error'], 400, ['Content-Type' => 'application/json']);
-        }
-    }
-
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\Response
+     */
     public function ajaxSort(Request $request)
     {
-        $validateResult = $request->validate([
+        $inputSet = $request->input();
+
+        $validator = validator($inputSet, [
             'id' => 'required',
             'column' => 'required',
             'index' => 'required|integer',
         ]);
 
-        if($this->modelRepository->save([$request->input('column') => $request->input('index')], [[$this->modelRepository->getIndexKey(), '=', $request->input('id')]])) {
-            return response(['msg' => 'success'], 200, ['Content-Type' => 'application/json']);
-        } else {
-            return response(['msg' => 'error'], 400, ['Content-Type' => 'application/json']);
+        if (!$validator->fails() && $model = $this->modelRepository->find($inputSet['id'])) {
+            if ($this->modelRepository->save($model, [$inputSet['column'] => $inputSet['index']])) {
+                LogHelper::system('administrator', $request->path(), $request->method(), $inputSet['id'], $this->adminData->username, 1, __('administrator.form.message.edit_success'));
+                return response(['msg' => 'success'], 200, ['Content-Type' => 'application/json']);
+            }
         }
+
+        LogHelper::system('administrator', $request->path(), $request->method(), $inputSet['id'], $this->adminData->username, 0, __('administrator.form.message.edit_error'));
+        return response(['msg' => 'error'], 400, ['Content-Type' => 'application/json']);
     }
 }

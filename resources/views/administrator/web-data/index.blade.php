@@ -1,3 +1,9 @@
+<?php
+/**
+ * @var \App\Models\AdministratorMenu $pageData
+ */
+?>
+
 @extends('administrator.default.index')
 
 @section('grid-filter')
@@ -16,8 +22,8 @@
         <div class="col col-md-auto ml-1">
             <select class="bs-select form-control sch_select" id="searchActive" name="searchActive" data-style="btn-outline-light btn-sm">
                 <option selected="selected" value="">@lang('administrator.grid.selection.all_active')</option>
-                <option value="1">@lang('models.WebData.selection.active.1')</option>
-                <option value="0">@lang('models.WebData.selection.active.0')</option>
+                <option value="1">{{ systemParam('active.1.title') }}</option>
+                <option value="0">{{ systemParam('active.0.title') }}</option>
             </select>
         </div>
     </div>
@@ -25,11 +31,10 @@
 @endsection
 
 @section('grid-table')
-<input type="hidden" id="model"  value="{{ $pageData->model }}">
-
 <table class="table table-responsive-md table-bordered table-striped table-hover table-checkable datatables" id="tableList">
     <thead>
     <tr role="row">
+        <th class="w-25">@lang('models.WebData.guard')</th>
         <th class="w-25">@lang('models.WebData.website_name')</th>
         <th class="w-25">@lang('models.WebData.system_email')</th>
         <th>@lang('models.WebData.active')</th>
@@ -49,24 +54,28 @@ $(document).ready(function() {
             url: '/admin/js/lang/{{ app()->getLocale() }}/datatables.json'
         },
         ajax: {
-            url: '{{ route('administrator.datatables', ['uri' => $pageData->uri]) }}',
+            url: '{{ langRoute("administrator.{$pageData->uri}.ajaxDataTable") }}',
             data: function (d) {
                 let searchKeyword = $('#sch_keyword').val();
                 d.filter = {
+                    "guard": searchKeyword,
                     "website_name": searchKeyword,
-                    "system_email": searchKeyword,
+                    "system_email": searchKeyword
+                };
+                d.equal = {
                     "active": $('#searchActive').val()
                 };
             }
         },
         columns: [
+            {data: 'guard', name: 'guard'},
             {data: 'website_name', name: 'website_name'},
             {data: 'system_email', name: 'system_email'},
             {data: 'active', name: 'active'},
             {data: 'action', name: 'action'}
         ],
         order: [
-            [0, 'asc']
+            [3, 'asc'], [0, 'asc']
         ]
     });
 });

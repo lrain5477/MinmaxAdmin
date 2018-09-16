@@ -13,7 +13,7 @@
 </head>
 <body>
 <div class="wrapper">
-    @include('administrator.layouts._header')
+    @include('administrator.layouts.header')
 
     <div class="border-box page-content">
         <div class="content-header">
@@ -25,19 +25,19 @@
         </div>
 
         <div class="content-body">
-            @include('administrator.layouts._alerts')
+            @include('administrator.layouts.alerts')
 
             @yield('content')
         </div>
     </div>
 
-    @include('administrator.layouts._sidebar')
+    @include('administrator.layouts.sidebar')
 
     <footer class="page-footer small p-2">
         <p class="mb-0">{{ date('Y') }} © {{ config('app.author') }}. design by <a href="{{ config('app.author_url') }}" target="_blank">{{ config('app.author') }}</a></p>
     </footer>
 </div>
 
-@include('administrator.layouts._footJs')
+@include('administrator.layouts.plugin')
 </body>
 </html>

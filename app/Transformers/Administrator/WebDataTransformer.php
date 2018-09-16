@@ -19,10 +19,11 @@ class WebDataTransformer extends Transformer
     public function transform(WebData $model)
     {
         return [
+            'guard' => $this->getGridText($model->guard),
             'website_name' => $this->getGridText($model->website_name),
             'system_email' => $this->getGridText($model->system_email),
             'active' => $this->getGridSwitch($model->guid, 'active', $model->active),
-            'action' => $this->getGridActions($model->guid),
+            'action' => $this->getGridActions($model->guid, ['R', 'U']),
         ];
     }
 }

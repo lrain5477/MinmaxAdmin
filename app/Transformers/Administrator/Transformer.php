@@ -2,8 +2,6 @@
 
 namespace App\Transformers\Administrator;
 
-use App\Models\SystemParameter;
-use Illuminate\Support\Carbon;
 use League\Fractal\TransformerAbstract;
 
 class Transformer extends TransformerAbstract
@@ -15,39 +13,18 @@ class Transformer extends TransformerAbstract
 
     /**
      * Transformer constructor. Initial setting uri.
+     *
      * @param string $uri
      */
     public function __construct($uri)
     {
         $this->uri = $uri;
 
-        $parameterGroup = SystemParameter::where(['active' => 1])
-            ->get(['guid', 'code', 'title'])
-            ->filter(function($item) {
-                return in_array($item->code, $this->parameterSet);
-            })
-            ->values();
-
-        $this->parameters = collect($this->parameterSet)
-            ->map(function($item) use ($parameterGroup) {
-                return $parameterGroup->where('code', '=', $item)->count() > 0
-                    ? $parameterGroup
-                        ->firstWhere('code', '=', $item)
-                        ->parameterItem()
-                        ->get(['title', 'value', 'class'])
-                        ->mapWithKeys(function($item) {
-                            /** @var \App\Models\ParameterItem $item **/
-                            return [
-                                $item->value => [
-                                    'title' => $item->getAttribute('title'),
-                                    'class' => $item->getAttribute('class')
-                                ]
-                            ];
-                        })
-                        ->toArray()
-                    : [];
-            })
-            ->toArray();
+        foreach ($this->parameterSet as $item) {
+            if ($paramArray = systemParam($item)) {
+                $this->parameters[$item] = systemParam($item);
+            }
+        }
     }
 
     /**
@@ -61,7 +38,6 @@ class Transformer extends TransformerAbstract
 
     /**
      * @param string $value
-     * @param string $class
      * @param string $column
      * @return string
      * @throws \Throwable
@@ -93,24 +69,6 @@ class Transformer extends TransformerAbstract
     }
 
     /**
-     * @param string $value
-     * @return string
-     */
-    public function getGridDate($value)
-    {
-        return is_null($value) ? '-' : Carbon::parse($value)->format('Y-m-d');
-    }
-
-    /**
-     * @param string $value
-     * @return string
-     */
-    public function getGridDatetime($value)
-    {
-        return is_null($value) ? '-' : Carbon::parse($value)->format('Y-m-d H:i:s');
-    }
-
-    /**
      * @param string $id
      * @return string
      * @throws \Throwable
@@ -139,9 +97,9 @@ class Transformer extends TransformerAbstract
     }
 
     /**
-     * @param $id
-     * @param $column
-     * @param $value
+     * @param  integer|string $id
+     * @param  string $column
+     * @param  string $value
      * @return string
      * @throws \Throwable
      */
@@ -158,16 +116,17 @@ class Transformer extends TransformerAbstract
     }
 
     /**
-     * @param $id
+     * @param  integer|string $id
+     * @param  array $rules
      * @return string
      * @throws \Throwable
      */
-    public function getGridActions($id)
+    public function getGridActions($id, $rules = ['R', 'U', 'D'])
     {
         return view('administrator.grid-components.actions', [
             'id' => $id,
             'uri' => $this->uri,
-            'rules' => ['R', 'U', 'D'],
+            'rules' => $rules,
         ])->render();
     }
 }

@@ -9,12 +9,12 @@
  */
 ?>
 <div class="text-center">
-    <a class="badge badge-pill badge-{{ $parameter ? $parameter['class'] : 'secondary' }} badge-switch" href="#1"
+    <a class="badge badge-pill badge-{{ $parameter['class'] ?? 'secondary' }} badge-switch" href="#1"
        title="@lang('administrator.grid.click_to_switch')"
-       data-url="{{ route('administrator.switch', ['uri' => $uri]) }}"
+       data-url="{{ langRoute("administrator.{$uri}.ajaxSwitch") }}"
        data-column="{{ $column }}"
        data-value="{{ $value }}"
        data-id="{{ $id }}">
-        {{ $parameter ? $parameter['title'] : __("models.{$model}.selection.{$column}.{$value}") }}
+        {{ $parameter['title'] ?? __("models.{$model}.selection.{$column}.{$value}") }}
     </a>
 </div>

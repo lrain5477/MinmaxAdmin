@@ -1,3 +1,9 @@
+<?php
+/**
+ * @var \App\Models\AdministratorMenu $pageData
+ */
+?>
+
 @extends('administrator.layouts.site')
 
 @section('breadcrumbs', Breadcrumbs::view('administrator.layouts.breadcrumbs', 'view'))

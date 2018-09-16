@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers\Administrator;
 
-use App\Models\WebData;
-use Auth;
+use App\Helpers\LogHelper;
+use App\Repositories\Administrator\WebDataRepository;
+use App\Repositories\Administrator\WorldLanguageRepository;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 use Illuminate\Foundation\Bus\DispatchesJobs;
@@ -23,13 +24,38 @@ class LoginController extends BaseController
      */
     protected $redirectTo = '/administrator';
 
+    /** @var \Illuminate\Support\Collection|\App\Models\WorldLanguage[] $languageData */
+    protected $languageData;
+
+    /**
+     * @var \App\Models\WebData $webData
+     */
+    protected $webData;
+
     /**
      * Create a new controller instance.
      *
+     * @param  WebDataRepository $webDataRepository
      * @return void
      */
-    public function __construct()
+    public function __construct(WebDataRepository $webDataRepository)
     {
+        // 設定 語言資料
+        $this->languageData = \Cache::rememberForever('languageSet', function() {
+            return (new WorldLanguageRepository())
+                ->all(function($query) {
+                    /** @var \Illuminate\Database\Query\Builder $query */
+                    $query->where('active', '1')->orderBy('sort');
+                });
+        });
+
+        // 設定 網站資料
+        $this->webData = $webDataRepository->getData() ?? abort(404);
+        if ($this->webData->active != '1') abort(404, $this->webData->offline_text);
+
+        // 設定 導向網址
+        $this->redirectTo .= $this->languageData->count() > 1 ? ('/'.app()->getLocale()) : '';
+
         $this->middleware('guest')->except('logout');
     }
 
@@ -40,7 +66,7 @@ class LoginController extends BaseController
      */
     public function showLoginForm()
     {
-        return view('administrator.login', ['webData' => WebData::where(['lang' => app()->getLocale(), 'website_key' => 'administrator'])->first()]);
+        return view('administrator.login', ['webData' => $this->webData]);
     }
 
     /**
@@ -56,17 +82,18 @@ class LoginController extends BaseController
                 'required',
                 'string',
                 'max:16',
-                Rule::exists('administrator', $this->username())->where(function($query) {
-                    /** @var \Illuminate\Database\Query\Builder $query */
-                    $query
-                        ->where('active', '=', 1)
-                        ->where(function($query) {
-                            /** @var \Illuminate\Database\Query\Builder $query */
-                            $query
-                                ->whereNull('allow_ip')
-                                ->orWhere('allow_ip', 'like', '%\'' . \Request::ip() . '\'%');
-                        });
-                }),
+                Rule::exists('administrator', $this->username())
+                    ->where(function($query) {
+                        /** @var \Illuminate\Database\Query\Builder $query */
+                        $query
+                            ->where('active', '=', 1)
+                            ->where(function($query) {
+                                /** @var \Illuminate\Database\Query\Builder $query */
+                                $query
+                                    ->whereNull('allow_ip')
+                                    ->orWhere('allow_ip', 'like', '%\'' . request()->ip() . '\'%');
+                            });
+                    }),
             ],
             'password' => 'required|string',
             'captcha' => ['required', Rule::in([session('administrator_captcha_login')])],
@@ -98,7 +125,18 @@ class LoginController extends BaseController
 
         $request->session()->invalidate();
 
-        return redirect()->route('administrator.home');
+        return redirect(langRoute('administrator.home'));
+    }
+
+    /**
+     * The user has been authenticated.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  mixed  $user
+     */
+    protected function authenticated(Request $request, $user)
+    {
+        LogHelper::login('administrator', $request, $user->username, 1, 'Login success');
     }
 
     /**
@@ -108,7 +146,7 @@ class LoginController extends BaseController
      */
     protected function guard()
     {
-        return Auth::guard('administrator');
+        return \Auth::guard('administrator');
     }
 
     /**

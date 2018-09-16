@@ -1,3 +1,9 @@
+<?php
+/**
+ * @var \App\Models\AdministratorMenu $pageData
+ */
+?>
+
 @extends('administrator.layouts.site')
 
 @section('breadcrumbs', Breadcrumbs::view('administrator.layouts.breadcrumbs', 'create'))
@@ -7,17 +13,14 @@
 <section class="panel panel-default">
     <header class="panel-heading">
         <h1 class="h5 float-left font-weight-bold">{{ $pageData->title }} @lang('administrator.form.create')</h1>
-        <div class="float-right">
-            <a class="btn btn-sm btn-light" href="{{ route('administrator.index', [$pageData->uri]) }}" title="@lang('administrator.form.back_list')">
-                <i class="icon-undo2"></i><span class="ml-1 d-none d-md-inline-block">@lang('administrator.form.back_list')</span>
-            </a>
-        </div>
+
+        @yield('action-buttons')
     </header>
 
     <div class="panel-wrapper">
         <div class="panel-body">
             <form id="createForm" class="form-horizontal validate createForm"  name="createForm"
-                  action="{{ route('administrator.store', [$pageData->uri]) }}"
+                  action="{{ langRoute("administrator.{$pageData->uri}.store") }}"
                   method="post"
                   enctype="multipart/form-data">
                 @csrf

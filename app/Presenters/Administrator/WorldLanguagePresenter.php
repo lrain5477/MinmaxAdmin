@@ -2,7 +2,7 @@
 
 namespace App\Presenters\Administrator;
 
-class WebDataPresenter extends Presenter
+class WorldLanguagePresenter extends Presenter
 {
     public function __construct()
     {

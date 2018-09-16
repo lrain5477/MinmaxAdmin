@@ -2,130 +2,330 @@
 
 namespace App\Repositories\Administrator;
 
-class Repository
+use Closure;
+
+/**
+ * Abstract class Repository
+ */
+abstract class Repository
 {
-    /**
-     * @var string $modelClassName
-     */
-    protected $modelClassName = null;
+    const MODEL = null;
+
+    protected $languageColumns = [];
+    protected $languageBuffer = [];
 
     /**
-     * @param $modelClassName
+     * Get table name of this model
+     *
+     * @return string
      */
-    public function setModelClassName($modelClassName)
+    abstract protected function getTable();
+
+    /**
+     * Search by primary key
+     *
+     * @param  mixed $id
+     * @return mixed
+     */
+    public function find($id)
     {
-        $this->modelClassName = $modelClassName;
+        return $this->query()->findOrFail($id);
     }
 
     /**
-     * @return array
-     */
-    public function getRules()
-    {
-        return call_user_func_array("App\\Models\\{$this->modelClassName}::rules", []) ?? null;
-    }
-
-    public function getIndexKey()
-    {
-        return call_user_func_array("App\\Models\\{$this->modelClassName}::getIndexKey", []) ?? null;
-    }
-
-    /**
-     * Return if this model's table with column `lang` and need to use.
-     * @return bool
-     */
-    public function isMultiLanguage()
-    {
-        return call_user_func_array("App\\Models\\{$this->modelClassName}::isMultiLanguage", []) ?? false;
-    }
-
-    /**
+     * Search by condition
+     *
+     * @param  string|array|Closure  $column
+     * @param  string  $operator
+     * @param  mixed  $value
+     * @param  string  $boolean
      * @return \Illuminate\Database\Eloquent\Model
      */
-    public function new()
+    public function one($column = null, $operator = null, $value = null, $boolean = 'and')
     {
-        return app()->make("App\\Models\\{$this->modelClassName}") ?? null;
-    }
+        $query = $this->query();
 
-    /**
-     * @param array $where
-     * @return \Illuminate\Database\Query\Builder
-     */
-    public function query($where = [])
-    {
-        return call_user_func_array("App\\Models\\{$this->modelClassName}::where", [$where]) ?? null;
-    }
+        if ($column instanceof Closure) {
+            $subQuery = $this->query();
 
-    /**
-     * @param array $where
-     * @return \Illuminate\Database\Eloquent\Model
-     */
-    public function one($where = [])
-    {
-        return call_user_func_array("App\\Models\\{$this->modelClassName}::where", [$where])->first() ?? null;
-    }
+            $column($subQuery);
 
-    /**
-     * @param array $where
-     * @return \Illuminate\Support\Collection
-     */
-    public function all($where = [])
-    {
-        return call_user_func_array("App\\Models\\{$this->modelClassName}::where", [$where])->get() ?? null;
-    }
-
-    /**
-     * @param array $data
-     * @return \Illuminate\Database\Eloquent\Model
-     */
-    public function create($data)
-    {
-        foreach($data as $key => $value) {
-            if(is_null($value)) unset($data[$key]);
-            if(is_array($value)) $data[$key] = implode(config('app.separate_string'), $value);
+            return $query->addNestedWhereQuery($subQuery->getQuery(), $boolean)->first();
+        } elseif (is_null($column)) {
+            return $query->first();
+        } else {
+            return $query->where(...func_get_args())->first();
         }
-        return call_user_func_array("App\\Models\\{$this->modelClassName}::create", [$data]) ?? null;
     }
 
     /**
-     * @param array $data
-     * @param array $where
-     * @return bool
+     * Search to a collection with condition
+     *
+     * @param  string|array|Closure  $column
+     * @param  string  $operator
+     * @param  mixed  $value
+     * @param  string  $boolean
+     * @return \Illuminate\Database\Eloquent\Collection|\Illuminate\Database\Eloquent\Model[]
      */
-    public function save($data, $where = [])
+    public function all($column = null, $operator = null, $value = null, $boolean = 'and')
     {
-        $thisRow = $this->one($where);
+        $query = $this->query();
 
-        foreach($data as $key => $value) {
-            $thisRow->$key = is_array($value) ? implode(config('app.separate_string'), $value) : $value;
+        if ($column instanceof Closure) {
+            $subQuery = $this->query();
+
+            $column($subQuery);
+
+            return $query->addNestedWhereQuery($subQuery->getQuery(), $boolean)->get();
+        } elseif (is_null($column)) {
+            return $query->get();
+        } else {
+            return $query->where(...func_get_args())->get();
         }
-
-        return $thisRow->save();
     }
 
     /**
-     * @param array $data
-     * @param array $where
-     * @return bool
+     * Create a new model
+     *
+     * @param  array $attributes
+     * @return \Illuminate\Database\Eloquent\Model|null
      */
-    public function update($data, $where = [])
+    public function create($attributes)
     {
-        foreach($data as $key => $value) {
-            if(is_array($value)) $data[$key] = implode(config('app.separate_string'), $value);
-        }
-        return call_user_func_array("App\\Models\\{$this->modelClassName}::where", [$where])->update($data) ?? false;
-    }
+        $this->beforeCreate();
 
-    /**
-     * @param array $where
-     * @return bool
-     */
-    public function delete($where = [])
-    {
+        $model = $this->serialization($attributes);
+
         try {
-            return call_user_func_array("App\\Models\\{$this->modelClassName}::where", [$where])->delete();
+            if ($model->save()) {
+                $model = $this->saveLanguage($model);
+
+                $this->afterCreate();
+
+                return $model;
+            }
+            return null;
         } catch (\Exception $e) {
+            return null;
+        }
+    }
+
+    /**
+     * @param  \Illuminate\Database\Eloquent\Model $model
+     * @param  array $attributes
+     * @return \Illuminate\Database\Eloquent\Model
+     */
+    public function save($model, $attributes)
+    {
+        $this->beforeSave();
+
+        $this->clearLanguageBuffer();
+
+        foreach ($this->languageColumns as $column) {
+            if (array_key_exists($column, $attributes)) {
+                $attributes[$column] = $this->exchangeLanguage($attributes, $column, $model->getAttribute($model->getKeyName()));
+            }
+        }
+
+        if (count($this->languageBuffer) > 0) {
+            $attributes['updated_at'] = date('Y-m-d H:i:s');
+        }
+
+        $model->fill($attributes);
+
+        if ($model->save()) {
+            $model = $this->saveLanguage($model);
+            return $model;
+        }
+
+        $this->afterSave();
+
+        return null;
+    }
+
+    /**
+     * @param  \Illuminate\Database\Eloquent\Model $model
+     * @param  bool $force
+     * @return bool
+     */
+    public function delete($model, $force = false)
+    {
+        $this->beforeDelete();
+
+        try {
+            \DB::beginTransaction();
+
+            $this->deleteLanguage($model);
+
+            $deleteResult = $force ? $model->forceDelete() : $model->delete();
+
+            if ($deleteResult) {
+                $this->afterDelete();
+                \DB::commit();
+            }
+
+            \DB::rollBack();
+            return $deleteResult;
+        } catch (\Exception $e) {
+            \DB::rollBack();
             return false;
         }
     }
+
+    /**
+     * Create a model query builder
+     *
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function query()
+    {
+        return call_user_func(static::MODEL.'::query');
+    }
+
+    /**
+     * Clear valuable $languageBuffer to empty array
+     *
+     * @return void
+     */
+    protected function clearLanguageBuffer()
+    {
+        $this->languageBuffer = [];
+    }
+
+    /**
+     * Save value to buffer array and return a language map key
+     *
+     * @param  array $attributes
+     * @param  string $column
+     * @param  string|null $id
+     * @return string
+     */
+    protected function exchangeLanguage($attributes, $column, $id = null)
+    {
+        if(!array_key_exists($column, $attributes)) return null;
+
+        $attribute = $attributes[$column];
+
+        if (!array_key_exists($column, $this->languageBuffer)) {
+            $this->languageBuffer[$column] = $attribute;
+
+            if ($id) {
+                $attribute = "{$this->getTable()}.{$column}.{$id}";
+            } else {
+                $attribute = "{$this->getTable()}.{$column}";
+            }
+        }
+
+        return $attribute;
+    }
+
+    /**
+     * Save language value from buffer array to database and after return model
+     *
+     * @param  \Illuminate\Database\Eloquent\Model $model
+     * @param  string|array $columns
+     * @return \Illuminate\Database\Eloquent\Model
+     */
+    protected function saveLanguage($model, $columns = [])
+    {
+        if (!is_array($columns)) {
+            $columns = [$columns];
+        }
+
+        if (count($this->languageBuffer) > 0) {
+            foreach ($this->languageBuffer as $column => $value) {
+                if (count($columns) > 0 && !in_array($column, $columns)) continue;
+
+                $key = "{$this->getTable()}.{$column}.{$model->getKey()}";
+                $model->setAttribute($column, $key);
+                saveLang($key, $value);
+            }
+            $model->save();
+        }
+
+        return $model;
+    }
+
+    /**
+     * @param  \Illuminate\Database\Eloquent\Model $model
+     * @return bool
+     */
+    protected function deleteLanguage($model)
+    {
+        $keyList = [];
+
+        foreach ($this->languageColumns as $column) {
+            $keyList[] = "{$this->getTable()}.{$column}.{$model->getKey()}";
+        }
+
+        if (count($keyList) > 0) {
+            if (deleteLang($keyList)) {
+                return true;
+            }
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Serialize input attributes to a new model
+     *
+     * @param  array $attributes
+     * @return \Illuminate\Database\Eloquent\Model
+     */
+    protected function serialization(array $attributes)
+    {
+        $this->clearLanguageBuffer();
+
+        $model = static::MODEL;
+        /** @var \Illuminate\Database\Eloquent\Model $model */
+        $model = new $model();
+
+        $primaryKey = $model->incrementing ? null : uuidl();
+
+        if (!$model->incrementing) {
+            $model->setAttribute($model->getKeyName(), $primaryKey);
+        }
+
+        foreach ($attributes as $column => $value) {
+            if (in_array($column, $this->languageColumns)) {
+                $model->setAttribute($column, $this->exchangeLanguage($attributes, $column, $primaryKey));
+            } else {
+                $model->setAttribute($column, $value);
+            }
+        }
+
+        return $model;
+    }
+
+    /**
+     * Before create method
+     */
+    protected function beforeCreate() {}
+
+    /**
+     * Before save method
+     */
+    protected function beforeSave() {}
+
+    /**
+     * Before delete method
+     */
+    protected function beforeDelete() {}
+
+    /**
+     * After create method
+     */
+    protected function afterCreate() {}
+
+    /**
+     * After save method
+     */
+    protected function afterSave() {}
+
+    /**
+     * After delete method
+     */
+    protected function afterDelete() {}
 }
