@@ -31,12 +31,12 @@ class CreateSystemTable extends Migration
             $table->string('system_email')->comment('系統信箱');
             $table->string('system_url')->comment('網站網址');
             $table->text('system_logo')->nullable()->comment('網站Logo');
-            $table->text('company')->nullable()->comment('公司資訊');   // {name, name_en, id}
-            $table->text('contact')->nullable()->comment('聯絡資訊');   // {[phone, fax, email, address, map, lng, lat]}
-            $table->text('social')->nullable()->comment('社群連結');    // {facebook, youtube, instagram}
-            $table->text('seo')->comment('搜尋引擎');                   // {meta_description, meta_keywords, og_image}
+            $table->string('company')->comment('公司資訊');                 // {name, name_en, id}
+            $table->string('contact')->comment('聯絡資訊');                 // {[phone, fax, email, address, map, lng, lat]}
+            $table->text('social')->nullable()->comment('社群連結');        // {facebook, youtube, instagram}
+            $table->string('seo')->comment('搜尋引擎');                     // {meta_description, meta_keywords, og_image}
             $table->text('google_analytics')->nullable()->comment('Google Analytics');
-            $table->text('offline_text')->nullable()->comment('網站離線訊息');
+            $table->string('offline_text')->comment('網站離線訊息');
             $table->enum('active', [1, 0])->default(1)->comment('網站狀態');
             $table->timestamps();
         });
