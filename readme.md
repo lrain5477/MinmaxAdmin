@@ -24,7 +24,7 @@
 > php artisan cache:clear           # Clear all cache (Especial language cache)
 > php artisan migrate:fresh --seed  # Refresh migration and build seed data
 > php artisan ide-helper:generate   # Generate new ide-helper mapping file
-> php artisan crud:generate [name]  # Generate new feature all crud files
+> php artisan crud:generator [name] # Generate new feature all crud files
 ```
 
 ### Site url
