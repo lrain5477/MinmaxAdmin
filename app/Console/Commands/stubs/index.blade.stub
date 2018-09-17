@@ -35,7 +35,7 @@
         {{--
         <div class="col col-md-auto ml-1">
             <select class="bs-select form-control sch_select" id="searchActive" name="searchActive" data-style="btn-outline-light btn-sm">
-                <option selected="selected" value="">@lang('admin.grid.selection.all_active')</option>
+                <option selected="selected" value="">@lang('DummyGuardName.grid.selection.all_active')</option>
                 <option value="1">{{ systemParam('active.1.title') }}</option>
                 <option value="0">{{ systemParam('active.0.title') }}</option>
             </select>
