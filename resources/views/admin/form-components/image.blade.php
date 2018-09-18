@@ -29,7 +29,7 @@
         <div class="file-img-list" id="{{ $id }}-list">
             @foreach($images as $key => $image)
             <div class="card mr-2 d-inline-block ui-sortable-handle">
-                <input type="hidden" name="{{ $name }}[{{ $loop->index }}][path]" value="{{ $image['path'] ?? '' }}" required />
+                <input type="hidden" class="card-path" name="{{ $name }}[{{ $loop->index }}][path]" value="{{ $image['path'] ?? '' }}" required />
                 <a class="thumb" href="{{ asset($image['path']) }}" data-fancybox="">
                     <span class="imgFill imgLiquid_bgSize imgLiquid_ready"><img src="{{ asset($image['path']) }}"/></span>
                 </a>
@@ -208,7 +208,7 @@
                     $('.card-path', $this).attr('name', inputName + '[' + $this.index() + '][path]');
 
                     @if(count($additionalFields) > 0)
-                    $('.addi-button', $this).attr('href', '#' + thisId + '-modal-set-' + $this.index());
+                    $('.addi-button', $this).attr('data-target', '#' + thisId + '-modal-set-' + $this.index());
                     $('.modal', $this).attr('id', thisId + '-modal-set-' + $this.index());
                     $('.nav-tabs', $this)
                         .attr('id', thisId + '-tabModal-' + $this.index())
@@ -296,7 +296,7 @@
                     $('.card-path', $this).attr('name', inputName + '[' + $this.index() + '][path]');
 
                     @if(count($additionalFields) > 0)
-                    $('.addi-button', $this).attr('href', '#' + thisId + '-modal-set-' + $this.index());
+                    $('.addi-button', $this).attr('data-target', '#' + thisId + '-modal-set-' + $this.index());
                     $('.modal', $this).attr('id', thisId + '-modal-set-' + $this.index());
                     $('.nav-tabs', $this)
                         .attr('id', thisId + '-tabModal-' + $this.index())
@@ -339,7 +339,7 @@
                     $('.card-path', $this).attr('name', inputName + '[' + $this.index() + '][path]');
 
                     @if(count($additionalFields) > 0)
-                    $('.addi-button', $this).attr('href', '#' + thisId + '-modal-set-' + $this.index());
+                    $('.addi-button', $this).attr('data-target', '#' + thisId + '-modal-set-' + $this.index());
                     $('.modal', $this).attr('id', thisId + '-modal-set-' + $this.index());
                     $('.nav-tabs', $this)
                         .attr('id', thisId + '-tabModal-' + $this.index())
