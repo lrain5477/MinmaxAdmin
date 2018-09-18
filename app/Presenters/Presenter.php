@@ -632,6 +632,7 @@ class Presenter
             'hint' => isset($options['hint']) && $options['hint'] === true ? (is_string($options['hint']) ? $options['hint'] : __($hintPath)) : '',
             'lang' => $lang,
             'images' => $fieldValue,
+            'additionalFields' => $options['additional'] ?? [],
         ];
 
         return view("{$this->guardName}.form-components.image", $componentData);
