@@ -36,22 +36,22 @@ class WebData extends Model
 
     public function getCompanyAttribute()
     {
-        return json_decode(langDB($this->getAttributeFromArray('company')));
+        return json_decode(langDB($this->getAttributeFromArray('company')), true);
     }
 
     public function getContactAttribute()
     {
-        return json_decode(langDB($this->getAttributeFromArray('contact')));
+        return json_decode(langDB($this->getAttributeFromArray('contact')), true);
     }
 
     public function getSocialAttribute()
     {
-        return json_decode(langDB($this->getAttributeFromArray('social')));
+        return json_decode(langDB($this->getAttributeFromArray('social')), true);
     }
 
     public function getSeoAttribute()
     {
-        return json_decode(langDB($this->getAttributeFromArray('seo')));
+        return json_decode(langDB($this->getAttributeFromArray('seo')), true);
     }
 
     public function getOfflineTextAttribute()

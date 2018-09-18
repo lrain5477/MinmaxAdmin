@@ -34,7 +34,7 @@ class Presenter
 
         if (isset($options['subColumn'])) {
             $columnLabel = __("models.{$modelName}.{$column}.{$options['subColumn']}");
-            $fieldValue = $fieldValue->{$options['subColumn']} ?? '';
+            $fieldValue = $fieldValue[$options['subColumn']] ?? '';
         }
 
         $componentData = [
@@ -126,7 +126,7 @@ class Presenter
 
         if (isset($options['subColumn'])) {
             $columnLabel = __("models.{$modelName}.{$column}.{$options['subColumn']}");
-            $fieldValue = $fieldValue->{$options['subColumn']} ?? '';
+            $fieldValue = $fieldValue[$options['subColumn']] ?? '';
         }
 
         $componentData = [
@@ -156,7 +156,7 @@ class Presenter
         if (isset($options['subColumn'])) {
             $columnLabel = __("models.{$modelName}.{$column}.{$options['subColumn']}");
             $fieldName .= "[{$options['subColumn']}]";
-            $fieldValue = $fieldValue->{$options['subColumn']} ?? '';
+            $fieldValue = $fieldValue[$options['subColumn']] ?? '';
             $hintPath .= ".{$options['subColumn']}";
         }
 
@@ -192,7 +192,7 @@ class Presenter
         if (isset($options['subColumn'])) {
             $columnLabel = __("models.{$modelName}.{$column}.{$options['subColumn']}");
             $fieldName .= "[{$options['subColumn']}]";
-            $fieldValue = $fieldValue->{$options['subColumn']} ?? '';
+            $fieldValue = $fieldValue[$options['subColumn']] ?? '';
             $hintPath .= ".{$options['subColumn']}";
         }
 
@@ -228,7 +228,7 @@ class Presenter
         if (isset($options['subColumn'])) {
             $columnLabel = __("models.{$modelName}.{$column}.{$options['subColumn']}");
             $fieldName .= "[{$options['subColumn']}]";
-            $fieldValue = $fieldValue->{$options['subColumn']} ?? '';
+            $fieldValue = $fieldValue[$options['subColumn']] ?? '';
             $hintPath .= ".{$options['subColumn']}";
         }
 
@@ -321,7 +321,7 @@ class Presenter
         if (isset($options['subColumn'])) {
             $columnLabel = __("models.{$modelName}.{$column}.{$options['subColumn']}");
             $fieldName .= "[{$options['subColumn']}]";
-            $fieldValue = $fieldValue->{$options['subColumn']} ?? '';
+            $fieldValue = $fieldValue[$options['subColumn']] ?? '';
             $hintPath .= ".{$options['subColumn']}";
         }
 
@@ -358,7 +358,7 @@ class Presenter
         if (isset($options['subColumn'])) {
             $columnLabel = __("models.{$modelName}.{$column}.{$options['subColumn']}");
             $fieldName .= "[{$options['subColumn']}]";
-            $fieldValue = $fieldValue->{$options['subColumn']} ?? '';
+            $fieldValue = $fieldValue[$options['subColumn']] ?? '';
             $hintPath .= ".{$options['subColumn']}";
         }
 
@@ -394,7 +394,7 @@ class Presenter
         if (isset($options['subColumn'])) {
             $columnLabel = __("models.{$modelName}.{$column}.{$options['subColumn']}");
             $fieldName .= "[{$options['subColumn']}]";
-            $fieldValue = $fieldValue->{$options['subColumn']} ?? '';
+            $fieldValue = $fieldValue[$options['subColumn']] ?? '';
             $hintPath .= ".{$options['subColumn']}";
         }
 
@@ -431,7 +431,7 @@ class Presenter
         if (isset($options['subColumn'])) {
             $columnLabel = __("models.{$modelName}.{$column}.{$options['subColumn']}");
             $fieldName .= "[{$options['subColumn']}]";
-            $fieldValue = $fieldValue->{$options['subColumn']} ?? '';
+            $fieldValue = $fieldValue[$options['subColumn']] ?? '';
             $hintPath .= ".{$options['subColumn']}";
         }
 
@@ -468,7 +468,7 @@ class Presenter
         if (isset($options['subColumn'])) {
             $columnLabel = __("models.{$modelName}.{$column}.{$options['subColumn']}");
             $fieldName .= "[{$options['subColumn']}]";
-            $fieldValue = $fieldValue->{$options['subColumn']} ?? '';
+            $fieldValue = $fieldValue[$options['subColumn']] ?? '';
             $hintPath .= ".{$options['subColumn']}";
         }
 
@@ -505,7 +505,7 @@ class Presenter
         if (isset($options['subColumn'])) {
             $columnLabel = __("models.{$modelName}.{$column}.{$options['subColumn']}");
             $fieldName .= "[{$options['subColumn']}]";
-            $fieldValue = $fieldValue->{$options['subColumn']} ?? '';
+            $fieldValue = $fieldValue[$options['subColumn']] ?? '';
             $hintPath .= ".{$options['subColumn']}";
         }
 
@@ -542,7 +542,7 @@ class Presenter
         if (isset($options['subColumn'])) {
             $columnLabel = __("models.{$modelName}.{$column}.{$options['subColumn']}");
             $fieldName .= "[{$options['subColumn']}]";
-            $fieldValue = $fieldValue->{$options['subColumn']} ?? '';
+            $fieldValue = $fieldValue[$options['subColumn']] ?? '';
             $hintPath .= ".{$options['subColumn']}";
         }
 
@@ -578,7 +578,7 @@ class Presenter
         if (isset($options['subColumn'])) {
             $columnLabel = __("models.{$modelName}.{$column}.{$options['subColumn']}");
             $fieldName .= "[{$options['subColumn']}]";
-            $fieldValue = $fieldValue->{$options['subColumn']} ?? '';
+            $fieldValue = $fieldValue[$options['subColumn']] ?? '';
             $hintPath .= ".{$options['subColumn']}";
         }
 
