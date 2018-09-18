@@ -38,7 +38,7 @@
                         <div class="btn-group btn-group-sm justify-content-center">
                             <button class="btn btn-outline-default delBtn" type="button"><i class="icon-trash2"></i></button>
                             @if(count($additionalFields) > 0)
-                            <button class="btn btn-outline-defaultaddi-button" type="button" title="設定" data-target="#{{ $id }}-modal-set-{{ $loop->index }}" data-toggle="modal"><i class="icon-wrench"></i></button>
+                            <button class="btn btn-outline-default addi-button" type="button" title="設定" data-target="#{{ $id }}-modal-set-{{ $loop->index }}" data-toggle="modal"><i class="icon-wrench"></i></button>
                             @endif
                         </div>
                     </div>
