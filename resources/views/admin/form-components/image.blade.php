@@ -67,7 +67,7 @@
                                                     <legend class="legend h6 mb-4"><i class="icon-angle-double-down2 mr-3"></i>基本設定</legend>
                                                     @foreach($additionalFields as $column => $type)
                                                     <div class="form-group row">
-                                                        <label class="col-sm-2 col-form-label">@lang('models.' . str_replace('-', '.', $id) . '.' . $column)</label>
+                                                        <label class="col-sm-2 col-form-label">@lang('models.' . str_replace('-', '.additional.', $id) . '.' . $column)</label>
                                                         <div class="col-sm-10">
                                                         @switch($type)
                                                             @case('text')
@@ -143,7 +143,7 @@
                                             <legend class="legend h6 mb-4"><i class="icon-angle-double-down2 mr-3"></i>基本設定</legend>
                                             @foreach($additionalFields as $column => $type)
                                             <div class="form-group row">
-                                                <label class="col-sm-2 col-form-label">@lang('models.' . str_replace('-', '.', $id) . '.' . $column)</label>
+                                                <label class="col-sm-2 col-form-label">@lang('models.' . str_replace('-', '.additional.', $id) . '.' . $column)</label>
                                                 <div class="col-sm-10">
                                                 @switch($type)
                                                     @case('text')
