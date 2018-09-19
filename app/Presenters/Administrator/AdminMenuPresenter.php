@@ -16,9 +16,9 @@ class AdminMenuPresenter extends Presenter
                 ->all(['parent_id' => null])
                 ->mapWithKeys(function($item) {
                     /** @var \App\Models\AdminMenu $item */
-                    return [$item->guid => $item->title];
+                    return [$item->guid => ['title' => $item->title, 'class' => null]];
                 })
-                ->prepend('(' . __('administrator.grid.root') . ')', '')
+                ->prepend(['title' => '(' . __('administrator.grid.root') . ')', 'class' => null], '')
                 ->toArray()
         ];
     }

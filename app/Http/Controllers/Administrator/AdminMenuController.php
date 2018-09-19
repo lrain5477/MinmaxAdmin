@@ -19,9 +19,11 @@ class AdminMenuController extends Controller
      */
     protected function getQueryBuilder()
     {
-        return $this->modelRepository
-            ->query()
-            ->where('parent_id', request('parent', null));
+        if ($parent_id = request('parent')) {
+            return parent::getQueryBuilder()->where('parent_id', $parent_id);
+        } else {
+            return parent::getQueryBuilder()->whereNull('parent_id');
+        }
     }
 
     /**
@@ -32,10 +34,7 @@ class AdminMenuController extends Controller
      */
     public function index()
     {
-        $parentModel = $this->modelRepository->find(request('parent', null)) ?? abort(404);
-
-        $this->viewData['menuParent'] = $parentModel->guid;
-        $this->viewData['menuParentBack'] = $parentModel->parent_id;
+        $this->viewData['parentModel'] = $this->modelRepository->one('guid', request('parent'));
 
         return parent::index();
     }
