@@ -1,4 +1,4 @@
-<?php
+bn b b b b b b b b b b b b b b b b b b b b b b b b b b b b b b b b b b <?php
 
 return [
 
@@ -133,6 +133,10 @@ return [
             'remove_file' => '移除已上傳的檔案',
             'limit_title' => '超過選擇上限',
             'limit_text' => '您最多只能選擇 :limit 個檔案',
+        ],
+        'image' => [
+            'advance_tab_1' => '圖片資訊',
+            'advance_panel_fieldSet_base' => '基本設定',
         ],
         'message' => [
             'create_success' => '您新增的資料儲存成功。',

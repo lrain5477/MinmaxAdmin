@@ -21,14 +21,14 @@
         @if($group)
             @foreach($listData as $groupLabel => $listSet)
             <optgroup label="{{ $groupLabel }}">
-                @foreach($listSet as $listKey => $listLabel)
-                <option value="{{ $listKey }}" {{ in_array($listKey, $values) ? 'selected' : '' }}>{{ $listLabel }}</option>
+                @foreach($listSet as $listKey => $listItem)
+                <option value="{{ $listKey }}" {{ in_array($listKey, $values) ? 'selected' : '' }}>{{ $listItem['title'] ?? '' }}</option>
                 @endforeach
             </optgroup>
             @endforeach
         @else
-            @foreach($listData as $listKey => $listLabel)
-            <option value="{{ $listKey }}" {{ in_array($listKey, $values) ? 'selected' : '' }}>{{ $listLabel }}</option>
+            @foreach($listData as $listKey => $listItem)
+            <option value="{{ $listKey }}" {{ in_array($listKey, $values) ? 'selected' : '' }}>{{ $listItem['title'] ?? '' }}</option>
             @endforeach
         @endif
         </select>

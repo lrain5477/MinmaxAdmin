@@ -24,21 +24,21 @@
                 data-live-search="{{ $search === true ? 'true' : 'false' }}"
                 {{ $required === true ? '' : ('title="' . ($title === '' ? __('administrator.form.select_default_title') : $title) . '"') }}
                 {{ $required === true ? 'required' : '' }}>
-            @foreach($listData as $listOptions)
+        @foreach($listData as $listOptions)
             @if(isset($listOptions['options']) && count($listOptions['options']) > 0)
             <optgroup label="{{ $listOptions['group'] ?? 'Undefined' }}">
             @if(array_key_exists($value, $listOptions['options']))
-                @foreach($listOptions['options'] as $listKey => $listLabel)
-                <option value="{{ $listKey }}" {{ $listKey == $value ? 'selected' : '' }}>{{ $listLabel }}</option>
+                @foreach($listOptions['options'] as $listKey => $listItem)
+                <option value="{{ $listKey }}" {{ $listKey == $value ? 'selected' : '' }}>{{ $listItem['title'] ?? '' }}</option>
                 @endforeach
             @else
-                @foreach($listOptions['options'] as $listKey => $listLabel)
-                <option value="{{ $listKey }}" {{ $required === true && $loop->parent->first && $loop->first ? 'selected' : '' }}>{{ $listLabel }}</option>
+                @foreach($listOptions['options'] as $listKey => $listItem)
+                <option value="{{ $listKey }}" {{ $required === true && $loop->parent->first && $loop->first ? 'selected' : '' }}>{{ $listItem['title'] ?? '' }}</option>
                 @endforeach
             @endif
             </optgroup>
             @endif
-            @endforeach
+        @endforeach
         </select>
     </div>
     @if($hint !== '')

@@ -14,7 +14,12 @@ class WebDataRequest extends FormRequest
      */
     public function authorize()
     {
-        return $this->user()->can('webDataEdit');
+        switch ($this->method()) {
+            case 'PUT':
+                return $this->user('admin')->can('webDataEdit');
+            default:
+                return false;
+        }
     }
 
     /**
@@ -24,19 +29,23 @@ class WebDataRequest extends FormRequest
      */
     public function rules()
     {
-        return [
-            'WebData.website_name' => 'required|string',
-            'WebData.system_email' => 'required|email',
-            'WebData.system_url' => 'required|url',
-            'WebData.company' => 'required|array',
-            'WebData.company.name' => 'required|string',
-            'WebData.contact' => 'required|array',
-            'WebData.contact.phone' => 'required|string',
-            'WebData.contact.email' => 'required|email',
-            'WebData.contact.map' => 'nullable|url',
-            'WebData.seo' => 'nullable|array',
-            'WebData.active' => 'required|in:1,0',
-        ];
+        switch ($this->method()) {
+            case 'PUT':
+            default:
+                return [
+                    'WebData.website_name' => 'required|string',
+                    'WebData.system_email' => 'required|email',
+                    'WebData.system_url' => 'required|url',
+                    'WebData.company' => 'required|array',
+                    'WebData.company.name' => 'required|string',
+                    'WebData.contact' => 'required|array',
+                    'WebData.contact.phone' => 'required|string',
+                    'WebData.contact.email' => 'required|email',
+                    'WebData.contact.map' => 'nullable|url',
+                    'WebData.seo' => 'nullable|array',
+                    'WebData.active' => 'required|in:1,0',
+                ];
+        }
     }
 
     /**

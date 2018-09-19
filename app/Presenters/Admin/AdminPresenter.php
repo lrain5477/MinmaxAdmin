@@ -15,7 +15,8 @@ class AdminPresenter extends Presenter
                 ->orderBy('display_name')
                 ->get()
                 ->mapWithKeys(function($item) {
-                    return [$item->id => $item->display_name];
+                    /** @var \App\Models\Role $item */
+                    return [$item->id => ['title' => $item->display_name, 'class' => null]];
                 })
                 ->toArray(),
             'active' => systemParam('active'),

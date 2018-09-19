@@ -14,7 +14,14 @@ class AdminRequest extends FormRequest
      */
     public function authorize()
     {
-        return $this->user()->can('adminEdit');
+        switch ($this->method()) {
+            case 'PUT':
+                return $this->user('admin')->can('adminEdit');
+            case 'POST':
+                return $this->user('admin')->can('adminCreate');
+            default:
+                return false;
+        }
     }
 
     /**
@@ -70,11 +77,11 @@ class AdminRequest extends FormRequest
     {
         if ($validator->fails()) {
             switch ($this->method()) {
-                case 'POST':
-                    LogHelper::system('admin', $this->path(), $this->method(), '', $this->user()->username, 0, $validator->errors()->first());
-                    break;
                 case 'PUT':
                     LogHelper::system('admin', $this->path(), $this->method(), $this->route('id'), $this->user()->username, 0, $validator->errors()->first());
+                    break;
+                case 'POST':
+                    LogHelper::system('admin', $this->path(), $this->method(), '', $this->user()->username, 0, $validator->errors()->first());
                     break;
             }
         }

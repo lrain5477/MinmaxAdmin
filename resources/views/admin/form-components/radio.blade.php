@@ -25,7 +25,7 @@
                    value="{{ $listKey }}"
                    {{ $listKey == $value ? 'checked' : '' }}
                    {{ $required === true && $loop->first ? 'required' : '' }} />
-            <label class="custom-control-label" for="{{ $id }}-{{ $listKey }}">{{ $listItem['title'] }}</label>
+            <label class="custom-control-label" for="{{ $id }}-{{ $listKey }}">{{ $listItem['title'] ?? '' }}</label>
         </div>
         @endforeach
     @else
@@ -37,7 +37,7 @@
                    value="{{ $listKey }}"
                    {{ $loop->first ? 'checked' : '' }}
                    {{ $required === true && $loop->first ? 'required' : '' }} />
-            <label class="custom-control-label" for="{{ $id }}-{{ $listKey }}">{{ $listItem['title'] }}</label>
+            <label class="custom-control-label" for="{{ $id }}-{{ $listKey }}">{{ $listItem['title'] ?? '' }}</label>
         </div>
         @endforeach
     @endif

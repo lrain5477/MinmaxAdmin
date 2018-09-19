@@ -134,6 +134,10 @@ return [
             'limit_title' => 'Over selected limit.',
             'limit_text' => 'You can only select :limit file',
         ],
+        'image' => [
+            'advance_tab_1' => 'Image Information',
+            'advance_panel_fieldSet_base' => 'Default',
+        ],
         'message' => [
             'create_success' => 'Create a new data success.',
             'create_error' => 'Failed to create a new data.',

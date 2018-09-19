@@ -14,7 +14,14 @@ class FirewallRequest extends FormRequest
      */
     public function authorize()
     {
-        return $this->user()->can('firewallEdit');
+        switch ($this->method()) {
+            case 'PUT':
+                return $this->user('admin')->can('firewallEdit');
+            case 'POST':
+                return $this->user('admin')->can('firewallCreate');
+            default:
+                return false;
+        }
     }
 
     /**
@@ -67,11 +74,11 @@ class FirewallRequest extends FormRequest
     {
         if ($validator->fails()) {
             switch ($this->method()) {
-                case 'POST':
-                    LogHelper::system('admin', $this->path(), $this->method(), '', $this->user()->username, 0, $validator->errors()->first());
-                    break;
                 case 'PUT':
                     LogHelper::system('admin', $this->path(), $this->method(), $this->route('id'), $this->user()->username, 0, $validator->errors()->first());
+                    break;
+                case 'POST':
+                    LogHelper::system('admin', $this->path(), $this->method(), '', $this->user()->username, 0, $validator->errors()->first());
                     break;
             }
         }

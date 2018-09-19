@@ -22,15 +22,15 @@
                 data-size="6"
                 name="{{ $name }}"
                 data-live-search="{{ $search === true ? 'true' : 'false' }}"
-                {{ $required === true ? '' : ('title="' . ($title === '' ? __('administrator.form.select_default_title') : $title) . '"') }}
+                {!! $required === true ? '' : ('title="' . ($title === '' ? __('administrator.form.select_default_title') : $title) . '"') !!}
                 {{ $required === true ? 'required' : '' }}>
         @if(array_key_exists($value, $listData))
-            @foreach($listData as $listKey => $listLabel)
-            <option value="{{ $listKey }}" {{ $listKey == $value ? 'selected' : '' }}>{{ $listLabel }}</option>
+            @foreach($listData as $listKey => $listItem)
+            <option value="{{ $listKey }}" {{ $listKey == $value ? 'selected' : '' }}>{{ $listItem['title'] ?? '' }}</option>
             @endforeach
         @else
             @foreach($listData as $listKey => $listLabel)
-            <option value="{{ $listKey }}" {{ $required === true && $loop->first ? 'selected' : '' }}>{{ $listLabel }}</option>
+            <option value="{{ $listKey }}" {{ $required === true && $loop->first ? 'selected' : '' }}>{{ $listItem['title'] ?? '' }}</option>
             @endforeach
         @endif
         </select>

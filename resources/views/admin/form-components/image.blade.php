@@ -132,7 +132,7 @@
                                    href="#{{ $id }}-tabModal-pane-DumpIndex-1"
                                    role="tab"
                                    aria-controls="{{ $id }}-tabModal-pane-DumpIndex-1"
-                                   aria-selected="true">圖片資訊</a>
+                                   aria-selected="true">@lang('admin.form.image.advance_tab_1')</a>
                             </li>
                         </ul>
                         <div class="tab-content mt-4" id="{{ $id }}-tabModalContent-DumpIndex">
@@ -140,7 +140,7 @@
                                 <div class="row">
                                     <div class="col">
                                         <fieldset>
-                                            <legend class="legend h6 mb-4"><i class="icon-angle-double-down2 mr-3"></i>基本設定</legend>
+                                            <legend class="legend h6 mb-4"><i class="icon-angle-double-down2 mr-3"></i>@lang('admin.form.image.advance_panel_fieldSet_base')</legend>
                                             @foreach($additionalFields as $column => $type)
                                             <div class="form-group row">
                                                 <label class="col-sm-2 col-form-label">@lang('models.' . str_replace('-', '.additional.', $id) . '.' . $column)</label>
@@ -200,7 +200,7 @@
             forceHelperSize: false,
             helper: 'clone',
             change: function(event, div) { div.placeholder.css({visibility: 'visible', background: '#cc0000', opacity: 0.2}) },
-            stop : function(event, div) {
+            stop: function() {
                 $('#{{ $id }}-list .card').each(function() {
                     let inputName = '{{ $name }}';
                     let thisId = '{{ $id }}';

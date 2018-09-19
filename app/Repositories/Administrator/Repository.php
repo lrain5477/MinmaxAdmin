@@ -11,6 +11,8 @@ abstract class Repository
 {
     const MODEL = null;
 
+    protected $hasSort = false;
+
     protected $languageColumns = [];
     protected $languageBuffer = [];
 
@@ -286,6 +288,12 @@ abstract class Repository
 
         if (!$model->incrementing) {
             $model->setAttribute($model->getKeyName(), $primaryKey);
+        }
+
+        if ($this->hasSort && array_key_exists('sort', $attributes)) {
+            if (is_null($attributes['sort']) || $attributes['sort'] < 1) {
+                $attributes['sort'] = 1;
+            }
         }
 
         foreach ($attributes as $column => $value) {
