@@ -39,11 +39,10 @@ class WebLanguage
         }
 
         $uriSet = explode('/', $request->path());
-        if (isset($uriSet[1]) && $languageSet->where('code', $uriSet[1])->count() == 1) {
-            app()->setLocale($uriSet[1]);
+        if (isset($uriSet[0]) && $languageSet->where('code', $uriSet[0])->count() == 1) {
+            app()->setLocale($uriSet[0]);
         } else {
-            $uriSet[0] = app()->getLocale();
-            return redirect($this->prefix . '/' . implode('/', $uriSet));
+            return redirect(app()->getLocale() . '/' . $request->path());
         }
 
         return $next($request);
