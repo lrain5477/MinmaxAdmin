@@ -15,7 +15,6 @@ class AdminSeeder extends Seeder
     {
         // $defaultLanguage = config('app.local');
         $timestamp = date('Y-m-d H:i:s');
-        // $languageData = DB::table('world_language')->where('active', '1')->get(['code']);
         $webData = DB::table('web_data')->get(['guid', 'guard']);
         $menuClass = ['default', 'module', 'system'];
 

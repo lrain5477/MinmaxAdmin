@@ -7,10 +7,10 @@ use App\Repositories\Admin\WorldLanguageRepository;
 use Cache;
 use Closure;
 
-class AdminLanguage
+class AdministratorLanguage
 {
-    protected $guard = 'admin';
-    protected $prefix = 'siteadmin';
+    protected $guard = 'administrator';
+    protected $prefix = 'administrator';
 
     /**
      * Handle an incoming request.

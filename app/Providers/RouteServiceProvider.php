@@ -76,6 +76,8 @@ class RouteServiceProvider extends ServiceProvider
     protected function mapWebRoutes($langPrefix = null)
     {
         if ($langPrefix) {
+            Route::middleware('web')->get('/', $this->namespace . '\Web\SiteController@index');
+
             Route::prefix($langPrefix)
                 ->middleware('web')
                 ->name("{$langPrefix}.")
@@ -98,6 +100,10 @@ class RouteServiceProvider extends ServiceProvider
      */
     protected function mapAdminRoutes($langPrefix = null)
     {
+        if (!is_null($langPrefix)) {
+            Route::middleware('admin')->get('siteadmin', $this->namespace . '\Admin\SiteController@index');
+        }
+
         Route::prefix('siteadmin' . (is_null($langPrefix) ? '' : "/{$langPrefix}"))
             ->middleware('admin')
             ->name('admin.' . (is_null($langPrefix) ? '' : "{$langPrefix}."))
@@ -115,6 +121,10 @@ class RouteServiceProvider extends ServiceProvider
      */
     protected function mapAdministratorRoutes($langPrefix = null)
     {
+        if (!is_null($langPrefix)) {
+            Route::middleware('administrator')->get('administrator', $this->namespace . '\Administrator\SiteController@index');
+        }
+
         Route::prefix('administrator' . (is_null($langPrefix) ? '' : "/{$langPrefix}"))
             ->middleware('administrator')
             ->name('administrator.' . (is_null($langPrefix) ? '' : "{$langPrefix}."))

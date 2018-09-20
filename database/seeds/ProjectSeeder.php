@@ -13,5 +13,6 @@ class ProjectSeeder extends Seeder
     public function run()
     {
         $timestamp = date('Y-m-d H:i:s');
+        $languageAmount = DB::table('world_language')->count();
     }
 }

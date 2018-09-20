@@ -24,7 +24,7 @@ class WorldSeeder extends Seeder
             // ['title' => '英文', 'code' => 'en', 'name' => 'English', 'icon' => 'flag-icon-us', 'sort' => 3, 'active' => '0', 'created_at' => $timestamp, 'updated_at' => $timestamp],
         ];
 
-        $languageTempPack = SeederHelper::getExchangeLanguageResource('world_language', $worldLanguageData, 'name');
+        $languageTempPack = SeederHelper::getExchangeLanguageResource('world_language', $worldLanguageData, 'name', count($worldLanguageData));
         $worldLanguageData = $languageTempPack['data'];
         $languageResourceData = array_merge($languageResourceData, $languageTempPack['resource']);
 
@@ -46,7 +46,7 @@ class WorldSeeder extends Seeder
             ],
         ];
 
-        $languageTempPack = SeederHelper::getExchangeLanguageResource('world_country', $countryData, 'name');
+        $languageTempPack = SeederHelper::getExchangeLanguageResource('world_country', $countryData, 'name', count($worldLanguageData));
         $countryData = $languageTempPack['data'];
         $languageResourceData = array_merge($languageResourceData, $languageTempPack['resource']);
 
@@ -80,7 +80,7 @@ class WorldSeeder extends Seeder
             // ['country_id' => $countryGuid01, 'title' => '釣魚臺', 'code' => 'TW-DYS', 'name' => '釣魚臺', 'updated_at' => $timestamp, 'created_at' => $timestamp],
         ];
 
-        $languageTempPack = SeederHelper::getExchangeLanguageResource('world_state', $stateData, 'name');
+        $languageTempPack = SeederHelper::getExchangeLanguageResource('world_state', $stateData, 'name', count($worldLanguageData));
         $stateData = $languageTempPack['data'];
         $languageResourceData = array_merge($languageResourceData, $languageTempPack['resource']);
 
@@ -464,7 +464,7 @@ class WorldSeeder extends Seeder
             //['state_id' => 24, 'title' => '釣魚臺', 'code' => '290', 'name' => '釣魚臺', 'updated_at' => $timestamp, 'created_at' => $timestamp],
         ];
 
-        $languageTempPack = SeederHelper::getExchangeLanguageResource('world_city', $cityData, 'name');
+        $languageTempPack = SeederHelper::getExchangeLanguageResource('world_city', $cityData, 'name', count($worldLanguageData));
         $cityData = $languageTempPack['data'];
         $languageResourceData = array_merge($languageResourceData, $languageTempPack['resource']);
 
@@ -513,7 +513,7 @@ class WorldSeeder extends Seeder
             ['country_id' => 1, 'title' => '中國信託商業銀行', 'code' => '822', 'name' => '中國信託商業銀行', 'updated_at' => $timestamp, 'created_at' => $timestamp],
         ];
 
-        $languageTempPack = SeederHelper::getExchangeLanguageResource('bank', $bankData, 'name');
+        $languageTempPack = SeederHelper::getExchangeLanguageResource('bank', $bankData, 'name', count($worldLanguageData));
         $bankData = $languageTempPack['data'];
         $languageResourceData = array_merge($languageResourceData, $languageTempPack['resource']);
 

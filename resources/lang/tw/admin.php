@@ -1,4 +1,4 @@
-bn b b b b b b b b b b b b b b b b b b b b b b b b b b b b b b b b b b <?php
+<?php
 
 return [
 
