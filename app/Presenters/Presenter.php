@@ -97,6 +97,36 @@ class Presenter
      * @param  array $options
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
+    public function getViewMultiSelection($model, $column, $options = []) {
+        $modelName = class_basename($model);
+        $columnLabel = __("models.{$modelName}.{$column}");
+        $defaultValue = $options['defaultValue'] ?? null;
+        $fieldValue = $model->getAttribute($column) ?? [];
+
+        $parameterValue = collect($this->parameterSet[$column] ?? [])
+            ->filter(function($item, $key) use ($fieldValue) {
+                return array_key_exists('title', $item) && in_array($key, $fieldValue);
+            })
+            ->map(function($item) {
+                return $item['title'] ?? '';
+            })
+            ->implode(', ');
+
+        $componentData = [
+            'id' => "{$modelName}-{$column}",
+            'label' => $columnLabel,
+            'value' => $defaultValue ?? $parameterValue,
+        ];
+
+        return view("{$this->guardName}.view-components.normal-text", $componentData);
+    }
+
+    /**
+     * @param  \Illuminate\Database\Eloquent\Model $model
+     * @param  string $column
+     * @param  array $options
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function getViewMediaImage($model, $column, $options = []) {
         $modelName = class_basename($model);
         $columnLabel = __("models.{$modelName}.{$column}");
@@ -536,7 +566,7 @@ class Presenter
         $modelName = class_basename($model);
         $columnLabel = __("models.{$modelName}.{$column}");
         $fieldName = $options['name'] ?? "{$modelName}[{$column}]";
-        $fieldValue = $model->getAttribute($column) ?? '';
+        $fieldValue = $model->getAttribute($column) ?? [];
         $hintPath = "models.{$modelName}.hint.{$column}";
 
         if (isset($options['subColumn'])) {
