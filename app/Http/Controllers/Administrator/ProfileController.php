@@ -2,114 +2,86 @@
 
 namespace App\Http\Controllers\Administrator;
 
-use App\Models\WebData;
-use App\Repositories\Administrator\ProfileRepository;
+use App\Helpers\LogHelper;
+use App\Http\Requests\Administrator\ProfileRequest;
+use App\Repositories\Administrator\AdministratorRepository;
 use Illuminate\Http\Request;
-use Illuminate\Routing\Controller as BaseController;
-use Illuminate\Foundation\Bus\DispatchesJobs;
-use Illuminate\Foundation\Validation\ValidatesRequests;
-use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-use Auth;
 use Breadcrumbs;
-use Validator;
 
 /**
  * Class ProfileController
  * @property \App\Models\Administrator $adminData
  */
-class ProfileController extends BaseController
+class ProfileController extends Controller
 {
-    use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
-
-    protected $uri;
-    protected $viewData;
-    protected $adminData;
-    protected $languageData;
-    protected $pageData;
-    protected $modelName;
-    protected $modelRepository;
-
-    public function __construct(ProfileRepository $modelRepository)
+    public function __construct(Request $request, AdministratorRepository $administratorRepository)
     {
-        $this->modelRepository = $modelRepository;
+        $this->modelRepository = $administratorRepository;
 
-        $this->middleware(function($request, $next) {
-            /**
-             * @var \Illuminate\Http\Request $request
-             */
-
-            $this->uri = 'profile';
-
-            // 設定 網站資料
-            $this->viewData['webData'] = WebData::where(['lang' => app()->getLocale(), 'website_key' => 'administrator'])->first();
-
-            // 設定 頁面資料
-            $this->viewData['pageData'] = collect([[
-                'lang' => app()->getLocale(),
-                'uri' => $this->uri,
-                'title' => __('administrator.header.profile'),
-                'parent' => '0',
-            ]])->map(function($item) { return (object) $item; })->first();
-
-            // 設定 帳號資料
-            $this->adminData = Auth::guard('administrator')->user();
-            $this->viewData['adminData'] = $this->adminData;
-
-            return $next($request);
-        });
+        parent::__construct($request);
     }
 
     /**
-     * Administrator profile edit.
-     *
-     * @return \Illuminate\Http\Response
+     * @param  string|integer $id
      * @throws \DaveJamesMiller\Breadcrumbs\Exceptions\DuplicateBreadcrumbException
      */
-    public function edit()
+    protected function buildBreadcrumbsEdit($id)
     {
-        $this->viewData['formData'] = $this->modelRepository->one(['guid' => $this->adminData->guid]);
-
-        // 設定麵包屑導航
-        Breadcrumbs::register('edit', function ($breadcrumbs) {
-            /**
-             * @var \DaveJamesMiller\Breadcrumbs\BreadcrumbsGenerator $breadcrumbs
-             */
+        Breadcrumbs::register('edit', function ($breadcrumbs) use ($id) {
+            /** @var \DaveJamesMiller\Breadcrumbs\BreadcrumbsGenerator $breadcrumbs */
             $breadcrumbs->parent('administrator.home');
             $breadcrumbs->push(__('administrator.header.account'));
         });
+    }
 
-        return view('administrator.' . $this->uri . '.edit', $this->viewData);
+    protected function checkValidate()
+    {
+        app(ProfileRequest::class);
+    }
+
+    /**
+     * Admin profile edit.
+     *
+     * @param string $id
+     * @return \Illuminate\Http\Response
+     * @throws \DaveJamesMiller\Breadcrumbs\Exceptions\DuplicateBreadcrumbException
+     */
+    public function edit($id = null)
+    {
+        return parent::edit($this->adminData->guid);
     }
 
     /**
      * Model Update
      *
+     * @param string $id
      * @param Request $request
      * @return $this|\Illuminate\Http\RedirectResponse
      */
-    public function update(Request $request)
+    public function update($id = null, Request $request)
     {
-        $validator = Validator::make($request->input('Administrator'), [
-            'name' => 'required',
-            'password' => 'nullable|confirmed|min:6'
-        ]);
+        $this->checkValidate();
 
-        $input = $request->input('Administrator');
-        if(is_null($input['password']) || $input['password'] === '') {
-            unset($input['password']);
-        } else {
-            $input['password'] = \Hash::make($input['password']);
-        }
-        unset($input['password_confirmation']);
+        $model = $this->modelRepository->find($this->adminData->guid) ?? abort(404);
 
-        if($validator->passes()) {
-            if($this->modelRepository->save($input, ['guid' => $this->adminData->guid])) {
-                return redirect()->route('administrator.profile')->with('success', __('administrator.form.message.edit_success'));
+        $inputSet = $request->input('Administrator');
+
+        // 儲存更新資料
+        try {
+            \DB::beginTransaction();
+
+            if ($this->modelRepository->save($model, $inputSet)) {
+                \DB::commit();
+                LogHelper::system('administrator', $request->path(), $request->method(), $id, $this->adminData->username, 1, __('administrator.form.message.edit_success'));
+                return redirect(langRoute("administrator.profile"))->with('success', __('administrator.form.message.edit_success'));
             }
 
-            return redirect()->route('administrator.profile')->withErrors([__('administrator.form.message.edit_error')])->withInput();
+            \DB::rollBack();
+        } catch (\Exception $e) {
+            \DB::rollBack();
         }
 
-        return redirect()->route('administrator.profile')->withErrors($validator)->withInput();
+        LogHelper::system('administrator', $request->path(), $request->method(), $id, $this->adminData->username, 0, __('administrator.form.message.edit_error'));
+        return redirect(langRoute("administrator.profile"))->withErrors([__('administrator.form.message.edit_error')])->withInput();
     }
 }

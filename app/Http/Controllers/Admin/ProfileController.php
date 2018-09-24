@@ -3,136 +3,85 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Helpers\LogHelper;
-use App\Models\AdminMenu;
-use App\Models\WorldLanguage;
-use App\Models\WebData;
-use App\Repositories\Admin\ProfileRepository;
+use App\Http\Requests\Admin\ProfileRequest;
+use App\Repositories\Admin\AdminRepository;
 use Illuminate\Http\Request;
-use Illuminate\Routing\Controller as BaseController;
-use Illuminate\Foundation\Bus\DispatchesJobs;
-use Illuminate\Foundation\Validation\ValidatesRequests;
-use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-use Auth;
 use Breadcrumbs;
-use Validator;
 
-/**
- * Class ProfileController
- * @property \App\Models\Admin $adminData
- */
-class ProfileController extends BaseController
+class ProfileController extends Controller
 {
-    use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
-
-    protected $uri;
-    protected $viewData;
-    protected $adminData;
-    protected $languageData;
-    protected $pageData;
-    protected $modelName;
-    protected $modelRepository;
-
-    public function __construct(ProfileRepository $modelRepository)
+    public function __construct(Request $request, AdminRepository $adminRepository)
     {
-        $this->modelRepository = $modelRepository;
+        $this->modelRepository = $adminRepository;
 
-        $this->middleware(function($request, $next) {
-            /**
-             * @var \Illuminate\Http\Request $request
-             */
-
-            // 取得 語系資料
-            $this->languageData = WorldLanguage::all();
-            $this->viewData['languageData'] = $this->languageData->where('active', '1');
-
-            // 設定 語系
-            if($request->has('language') && $this->languageData->where('codes', $request->get('language'))->where('active', '1')->count() > 0) {
-                session(['adminLanguage' => $request->get('language')]);
-                session()->save();
-            }
-            if(session()->has('adminLanguage') && !is_null(session('adminLanguage'))) {
-                app()->setLocale(session('adminLanguage'));
-            }
-
-            $this->uri = 'profile';
-
-            // 設定 網站資料
-            $this->viewData['webData'] = WebData::where(['lang' => app()->getLocale(), 'website_key' => 'admin', 'active' => 1])->first() ?? abort(404);
-
-            // 設定 選單資料
-            $this->viewData['menuData'] = AdminMenu::where(['active' => 1])->orderBy('sort')->get();
-
-            // 設定 頁面資料
-            $this->pageData =  collect([[
-                'lang' => app()->getLocale(),
-                'uri' => $this->uri,
-                'title' => __('admin.header.profile'),
-                'parent' => '0',
-            ]])->map(function($item) { return (object) $item; })->first();
-            $this->viewData['pageData'] = $this->pageData;
-
-            // 設定 帳號資料
-            $this->adminData = Auth::guard('admin')->user();
-            $this->viewData['adminData'] = $this->adminData;
-
-            return $next($request);
-        });
+        parent::__construct($request);
     }
 
+    protected function checkPermissionEdit($type = 'web') {}
+
     /**
-     * Administrator profile edit.
-     *
-     * @return \Illuminate\Http\Response
+     * @param  string|integer $id
      * @throws \DaveJamesMiller\Breadcrumbs\Exceptions\DuplicateBreadcrumbException
      */
-    public function edit()
+    protected function buildBreadcrumbsEdit($id)
     {
-        $this->viewData['formData'] = $this->modelRepository->one(['guid' => $this->adminData->guid]);
-
-        // 設定麵包屑導航
-        Breadcrumbs::register('edit', function ($breadcrumbs) {
-            /**
-             * @var \DaveJamesMiller\Breadcrumbs\BreadcrumbsGenerator $breadcrumbs
-             */
+        Breadcrumbs::register('edit', function ($breadcrumbs) use ($id) {
+            /** @var \DaveJamesMiller\Breadcrumbs\BreadcrumbsGenerator $breadcrumbs */
             $breadcrumbs->parent('admin.home');
             $breadcrumbs->push(__('admin.header.account'));
         });
+    }
 
-        return view('admin.' . $this->uri . '.edit', $this->viewData);
+    protected function checkValidate()
+    {
+        app(ProfileRequest::class);
+    }
+
+    /**
+     * Admin profile edit.
+     *
+     * @param string $id
+     * @return \Illuminate\Http\Response
+     * @throws \DaveJamesMiller\Breadcrumbs\Exceptions\DuplicateBreadcrumbException
+     */
+    public function edit($id = null)
+    {
+        return parent::edit($this->adminData->guid);
     }
 
     /**
      * Model Update
      *
+     * @param string $id
      * @param Request $request
      * @return $this|\Illuminate\Http\RedirectResponse
      */
-    public function update(Request $request)
+    public function update($id = null, Request $request)
     {
-        $validator = Validator::make($request->input('Admin'), [
-            'name' => 'required',
-            'password' => 'nullable|confirmed|min:6'
-        ]);
+        $this->checkPermissionEdit();
 
-        $input = $request->input('Admin');
-        if(is_null($input['password']) || $input['password'] === '') {
-            unset($input['password']);
-        } else {
-            $input['password'] = \Hash::make($input['password']);
-        }
-        unset($input['password_confirmation']);
+        $this->checkValidate();
 
-        if($validator->passes()) {
-            if($this->modelRepository->save($input, ['guid' => $this->adminData->guid])) {
-                LogHelper::system('admin', $this->uri, 'update', $this->adminData->guid, $this->adminData->username, 1, __('admin.form.message.edit_success'));
-                return redirect()->route('admin.profile')->with('success', __('admin.form.message.edit_success'));
+        $model = $this->modelRepository->find($this->adminData->guid) ?? abort(404);
+
+        $inputSet = $request->input('Admin');
+
+        // 儲存更新資料
+        try {
+            \DB::beginTransaction();
+
+            if ($this->modelRepository->save($model, $inputSet)) {
+                \DB::commit();
+                LogHelper::system('admin', $request->path(), $request->method(), $id, $this->adminData->username, 1, __('admin.form.message.edit_success'));
+                return redirect(langRoute("admin.profile"))->with('success', __('admin.form.message.edit_success'));
             }
 
-            LogHelper::system('admin', $this->uri, 'update', $this->adminData->guid, $this->adminData->username, 0, __('admin.form.message.edit_error'));
-            return redirect()->route('admin.profile')->withErrors([__('admin.form.message.edit_error')])->withInput();
+            \DB::rollBack();
+        } catch (\Exception $e) {
+            \DB::rollBack();
         }
 
-        LogHelper::system('admin', $this->uri, 'update', $this->adminData->guid, $this->adminData->username, 0, $validator->errors()->first());
-        return redirect()->route('admin.profile')->withErrors($validator)->withInput();
+        LogHelper::system('admin', $request->path(), $request->method(), $id, $this->adminData->username, 0, __('admin.form.message.edit_error'));
+        return redirect(langRoute("admin.profile"))->withErrors([__('admin.form.message.edit_error')])->withInput();
     }
 }

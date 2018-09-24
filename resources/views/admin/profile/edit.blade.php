@@ -6,35 +6,35 @@
 <!-- layout-content-->
 <section class="panel panel-default">
     <header class="panel-heading">
-        <h1 class="h5 float-left font-weight-bold">{{ $pageData->title }} @lang('admin.form.edit')</h1>
+        <h1 class="h5 float-left font-weight-bold">@lang('admin.header.account') @lang('admin.form.edit')</h1>
     </header>
 
     <div class="panel-wrapper">
         <div class="panel-body">
             <form id="editForm" class="form-horizontal validate editForm"  name="editForm"
-                  action="{{ route('admin.profile') }}"
+                  action="{{ langRoute('admin.profile') }}"
                   method="post"
                   enctype="multipart/form-data">
                 @method('PUT')
                 @csrf
 
-                @inject('modelPresenter', 'App\Presenters\Admin\ProfilePresenter')
+                @inject('modelPresenter', 'App\Presenters\Admin\AdminPresenter')
 
                 <fieldset id="baseFieldSet">
                     <legend class="legend h6 mb-4"><i class="icon-angle-double-down2 mr-2"></i>@lang('admin.form.fieldSet.default')</legend>
 
-                    {!! $modelPresenter->getFieldNormalText($formData, 'username', true) !!}
+                    {!! $modelPresenter->getFieldNormalText($formData, 'username', ['required' => true]) !!}
 
-                    {!! $modelPresenter->getFieldText($formData, 'name', true, ['size' => 4]) !!}
+                    {!! $modelPresenter->getFieldText($formData, 'name', ['required' => true, 'size' => 4]) !!}
 
-                    {!! $modelPresenter->getFieldEmail($formData, 'email', true) !!}
+                    {!! $modelPresenter->getFieldEmail($formData, 'email', ['required' => true]) !!}
 
                 </fieldset>
 
                 <fieldset class="mt-4" id="advFieldSet">
                     <legend class="legend h6 mb-4"><i class="icon-angle-double-down2 mr-2"></i>@lang('admin.form.fieldSet.advanced')</legend>
 
-                    {!! $modelPresenter->getFieldPassword($formData, 'password', false, ['size' => 4, 'hint' => true]) !!}
+                    {!! $modelPresenter->getFieldPassword($formData, 'password', ['size' => 4, 'hint' => true]) !!}
 
                     <div class="form-group row">
                         <label class="col-sm-2 col-form-label" for="Admin-password_confirmation">@lang('models.Admin.password_confirmation')</label>
