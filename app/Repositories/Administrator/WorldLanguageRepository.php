@@ -34,6 +34,20 @@ class WorldLanguageRepository extends Repository
 
     protected function afterCreate()
     {
+        $currentTimestamp  = date('Y-m-d H:i:s');
+        $currentLanguageId = langId(app()->getLocale());
+        $newLanguageId = $this->query()->orderByDesc('id')->first()->getKey();
+        $copyQuery = <<<QUERY
+insert into `language_resource`
+    (`language_id`, `key`, `text`, `created_at`, `updated_at`)
+select
+    $newLanguageId as `language_id`, `key`, `text`, '$currentTimestamp' as `created_at`, '$currentTimestamp' as `updated_at`
+from `language_resource`
+where `language_id` = $currentLanguageId
+QUERY;
 
+        \DB::statement($copyQuery);
+
+        \Cache::flush();
     }
 }
