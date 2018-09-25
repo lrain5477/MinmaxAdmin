@@ -2,11 +2,11 @@
 
 @section('action-buttons')
 <div class="float-right">
-    <a class="btn btn-sm btn-light" href="{{ route('admin.index', [$pageData->uri]) }}" title="@lang('admin.form.back_list')">
+    <a class="btn btn-sm btn-light" href="{{ langRoute('admin.index', [$pageData->uri]) }}" title="@lang('admin.form.back_list')">
         <i class="icon-undo2"></i><span class="ml-1 d-none d-md-inline-block">@lang('admin.form.back_list')</span>
     </a>
     @if($adminData->can('adminEdit'))
-    <a class="btn btn-sm btn-main" href="{{ route('admin.edit', [$pageData->uri, $formData->guid]) }}" title="@lang('admin.form.edit')">
+    <a class="btn btn-sm btn-main" href="{{ langRoute('admin.edit', [$pageData->uri, $formData->guid]) }}" title="@lang('admin.form.edit')">
         <i class="icon-pencil"></i><span class="ml-1 d-none d-md-inline-block">@lang('admin.form.edit')</span>
     </a>
     @endif

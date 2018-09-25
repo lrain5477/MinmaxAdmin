@@ -108,6 +108,7 @@ return [
         'record' => 'Record',
         'note' => 'Note',
         'select_default_title' => 'Please select',
+        'password_build_auto' => 'Default password is 123456. System auto set.',
         'select_all' => 'Select All',
         'select_clear' => 'Clear Selected',
         'fieldSet' => [
