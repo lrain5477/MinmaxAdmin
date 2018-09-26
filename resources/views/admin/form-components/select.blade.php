@@ -29,7 +29,7 @@
             <option value="{{ $listKey }}" {{ $listKey == $value ? 'selected' : '' }}>{{ $listItem['title'] ?? '' }}</option>
             @endforeach
         @else
-            @foreach($listData as $listKey => $listLabel)
+            @foreach($listData as $listKey => $listItem)
             <option value="{{ $listKey }}" {{ $required === true && $loop->first ? 'selected' : '' }}>{{ $listItem['title'] ?? '' }}</option>
             @endforeach
         @endif
