@@ -30,15 +30,17 @@ class Presenter
         $modelName = class_basename($model);
         $columnLabel = __("models.{$modelName}.{$column}");
         $defaultValue = $options['defaultValue'] ?? null;
+        $fieldId = "{$modelName}-{$column}";
         $fieldValue = $defaultValue ?? ($model->getAttribute($column) ?? '');
 
         if (isset($options['subColumn'])) {
             $columnLabel = __("models.{$modelName}.{$column}.{$options['subColumn']}");
-            $fieldValue = $fieldValue[$options['subColumn']] ?? '';
+            $fieldId .= '-' . $options['subColumn'];
+            $fieldValue = $defaultValue ?? $fieldValue[$options['subColumn']] ?? '';
         }
 
         $componentData = [
-            'id' => "{$modelName}-{$column}",
+            'id' => $fieldId,
             'label' => $columnLabel,
             'value' => nl2br(trim(strip_tags($fieldValue))),
         ];
@@ -56,10 +58,17 @@ class Presenter
         $modelName = class_basename($model);
         $columnLabel = __("models.{$modelName}.{$column}");
         $defaultValue = $options['defaultValue'] ?? null;
+        $fieldId = "{$modelName}-{$column}";
         $fieldValue = $defaultValue ?? ($model->getAttribute($column) ?? '');
 
+        if (isset($options['subColumn'])) {
+            $columnLabel = __("models.{$modelName}.{$column}.{$options['subColumn']}");
+            $fieldId .= '-' . $options['subColumn'];
+            $fieldValue = $defaultValue ?? $fieldValue[$options['subColumn']] ?? '';
+        }
+
         $componentData = [
-            'id' => "{$modelName}-{$column}",
+            'id' => $fieldId,
             'label' => $columnLabel,
             'value' => $fieldValue,
             'size' => $options['size'] ?? 10,
@@ -180,18 +189,20 @@ class Presenter
         $modelName = class_basename($model);
         $columnLabel = __("models.{$modelName}.{$column}");
         $fieldName = $options['name'] ?? "{$modelName}[{$column}]";
+        $fieldId = "{$modelName}-{$column}";
         $fieldValue = $model->getAttribute($column) ?? '';
         $hintPath = "models.{$modelName}.hint.{$column}";
 
         if (isset($options['subColumn'])) {
             $columnLabel = __("models.{$modelName}.{$column}.{$options['subColumn']}");
             $fieldName .= "[{$options['subColumn']}]";
+            $fieldId .= '-' . $options['subColumn'];
             $fieldValue = $fieldValue[$options['subColumn']] ?? '';
             $hintPath .= ".{$options['subColumn']}";
         }
 
         $componentData = [
-            'id' => "{$modelName}-{$column}",
+            'id' => $fieldId,
             'label' => $columnLabel,
             'name' => $fieldName,
             'value' => $fieldValue,
@@ -216,18 +227,20 @@ class Presenter
         $modelName = class_basename($model);
         $columnLabel = __("models.{$modelName}.{$column}");
         $fieldName = $options['name'] ?? "{$modelName}[{$column}]";
+        $fieldId = "{$modelName}-{$column}";
         $fieldValue = $model->getAttribute($column) ?? '';
         $hintPath = "models.{$modelName}.hint.{$column}";
 
         if (isset($options['subColumn'])) {
             $columnLabel = __("models.{$modelName}.{$column}.{$options['subColumn']}");
             $fieldName .= "[{$options['subColumn']}]";
+            $fieldId .= '-' . $options['subColumn'];
             $fieldValue = $fieldValue[$options['subColumn']] ?? '';
             $hintPath .= ".{$options['subColumn']}";
         }
 
         $componentData = [
-            'id' => "{$modelName}-{$column}",
+            'id' => $fieldId,
             'label' => $columnLabel,
             'name' => $fieldName,
             'value' => $fieldValue,
@@ -252,18 +265,20 @@ class Presenter
         $modelName = class_basename($model);
         $columnLabel = __("models.{$modelName}.{$column}");
         $fieldName = $options['name'] ?? "{$modelName}[{$column}]";
+        $fieldId = "{$modelName}-{$column}";
         $fieldValue = $model->getAttribute($column) ?? '';
         $hintPath = "models.{$modelName}.hint.{$column}";
 
         if (isset($options['subColumn'])) {
             $columnLabel = __("models.{$modelName}.{$column}.{$options['subColumn']}");
             $fieldName .= "[{$options['subColumn']}]";
+            $fieldId .= '-' . $options['subColumn'];
             $fieldValue = $fieldValue[$options['subColumn']] ?? '';
             $hintPath .= ".{$options['subColumn']}";
         }
 
         $componentData = [
-            'id' => "{$modelName}-{$column}",
+            'id' => $fieldId,
             'label' => $columnLabel,
             'name' => $fieldName,
             'value' => $fieldValue,
@@ -287,17 +302,19 @@ class Presenter
     {
         $modelName = class_basename($model);
         $columnLabel = __("models.{$modelName}.{$column}");
+        $fieldId = "{$modelName}-{$column}";
         $fieldName = $options['name'] ?? "{$modelName}[{$column}]";
         $hintPath = "models.{$modelName}.hint.{$column}";
 
         if (isset($options['subColumn'])) {
             $columnLabel = __("models.{$modelName}.{$column}.{$options['subColumn']}");
+            $fieldId .= '-' . $options['subColumn'];
             $fieldName .= "[{$options['subColumn']}]";
             $hintPath .= ".{$options['subColumn']}";
         }
 
         $componentData = [
-            'id' => "{$modelName}-{$column}",
+            'id' => $fieldId,
             'label' => $columnLabel,
             'name' => $fieldName,
             'required' => $options['required'] ?? false,
@@ -318,7 +335,7 @@ class Presenter
      */
     public function getFieldHidden($model, $column, $defaultValue = null) {
         $modelName = class_basename($model);
-        $fieldValue = $model->getAttribute($column) ?? $defaultValue;
+        $fieldValue = $defaultValue ?? $model->getAttribute($column);
 
         return "<input type=\"hidden\" name=\"{$modelName}[{$column}]\" value=\"{$fieldValue}\" />";
     }
@@ -334,6 +351,7 @@ class Presenter
         $modelName = class_basename($model);
         $columnLabel = __("models.{$modelName}.{$column}");
         $fieldName = $options['name'] ?? "{$modelName}[{$column}]";
+        $fieldId = "{$modelName}-{$column}";
         $fieldValue = $model->getAttribute($column) ?? '';
         $hintPath = "models.{$modelName}.hint.{$column}";
         $pickerType = $options['type'] ?? 'birthdate';
@@ -351,12 +369,13 @@ class Presenter
         if (isset($options['subColumn'])) {
             $columnLabel = __("models.{$modelName}.{$column}.{$options['subColumn']}");
             $fieldName .= "[{$options['subColumn']}]";
+            $fieldId .= '-' . $options['subColumn'];
             $fieldValue = $fieldValue[$options['subColumn']] ?? '';
             $hintPath .= ".{$options['subColumn']}";
         }
 
         $componentData = [
-            'id' => "{$modelName}-{$column}",
+            'id' => $fieldId,
             'label' => $columnLabel,
             'name' => $fieldName,
             'value' => !is_null($fieldValue) && $fieldValue != '' ? date($valueTimeFormat, strtotime($fieldValue)) : '',
@@ -382,18 +401,20 @@ class Presenter
         $modelName = class_basename($model);
         $columnLabel = __("models.{$modelName}.{$column}");
         $fieldName = $options['name'] ?? "{$modelName}[{$column}]";
+        $fieldId = "{$modelName}-{$column}";
         $fieldValue = $model->getAttribute($column) ?? '';
         $hintPath = "models.{$modelName}.hint.{$column}";
 
         if (isset($options['subColumn'])) {
             $columnLabel = __("models.{$modelName}.{$column}.{$options['subColumn']}");
             $fieldName .= "[{$options['subColumn']}]";
+            $fieldId .= '-' . $options['subColumn'];
             $fieldValue = $fieldValue[$options['subColumn']] ?? '';
             $hintPath .= ".{$options['subColumn']}";
         }
 
         $componentData = [
-            'id' => "{$modelName}-{$column}",
+            'id' => $fieldId,
             'label' => $columnLabel,
             'name' => $fieldName,
             'value' => $fieldValue,
@@ -418,18 +439,20 @@ class Presenter
         $modelName = class_basename($model);
         $columnLabel = __("models.{$modelName}.{$column}");
         $fieldName = $options['name'] ?? "{$modelName}[{$column}]";
+        $fieldId = "{$modelName}-{$column}";
         $fieldValue = $model->getAttribute($column) ?? '';
         $hintPath = "models.{$modelName}.hint.{$column}";
 
         if (isset($options['subColumn'])) {
             $columnLabel = __("models.{$modelName}.{$column}.{$options['subColumn']}");
             $fieldName .= "[{$options['subColumn']}]";
+            $fieldId .= '-' . $options['subColumn'];
             $fieldValue = $fieldValue[$options['subColumn']] ?? '';
             $hintPath .= ".{$options['subColumn']}";
         }
 
         $componentData = [
-            'id' => "{$modelName}-{$column}",
+            'id' => $fieldId,
             'label' => $columnLabel,
             'name' => $fieldName,
             'value' => $fieldValue,
@@ -455,18 +478,20 @@ class Presenter
         $modelName = class_basename($model);
         $columnLabel = __("models.{$modelName}.{$column}");
         $fieldName = $options['name'] ?? "{$modelName}[{$column}]";
+        $fieldId = "{$modelName}-{$column}";
         $fieldValue = $model->getAttribute($column) ?? '';
         $hintPath = "models.{$modelName}.hint.{$column}";
 
         if (isset($options['subColumn'])) {
             $columnLabel = __("models.{$modelName}.{$column}.{$options['subColumn']}");
             $fieldName .= "[{$options['subColumn']}]";
+            $fieldId .= '-' . $options['subColumn'];
             $fieldValue = $fieldValue[$options['subColumn']] ?? '';
             $hintPath .= ".{$options['subColumn']}";
         }
 
         $componentData = [
-            'id' => "{$modelName}-{$column}",
+            'id' => $fieldId,
             'label' => $columnLabel,
             'name' => $fieldName,
             'value' => $fieldValue,
@@ -492,18 +517,20 @@ class Presenter
         $modelName = class_basename($model);
         $columnLabel = __("models.{$modelName}.{$column}");
         $fieldName = $options['name'] ?? "{$modelName}[{$column}]";
+        $fieldId = "{$modelName}-{$column}";
         $fieldValue = $model->getAttribute($column) ?? '';
         $hintPath = "models.{$modelName}.hint.{$column}";
 
         if (isset($options['subColumn'])) {
             $columnLabel = __("models.{$modelName}.{$column}.{$options['subColumn']}");
             $fieldName .= "[{$options['subColumn']}]";
+            $fieldId .= '-' . $options['subColumn'];
             $fieldValue = $fieldValue[$options['subColumn']] ?? '';
             $hintPath .= ".{$options['subColumn']}";
         }
 
         $componentData = [
-            'id' => "{$modelName}-{$column}",
+            'id' => $fieldId,
             'label' => $columnLabel,
             'name' => $fieldName,
             'value' => $fieldValue,
@@ -529,18 +556,20 @@ class Presenter
         $modelName = class_basename($model);
         $columnLabel = __("models.{$modelName}.{$column}");
         $fieldName = $options['name'] ?? "{$modelName}[{$column}]";
+        $fieldId = "{$modelName}-{$column}";
         $fieldValue = $model->getAttribute($column) ?? '';
         $hintPath = "models.{$modelName}.hint.{$column}";
 
         if (isset($options['subColumn'])) {
             $columnLabel = __("models.{$modelName}.{$column}.{$options['subColumn']}");
             $fieldName .= "[{$options['subColumn']}]";
+            $fieldId .= '-' . $options['subColumn'];
             $fieldValue = $fieldValue[$options['subColumn']] ?? '';
             $hintPath .= ".{$options['subColumn']}";
         }
 
         $componentData = [
-            'id' => "{$modelName}-{$column}",
+            'id' => $fieldId,
             'label' => $columnLabel,
             'name' => "{$fieldName}[]",
             'values' => $fieldValue,
@@ -566,18 +595,20 @@ class Presenter
         $modelName = class_basename($model);
         $columnLabel = __("models.{$modelName}.{$column}");
         $fieldName = $options['name'] ?? "{$modelName}[{$column}]";
+        $fieldId = "{$modelName}-{$column}";
         $fieldValue = $model->getAttribute($column) ?? [];
         $hintPath = "models.{$modelName}.hint.{$column}";
 
         if (isset($options['subColumn'])) {
             $columnLabel = __("models.{$modelName}.{$column}.{$options['subColumn']}");
             $fieldName .= "[{$options['subColumn']}]";
+            $fieldId .= '-' . $options['subColumn'];
             $fieldValue = $fieldValue[$options['subColumn']] ?? '';
             $hintPath .= ".{$options['subColumn']}";
         }
 
         $componentData = [
-            'id' => "{$modelName}-{$column}",
+            'id' => $fieldId,
             'label' => $columnLabel,
             'name' => "{$fieldName}[]",
             'value' => $fieldValue,
@@ -602,18 +633,20 @@ class Presenter
         $modelName = class_basename($model);
         $columnLabel = __("models.{$modelName}.{$column}");
         $fieldName = $options['name'] ?? "{$modelName}[{$column}]";
+        $fieldId = "{$modelName}-{$column}";
         $fieldValue = $model->getAttribute($column) ?? '';
         $hintPath = "models.{$modelName}.hint.{$column}";
 
         if (isset($options['subColumn'])) {
             $columnLabel = __("models.{$modelName}.{$column}.{$options['subColumn']}");
             $fieldName .= "[{$options['subColumn']}]";
+            $fieldId .= '-' . $options['subColumn'];
             $fieldValue = $fieldValue[$options['subColumn']] ?? '';
             $hintPath .= ".{$options['subColumn']}";
         }
 
         $componentData = [
-            'id' => "{$modelName}-{$column}",
+            'id' => $fieldId,
             'label' => $columnLabel,
             'name' => $fieldName,
             'value' => $fieldValue,
