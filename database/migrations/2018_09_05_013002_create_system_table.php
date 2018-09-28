@@ -76,6 +76,17 @@ class CreateSystemTable extends Migration
             $table->timestamp('created_at')->useCurrent();
         });
 
+        // Laravel 佇列
+        Schema::create('jobs', function (Blueprint $table) {
+            $table->bigIncrements('id');
+            $table->string('queue')->index();
+            $table->longText('payload');
+            $table->unsignedTinyInteger('attempts');
+            $table->unsignedInteger('reserved_at')->nullable();
+            $table->unsignedInteger('available_at');
+            $table->unsignedInteger('created_at');
+        });
+
         // 文字編輯器模板
         Schema::create('editor_template', function (Blueprint $table) {
             $table->increments('id');
@@ -98,6 +109,7 @@ class CreateSystemTable extends Migration
     public function down()
     {
         Schema::dropIfExists('editor_template');
+        Schema::dropIfExists('jobs');
         Schema::dropIfExists('login_log');
         Schema::dropIfExists('system_log');
         Schema::dropIfExists('firewall');
