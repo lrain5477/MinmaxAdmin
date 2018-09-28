@@ -64,6 +64,10 @@ class AdminSeeder extends Seeder
             ],
         ];
         $permissionsData = array_merge($permissionsData, SeederHelper::getPermissionArray('admin', 'webData', '網站基本資訊', ['U']));
+        $permissionsData = array_merge($permissionsData, SeederHelper::getPermissionArray('admin', 'newsletterSchedule', '電子報管理'));
+        $permissionsData = array_merge($permissionsData, SeederHelper::getPermissionArray('admin', 'newsletterTemplate', '電子報範本'));
+        $permissionsData = array_merge($permissionsData, SeederHelper::getPermissionArray('admin', 'newsletterSubscribe', '電子報名單', ['R', 'D']));
+        $permissionsData = array_merge($permissionsData, SeederHelper::getPermissionArray('admin', 'newsletterGroup', '電子報類別'));
         $permissionsData = array_merge($permissionsData, SeederHelper::getPermissionArray('admin', 'admin', '管理員帳戶'));
         $permissionsData = array_merge($permissionsData, SeederHelper::getPermissionArray('admin', 'role', '群組管理'));
         $permissionsData = array_merge($permissionsData, SeederHelper::getPermissionArray('admin', 'loginLog', '後臺登入紀錄', ['R']));
@@ -89,7 +93,7 @@ class AdminSeeder extends Seeder
             [
                 'guid' => uuidl(),
                 'title' => '前臺首頁',
-                'uri' => 'web',
+                'uri' => 'home-web',
                 'controller' => null,
                 'model' => null,
                 'class' => $menuClass[0],
@@ -103,9 +107,75 @@ class AdminSeeder extends Seeder
             // Module
             // TODO: Put project menu here.
 
-            // System
             [
                 'guid' => $menuGuid1 = uuidl(),
+                'title' => '電子報',
+                'uri' => 'root-newsletter',
+                'controller' => null,
+                'model' => null,
+                'class' => $menuClass[1],
+                'parent_id' => null,
+                'link' => null,
+                'icon' => 'icon-newspaper',
+                'permission_key' => null,
+                'sort' => 10, 'active' => '1', 'updated_at' => $timestamp, 'created_at' => $timestamp
+            ],
+            [
+                'guid' => uuidl(),
+                'title' => '電子報管理',
+                'uri' => 'newsletter-schedule',
+                'controller' => 'NewsletterScheduleController',
+                'model' => 'NewsletterSchedule',
+                'class' => $menuClass[1],
+                'parent_id' => $menuGuid1,
+                'link' => 'newsletter-schedule',
+                'icon' => null,
+                'permission_key' => 'newsletterScheduleShow',
+                'sort' => 1, 'active' => '1', 'updated_at' => $timestamp, 'created_at' => $timestamp
+            ],
+            [
+                'guid' => uuidl(),
+                'title' => '範本管理',
+                'uri' => 'newsletter-template',
+                'controller' => 'NewsletterTemplateController',
+                'model' => 'NewsletterTemplate',
+                'class' => $menuClass[1],
+                'parent_id' => $menuGuid1,
+                'link' => 'newsletter-template',
+                'icon' => null,
+                'permission_key' => 'newsletterTemplateShow',
+                'sort' => 2, 'active' => '1', 'updated_at' => $timestamp, 'created_at' => $timestamp
+            ],
+            [
+                'guid' => uuidl(),
+                'title' => '名單管理',
+                'uri' => 'newsletter-subscribe',
+                'controller' => 'NewsletterSubscribeController',
+                'model' => 'NewsletterSubscribe',
+                'class' => $menuClass[1],
+                'parent_id' => $menuGuid1,
+                'link' => 'newsletter-subscribe',
+                'icon' => null,
+                'permission_key' => 'newsletterSubscribeShow',
+                'sort' => 3, 'active' => '1', 'updated_at' => $timestamp, 'created_at' => $timestamp
+            ],
+            [
+                'guid' => uuidl(),
+                'title' => '發報類別',
+                'uri' => 'newsletter-group',
+                'controller' => 'NewsletterGroupController',
+                'model' => 'NewsletterGroup',
+                'class' => $menuClass[1],
+                'parent_id' => $menuGuid1,
+                'link' => 'newsletter-group',
+                'icon' => null,
+                'permission_key' => 'newsletterGroupShow',
+                'sort' => 4, 'active' => '1', 'updated_at' => $timestamp, 'created_at' => $timestamp
+            ],
+
+            // System
+            [
+                'guid' => $menuGuid2 = uuidl(),
                 'title' => '控制臺',
                 'uri' => 'root-command',
                 'controller' => null,
@@ -115,7 +185,7 @@ class AdminSeeder extends Seeder
                 'link' => null,
                 'icon' => 'icon-cog',
                 'permission_key' => null,
-                'sort' => 3, 'active' => '1', 'updated_at' => $timestamp, 'created_at' => $timestamp
+                'sort' => 11, 'active' => '1', 'updated_at' => $timestamp, 'created_at' => $timestamp
             ],
             [
                 'guid' => uuidl(),
@@ -124,7 +194,7 @@ class AdminSeeder extends Seeder
                 'controller' => 'WebDataController',
                 'model' => 'WebData',
                 'class' => $menuClass[2],
-                'parent_id' => $menuGuid1,
+                'parent_id' => $menuGuid2,
                 'link' => 'web-data/' . $webData->where('guard', 'web')->first()->guid . '/edit',
                 'icon' => null,
                 'permission_key' => 'webDataEdit',
@@ -132,7 +202,7 @@ class AdminSeeder extends Seeder
             ],
 
             [
-                'guid' => $menuGuid2 = uuidl(),
+                'guid' => $menuGuid3 = uuidl(),
                 'title' => '帳戶資訊',
                 'uri' => 'root-system-account',
                 'controller' => null,
@@ -142,7 +212,7 @@ class AdminSeeder extends Seeder
                 'link' => null,
                 'icon' => 'icon-person_pin',
                 'permission_key' => null,
-                'sort' => 4, 'active' => '1', 'updated_at' => $timestamp, 'created_at' => $timestamp
+                'sort' => 12, 'active' => '1', 'updated_at' => $timestamp, 'created_at' => $timestamp
             ],
             [
                 'guid' => uuidl(),
@@ -151,7 +221,7 @@ class AdminSeeder extends Seeder
                 'controller' => 'AdminController',
                 'model' => 'Admin',
                 'class' => $menuClass[2],
-                'parent_id' => $menuGuid2,
+                'parent_id' => $menuGuid3,
                 'link' => 'admin',
                 'icon' => null,
                 'permission_key' => 'adminShow',
@@ -164,7 +234,7 @@ class AdminSeeder extends Seeder
                 'controller' => 'RoleController',
                 'model' => 'Role',
                 'class' => $menuClass[2],
-                'parent_id' => $menuGuid2,
+                'parent_id' => $menuGuid3,
                 'link' => 'role',
                 'icon' => null,
                 'permission_key' => 'roleShow',
@@ -177,7 +247,7 @@ class AdminSeeder extends Seeder
                 'controller' => 'LoginLogController',
                 'model' => 'LoginLog',
                 'class' => $menuClass[2],
-                'parent_id' => $menuGuid2,
+                'parent_id' => $menuGuid3,
                 'link' => 'login-log',
                 'icon' => null,
                 'permission_key' => 'loginLogShow',
@@ -185,7 +255,7 @@ class AdminSeeder extends Seeder
             ],
 
             [
-                'guid' => $menuGuid3 = uuidl(),
+                'guid' => $menuGuid4 = uuidl(),
                 'title' => '資訊安全',
                 'uri' => 'root-security',
                 'controller' => null,
@@ -195,7 +265,7 @@ class AdminSeeder extends Seeder
                 'link' => null,
                 'icon' => 'icon-shield',
                 'permission_key' => null,
-                'sort' => 5, 'active' => '1', 'updated_at' => $timestamp, 'created_at' => $timestamp
+                'sort' => 13, 'active' => '1', 'updated_at' => $timestamp, 'created_at' => $timestamp
             ],
             [
                 'guid' => uuidl(),
@@ -204,7 +274,7 @@ class AdminSeeder extends Seeder
                 'controller' => 'SystemLogController',
                 'model' => 'SystemLog',
                 'class' => $menuClass[2],
-                'parent_id' => $menuGuid3,
+                'parent_id' => $menuGuid4,
                 'link' => 'system-log',
                 'icon' => null,
                 'permission_key' => 'systemLogShow',
@@ -217,7 +287,7 @@ class AdminSeeder extends Seeder
                 'controller' => 'FirewallController',
                 'model' => 'Firewall',
                 'class' => $menuClass[2],
-                'parent_id' => $menuGuid3,
+                'parent_id' => $menuGuid4,
                 'link' => 'firewall',
                 'icon' => null,
                 'permission_key' => 'firewallShow',

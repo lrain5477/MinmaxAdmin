@@ -557,14 +557,14 @@ class Presenter
         $columnLabel = __("models.{$modelName}.{$column}");
         $fieldName = $options['name'] ?? "{$modelName}[{$column}]";
         $fieldId = "{$modelName}-{$column}";
-        $fieldValue = $model->getAttribute($column) ?? '';
+        $fieldValue = $model->getAttribute($column) ?? [];
         $hintPath = "models.{$modelName}.hint.{$column}";
 
         if (isset($options['subColumn'])) {
             $columnLabel = __("models.{$modelName}.{$column}.{$options['subColumn']}");
             $fieldName .= "[{$options['subColumn']}]";
             $fieldId .= '-' . $options['subColumn'];
-            $fieldValue = $fieldValue[$options['subColumn']] ?? '';
+            $fieldValue = $model->getAttribute($column)[$options['subColumn']] ?? [];
             $hintPath .= ".{$options['subColumn']}";
         }
 

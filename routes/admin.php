@@ -92,4 +92,10 @@ Route::group(['middleware' => 'auth:admin'], function() {
         Route::any('connector', ['as' => 'elfinder.connector', 'uses' => 'ElfinderController@showConnector']);
         Route::get('ckeditor', ['as' => 'elfinder.ckeditor', 'uses' => 'ElfinderController@showCKeditor4']);
     });
+
+    // NewsletterSchedule
+    Route::get('newsletter-schedule/ajax/template', 'NewsletterScheduleController@ajaxTemplate')->name('newsletter-schedule.ajax.template');
+
+    // NewsletterSubscribe
+    Route::get('newsletter-subscribe/data/export', 'NewsletterSubscribeController@export')->name('newsletter-subscribe.export');
 });
