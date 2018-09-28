@@ -41,6 +41,30 @@ class AdministratorSeeder extends Seeder
                 'icon' => 'icon-home3',
                 'sort' => 1, 'updated_at' => $timestamp, 'created_at' => $timestamp
             ],
+            [
+                'guid' => uuidl(),
+                'title' => '後臺首頁',
+                'uri' => 'home-admin',
+                'controller' => null,
+                'model' => null,
+                'class' => 'default',
+                'parent_id' => null,
+                'link' => config('app.url') . '/siteadmin',
+                'icon' => 'icon-home3',
+                'sort' => 2, 'updated_at' => $timestamp, 'created_at' => $timestamp
+            ],
+            [
+                'guid' => uuidl(),
+                'title' => '網站首頁',
+                'uri' => 'home-web',
+                'controller' => null,
+                'model' => null,
+                'class' => 'default',
+                'parent_id' => null,
+                'link' => config('app.url'),
+                'icon' => 'icon-home3',
+                'sort' => 3, 'updated_at' => $timestamp, 'created_at' => $timestamp
+            ],
 
             // System
             [
@@ -53,7 +77,7 @@ class AdministratorSeeder extends Seeder
                 'parent_id' => null,
                 'link' => null,
                 'icon' => 'icon-cog',
-                'sort' => 1, 'updated_at' => $timestamp, 'created_at' => $timestamp
+                'sort' => 11, 'updated_at' => $timestamp, 'created_at' => $timestamp
             ],
             [
                 'guid' => uuidl(),
@@ -102,7 +126,7 @@ class AdministratorSeeder extends Seeder
                 'parent_id' => null,
                 'link' => null,
                 'icon' => 'icon-group',
-                'sort' => 2, 'updated_at' => $timestamp, 'created_at' => $timestamp
+                'sort' => 12, 'updated_at' => $timestamp, 'created_at' => $timestamp
             ],
             [
                 'guid' => uuidl(),
@@ -151,7 +175,7 @@ class AdministratorSeeder extends Seeder
                 'parent_id' => null,
                 'link' => null,
                 'icon' => 'icon-shield',
-                'sort' => 3, 'updated_at' => $timestamp, 'created_at' => $timestamp
+                'sort' => 13, 'updated_at' => $timestamp, 'created_at' => $timestamp
             ],
             [
                 'guid' => uuidl(),
@@ -200,7 +224,7 @@ class AdministratorSeeder extends Seeder
                 'parent_id' => null,
                 'link' => null,
                 'icon' => 'icon-sphere',
-                'sort' => 4, 'updated_at' => $timestamp, 'created_at' => $timestamp
+                'sort' => 14, 'updated_at' => $timestamp, 'created_at' => $timestamp
             ],
             [
                 'guid' => uuidl(),
@@ -261,7 +285,7 @@ class AdministratorSeeder extends Seeder
                 'parent_id' => null,
                 'link' => null,
                 'icon' => 'icon-filter',
-                'sort' => 5, 'updated_at' => $timestamp, 'created_at' => $timestamp
+                'sort' => 15, 'updated_at' => $timestamp, 'created_at' => $timestamp
             ],
             [
                 'guid' => uuidl(),
