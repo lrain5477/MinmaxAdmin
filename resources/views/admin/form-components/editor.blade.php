@@ -21,11 +21,11 @@
             height: '{{ $height }}',
             contentsCss: '{{ $stylesheet }}',
             @if($template)
-            templates_files: ['{{ route('admin.editorTemplate', ['category' => $template]) }}'],
+            templates_files: ['{{ langRoute('admin.editorTemplate', [$template]) }}'],
             @else
             removeButtons: 'Templates',
             @endif
-            filebrowserBrowseUrl: '/siteadmin/elfinder/ckeditor'
+            filebrowserBrowseUrl: '{{ langRoute('admin.elfinder.ckeditor') }}'
         });
         CKEDITOR.dtd.$removeEmpty['i'] = false;
     });
