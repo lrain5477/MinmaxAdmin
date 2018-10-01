@@ -176,7 +176,7 @@ class SystemSeeder extends Seeder
         DB::table('system_parameter')->insert($parametersData);
 
         try {
-            $emailTemplate1 = view('emails.templates.email-normal')->render();
+            $emailTemplate1 = view('editor-template.email-normal')->render();
         } catch (\Exception $e) {
             $emailTemplate1 = '';
         }
