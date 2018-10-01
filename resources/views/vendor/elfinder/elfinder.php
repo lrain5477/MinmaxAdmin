@@ -35,7 +35,7 @@
                     customData: { 
                         _token: '<?= csrf_token() ?>'
                     },
-                    url : '<?= route("elfinder.connector") ?>',  // connector URL
+                    url : '<?= langRoute("{$guard}.elfinder.connector") ?>',  // connector URL
                     commandsOptions: {
                         upload : {
                             ui : 'uploadbutton'
@@ -44,22 +44,29 @@
                     soundPath: '<?= asset($dir.'/sounds') ?>',
                     uiOptions: {
                         toolbar: [
-                            <?php if($guard === 'administrator' || \Auth::guard($guard)->user()->can('systemUpload')) { ?>
+                            <?php if($guard === 'administrator' || request()->user($guard)->can('systemUpload')) { ?>
                             ['back', 'forward', 'up'], ['view', 'sort'], ['copy', 'cut', 'paste'], ['rm'],
-                            ['duplicate', 'rename'], ['mkdir', 'upload'], ['getfile', 'open', 'download'], ['info']
+                            ['duplicate', 'rename'], ['mkdir', 'upload'], ['getfile', 'open', 'download'], ['info'],
                             <?php } else { ?>
-                            ['back', 'forward', 'up'], ['view', 'sort'], ['getfile', 'open', 'download'], ['info']
+                            ['back', 'forward', 'up'], ['view', 'sort'], ['getfile', 'open', 'download'], ['info'],
                             <?php } ?>
                         ]
                     },
                     contextmenu: {
-                        <?php if($guard === 'administrator' || \Auth::guard($guard)->user()->can('systemUpload')) { ?>
-                        cwd: ['reload', '|', 'upload', 'mkdir', 'paste', '|', 'view', 'sort', 'selectall', '|', 'info'],
-                        files: ['getfile', 'open', 'download', '|', 'copy', 'cut', 'paste', 'rm', '|', 'rename', '|', 'info']
-                        <?php } else { ?>
-                        cwd: ['reload', '|', 'view', 'sort', 'selectall', '|', 'info'],
-                        files: ['getfile', 'open', 'download', 'info']
-                        <?php } ?>
+                        cwd: [
+                            <?php if($guard === 'administrator' || request()->user($guard)->can('systemUpload')) { ?>
+                            'reload', '|', 'upload', 'mkdir', 'paste', '|', 'view', 'sort', 'selectall', '|', 'info',
+                            <?php } else { ?>
+                            'reload', '|', 'view', 'sort', 'selectall', '|', 'info',
+                            <?php } ?>
+                        ],
+                        files: [
+                            <?php if($guard === 'administrator' || request()->user($guard)->can('systemUpload')) { ?>
+                            'getfile', 'open', 'download', '|', 'copy', 'cut', 'paste', 'rm', '|', 'rename', '|', 'info'
+                            <?php } else { ?>
+                            'getfile', 'open', 'download', 'info',
+                            <?php } ?>
+                        ]
                     }
                 });
             });
