@@ -8,7 +8,7 @@ class EditorTemplateTransformer extends Transformer
 {
     protected $model = 'EditorTemplate';
     protected $parameterSet = [
-        'active' => 'active',
+        'active',
     ];
 
     /**
@@ -23,8 +23,8 @@ class EditorTemplateTransformer extends Transformer
             'category' => $this->getGridText($model->category),
             'title' => $this->getGridText($model->title),
             'sort' => $this->getGridSort($model->guard, 'sort', $model->sort),
-            'active' => $this->getGridSwitch($model->guid, 'active', $model->active),
-            'action' => $this->getGridActions($model->guid),
+            'active' => $this->getGridSwitch($model->id, 'active', $model->active),
+            'action' => $this->getGridActions($model->id),
         ];
     }
 }

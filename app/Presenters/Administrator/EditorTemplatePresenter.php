@@ -8,22 +8,12 @@ class EditorTemplatePresenter extends Presenter
     {
         parent::__construct();
 
-        $this->fieldSelection = [
+        $this->parameterSet = [
             'guard' => [
-                'admin' => 'admin',
-                'merchant' => 'merchant',
-                'web' => 'web',
+                'admin' => ['title' => 'admin', 'class' => null],
+                'web' => ['title' => 'web', 'class' => null],
             ],
-            'active' => $this->parameterSet
-                ->firstWhere('code', '=', 'active')
-                ->parameterItem()
-                ->where(['active' => 1])
-                ->get(['title', 'value'])
-                ->mapWithKeys(function($item) {
-                    /** @var \App\Models\ParameterItem $item **/
-                    return [$item->value => $item->title];
-                })
-                ->toArray(),
+            'active' => systemParam('active'),
         ];
     }
 }

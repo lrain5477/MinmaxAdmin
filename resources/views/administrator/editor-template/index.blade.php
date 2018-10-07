@@ -1,8 +1,14 @@
+<?php
+/**
+ * @var \App\Models\AdministratorMenu $pageData
+ */
+?>
+
 @extends('administrator.default.index')
 
 @section('action-buttons')
 <div class="float-right">
-    <a class="btn btn-sm btn-main" href="{{ route('administrator.create', [$pageData->uri]) }}" title="@lang('administrator.form.create')">
+    <a class="btn btn-sm btn-main" href="{{ langRoute("administrator.{$pageData->uri}.create") }}" title="@lang('administrator.form.create')">
         <i class="icon-plus2"></i><span class="ml-1 d-none d-md-inline-block">@lang('administrator.form.create')</span>
     </a>
 </div>
@@ -25,15 +31,14 @@
             <select class="bs-select form-control sch_select" id="searchGuard" name="searchGuard" data-style="btn-outline-light btn-sm">
                 <option selected="selected" value="">@lang('administrator.grid.selection.all_guard')</option>
                 <option value="admin">admin</option>
-                <option value="merchant">merchant</option>
                 <option value="web">web</option>
             </select>
         </div>
         <div class="col col-md-auto ml-1">
             <select class="bs-select form-control sch_select" id="searchActive" name="searchActive" data-style="btn-outline-light btn-sm">
                 <option selected="selected" value="">@lang('administrator.grid.selection.all_active')</option>
-                <option value="1">@lang('models.EditorTemplate.selection.active.1')</option>
-                <option value="0">@lang('models.EditorTemplate.selection.active.0')</option>
+                <option value="1">{{ systemParam('active') }}</option>
+                <option value="0">{{ systemParam('active') }}</option>
             </select>
         </div>
     </div>
@@ -41,8 +46,6 @@
 @endsection
 
 @section('grid-table')
-<input type="hidden" id="model"  value="{{ $pageData->model }}">
-
 <table class="table table-responsive-md table-bordered table-striped table-hover table-checkable datatables" id="tableList">
     <thead>
     <tr role="row">
@@ -68,7 +71,7 @@
                 url: '/admin/js/lang/{{ app()->getLocale() }}/datatables.json'
             },
             ajax: {
-                url: '{{ route('administrator.datatables', ['uri' => $pageData->uri]) }}',
+                url: '{{ langRoute("administrator.{$pageData->uri}.ajaxDataTable") }}',
                 data: function (d) {
                     let searchKeyword = $('#sch_keyword').val();
                     d.filter = {

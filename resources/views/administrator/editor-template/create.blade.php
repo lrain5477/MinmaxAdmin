@@ -1,22 +1,35 @@
+<?php
+/**
+ * @var \App\Models\AdministratorMenu $pageData
+ * @var \App\Models\EditorTemplate $formData
+ */
+?>
+
 @extends('administrator.default.create')
+
+@section('action-buttons')
+<div class="float-right">
+    <a class="btn btn-sm btn-light" href="{{ langRoute("administrator.{$pageData->uri}.index") }}" title="@lang('administrator.form.back_list')">
+        <i class="icon-undo2"></i><span class="ml-1 d-none d-md-inline-block">@lang('administrator.form.back_list')</span>
+    </a>
+</div>
+@endsection
 
 @section('forms')
     @inject('modelPresenter', 'App\Presenters\Administrator\EditorTemplatePresenter')
 
-    {!! $modelPresenter->getFieldHidden($formData, 'lang', app()->getLocale()) !!}
-
     <fieldset id="baseFieldSet">
         <legend class="legend h6 mb-4"><i class="icon-angle-double-down2 mr-2"></i>@lang('administrator.form.fieldSet.default')</legend>
 
-        {!! $modelPresenter->getFieldSelect($formData, 'guard', true) !!}
+        {!! $modelPresenter->getFieldSelect($formData, 'guard', ['required' => true]) !!}
 
-        {!! $modelPresenter->getFieldText($formData, 'category', true, ['size' => 4]) !!}
+        {!! $modelPresenter->getFieldText($formData, 'category', ['required' => true, 'size' => 4]) !!}
 
-        {!! $modelPresenter->getFieldText($formData, 'title', true) !!}
+        {!! $modelPresenter->getFieldText($formData, 'title', ['required' => true]) !!}
 
-        {!! $modelPresenter->getFieldText($formData, 'description', true) !!}
+        {!! $modelPresenter->getFieldText($formData, 'description', ['required' => true]) !!}
 
-        {!! $modelPresenter->getFieldEditor($formData, 'editor', true, ['height' => '550px']) !!}
+        {!! $modelPresenter->getFieldEditor($formData, 'editor', ['required' => true, 'height' => '550px']) !!}
 
     </fieldset>
 
@@ -25,7 +38,7 @@
 
         {!! $modelPresenter->getFieldText($formData, 'sort', ['size' => 2]) !!}
 
-        {!! $modelPresenter->getFieldRadio($formData, 'active', true, ['inline' => true]) !!}
+        {!! $modelPresenter->getFieldRadio($formData, 'active', ['required' => true, 'inline' => true]) !!}
 
     </fieldset>
 

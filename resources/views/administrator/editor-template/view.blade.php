@@ -1,11 +1,18 @@
+<?php
+/**
+ * @var \App\Models\AdministratorMenu $pageData
+ * @var \App\Models\EditorTemplate $formData
+ */
+?>
+
 @extends('administrator.default.view')
 
 @section('action-buttons')
 <div class="float-right">
-    <a class="btn btn-sm btn-light" href="{{ route('administrator.index', [$pageData->uri]) }}" title="@lang('administrator.form.back_list')">
+    <a class="btn btn-sm btn-light" href="{{ langRoute("administrator.{$pageData->uri}.index") }}" title="@lang('administrator.form.back_list')">
         <i class="icon-undo2"></i><span class="ml-1 d-none d-md-inline-block">@lang('administrator.form.back_list')</span>
     </a>
-    <a class="btn btn-sm btn-main" href="{{ route('administrator.edit', [$pageData->uri, $formData->guid]) }}" title="@lang('administrator.form.edit')">
+    <a class="btn btn-sm btn-main" href="{{ langRoute("administrator.{$pageData->uri}.edit", [$formData->id]) }}" title="@lang('administrator.form.edit')">
         <i class="icon-pencil"></i><span class="ml-1 d-none d-md-inline-block">@lang('administrator.form.edit')</span>
     </a>
 </div>
