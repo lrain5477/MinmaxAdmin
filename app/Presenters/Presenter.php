@@ -36,7 +36,7 @@ class Presenter
         if (isset($options['subColumn'])) {
             $columnLabel = __("models.{$modelName}.{$column}.{$options['subColumn']}");
             $fieldId .= '-' . $options['subColumn'];
-            $fieldValue = $defaultValue ?? $fieldValue[$options['subColumn']] ?? '';
+            $fieldValue = $defaultValue ?? ($fieldValue == '' ? '' : ($fieldValue[$options['subColumn']] ?? ''));
         }
 
         $componentData = [
@@ -64,7 +64,7 @@ class Presenter
         if (isset($options['subColumn'])) {
             $columnLabel = __("models.{$modelName}.{$column}.{$options['subColumn']}");
             $fieldId .= '-' . $options['subColumn'];
-            $fieldValue = $defaultValue ?? $fieldValue[$options['subColumn']] ?? '';
+            $fieldValue = $defaultValue ?? ($fieldValue == '' ? '' : ($fieldValue[$options['subColumn']] ?? ''));
         }
 
         $componentData = [
@@ -89,12 +89,21 @@ class Presenter
         $modelName = class_basename($model);
         $columnLabel = __("models.{$modelName}.{$column}");
         $defaultValue = $options['defaultValue'] ?? null;
+        $fieldId = "{$modelName}-{$column}";
         $fieldValue = $model->getAttribute($column) ?? '';
+        $parameterColumn = $column;
+
+        if (isset($options['subColumn'])) {
+            $columnLabel = __("models.{$modelName}.{$column}.{$options['subColumn']}");
+            $fieldId .= '-' . $options['subColumn'];
+            $fieldValue = $defaultValue ?? ($fieldValue == '' ? '' : ($fieldValue[$options['subColumn']] ?? ''));
+            $parameterColumn .= ".{$options['subColumn']}";
+        }
 
         $componentData = [
-            'id' => "{$modelName}-{$column}",
+            'id' => $fieldId,
             'label' => $columnLabel,
-            'value' => $defaultValue ?? ($this->parameterSet[$column][$fieldValue]['title'] ?? '(not exist)'),
+            'value' => $defaultValue ?? ($this->parameterSet[$parameterColumn][$fieldValue]['title'] ?? '(not exist)'),
         ];
 
         return view("{$this->guardName}.view-components.normal-text", $componentData);
@@ -110,9 +119,18 @@ class Presenter
         $modelName = class_basename($model);
         $columnLabel = __("models.{$modelName}.{$column}");
         $defaultValue = $options['defaultValue'] ?? null;
+        $fieldId = "{$modelName}-{$column}";
         $fieldValue = $model->getAttribute($column) ?? [];
+        $parameterColumn = $column;
 
-        $parameterValue = collect($this->parameterSet[$column] ?? [])
+        if (isset($options['subColumn'])) {
+            $columnLabel = __("models.{$modelName}.{$column}.{$options['subColumn']}");
+            $fieldId .= '-' . $options['subColumn'];
+            $fieldValue = $defaultValue ?? ($fieldValue[$options['subColumn']] ?? []);
+            $parameterColumn .= ".{$options['subColumn']}";
+        }
+
+        $parameterValue = collect($this->parameterSet[$parameterColumn] ?? [])
             ->filter(function($item, $key) use ($fieldValue) {
                 return array_key_exists('title', $item) && in_array($key, $fieldValue);
             })
@@ -122,7 +140,7 @@ class Presenter
             ->implode(', ');
 
         $componentData = [
-            'id' => "{$modelName}-{$column}",
+            'id' => $fieldId,
             'label' => $columnLabel,
             'value' => $defaultValue ?? $parameterValue,
         ];
@@ -165,7 +183,7 @@ class Presenter
 
         if (isset($options['subColumn'])) {
             $columnLabel = __("models.{$modelName}.{$column}.{$options['subColumn']}");
-            $fieldValue = $fieldValue[$options['subColumn']] ?? '';
+            $fieldValue = $fieldValue == '' ? '' : ($fieldValue[$options['subColumn']] ?? '');
         }
 
         $componentData = [
@@ -197,7 +215,7 @@ class Presenter
             $columnLabel = __("models.{$modelName}.{$column}.{$options['subColumn']}");
             $fieldName .= "[{$options['subColumn']}]";
             $fieldId .= '-' . $options['subColumn'];
-            $fieldValue = $fieldValue[$options['subColumn']] ?? '';
+            $fieldValue = $fieldValue == '' ? '' : ($fieldValue[$options['subColumn']] ?? '');
             $hintPath .= ".{$options['subColumn']}";
         }
 
@@ -235,7 +253,7 @@ class Presenter
             $columnLabel = __("models.{$modelName}.{$column}.{$options['subColumn']}");
             $fieldName .= "[{$options['subColumn']}]";
             $fieldId .= '-' . $options['subColumn'];
-            $fieldValue = $fieldValue[$options['subColumn']] ?? '';
+            $fieldValue = $fieldValue == '' ? '' : ($fieldValue[$options['subColumn']] ?? '');
             $hintPath .= ".{$options['subColumn']}";
         }
 
@@ -273,7 +291,7 @@ class Presenter
             $columnLabel = __("models.{$modelName}.{$column}.{$options['subColumn']}");
             $fieldName .= "[{$options['subColumn']}]";
             $fieldId .= '-' . $options['subColumn'];
-            $fieldValue = $fieldValue[$options['subColumn']] ?? '';
+            $fieldValue = $fieldValue == '' ? '' : ($fieldValue[$options['subColumn']] ?? '');
             $hintPath .= ".{$options['subColumn']}";
         }
 
@@ -370,7 +388,7 @@ class Presenter
             $columnLabel = __("models.{$modelName}.{$column}.{$options['subColumn']}");
             $fieldName .= "[{$options['subColumn']}]";
             $fieldId .= '-' . $options['subColumn'];
-            $fieldValue = $fieldValue[$options['subColumn']] ?? '';
+            $fieldValue = $fieldValue == '' ? '' : ($fieldValue[$options['subColumn']] ?? '');
             $hintPath .= ".{$options['subColumn']}";
         }
 
@@ -409,7 +427,7 @@ class Presenter
             $columnLabel = __("models.{$modelName}.{$column}.{$options['subColumn']}");
             $fieldName .= "[{$options['subColumn']}]";
             $fieldId .= '-' . $options['subColumn'];
-            $fieldValue = $fieldValue[$options['subColumn']] ?? '';
+            $fieldValue = $fieldValue == '' ? '' : ($fieldValue[$options['subColumn']] ?? '');
             $hintPath .= ".{$options['subColumn']}";
         }
 
@@ -447,7 +465,7 @@ class Presenter
             $columnLabel = __("models.{$modelName}.{$column}.{$options['subColumn']}");
             $fieldName .= "[{$options['subColumn']}]";
             $fieldId .= '-' . $options['subColumn'];
-            $fieldValue = $fieldValue[$options['subColumn']] ?? '';
+            $fieldValue = $fieldValue == '' ? '' : ($fieldValue[$options['subColumn']] ?? '');
             $hintPath .= ".{$options['subColumn']}";
         }
 
@@ -481,13 +499,15 @@ class Presenter
         $fieldId = "{$modelName}-{$column}";
         $fieldValue = $model->getAttribute($column) ?? '';
         $hintPath = "models.{$modelName}.hint.{$column}";
+        $parameterColumn = $column;
 
         if (isset($options['subColumn'])) {
             $columnLabel = __("models.{$modelName}.{$column}.{$options['subColumn']}");
             $fieldName .= "[{$options['subColumn']}]";
             $fieldId .= '-' . $options['subColumn'];
-            $fieldValue = $fieldValue[$options['subColumn']] ?? '';
+            $fieldValue = $fieldValue == '' ? '' : ($fieldValue[$options['subColumn']] ?? '');
             $hintPath .= ".{$options['subColumn']}";
+            $parameterColumn .= ".{$options['subColumn']}";
         }
 
         $componentData = [
@@ -500,7 +520,7 @@ class Presenter
             'search' => $options['search'] ?? false,
             'size' => $options['size'] ?? 3,
             'hint' => isset($options['hint']) && $options['hint'] === true ? (is_string($options['hint']) ? $options['hint'] : __($hintPath)) : '',
-            'listData' => $this->parameterSet[$column] ?? [],
+            'listData' => $this->parameterSet[$parameterColumn] ?? [],
         ];
 
         return view("{$this->guardName}.form-components.select", $componentData);
@@ -520,13 +540,15 @@ class Presenter
         $fieldId = "{$modelName}-{$column}";
         $fieldValue = $model->getAttribute($column) ?? '';
         $hintPath = "models.{$modelName}.hint.{$column}";
+        $parameterColumn = $column;
 
         if (isset($options['subColumn'])) {
             $columnLabel = __("models.{$modelName}.{$column}.{$options['subColumn']}");
             $fieldName .= "[{$options['subColumn']}]";
             $fieldId .= '-' . $options['subColumn'];
-            $fieldValue = $fieldValue[$options['subColumn']] ?? '';
+            $fieldValue = $fieldValue == '' ? '' : ($fieldValue[$options['subColumn']] ?? '');
             $hintPath .= ".{$options['subColumn']}";
+            $parameterColumn .= ".{$options['subColumn']}";
         }
 
         $componentData = [
@@ -539,7 +561,7 @@ class Presenter
             'search' => $options['search'] ?? false,
             'size' => $options['size'] ?? 3,
             'hint' => isset($options['hint']) && $options['hint'] === true ? (is_string($options['hint']) ? $options['hint'] : __($hintPath)) : '',
-            'listData' => $this->parameterSet[$column] ?? [],
+            'listData' => $this->parameterSet[$parameterColumn] ?? [],
         ];
 
         return view("{$this->guardName}.form-components.group-select", $componentData);
@@ -559,6 +581,7 @@ class Presenter
         $fieldId = "{$modelName}-{$column}";
         $fieldValue = $model->getAttribute($column) ?? [];
         $hintPath = "models.{$modelName}.hint.{$column}";
+        $parameterColumn = $column;
 
         if (isset($options['subColumn'])) {
             $columnLabel = __("models.{$modelName}.{$column}.{$options['subColumn']}");
@@ -566,6 +589,7 @@ class Presenter
             $fieldId .= '-' . $options['subColumn'];
             $fieldValue = $model->getAttribute($column)[$options['subColumn']] ?? [];
             $hintPath .= ".{$options['subColumn']}";
+            $parameterColumn .= ".{$options['subColumn']}";
         }
 
         $componentData = [
@@ -578,7 +602,7 @@ class Presenter
             'group' => $options['group'] ?? false,
             'size' => $options['size'] ?? 10,
             'hint' => isset($options['hint']) && $options['hint'] === true ? (is_string($options['hint']) ? $options['hint'] : __($hintPath)) : '',
-            'listData' => $this->parameterSet[$column] ?? [],
+            'listData' => $this->parameterSet[$parameterColumn] ?? [],
         ];
 
         return view("{$this->guardName}.form-components.multi-select", $componentData);
@@ -598,13 +622,15 @@ class Presenter
         $fieldId = "{$modelName}-{$column}";
         $fieldValue = $model->getAttribute($column) ?? [];
         $hintPath = "models.{$modelName}.hint.{$column}";
+        $parameterColumn = $column;
 
         if (isset($options['subColumn'])) {
             $columnLabel = __("models.{$modelName}.{$column}.{$options['subColumn']}");
             $fieldName .= "[{$options['subColumn']}]";
             $fieldId .= '-' . $options['subColumn'];
-            $fieldValue = $fieldValue[$options['subColumn']] ?? '';
+            $fieldValue = $fieldValue[$options['subColumn']] ?? [];
             $hintPath .= ".{$options['subColumn']}";
+            $parameterColumn .= ".{$options['subColumn']}";
         }
 
         $componentData = [
@@ -616,7 +642,7 @@ class Presenter
             'inline' => $options['inline'] ?? false,
             'color' => $options['color'] ?? '',
             'hint' => isset($options['hint']) && $options['hint'] === true ? (is_string($options['hint']) ? $options['hint'] : __($hintPath)) : '',
-            'listData' => $this->parameterSet[$column] ?? [],
+            'listData' => $this->parameterSet[$parameterColumn] ?? [],
         ];
 
         return view("{$this->guardName}.form-components.checkbox", $componentData);
@@ -636,13 +662,15 @@ class Presenter
         $fieldId = "{$modelName}-{$column}";
         $fieldValue = $model->getAttribute($column) ?? '';
         $hintPath = "models.{$modelName}.hint.{$column}";
+        $parameterColumn = $column;
 
         if (isset($options['subColumn'])) {
             $columnLabel = __("models.{$modelName}.{$column}.{$options['subColumn']}");
             $fieldName .= "[{$options['subColumn']}]";
             $fieldId .= '-' . $options['subColumn'];
-            $fieldValue = $fieldValue[$options['subColumn']] ?? '';
+            $fieldValue = $fieldValue == '' ? '' : ($fieldValue[$options['subColumn']] ?? '');
             $hintPath .= ".{$options['subColumn']}";
+            $parameterColumn .= ".{$options['subColumn']}";
         }
 
         $componentData = [
@@ -654,7 +682,7 @@ class Presenter
             'inline' => $options['inline'] ?? false,
             'color' => $options['color'] ?? '',
             'hint' => isset($options['hint']) && $options['hint'] === true ? (is_string($options['hint']) ? $options['hint'] : __($hintPath)) : '',
-            'listData' => $this->parameterSet[$column] ?? [],
+            'listData' => $this->parameterSet[$parameterColumn] ?? [],
         ];
 
         return view("{$this->guardName}.form-components.radio", $componentData);
