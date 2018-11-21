@@ -1,0 +1,19 @@
+{
+    "name": "minmax/world",
+    "description": "World data management",
+    "type": "library",
+    "authors": [
+        {
+            "name": "Jeffy",
+            "email": "jeffy@e-creative.tw"
+        }
+    ],
+    "require": {
+        "minmax/default": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "Minmax\\World\\": "src/"
+        }
+    }
+}

@@ -27,6 +27,8 @@ return [
 
     'author' => env('APP_AUTHOR'),
 
+    'author_en' => env('APP_AUTHOR_EN'),
+
     'author_url' => env('APP_AUTHOR_URL'),
 
     /*
@@ -177,6 +179,8 @@ return [
         /*
          * Package Service Providers...
          */
+        Minmax\Base\ServiceProvider::class,
+        Minmax\World\ServiceProvider::class,
 
         /*
          * Application Service Providers...

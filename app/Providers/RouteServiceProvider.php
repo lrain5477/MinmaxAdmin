@@ -35,34 +35,34 @@ class RouteServiceProvider extends ServiceProvider
      */
     public function map()
     {
-        $languageMap = \Cache::rememberForever('langId', function() {
-            try {
-                $langTable = \DB::table('world_language')
-                    ->where('active', '1')
-                    ->orderBy('sort')
-                    ->select(['id', 'code'])
-                    ->get();
-                return $langTable
-                    ->mapWithKeys(function ($item) { return [$item->code => $item->id]; })
-                    ->toArray();
-            } catch (\Exception $e) {
-                return [];
-            }
-        });
-
-        if (count($languageMap) < 2) {
-            $this->mapApiRoutes();
-            $this->mapWebRoutes();
-            $this->mapAdminRoutes();
-            $this->mapAdministratorRoutes();
-        } else {
-            foreach ($languageMap as $langCode => $langId) {
-                $this->mapApiRoutes($langCode);
-                $this->mapWebRoutes($langCode);
-                $this->mapAdminRoutes($langCode);
-                $this->mapAdministratorRoutes($langCode);
-            }
-        }
+//        $languageMap = \Cache::rememberForever('langId', function() {
+//            try {
+//                $langTable = \DB::table('world_language')
+//                    ->where('active', '1')
+//                    ->orderBy('sort')
+//                    ->select(['id', 'code'])
+//                    ->get();
+//                return $langTable
+//                    ->mapWithKeys(function ($item) { return [$item->code => $item->id]; })
+//                    ->toArray();
+//            } catch (\Exception $e) {
+//                return [];
+//            }
+//        });
+//
+//        if (count($languageMap) < 2) {
+//            $this->mapApiRoutes();
+//            $this->mapWebRoutes();
+//            $this->mapAdminRoutes();
+//            $this->mapAdministratorRoutes();
+//        } else {
+//            foreach ($languageMap as $langCode => $langId) {
+//                $this->mapApiRoutes($langCode);
+//                $this->mapWebRoutes($langCode);
+//                $this->mapAdminRoutes($langCode);
+//                $this->mapAdministratorRoutes($langCode);
+//            }
+//        }
     }
 
     /**
