@@ -1,0 +1,50 @@
+<html>
+      <head>
+        <meta charset="UTF-8">
+        <title>README.md</title>
+      </head>
+      <body>
+        <h1 id="stylesheets">Stylesheets</h1>
+<p>All CSS for your theme will be located here.</p>
+<p>The <code>theme.css</code> file is the focal point for loading the styles. These could all have been in one file, but have been split up for the sake of more easily structuring and maintaining the codebase.</p>
+<ul>
+<li><strong>reset.css</strong> : resets background and border of all elfinder elements so that you can skin from scratch without manually positioning the main elements yourself</li>
+<li><strong>main.css</strong> : main UI elements (wrapper for the main elfinder div, global styles, etc..)</li>
+<li><strong>icons.css</strong> : icons across the UI (e.g. file associations)</li>
+<li><strong>toolbar.css</strong> : toolbar at the top of the elfinder container. Contains toolbar buttons and searchbar</li>
+<li><strong>navbar.css</strong> : directory navigation on the left-hand panel</li>
+<li><strong>view-list.css</strong> : defines the list view</li>
+<li><strong>view-thumbnail.css</strong> : defines the thumbnail/tile view</li>
+<li><strong>contextmenu.css</strong> : context menu shown when right-clicking on in the list/thumbnail view or navbar</li>
+<li><strong>dialog.css</strong> : information dialogs/modal windows</li>
+<li><strong>statusbar.css</strong> : footer; contains information about directory and currently selected files</li>
+</ul>
+<p>Note that many of the styles have a large degree of selectivity. E.g:</p>
+<pre><code class="lang-css">.elfinder .elfinder-navbar .elfinder-navbar-dir.ui-state-active:hover { /* */ }
+</code></pre>
+<p>This is to minimize the need for using <code>!important</code> flags to override the existing styles (particularly with respect to jQuery UI&#39;s CSS).</p>
+<h2 id="tips">Tips</h2>
+<ul>
+<li>Use the <code>reset.css</code> style to reset the styles that you need to. Comment out selectors that you wish to remain untouched.</li>
+<li><p>If you need to reset a style outside of <code>reset.css</code>, the following normally suffices:</p>
+<pre><code class="lang-css">    background: none;
+    border: none;
+</code></pre>
+</li>
+<li><p>If you want to change the icons in a particular container, it is best to reset the icon&#39;s style from a general selector, then style each individual icon separately. For example:</p>
+<pre><code class="lang-css">  /* All toolbar icons */
+  .elfinder .elfinder-toolbar .elfinder-buttonset .elfinder-button-icon {
+    /* reset the style and set  properties common to all toolbar icons */
+  }
+
+  /* mkfile toolbar icon */
+  .elfinder .elfinder-toolbar .elfinder-buttonset .elfinder-button-icon-mkfile {
+    /* styles specific to the mkfile button (e.g. background-position) */
+  }
+</code></pre>
+</li>
+<li>Some styles have their <code>text-indent</code> property set to <code>-9999px</code> to keep the text out of view. If after styling you can&#39;t see the text (and you need to), change the <code>text-indent</code> property</li>
+</ul>
+
+      </body>
+    </html>

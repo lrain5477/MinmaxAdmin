@@ -1,0 +1,32 @@
+// 
+// // header 深色底
+// 
+$style:$main;
+$style-gay:#fff;
+$logo-filter:sepia(1) brightness(100);
+//content-bg
+$page-content-bg:#f0f4f5;
+//-header白底
+$page-header-bg:$style;
+//-header 右選單icon
+$page-dropdown-colo:$style-gay;
+//-選單線顏色
+$toggle-nav-btn-line:$style-gay;
+
+// 
+// // sidebar 
+// 
+$sidebar-hr:rgba(0, 0, 0, .1);
+$sidebar-bg:#fff;
+$navigation-header-color:$main;
+$sidebar-right-line:#eceeef;
+$sidebar-nav-1:#424242;
+$sidebar-nav-2:#878787;
+$sidebar-nav-1-active:#fff;
+$sidebar-nav-1-active-bg:$main;
+$sidebar-nav-2-active:$main;
+$sidebar-nav-2-active-bg: none;
+$sidebar-nav-line: rgba(0, 0, 0, 0.2);
+
+$footer:rgba(255, 255, 255,0.4);
+$footer-bg:$main;

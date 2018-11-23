@@ -14,8 +14,8 @@ return [
     */
 
     'defaults' => [
-        'guard' => 'admin',
-        'passwords' => 'admin',
+        'guard' => 'web',
+        'passwords' => 'member',
     ],
 
     /*
@@ -77,17 +77,17 @@ return [
     'providers' => [
         'administrator' => [
             'driver' => 'eloquent',
-            'model' => App\Models\Administrator::class,
+            'model' => \Minmax\Base\Models\Administrator::class,
         ],
 
         'admin' => [
             'driver' => 'eloquent',
-            'model' => App\Models\Admin::class,
+            'model' => \Minmax\Base\Models\Admin::class,
         ],
 
         'member' => [
             'driver' => 'eloquent',
-            'model' => App\Models\Admin::class,
+            'model' => \Minmax\Base\Models\Admin::class,
         ],
     ],
 

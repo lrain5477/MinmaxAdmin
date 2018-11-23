@@ -31,4 +31,13 @@ class WorldLanguageRepository extends Repository
     {
         \Cache::forget('langId');
     }
+
+    public function getLanguageList()
+    {
+        return $this->query()
+            ->where('active_admin', true)
+            ->where('active', true)
+            ->orderBy('sort')
+            ->get();
+    }
 }

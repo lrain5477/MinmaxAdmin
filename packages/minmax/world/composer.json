@@ -9,11 +9,18 @@
         }
     ],
     "require": {
-        "minmax/default": "*"
+        "minmax/base": "*"
     },
     "autoload": {
         "psr-4": {
             "Minmax\\World\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Minmax\\World\\ServiceProvider"
+            ]
         }
     }
 }

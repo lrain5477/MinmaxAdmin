@@ -1,0 +1,158 @@
+/**-- dataTables.js  ---------------------------- */
+
+.dataTables_wrapper {
+    padding-right: 0;
+    padding-left: 0;
+    .dataTables_length,
+    .dataTables_info {
+        display: inline-block;
+        width: auto;
+        vertical-align: middle;
+        padding: 0!important;
+        margin-right: 10px;
+        label {
+            margin: 0 !important;
+        }
+    }
+    .dataTables_info {
+        line-height: 1.8rem;
+    }
+    .dataTables_filter {
+        display: inline-block;
+        .icon-search {
+            font-size: 1.8rem;
+            color: #dee2e6;
+            vertical-align: middle;
+        }
+    }
+    .page-link {
+        height: 36px;
+    }
+    .disabled {
+        opacity: 0.5;
+    }
+    .page-item.active .page-link {
+        background-color: $main;
+        border-color: $main;
+    }
+    table {
+        width: 100%;
+        overflow-x: auto;
+        border-collapse: collapse!important;
+    }
+    table.table-bordered.dataTable th,
+    table.table-bordered.dataTable td {
+        border-left-width: 1px;
+    }
+    table.table-bordered.dataTable th:last-child,
+    table.table-bordered.dataTable th:last-child,
+    table.table-bordered.dataTable td:last-child,
+    table.table-bordered.dataTable td:last-child {
+        border-right-width: 1px;
+    }
+    table.table {
+        thead {
+            &>tr {
+                &>th.sorting_asc,
+                &>th.sorting_desc,
+                &>th.sorting,
+                &>td.sorting_asc,
+                &>td.sorting_desc,
+                &>td.sorting {
+                    padding-right: 30px
+                }
+                &>th:active,
+                &>td:active {
+                    outline: none
+                }
+            }
+            .sorting,
+            .sorting_asc,
+            .sorting_desc,
+            .sorting_asc_disabled,
+            .sorting_desc_disabled {
+                cursor: pointer;
+                position: relative;
+                &:before,
+                &:after {
+                    font-family: 'icomoon' !important;
+                    position: absolute;
+                    bottom: 0.9em;
+                    display: block;
+                    opacity: 0.3;
+                    font-weight: normal;
+                }
+            }
+            .sorting,
+            .sorting_asc,
+            .sorting_desc,
+            .sorting_desc_disabled {
+                &:before {
+                    right: 1em;
+                    content: "\e978";
+                }
+            }
+            .sorting,
+            .sorting_asc,
+            .sorting_desc,
+            .sorting_desc_disabled {
+                &:after {
+                    right: 0.5em;
+                    content: "\e979";
+                }
+            }
+            .sorting_asc:before,
+            .sorting_desc:after {
+                opacity: 1
+            }
+            .sorting_asc_disabled:before,
+            .sorting_desc_disabled:after {
+                opacity: 0
+            }
+        }
+    }
+    .pagination {
+        @include media-breakpoint-down(md) { 
+            justify-content: center !important;
+            margin-top: 15px !important;
+        }
+    }
+}
+
+.table.dataTable{
+    &>tbody>tr.child{
+        ul.dtr-details{
+            width: 100%;
+            &>li{
+                display: flex;
+                flex-wrap: wrap;
+                margin-right: -15px;
+                margin-left: -15px;
+                &>*{
+                    position: relative;
+                    width: 100%;
+                    min-height: 1px;
+                    padding-right: 15px;
+                    padding-left: 15px;
+                }
+                .dtr-title{
+                    flex: 0 0 auto;
+                    width: auto;
+                    max-width: none;
+                    min-width: 100px;
+                    
+                }
+                .dtr-data{
+                    flex-basis: 0;
+                    flex-grow: 1;
+                    max-width: 100%;
+                }
+                
+            }
+        }
+    }
+}   
+ table.dataTable>tbody>tr.child ul.dtr-details>li {
+  border:0;
+    
+ }

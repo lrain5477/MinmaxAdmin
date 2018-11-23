@@ -125,44 +125,19 @@ if (! function_exists('langRoute')) {
     {
         if (is_null($name) || $name == '') return '';
 
-        /** @var array $langMap */
-        $langMap = Cache::rememberForever('langId', function() {
-            try {
-                $langTable = DB::table('world_language')
-                    ->where('active', '1')
-                    ->orderBy('sort')
-                    ->select(['id', 'code'])
-                    ->get();
-                return $langTable
-                    ->mapWithKeys(function ($item) { return [$item->code => $item->id]; })
-                    ->toArray();
-            } catch (\Exception $e) {
-                return [];
+        $newNameSet = [];
+        $nameSet = explode('.', $name);
+
+        foreach ($nameSet as $index => $uri) {
+            if ($index == 0) {
+                $newNameSet[] = $uri;
+                $newNameSet[] = app()->getLocale();
+            } else {
+                $newNameSet[] = $uri;
             }
-        });
-
-        if (count($langMap) < 2) {
-            return route($name, $parameters, $absolute);
-        } else {
-            $newNameSet = [];
-            $nameSet = explode('.', $name);
-
-            foreach ($nameSet as $index => $uri) {
-                if ($index == 0) {
-                    if (in_array($uri, ['administrator', 'admin'])) {
-                        $newNameSet[] = $uri;
-                        $newNameSet[] = app()->getLocale();
-                    } else {
-                        $newNameSet[] = app()->getLocale();
-                        $newNameSet[] = $uri;
-                    }
-                } else {
-                    $newNameSet[] = $uri;
-                }
-            }
-
-            return route(implode('.', $newNameSet), $parameters, $absolute);
         }
+
+        return route(implode('.', $newNameSet), $parameters, $absolute);
     }
 }
 

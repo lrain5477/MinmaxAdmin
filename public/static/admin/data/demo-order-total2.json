@@ -1,0 +1,73 @@
+[{
+    "month": "1月",
+    "class1": 9410,
+    "class2": 1551,
+    "class3": 5441,
+    "class4": 15050
+}, {
+    "month": "2月",
+    "class1": 1010,
+    "class2": 2020,
+    "class3": 5212,
+    "class4": 1242
+}, {
+    "month": "3月",
+    "class1": 810,
+    "class2": 4247,
+    "class3": 2722,
+    "class4": 1014
+}, {
+    "month": "4月",
+    "class1": 5024,
+    "class2": 1212,
+    "class3": 1214,
+    "class4": 1212
+}, {
+    "month": "5月",
+    "class1": 541,
+    "class2": 1551,
+    "class3": 5441,
+    "class4": 1550
+}, {
+    "month": "6月",
+    "class1": 1500,
+    "class2": 2500,
+    "class3": 4254,
+    "class4": 8510
+},{
+    "month": "7月",
+    "class1": 1500,
+    "class2": 4547,
+    "class3": 6500,
+    "class4": 454
+}, {
+    "month": "8月",
+    "class1": 1500,
+    "class2": 2500,
+    "class3": 6500,
+    "class4": 8500
+}, {
+    "month": "9月",
+    "class1": 1540,
+    "class2": 124,
+    "class3": 1012,
+    "class4": 1553
+}, {
+    "month": "10月",
+    "class1": 1500,
+    "class2": 5517,
+    "class3": 6500,
+    "class4": 7444
+}, {
+    "month": "11月",
+    "class1": 1500,
+    "class2": 4444,
+    "class3": 7444,
+    "class4": 1455
+}, {
+    "month": "12月",
+    "class1": 1500,
+    "class2": 2141,
+    "class3": 6500,
+    "class4": 8500
+}]

@@ -45,6 +45,7 @@ class CreateSystemTables extends Migration
             $table->string('id', 64)->primary();
             $table->string('guard', 16)->comment('平台');
             $table->string('website_name')->comment('網站名稱');
+            $table->string('system_language')->comment('預設語系');
             $table->string('system_email')->comment('系統信箱');
             $table->string('system_url')->comment('網站網址');
             $table->json('system_logo')->nullable()->comment('網站Logo');
@@ -230,6 +231,7 @@ class CreateSystemTables extends Migration
                 'id' => $webDataId1 = uuidl(),
                 'guard' => 'administrator',
                 'website_name' => "web_data.website_name.{$webDataId1}",
+                'system_language' => 'zh-Hant',
                 'system_email' => config('mail.from.address'),
                 'system_url' => config('app.url') . '/administrator',
                 'system_logo' => json_encode([['path' => '/admin/images/logo-b.png']]),
@@ -250,6 +252,7 @@ class CreateSystemTables extends Migration
                 'id' => $webDataId2 = uuidl(),
                 'guard' => 'admin',
                 'website_name' => "web_data.website_name.{$webDataId2}",
+                'system_language' => 'zh-Hant',
                 'system_email' => config('mail.from.address'),
                 'system_url' => config('app.url') . '/siteadmin',
                 'system_logo' => json_encode([['path' => '/admin/images/logo-b.png']]),
@@ -270,6 +273,7 @@ class CreateSystemTables extends Migration
                 'id' => $webDataId3 = uuidl(),
                 'guard' => 'web',
                 'website_name' => "web_data.website_name.{$webDataId3}",
+                'system_language' => 'zh-Hant',
                 'system_email' => config('mail.from.address'),
                 'system_url' => config('app.url'),
                 'system_logo' => json_encode([['path' => '/admin/images/logo-b.png']]),

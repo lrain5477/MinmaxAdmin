@@ -12,57 +12,68 @@
 */
 
 Route::group([
-    'prefix' => 'siteadmin',
-    'middleware' => 'admin',
+    'prefix' => LaravelLocalization::setLocale(),
+    'middleware' => ['admin', 'localizationRedirect'],
     'namespace' => 'Minmax\Base\Admin',
-    'name' => 'admin.'
+    'as' => 'admin.' . app()->getLocale() . '.'
 ], function() {
-    Route::get('test', function() {
-        dd('test2');
-    });
 
-    // 登入登出
-    Route::get('captcha/{name}/{id?}', 'HelperController@getCaptcha')->name('captcha');
-    Route::post('login', 'LoginController@login');
-    Route::get('login', 'LoginController@showLoginForm')->name('login');
-    Route::get('logout', 'LoginController@logout')->name('logout');
+    Route::group(['prefix' => 'siteadmin'], function () {
 
-    Route::group(['middleware' => 'auth:admin'], function() {
+        // 登入登出
+        Route::get('captcha/{name}/{id?}', 'HelperController@getCaptcha')->name('captcha');
+        Route::get('login', 'LoginController@showLoginForm')->name('login');
+        Route::post('login', 'LoginController@login');
+        Route::get('logout', 'LoginController@logout')->name('logout');
 
-        /*
-         |--------------------------------------------------------------------------
-         | 需要登入的路由。
-         |--------------------------------------------------------------------------
-         */
+        Route::group(['middleware' => 'auth:admin'], function () {
 
-        // 首頁
-        Route::get('/', 'SiteController@index')->name('home');
+            /*
+             |--------------------------------------------------------------------------
+             | 需要登入的路由。
+             |--------------------------------------------------------------------------
+             */
 
-        // 個人資料
-        Route::get('profile', 'ProfileController@edit')->name('profile');
-        Route::put('profile', 'ProfileController@update');
+            // 首頁
+            Route::get('/', 'SiteController@index')->name('home');
 
-        // 圖片縮圖
-        Route::get('thumbnail/{width}x{height}/{imagePath}', 'HelperController@getThumbnail')->where([
-            'width' => config('app.thumbnail_size'),
-            'height' => config('app.thumbnail_size'),
-            'imagePath' => '.+\.(jpg|png|gif)$'
-        ])->name('thumbnail');
+            // 個人資料
+            Route::get('profile', 'ProfileController@edit')->name('profile');
+            Route::put('profile', 'ProfileController@update');
 
-        // EditorTemplate
-        Route::get('editor/template/{category}.js', 'HelperController@getEditorTemplate')->name('editorTemplate');
+            // 圖片縮圖
+            Route::get('thumbnail/{width}x{height}/{imagePath}', 'HelperController@getThumbnail')->where([
+                'width' => config('app.thumbnail_size'),
+                'height' => config('app.thumbnail_size'),
+                'imagePath' => '.+\.(jpg|png|gif)$'
+            ])->name('thumbnail');
 
-        // elFinder
-        Route::group(['prefix' => 'elfinder'], function() {
-            Route::get('/',  ['as' => 'elfinder.index', 'uses' =>'ElfinderController@showIndex']);
-            Route::any('connector', ['as' => 'elfinder.connector', 'uses' => 'ElfinderController@showConnector']);
-            Route::get('ckeditor', ['as' => 'elfinder.ckeditor', 'uses' => 'ElfinderController@showCKeditor4']);
+            // EditorTemplate
+            Route::get('editor/template/{category}.js', 'HelperController@getEditorTemplate')->name('editorTemplate');
+
+            // elFinder
+            Route::group(['prefix' => 'elfinder'], function () {
+                Route::get('/', ['as' => 'elfinder.index', 'uses' => 'ElfinderController@showIndex']);
+                Route::any('connector', ['as' => 'elfinder.connector', 'uses' => 'ElfinderController@showConnector']);
+                Route::get('ckeditor', ['as' => 'elfinder.ckeditor', 'uses' => 'ElfinderController@showCKeditor4']);
+            });
+
+            /*
+             * Firewall 防火牆
+             */
+            Route::get('firewall', 'FirewallController@index')->name('firewall.index');
+            Route::get('firewall/{id}', 'FirewallController@show')->name('firewall.show');
+            Route::get('firewall/create', 'FirewallController@create')->name('firewall.create');
+            Route::post('firewall', 'FirewallController@store')->name('firewall.store');
+            Route::get('firewall/{id}/edit', 'FirewallController@edit')->name('firewall.edit');
+            Route::put('firewall/{id}', 'FirewallController@update')->name('firewall.update');
+            Route::delete('firewall/{id}', 'FirewallController@destroy')->name('firewall.destroy');
+            Route::post('firewall/ajax/datatables', 'FirewallController@ajaxDataTable')->name('firewall.ajaxDataTable');
+            Route::patch('firewall/ajax/switch', 'FirewallController@ajaxSwitch')->name('firewall.ajaxSwitch');
+            Route::patch('firewall/ajax/sort', 'FirewallController@ajaxSort')->name('firewall.ajaxSort');
+
         });
 
-        // NewsletterSchedule
-        Route::get('newsletter-schedule/ajax/template', 'NewsletterScheduleController@ajaxTemplate')->name('newsletter-schedule.ajax.template');
-
-        // NewsletterSubscribe
-        Route::get('newsletter-subscribe/data/export', 'NewsletterSubscribeController@export')->name('newsletter-subscribe.export');
     });
+
 });

@@ -67,8 +67,8 @@ return [
     |
     */
     'user_models' => [
-        'admin' => 'App\Models\Admin',
-        'member' => 'App\Models\Member',
+        'admin' => 'Minmax\Base\Models\Admin',
+        'member' => 'Minmax\Base\Models\Member',
     ],
 
     /*
@@ -85,17 +85,17 @@ return [
         /**
          * Role model
          */
-        'role' => 'App\Models\Role',
+        'role' => 'Minmax\Base\Models\Role',
 
         /**
          * Permission model
          */
-        'permission' => 'App\Models\Permission',
+        'permission' => 'Minmax\Base\Models\Permission',
 
         /**
          * Team model
          */
-        'team' => 'App\Models\Team',
+        'team' => 'Minmax\Base\Models\Team',
 
     ],
 

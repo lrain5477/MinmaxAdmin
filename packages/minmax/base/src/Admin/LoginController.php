@@ -2,12 +2,13 @@
 
 namespace Minmax\Base\Admin;
 
-use Illuminate\Foundation\Auth\AuthenticatesUsers;
-use Illuminate\Http\Request;
-use Illuminate\Foundation\Bus\DispatchesJobs;
-use Illuminate\Routing\Controller as BaseController;
-use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Foundation\Bus\DispatchesJobs;
+use Illuminate\Foundation\Validation\ValidatesRequests;
+use Illuminate\Http\Request;
+use Illuminate\Routing\Controller as BaseController;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
 use Minmax\Base\Helpers\Log as LogHelper;
 
@@ -20,17 +21,21 @@ class LoginController extends BaseController
      *
      * @var string
      */
-    protected $redirectTo = '/siteadmin';
+    protected $redirectTo = 'siteadmin';
 
-    /** @var \Illuminate\Support\Collection|\App\Models\WorldLanguage[] $languageData */
+    /**
+     * @var \Illuminate\Support\Collection|\Minmax\Base\Models\WorldLanguage[] $languageData
+     */
     protected $languageData;
 
     /**
-     * @var \App\Models\WebData $webData
+     * @var \Minmax\Base\Models\WebData $webData
      */
     protected $webData;
 
-    /** @var \Illuminate\Database\Eloquent\Collection|\App\Models\Firewall[] */
+    /**
+     * @var \Illuminate\Database\Eloquent\Collection|\Minmax\Base\Models\Firewall[]
+     */
     protected $firewallData;
 
     /**
@@ -42,24 +47,15 @@ class LoginController extends BaseController
      */
     public function __construct(WebDataRepository $webDataRepository, FirewallRepository $firewallRepository)
     {
-        // 設定 語言資料
-        $this->languageData = \Cache::rememberForever('languageSet', function() {
-            return (new WorldLanguageRepository())
-                ->all(function($query) {
-                    /** @var \Illuminate\Database\Query\Builder $query */
-                    $query->where('active', '1')->orderBy('sort');
-                });
-        });
-
         // 設定 網站資料
         $this->webData = $webDataRepository->getData() ?? abort(404);
-        if ($this->webData->active != '1') abort(404, $this->webData->offline_text);
+        if (!$this->webData->active) abort(404, $this->webData->offline_text);
 
         // 設定 防火牆資料
-        $this->firewallData = $firewallRepository->all(['guard' => 'admin', 'active' => 1]);
+        $this->firewallData = $firewallRepository->all(['guard' => 'admin', 'active' => true]);
 
         // 設定 導向網址
-        $this->redirectTo .= $this->languageData->count() > 1 ? ('/'.app()->getLocale()) : '';
+        //$this->redirectTo = ($this->webData->system_language == app()->getLocale() ? '' : (app()->getLocale() . '/')) . $this->redirectTo;
 
         $this->middleware('guest')->except('logout');
     }
@@ -71,7 +67,7 @@ class LoginController extends BaseController
      */
     public function showLoginForm()
     {
-        return view('admin.login', ['webData' => $this->webData]);
+        return view('MinmaxBase::admin.login', ['webData' => $this->webData]);
     }
 
     /**
@@ -158,7 +154,7 @@ class LoginController extends BaseController
      */
     protected function guard()
     {
-        return \Auth::guard('admin');
+        return Auth::guard('admin');
     }
 
     /**

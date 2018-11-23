@@ -70,18 +70,24 @@ class Seeder
      * @param  string $groupName
      * @param  string $groupTitle
      * @param  array $permissions
+     * @param  integer $sort
      * @return array
      */
-    public static function getPermissionArray($guard, $groupName, $groupTitle, $permissions = ['C', 'R', 'U', 'D'])
+    public static function getPermissionArray($guard, $groupName, $groupTitle, $permissions = ['C', 'R', 'U', 'D'], $sort = 1)
     {
         $timestamp       = date('Y-m-d H:i:s');
         $permissionArray = [];
+
+        if (is_int($permissions)) {
+            $sort = $permissions;
+            $permissions = ['C', 'R', 'U', 'D'];
+        }
 
         if(in_array('R', $permissions)) {
             $permissionArray[] = [
                 'guard' => $guard, 'group' => $groupName,
                 'name' => $groupName . 'Show', 'label' => '瀏覽', 'display_name' => $groupTitle . ' [瀏覽]', 'description' => $groupTitle . ' [瀏覽]',
-                'active' => '1', 'updated_at' => $timestamp, 'created_at' => $timestamp,
+                'sort' => $sort, 'active' => true, 'created_at' => $timestamp, 'updated_at' => $timestamp
             ];
         }
 
@@ -89,7 +95,7 @@ class Seeder
             $permissionArray[] = [
                 'guard' => $guard, 'group' => $groupName,
                 'name' => $groupName . 'Create', 'label' => '新增', 'display_name' => $groupTitle . ' [新增]', 'description' => $groupTitle . ' [新增]',
-                'active' => '1', 'updated_at' => $timestamp, 'created_at' => $timestamp,
+                'sort' => $sort, 'active' => true, 'created_at' => $timestamp, 'updated_at' => $timestamp
             ];
         }
 
@@ -97,7 +103,7 @@ class Seeder
             $permissionArray[] = [
                 'guard' => $guard, 'group' => $groupName,
                 'name' => $groupName . 'Edit', 'label' => '編輯', 'display_name' => $groupTitle . ' [編輯]', 'description' => $groupTitle . ' [編輯]',
-                'active' => '1', 'updated_at' => $timestamp, 'created_at' => $timestamp,
+                'sort' => $sort, 'active' => true, 'created_at' => $timestamp, 'updated_at' => $timestamp
             ];
         }
 
@@ -105,7 +111,7 @@ class Seeder
             $permissionArray[] = [
                 'guard' => $guard, 'group' => $groupName,
                 'name' => $groupName . 'Destroy', 'label' => '刪除', 'display_name' => $groupTitle . ' [刪除]', 'description' => $groupTitle . ' [刪除]',
-                'active' => '1', 'updated_at' => $timestamp, 'created_at' => $timestamp,
+                'sort' => $sort, 'active' => true, 'created_at' => $timestamp, 'updated_at' => $timestamp
             ];
         }
 

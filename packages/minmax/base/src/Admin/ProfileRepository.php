@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Repositories\Admin;
+namespace Minmax\Base\Admin;
 
-use App\Models\Admin;
+use Minmax\Base\Models\Admin;
 
 class ProfileRepository
 {

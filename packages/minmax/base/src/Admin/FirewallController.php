@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 
 class FirewallController extends Controller
 {
+    protected $packagePrefix = 'MinmaxBase::';
+
     public function __construct(Request $request, FirewallRepository $firewallRepository)
     {
         $this->modelRepository = $firewallRepository;

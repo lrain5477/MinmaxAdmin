@@ -6,9 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * Class WebData
- * @property string $guid
+ * @property string $id
  * @property string $guard
  * @property string $website_name
+ * @property string $system_language
  * @property string $system_email
  * @property string $system_url
  * @property array $system_logo
@@ -16,23 +17,29 @@ use Illuminate\Database\Eloquent\Model;
  * @property array $contact
  * @property array $social
  * @property array $seo
- * @property string $google_analytics
+ * @property array $options
  * @property string $offline_text
- * @property integer $active
+ * @property boolean $active
  * @property \Illuminate\Support\Carbon $created_at
  * @property \Illuminate\Support\Carbon $updated_at
  */
 class WebData extends Model
 {
     protected $table = 'web_data';
-    protected $primaryKey = 'guid';
+    protected $primaryKey = 'id';
     protected $guarded = ['guard'];
     protected $casts = [
         'system_logo' => 'array',
         'social' => 'array',
+        'active' => 'boolean',
     ];
 
     public $incrementing = false;
+
+    public function getWebsiteNameAttribute()
+    {
+        return langDB($this->getAttributeFromArray('website_name'));
+    }
 
     public function getCompanyAttribute()
     {

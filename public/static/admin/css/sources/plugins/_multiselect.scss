@@ -1,0 +1,43 @@
+/**--  multiselect.js  ---------------------------- */
+
+.ms-container {
+    width: 100%;
+    .ms-list {
+        /*border-radius: 0;*/
+    }
+    .search-input {
+        margin-bottom: 5px;
+    }
+    .ms-selectable li.disabled,
+    .ms-selection li.disabled {
+        opacity: 0.6;
+    }
+    .ms-optgroup-label {
+        background-color: #eceeef;
+        color: #000;
+        font-size:0.75rem;
+    }
+    .ms-selectable li.ms-hover,
+    .ms-selection li.ms-hover {
+        cursor: pointer;
+        background-color:$main!important;
+    }
+    .ms-selectable li.ms-elem-selectable,
+    .ms-selection li.ms-elem-selection,
+    .ms-optgroup-label {
+        padding: 5px 10px;
+    }
+}
+
+.button-multiselect-box {
+    margin-right: -25px;
+    .btn {
+        width: 100%;
+        max-width: 166px;
+        margin: 0;
+        &:first-child {
+            margin-right: 33px;
+        }
+    }
+}
+

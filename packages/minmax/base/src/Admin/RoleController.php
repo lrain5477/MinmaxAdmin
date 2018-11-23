@@ -2,10 +2,9 @@
 
 namespace Minmax\Base\Admin;
 
-use Minmax\Base\Admin\RoleRepository;
+use Illuminate\Http\Request;
 use Minmax\Base\Helpers\Log as LogHelper;
 use Minmax\Base\Models\Permission;
-use Illuminate\Http\Request;
 
 class RoleController extends Controller
 {

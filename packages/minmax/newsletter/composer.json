@@ -1,0 +1,26 @@
+{
+    "name": "minmax/newsletter",
+    "description": "Newsletter management",
+    "type": "library",
+    "authors": [
+        {
+            "name": "Jeffy",
+            "email": "jeffy@e-creative.tw"
+        }
+    ],
+    "require": {
+        "minmax/base": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "Minmax\\Newsletter\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Minmax\\Newsletter\\ServiceProvider"
+            ]
+        }
+    }
+}

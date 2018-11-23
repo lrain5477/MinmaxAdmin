@@ -10,9 +10,7 @@ class Tree
 
         $currentSet = array_sort($currentSet, function ($value) use ($sortKey, $currentSet) { return $value[$sortKey] ?? count($currentSet); });
 
-        foreach($currentSet as $key => $item) data_fill($currentSet, "{$key}.children", static::getMenu($list, $item['guid']));
-
-        if(is_null($parent)) $currentSet = collect($currentSet)->groupBy('class')->toArray();
+        foreach($currentSet as $key => $item) data_fill($currentSet, "{$key}.children", static::getMenu($list, $item['id']));
 
         return $currentSet;
     }

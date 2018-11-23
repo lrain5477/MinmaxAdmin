@@ -1,0 +1,31 @@
+/*!
+ * Layout
+ * 
+ * @version 1.0.0 2018/01/01 00:00
+ * @author Jean <Jean@youweb.tw>
+ * @copyright (c) youweb.tw
+ * @link http://youweb.tw/
+ */
+
+/// ---------------------------------------------------------------------------
+/// Setups
+/// ---------------------------------------------------------------------------
+@import "../../modules/bootstrap4/scss/functions";
+@import "shares/_bootstrapConfig.scss";
+@import "../../modules/bootstrap4/scss/variables";
+@import "../../modules/bootstrap4/scss/mixins";
+@import "shares/_config.scss";
+/// ---------------------------------------------------------------------------
+/// Layout
+/// ---------------------------------------------------------------------------
+@import "layouts/_base";
+@import "layouts/_header";
+@import "layouts/_sidebar";
+@import "layouts/_main";
+@import "layouts/_footer";
+/// ---------------------------------------------------------------------------
+/// Pages
+/// ---------------------------------------------------------------------------
+@import "layouts/pages/_login";
+@import "layouts/pages/_login2";
+@import "layouts/pages/_index";

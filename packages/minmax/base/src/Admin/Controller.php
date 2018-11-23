@@ -10,6 +10,7 @@ use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Minmax\Base\Helpers\Log as LogHelper;
 use Minmax\Base\Helpers\Permission as PermissionHelper;
+use Yajra\DataTables\Facades\DataTables;
 
 /**
  * Class Controller
@@ -17,6 +18,9 @@ use Minmax\Base\Helpers\Permission as PermissionHelper;
 class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
+
+    /** @var string $packagePrefix */
+    protected $packagePrefix = '';
 
     /** @var string $uri */
     protected $uri;
@@ -27,7 +31,7 @@ class Controller extends BaseController
     /** @var bool $ajaxRequest */
     protected $ajaxRequest = false;
 
-    /** @var \Illuminate\Support\Collection|\App\Models\WorldLanguage[] $languageData */
+    /** @var \Illuminate\Support\Collection|\Minmax\Base\Models\WorldLanguage[] $languageData */
     protected $languageData;
 
     /** @var array $viewData */
@@ -36,35 +40,29 @@ class Controller extends BaseController
     /** @var array $systemMenu */
     protected $systemMenu;
 
-    /** @var \App\Models\WebData $webData */
+    /** @var \Minmax\Base\Models\WebData $webData */
     protected $webData;
 
-    /** @var \App\Models\AdminMenu $pageData */
+    /** @var \Minmax\Base\Models\AdminMenu $pageData */
     protected $pageData;
 
-    /** @var \App\Models\Admin $adminData */
+    /** @var \Minmax\Base\Models\Admin $adminData */
     protected $adminData;
 
-    /** @var \App\Repositories\Admin\Repository $modelRepository */
+    /** @var \Minmax\Base\Admin\Repository $modelRepository */
     protected $modelRepository;
 
     public function __construct(Request $request)
     {
-        // 設定 語言資料
-        $this->languageData = \Cache::rememberForever('languageSet', function() {
-            return (new WorldLanguageRepository())
-                ->all(function($query) {
-                    /** @var \Illuminate\Database\Query\Builder $query */
-                    $query->where('active', '1')->orderBy('sort');
-                });
-        });
-
         // 設定 網站資料
-        $this->webData = (new WebDataRepository())->getData() ?? abort(404);
+        $this->webData = (new WebDataRepository)->getData() ?? abort(404);
         if ($this->webData->active != '1') abort(404, $this->webData->offline_text);
 
         // 設定 Uri
-        $this->uri = explode('/', $request->path())[$this->languageData->count() > 1 ? 2 : 1] ?? '';
+        $this->uri = explode('/', str_replace("/^\//", '', str_replace(app()->getLocale(), '', $request->path())))[1] ?? '';
+
+        // 設定語系資料
+        $this->languageData = (new WorldLanguageRepository)->getLanguageList();
 
         // 設定 選單資料
         $this->systemMenu = (new AdminMenuRepository())->getMenu();
@@ -92,7 +90,7 @@ class Controller extends BaseController
         $this->viewData['systemMenu'] = $this->systemMenu;
         $this->viewData['pageData'] = $this->pageData;
         $this->viewData['adminData'] = $this->adminData;
-        $this->viewData['rootUri'] = $this->rootUri . '/' . ($this->languageData->count() > 1 ? (app()->getLocale() . '/') : '');
+        $this->viewData['rootUri'] = ($this->webData->system_language == app()->getLocale() ? '' : (app()->getLocale() . '/')) . $this->rootUri;
     }
 
     protected function checkPermissionCreate($type = 'web')
@@ -168,7 +166,7 @@ class Controller extends BaseController
             /** @var \DaveJamesMiller\Breadcrumbs\BreadcrumbsGenerator $breadcrumbs */
             $breadcrumbs->parent('admin.home');
             $breadcrumbs->push($this->pageData->title, langRoute("admin.{$this->uri}.index"));
-            $breadcrumbs->push(__('admin.form.view'));
+            $breadcrumbs->push(__('MinmaxBase::admin.form.view'));
         });
     }
 
@@ -186,7 +184,7 @@ class Controller extends BaseController
                     ? langRoute("admin.{$this->uri}.index")
                     : null
             );
-            $breadcrumbs->push(__('admin.form.create'));
+            $breadcrumbs->push(__('MinmaxBase::admin.form.create'));
         });
     }
 
@@ -205,13 +203,13 @@ class Controller extends BaseController
                     ? langRoute("admin.{$this->uri}.index")
                     : null
             );
-            $breadcrumbs->push(__('admin.form.edit'));
+            $breadcrumbs->push(__('MinmaxBase::admin.form.edit'));
         });
     }
 
     protected function checkValidate()
     {
-        app('App\\Http\\Requests\\Admin\\' . $this->pageData->getAttribute('model') . 'Request');
+        app(__NAMESPACE__ . '\\' . $this->pageData->getAttribute('model') . 'Request');
     }
 
     /**
@@ -300,7 +298,7 @@ class Controller extends BaseController
      */
     protected function setDatatablesTransformer($datatables)
     {
-        $datatables->setTransformer(app('App\\Transformers\\Admin\\' . $this->pageData->getAttribute('model') . 'Transformer', ['uri' => $this->uri]));
+        $datatables->setTransformer(app(__NAMESPACE__ . '\\' . $this->pageData->getAttribute('model') . 'Transformer', ['uri' => $this->uri]));
 
         return $datatables;
     }
@@ -318,7 +316,7 @@ class Controller extends BaseController
         $this->buildBreadcrumbsIndex();
 
         try {
-            return view('admin.' . $this->uri . '.index', $this->viewData);
+            return view($this->packagePrefix . 'admin.' . $this->uri . '.index', $this->viewData);
         } catch(\Exception $e) {
             return abort(404);
         }
@@ -340,7 +338,7 @@ class Controller extends BaseController
         $this->buildBreadcrumbsShow();
 
         try {
-            return view('admin.' . $this->uri . '.view', $this->viewData);
+            return view($this->packagePrefix . 'admin.' . $this->uri . '.view', $this->viewData);
         } catch(\Exception $e) {
             return abort(404);
         }
@@ -361,7 +359,7 @@ class Controller extends BaseController
         $this->buildBreadcrumbsCreate();
 
         try {
-            return view('admin.' . $this->uri . '.create', $this->viewData);
+            return view($this->packagePrefix . 'admin.' . $this->uri . '.create', $this->viewData);
         } catch(\Exception $e) {
             return abort(404);
         }
@@ -389,8 +387,8 @@ class Controller extends BaseController
 
             if ($modelData = $this->modelRepository->create($inputSet)) {
                 \DB::commit();
-                LogHelper::system('admin', $request->path(), $request->method(), $modelData->getKey(), $this->adminData->username, 1, __('admin.form.message.create_success'));
-                return redirect(langRoute("admin.{$this->uri}.edit", [$modelData->getKey()]))->with('success', __('admin.form.message.create_success'));
+                LogHelper::system('admin', $request->path(), $request->method(), $modelData->getKey(), $this->adminData->username, 1, __('MinmaxBase::admin.form.message.create_success'));
+                return redirect(langRoute("admin.{$this->uri}.edit", [$modelData->getKey()]))->with('success', __('MinmaxBase::admin.form.message.create_success'));
             }
 
             \DB::rollBack();
@@ -398,8 +396,8 @@ class Controller extends BaseController
             \DB::rollBack();
         }
 
-        LogHelper::system('admin', $request->path(), $request->method(), '', $this->adminData->username, 0, __('admin.form.message.create_error'));
-        return redirect(langRoute("admin.{$this->uri}.create"))->withErrors([__('admin.form.message.create_error')])->withInput();
+        LogHelper::system('admin', $request->path(), $request->method(), '', $this->adminData->username, 0, __('MinmaxBase::admin.form.message.create_error'));
+        return redirect(langRoute("admin.{$this->uri}.create"))->withErrors([__('MinmaxBase::admin.form.message.create_error')])->withInput();
     }
 
     /**
@@ -419,7 +417,7 @@ class Controller extends BaseController
         $this->buildBreadcrumbsEdit($id);
 
         try {
-            return view('admin.' . $this->uri . '.edit', $this->viewData);
+            return view($this->packagePrefix . 'admin.' . $this->uri . '.edit', $this->viewData);
         } catch(\Exception $e) {
             return abort(404);
         }
@@ -450,8 +448,8 @@ class Controller extends BaseController
 
             if ($this->modelRepository->save($model, $inputSet)) {
                 \DB::commit();
-                LogHelper::system('admin', $request->path(), $request->method(), $id, $this->adminData->username, 1, __('admin.form.message.edit_success'));
-                return redirect(langRoute("admin.{$this->uri}.edit", [$id]))->with('success', __('admin.form.message.edit_success'));
+                LogHelper::system('admin', $request->path(), $request->method(), $id, $this->adminData->username, 1, __('MinmaxBase::admin.form.message.edit_success'));
+                return redirect(langRoute("admin.{$this->uri}.edit", [$id]))->with('success', __('MinmaxBase::admin.form.message.edit_success'));
             }
 
             \DB::rollBack();
@@ -459,8 +457,8 @@ class Controller extends BaseController
             \DB::rollBack();
         }
 
-        LogHelper::system('admin', $request->path(), $request->method(), $id, $this->adminData->username, 0, __('admin.form.message.edit_error'));
-        return redirect(langRoute("admin.{$this->uri}.edit", [$id]))->withErrors([__('admin.form.message.edit_error')])->withInput();
+        LogHelper::system('admin', $request->path(), $request->method(), $id, $this->adminData->username, 0, __('MinmaxBase::admin.form.message.edit_error'));
+        return redirect(langRoute("admin.{$this->uri}.edit", [$id]))->withErrors([__('MinmaxBase::admin.form.message.edit_error')])->withInput();
     }
 
     /**
@@ -476,13 +474,13 @@ class Controller extends BaseController
 
         if ($model = $this->modelRepository->find($id)) {
             if ($this->modelRepository->delete($model)) {
-                LogHelper::system('admin', $request->path(), $request->method(), $id, $this->adminData->username, 1, __('admin.form.message.delete_success'));
-                return redirect(langRoute("admin.{$this->uri}.index"))->with('success', __('admin.form.message.delete_success'));
+                LogHelper::system('admin', $request->path(), $request->method(), $id, $this->adminData->username, 1, __('MinmaxBase::admin.form.message.delete_success'));
+                return redirect(langRoute("admin.{$this->uri}.index"))->with('success', __('MinmaxBase::admin.form.message.delete_success'));
             }
         }
 
-        LogHelper::system('admin', $request->path(), $request->method(), $id, $this->adminData->username, 0, __('admin.form.message.delete_error'));
-        return redirect(langRoute("admin.{$this->uri}.index"))->withErrors([__('admin.form.message.delete_error')]);
+        LogHelper::system('admin', $request->path(), $request->method(), $id, $this->adminData->username, 0, __('MinmaxBase::admin.form.message.delete_error'));
+        return redirect(langRoute("admin.{$this->uri}.index"))->withErrors([__('MinmaxBase::admin.form.message.delete_error')]);
     }
 
     /**
@@ -498,7 +496,7 @@ class Controller extends BaseController
 
         $queryBuilder = $this->getQueryBuilder();
 
-        $datatables = \DataTables::of($queryBuilder);
+        $datatables = DataTables::of($queryBuilder);
 
         $datatables = $this->doDatatableFilter($datatables, $request);
 
@@ -526,7 +524,7 @@ class Controller extends BaseController
 
         if (!$validator->fails() && $model = $this->modelRepository->find($inputSet['id'])) {
             if ($this->modelRepository->save($model, [$inputSet['column'] => $inputSet['switchTo']])) {
-                LogHelper::system('admin', $request->path(), $request->method(), $inputSet['id'], $this->adminData->username, 1, __('admin.form.message.edit_success'));
+                LogHelper::system('admin', $request->path(), $request->method(), $inputSet['id'], $this->adminData->username, 1, __('MinmaxBase::admin.form.message.edit_success'));
                 return response([
                     'msg' => 'success',
                     'oriClass' => 'badge-' . systemParam("{$inputSet['column']}.{$inputSet['oriValue']}.class"),
@@ -536,7 +534,7 @@ class Controller extends BaseController
             }
         }
 
-        LogHelper::system('admin', $request->path(), $request->method(), $inputSet['id'], $this->adminData->username, 0, __('admin.form.message.edit_error'));
+        LogHelper::system('admin', $request->path(), $request->method(), $inputSet['id'], $this->adminData->username, 0, __('MinmaxBase::admin.form.message.edit_error'));
         return response(['msg' => 'error'], 400, ['Content-Type' => 'application/json']);
     }
 
@@ -558,12 +556,12 @@ class Controller extends BaseController
 
         if (!$validator->fails() && $model = $this->modelRepository->find($inputSet['id'])) {
             if ($this->modelRepository->save($model, [$inputSet['column'] => $inputSet['index']])) {
-                LogHelper::system('admin', $request->path(), $request->method(), $inputSet['id'], $this->adminData->username, 1, __('admin.form.message.edit_success'));
+                LogHelper::system('admin', $request->path(), $request->method(), $inputSet['id'], $this->adminData->username, 1, __('MinmaxBase::admin.form.message.edit_success'));
                 return response(['msg' => 'success'], 200, ['Content-Type' => 'application/json']);
             }
         }
 
-        LogHelper::system('admin', $request->path(), $request->method(), $inputSet['id'], $this->adminData->username, 0, __('admin.form.message.edit_error'));
+        LogHelper::system('admin', $request->path(), $request->method(), $inputSet['id'], $this->adminData->username, 0, __('MinmaxBase::admin.form.message.edit_error'));
         return response(['msg' => 'error'], 400, ['Content-Type' => 'application/json']);
     }
 }

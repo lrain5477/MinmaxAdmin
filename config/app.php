@@ -94,7 +94,9 @@ return [
     |
     */
 
-    'locale' => 'tw',
+    'locale' => 'zh-Hant',
+
+    'locale_uri' => false,
 
     /*
     |--------------------------------------------------------------------------
@@ -107,7 +109,7 @@ return [
     |
     */
 
-    'fallback_locale' => 'tw',
+    'fallback_locale' => 'zh-Hant',
 
     /*
     |--------------------------------------------------------------------------
@@ -190,7 +192,6 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
-        App\Providers\HelperServiceProvider::class,
 
     ],
 

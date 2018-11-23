@@ -8,13 +8,13 @@ use Laratrust\Traits\LaratrustUserTrait;
 
 /**
  * Class Admin
- * @property string $guid
+ * @property string $id
  * @property string $username
  * @property string $password
  * @property string $remember_token
  * @property string $name
  * @property string $email
- * @property integer $active
+ * @property boolean $active
  * @property \Illuminate\Support\Carbon $created_at
  * @property \Illuminate\Support\Carbon $updated_at
  */
@@ -23,10 +23,12 @@ class Admin extends Authenticatable
     use Notifiable, LaratrustUserTrait;
 
     protected $table = 'admin';
-    protected $primaryKey = 'guid';
     protected $guarded = [];
     protected $hidden = [
         'password', 'remember_token',
+    ];
+    protected $casts = [
+        'active' => 'boolean',
     ];
 
     public $incrementing = false;
@@ -43,11 +45,11 @@ class Admin extends Authenticatable
         $cacheKey = 'laratrust_roles_for_user_' . $this->getKey();
 
         if (! config('laratrust.use_cache')) {
-            return $this->roles()->where('active', '1')->get();
+            return $this->roles()->where('active', true)->get();
         }
 
         return \Cache::remember($cacheKey, config('cache.ttl', 60), function () {
-            return $this->roles()->where('active', '1')->get()->toArray();
+            return $this->roles()->where('active', true)->get()->toArray();
         });
     }
 
@@ -63,11 +65,11 @@ class Admin extends Authenticatable
         $cacheKey = 'laratrust_permissions_for_user_' . $this->getKey();
 
         if (! config('laratrust.use_cache')) {
-            return $this->permissions()->where('active', '1')->get();
+            return $this->permissions()->where('active', true)->get();
         }
 
         return \Cache::remember($cacheKey, config('cache.ttl', 60), function () {
-            return $this->permissions()->where('active', '1')->get()->toArray();
+            return $this->permissions()->where('active', true)->get()->toArray();
         });
     }
 

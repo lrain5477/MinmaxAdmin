@@ -9,8 +9,8 @@ use Illuminate\Database\Eloquent\Model;
  * @property integer $id
  * @property string $guard
  * @property string $ip
- * @property integer $rule
- * @property integer $active
+ * @property boolean $rule
+ * @property boolean $active
  * @property \Illuminate\Support\Carbon $created_at
  * @property \Illuminate\Support\Carbon $updated_at
  */

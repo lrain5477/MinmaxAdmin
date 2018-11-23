@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Repositories\Admin;
+namespace Minmax\Base\Admin;
 
-use App\Models\Role;
+use Minmax\Base\Models\Role;
 
 /**
  * Class RoleRepository
