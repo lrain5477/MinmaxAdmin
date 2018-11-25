@@ -22,7 +22,7 @@
                 data-size="6"
                 name="{{ $name }}"
                 data-live-search="{{ $search === true ? 'true' : 'false' }}"
-                {!! $required === true ? '' : ('title="' . ($title === '' ? __('admin.form.select_default_title') : $title) . '"') !!}
+                {!! $required === true ? '' : ('title="' . ($title === '' ? __('MinmaxBase::admin.form.select_default_title') : $title) . '"') !!}
                 {{ $required === true ? 'required' : '' }}>
         @if(array_key_exists($value, $listData))
             @foreach($listData as $listKey => $listItem)

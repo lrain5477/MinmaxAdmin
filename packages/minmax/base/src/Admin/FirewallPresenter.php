@@ -4,6 +4,8 @@ namespace Minmax\Base\Admin;
 
 class FirewallPresenter extends Presenter
 {
+    protected $packagePrefix = 'MinmaxBase::';
+
     public function __construct()
     {
         $this->parameterSet = [

@@ -33,8 +33,8 @@
         @endif
         </select>
         <div class="button-multiselect-box mt-1">
-            <a class="select-all btn btn-secondary btn-sm" href="#">@lang('admin.form.select_all')</a>
-            <a class="deselect-all btn btn-secondary btn-sm" href="#">@lang('admin.form.select_clear')</a>
+            <a class="select-all btn btn-secondary btn-sm" href="#">@lang('MinmaxBase::admin.form.select_all')</a>
+            <a class="deselect-all btn btn-secondary btn-sm" href="#">@lang('MinmaxBase::admin.form.select_clear')</a>
         </div>
     </div>
     @if($hint !== '')

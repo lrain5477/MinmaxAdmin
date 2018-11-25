@@ -17,7 +17,7 @@
     <label class="col-sm-2 col-form-label" for="{{ $id }}">{{ $label }}{!! $required === true ? '<span class="text-danger ml-1">*</span>' : '' !!}</label>
     <div class="col-sm-10">
         <input type="hidden" id="{{ $id }}" name="{{ $name }}" value="" {{ $required === true ? 'required' : '' }} {{ count($files) > 0 ? 'disabled' : '' }} />
-        <button class="btn btn-secondary" type="button" data-target="#{{ $id }}-modal" data-toggle="modal"><i class="icon-folder"> </i> @lang('admin.form.button.media_file')</button>
+        <button class="btn btn-secondary" type="button" data-target="#{{ $id }}-modal" data-toggle="modal"><i class="icon-folder"> </i> @lang('MinmaxBase::admin.form.button.media_file')</button>
     </div>
     @if($hint !== '')
     <small class="form-text text-muted ml-sm-auto col-sm-10">{!! $hint !!}</small>
@@ -127,9 +127,9 @@
                 if(selectLimit !== 0 && $('#{{ $id }}-list .alert').length >= selectLimit) {
                     $('#{{ $id }}-modal').modal('hide');
                     swal({
-                        title: "@lang('admin.form.elfinder.limit_title')",
-                        text: "@lang('admin.form.elfinder.limit_text', ['limit' => $limit])",
-                        confirmButtonText: "@lang('admin.form.elfinder.limit_confirm_button')",
+                        title: "@lang('MinmaxBase::admin.form.elfinder.limit_title')",
+                        text: "@lang('MinmaxBase::admin.form.elfinder.limit_text', ['limit' => $limit])",
+                        confirmButtonText: "@lang('MinmaxBase::admin.form.elfinder.limit_confirm_button')",
                         confirmButtonClass: "btn-danger",
                         closeOnConfirm: true
                     });

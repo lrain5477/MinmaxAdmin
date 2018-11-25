@@ -18,7 +18,7 @@
     <label class="col-sm-2 col-form-label" for="{{ $id }}">{{ $label }}{!! $required === true ? '<span class="text-danger ml-1">*</span>' : '' !!}</label>
     <div class="col-sm-10">
         <input type="hidden" id="{{ $id }}" name="{{ $name }}" value="" {{ $required === true ? 'required' : '' }} {{ count($images) > 0 ? 'disabled' : '' }} />
-        <button class="btn btn-secondary" type="button" data-target="#{{ $id }}-modal" data-toggle="modal"><i class="icon-pictures"> </i> @lang('admin.form.button.media_image')</button>
+        <button class="btn btn-secondary" type="button" data-target="#{{ $id }}-modal" data-toggle="modal"><i class="icon-pictures"> </i> @lang('MinmaxBase::admin.form.button.media_image')</button>
     </div>
     @if($hint !== '')
     <small class="form-text text-muted ml-sm-auto col-sm-10">{!! $hint !!}</small>
@@ -132,7 +132,7 @@
                                    href="#{{ $id }}-tabModal-pane-DumpIndex-1"
                                    role="tab"
                                    aria-controls="{{ $id }}-tabModal-pane-DumpIndex-1"
-                                   aria-selected="true">@lang('admin.form.image.advance_tab_1')</a>
+                                   aria-selected="true">@lang('MinmaxBase::admin.form.image.advance_tab_1')</a>
                             </li>
                         </ul>
                         <div class="tab-content mt-4" id="{{ $id }}-tabModalContent-DumpIndex">
@@ -140,7 +140,7 @@
                                 <div class="row">
                                     <div class="col">
                                         <fieldset>
-                                            <legend class="legend h6 mb-4"><i class="icon-angle-double-down2 mr-3"></i>@lang('admin.form.image.advance_panel_fieldSet_base')</legend>
+                                            <legend class="legend h6 mb-4"><i class="icon-angle-double-down2 mr-3"></i>@lang('MinmaxBase::admin.form.image.advance_panel_fieldSet_base')</legend>
                                             @foreach($additionalFields as $column => $type)
                                             <div class="form-group row">
                                                 <label class="col-sm-2 col-form-label">@lang('models.' . str_replace('-', '.additional.', $id) . '.' . $column)</label>
@@ -179,7 +179,7 @@
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">@lang('admin.form.button.media_image')</h5>
+                <h5 class="modal-title">@lang('MinmaxBase::admin.form.button.media_image')</h5>
                 <button class="close" type="button" data-dismiss="modal" aria-label="Close"></button><span aria-hidden="true">×</span>
             </div>
             <div class="modal-body">
@@ -279,9 +279,9 @@
                 if(selectLimit !== 0 && $('#{{ $id }}-list .card').length >= selectLimit) {
                     $('#{{ $id }}-modal').modal('hide');
                     swal({
-                        title: "@lang('admin.form.elfinder.limit_title')",
-                        text: "@lang('admin.form.elfinder.limit_text', ['limit' => $limit])",
-                        confirmButtonText: "@lang('admin.form.elfinder.limit_confirm_button')",
+                        title: "@lang('MinmaxBase::admin.form.elfinder.limit_title')",
+                        text: "@lang('MinmaxBase::admin.form.elfinder.limit_text', ['limit' => $limit])",
+                        confirmButtonText: "@lang('MinmaxBase::admin.form.elfinder.limit_confirm_button')",
                         confirmButtonClass: "btn-danger",
                         closeOnConfirm: true
                     });
@@ -321,12 +321,12 @@
         $('body').delegate('#{{ $id }}-list .delBtn', 'click', function(){
             let $this = $(this);
             swal({
-                title: "@lang('admin.form.elfinder.remove_title')",
-                text: "@lang('admin.form.elfinder.remove_text')",
+                title: "@lang('MinmaxBase::admin.form.elfinder.remove_title')",
+                text: "@lang('MinmaxBase::admin.form.elfinder.remove_text')",
                 type: "info",
                 showCancelButton: true,
-                cancelButtonText: "@lang('admin.form.elfinder.remove_cancel_button')",
-                confirmButtonText: "@lang('admin.form.elfinder.remove_confirm_button')",
+                cancelButtonText: "@lang('MinmaxBase::admin.form.elfinder.remove_cancel_button')",
+                confirmButtonText: "@lang('MinmaxBase::admin.form.elfinder.remove_confirm_button')",
                 confirmButtonClass: "btn-danger",
                 closeOnConfirm: false
             }, function(){
@@ -362,7 +362,7 @@
                     $('#{{ $id }}').removeAttr('disabled');
                 }
 
-                swal("@lang('admin.form.elfinder.remove_success_title')", "@lang('admin.form.elfinder.remove_success_text')", "success");
+                swal("@lang('MinmaxBase::admin.form.elfinder.remove_success_title')", "@lang('MinmaxBase::admin.form.elfinder.remove_success_text')", "success");
             });
         });
     });

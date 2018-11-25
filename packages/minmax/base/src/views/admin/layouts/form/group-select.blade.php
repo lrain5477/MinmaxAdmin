@@ -22,7 +22,7 @@
                 data-size="6"
                 name="{{ $name }}"
                 data-live-search="{{ $search === true ? 'true' : 'false' }}"
-                {{ $required === true ? '' : ('title="' . ($title === '' ? __('admin.form.select_default_title') : $title) . '"') }}
+                {{ $required === true ? '' : ('title="' . ($title === '' ? __('MinmaxBase::admin.form.select_default_title') : $title) . '"') }}
                 {{ $required === true ? 'required' : '' }}>
         @foreach($listData as $listOptions)
             @if(isset($listOptions['options']) && count($listOptions['options']) > 0)

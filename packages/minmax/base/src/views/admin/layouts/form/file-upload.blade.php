@@ -6,12 +6,12 @@
         <input type="hidden" id="{{ $id }}-origin" name="{{ $name }}[origin]" value="{{ $file }}">
         <div class="custom-file">
             <input class="custom-file-input" name="{{ $name }}[file][]" type="file" id="{{ $id }}" {!! $required === true ? 'required' : '' !!} multiple>
-            <label class="custom-file-label" id="{{ $id }}-label" for="{{ $id }}">{{ $filename == '' ? __('admin.form.file.default_text') : $filename }}</label>
+            <label class="custom-file-label" id="{{ $id }}-label" for="{{ $id }}">{{ $filename == '' ? __('MinmaxBase::admin.form.file.default_text') : $filename }}</label>
         </div>
         @if($filename != '')
         <div class="custom-control custom-checkbox">
             <input class="custom-control-input" type="checkbox" id="{{ $id }}-remove" />
-            <label class="custom-control-label" for="{{ $id }}-remove">@lang('admin.form.file.remove_file')</label>
+            <label class="custom-control-label" for="{{ $id }}-remove">@lang('MinmaxBase::admin.form.file.remove_file')</label>
         </div>
         @endif
     </div>
@@ -41,21 +41,21 @@
             var limit = parseInt('{{ $limit }}');
             if(limit > 0 && this.files.length > limit) {
                 this.value = '';
-                $('#{{ $id }}-label').text('{{ $filename == '' ? __('admin.form.file.default_text') : $filename }}');
-                swal('@lang('admin.form.file.limit_title')', '@lang('admin.form.file.limit_text', ['limit' => $limit])');
+                $('#{{ $id }}-label').text('{{ $filename == '' ? __('MinmaxBase::admin.form.file.default_text') : $filename }}');
+                swal('@lang('MinmaxBase::admin.form.file.limit_title')', '@lang('MinmaxBase::admin.form.file.limit_text', ['limit' => $limit])');
             } else {
                 var nameList = '';
                 for(var i = 0; i < this.files.length; i++) {
                     nameList += this.files[i] ? ((nameList === '' ? '' : ', ') + this.files[i].name) : '';
                 }
-                $('#{{ $id }}-label').text(nameList === '' ? '@lang('admin.form.file.default_text')' : nameList);
+                $('#{{ $id }}-label').text(nameList === '' ? '@lang('MinmaxBase::admin.form.file.default_text')' : nameList);
             }
         });
         @if($filename != '')
         $('#{{ $id }}-remove').on('change', function() {
             if($(this).prop('checked')) {
                 $('#{{ $id }}-origin').val('');
-                $('#{{ $id }}-label').text('@lang('admin.form.file.default_text')');
+                $('#{{ $id }}-label').text('@lang('MinmaxBase::admin.form.file.default_text')');
                 $('#{{ $id }}-list').hide();
             } else {
                 $('#{{ $id }}-origin').val('{{ $file }}');

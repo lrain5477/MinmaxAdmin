@@ -62,12 +62,12 @@ Route::group([
              * Firewall 防火牆
              */
             Route::get('firewall', 'FirewallController@index')->name('firewall.index');
-            Route::get('firewall/{id}', 'FirewallController@show')->name('firewall.show');
-            Route::get('firewall/create', 'FirewallController@create')->name('firewall.create');
             Route::post('firewall', 'FirewallController@store')->name('firewall.store');
-            Route::get('firewall/{id}/edit', 'FirewallController@edit')->name('firewall.edit');
+            Route::get('firewall/create', 'FirewallController@create')->name('firewall.create');
+            Route::get('firewall/{id}', 'FirewallController@show')->name('firewall.show');
             Route::put('firewall/{id}', 'FirewallController@update')->name('firewall.update');
             Route::delete('firewall/{id}', 'FirewallController@destroy')->name('firewall.destroy');
+            Route::get('firewall/{id}/edit', 'FirewallController@edit')->name('firewall.edit');
             Route::post('firewall/ajax/datatables', 'FirewallController@ajaxDataTable')->name('firewall.ajaxDataTable');
             Route::patch('firewall/ajax/switch', 'FirewallController@ajaxSwitch')->name('firewall.ajaxSwitch');
             Route::patch('firewall/ajax/sort', 'FirewallController@ajaxSort')->name('firewall.ajaxSort');

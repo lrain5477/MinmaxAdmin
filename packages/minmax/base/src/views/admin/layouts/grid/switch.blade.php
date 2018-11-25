@@ -9,8 +9,8 @@
  */
 ?>
 <div class="text-center">
-    <a class="badge badge-pill badge-{{ $parameter['class'] ?? 'secondary' }} badge-switch" href="#1"
-       title="@lang('admin.grid.click_to_switch')"
+    <a class="badge badge-pill badge-{{ $parameter['class'] ?? 'secondary' }} badge-switch" href="#"
+       title="@lang('MinmaxBase::admin.grid.click_to_switch')"
        data-url="{{ langRoute("admin.{$uri}.ajaxSwitch") }}"
        data-column="{{ $column }}"
        data-value="{{ $value }}"

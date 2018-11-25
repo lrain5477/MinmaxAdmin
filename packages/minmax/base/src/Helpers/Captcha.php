@@ -1,4 +1,5 @@
 <?php
+
 namespace Minmax\Base\Helpers;
 
 class Captcha {
@@ -66,7 +67,7 @@ class Captcha {
         // 底色干擾線條
         for($i= 0; $i < 25; $i++) imageline($im, rand(0,$imageWidth), rand(0,$imageHeight), rand($imageHeight,$imageWidth), rand(0,$imageHeight), $noiseColor1);
         // 繪上文字
-        imagettftext($im, $fontSize, 0, 20, 25, $fontColor, base_path('/public/font/arial.ttf'), $verification);
+        imagettftext($im, $fontSize, 0, 20, 25, $fontColor, storage_path('app/font/arial.ttf'), $verification);
         // 干擾像素
         for($i= 0; $i < 90; $i++) imagesetpixel($im, rand()%$imageWidth, rand()%$imageHeight, $noiseColor2);
 

@@ -5,6 +5,11 @@ namespace Minmax\Base\Admin;
 class Presenter
 {
     /**
+     * @var string $packagePrefix
+     */
+    protected $packagePrefix = '';
+
+    /**
      * @var \Illuminate\Support\Collection $parameterSet
      */
     protected $parameterSet;
@@ -17,13 +22,13 @@ class Presenter
      */
     public function getViewNormalText($model, $column, $options = []) {
         $modelName = class_basename($model);
-        $columnLabel = __("models.{$modelName}.{$column}");
+        $columnLabel = __("{$this->packagePrefix}models.{$modelName}.{$column}");
         $defaultValue = $options['defaultValue'] ?? null;
         $fieldId = "{$modelName}-{$column}";
         $fieldValue = $defaultValue ?? ($model->getAttribute($column) ?? '');
 
         if (isset($options['subColumn'])) {
-            $columnLabel = __("models.{$modelName}.{$column}.{$options['subColumn']}");
+            $columnLabel = __("{$this->packagePrefix}models.{$modelName}.{$column}.{$options['subColumn']}");
             $fieldId .= '-' . $options['subColumn'];
             $fieldValue = $defaultValue ?? ($fieldValue == '' ? '' : ($fieldValue[$options['subColumn']] ?? ''));
         }
@@ -45,13 +50,13 @@ class Presenter
      */
     public function getViewEditor($model, $column, $options = []) {
         $modelName = class_basename($model);
-        $columnLabel = __("models.{$modelName}.{$column}");
+        $columnLabel = __("{$this->packagePrefix}models.{$modelName}.{$column}");
         $defaultValue = $options['defaultValue'] ?? null;
         $fieldId = "{$modelName}-{$column}";
         $fieldValue = $defaultValue ?? ($model->getAttribute($column) ?? '');
 
         if (isset($options['subColumn'])) {
-            $columnLabel = __("models.{$modelName}.{$column}.{$options['subColumn']}");
+            $columnLabel = __("{$this->packagePrefix}models.{$modelName}.{$column}.{$options['subColumn']}");
             $fieldId .= '-' . $options['subColumn'];
             $fieldValue = $defaultValue ?? ($fieldValue == '' ? '' : ($fieldValue[$options['subColumn']] ?? ''));
         }
@@ -76,14 +81,14 @@ class Presenter
      */
     public function getViewSelection($model, $column, $options = []) {
         $modelName = class_basename($model);
-        $columnLabel = __("models.{$modelName}.{$column}");
+        $columnLabel = __("{$this->packagePrefix}models.{$modelName}.{$column}");
         $defaultValue = $options['defaultValue'] ?? null;
         $fieldId = "{$modelName}-{$column}";
         $fieldValue = $model->getAttribute($column) ?? '';
         $parameterColumn = $column;
 
         if (isset($options['subColumn'])) {
-            $columnLabel = __("models.{$modelName}.{$column}.{$options['subColumn']}");
+            $columnLabel = __("{$this->packagePrefix}models.{$modelName}.{$column}.{$options['subColumn']}");
             $fieldId .= '-' . $options['subColumn'];
             $fieldValue = $defaultValue ?? ($fieldValue == '' ? '' : ($fieldValue[$options['subColumn']] ?? ''));
             $parameterColumn .= ".{$options['subColumn']}";
@@ -106,14 +111,14 @@ class Presenter
      */
     public function getViewMultiSelection($model, $column, $options = []) {
         $modelName = class_basename($model);
-        $columnLabel = __("models.{$modelName}.{$column}");
+        $columnLabel = __("{$this->packagePrefix}models.{$modelName}.{$column}");
         $defaultValue = $options['defaultValue'] ?? null;
         $fieldId = "{$modelName}-{$column}";
         $fieldValue = $model->getAttribute($column) ?? [];
         $parameterColumn = $column;
 
         if (isset($options['subColumn'])) {
-            $columnLabel = __("models.{$modelName}.{$column}.{$options['subColumn']}");
+            $columnLabel = __("{$this->packagePrefix}models.{$modelName}.{$column}.{$options['subColumn']}");
             $fieldId .= '-' . $options['subColumn'];
             $fieldValue = $defaultValue ?? ($fieldValue[$options['subColumn']] ?? []);
             $parameterColumn .= ".{$options['subColumn']}";
@@ -145,7 +150,7 @@ class Presenter
      */
     public function getViewMediaImage($model, $column, $options = []) {
         $modelName = class_basename($model);
-        $columnLabel = __("models.{$modelName}.{$column}");
+        $columnLabel = __("{$this->packagePrefix}models.{$modelName}.{$column}");
         $images = $model->getAttribute($column) ?? [];
 
         $componentData = [
@@ -167,7 +172,7 @@ class Presenter
     public function getFieldNormalText($model, $column, $options = [])
     {
         $modelName = class_basename($model);
-        $columnLabel = __("models.{$modelName}.{$column}");
+        $columnLabel = __("{$this->packagePrefix}models.{$modelName}.{$column}");
         $fieldValue = $model->getAttribute($column) ?? '';
 
         if (isset($options['subColumn'])) {
@@ -194,14 +199,14 @@ class Presenter
     public function getFieldText($model, $column, $options = [])
     {
         $modelName = class_basename($model);
-        $columnLabel = __("models.{$modelName}.{$column}");
+        $columnLabel = __("{$this->packagePrefix}models.{$modelName}.{$column}");
         $fieldName = $options['name'] ?? "{$modelName}[{$column}]";
         $fieldId = "{$modelName}-{$column}";
         $fieldValue = $model->getAttribute($column) ?? '';
-        $hintPath = "models.{$modelName}.hint.{$column}";
+        $hintPath = "{$this->packagePrefix}models.{$modelName}.hint.{$column}";
 
         if (isset($options['subColumn'])) {
-            $columnLabel = __("models.{$modelName}.{$column}.{$options['subColumn']}");
+            $columnLabel = __("{$this->packagePrefix}models.{$modelName}.{$column}.{$options['subColumn']}");
             $fieldName .= "[{$options['subColumn']}]";
             $fieldId .= '-' . $options['subColumn'];
             $fieldValue = $fieldValue == '' ? '' : ($fieldValue[$options['subColumn']] ?? '');
@@ -232,14 +237,14 @@ class Presenter
     public function getFieldEmail($model, $column, $options = [])
     {
         $modelName = class_basename($model);
-        $columnLabel = __("models.{$modelName}.{$column}");
+        $columnLabel = __("{$this->packagePrefix}models.{$modelName}.{$column}");
         $fieldName = $options['name'] ?? "{$modelName}[{$column}]";
         $fieldId = "{$modelName}-{$column}";
         $fieldValue = $model->getAttribute($column) ?? '';
-        $hintPath = "models.{$modelName}.hint.{$column}";
+        $hintPath = "{$this->packagePrefix}models.{$modelName}.hint.{$column}";
 
         if (isset($options['subColumn'])) {
-            $columnLabel = __("models.{$modelName}.{$column}.{$options['subColumn']}");
+            $columnLabel = __("{$this->packagePrefix}models.{$modelName}.{$column}.{$options['subColumn']}");
             $fieldName .= "[{$options['subColumn']}]";
             $fieldId .= '-' . $options['subColumn'];
             $fieldValue = $fieldValue == '' ? '' : ($fieldValue[$options['subColumn']] ?? '');
@@ -270,14 +275,14 @@ class Presenter
     public function getFieldTel($model, $column, $options = [])
     {
         $modelName = class_basename($model);
-        $columnLabel = __("models.{$modelName}.{$column}");
+        $columnLabel = __("{$this->packagePrefix}models.{$modelName}.{$column}");
         $fieldName = $options['name'] ?? "{$modelName}[{$column}]";
         $fieldId = "{$modelName}-{$column}";
         $fieldValue = $model->getAttribute($column) ?? '';
-        $hintPath = "models.{$modelName}.hint.{$column}";
+        $hintPath = "{$this->packagePrefix}models.{$modelName}.hint.{$column}";
 
         if (isset($options['subColumn'])) {
-            $columnLabel = __("models.{$modelName}.{$column}.{$options['subColumn']}");
+            $columnLabel = __("{$this->packagePrefix}models.{$modelName}.{$column}.{$options['subColumn']}");
             $fieldName .= "[{$options['subColumn']}]";
             $fieldId .= '-' . $options['subColumn'];
             $fieldValue = $fieldValue == '' ? '' : ($fieldValue[$options['subColumn']] ?? '');
@@ -308,13 +313,13 @@ class Presenter
     public function getFieldPassword($model, $column, $options = [])
     {
         $modelName = class_basename($model);
-        $columnLabel = __("models.{$modelName}.{$column}");
+        $columnLabel = __("{$this->packagePrefix}models.{$modelName}.{$column}");
         $fieldId = "{$modelName}-{$column}";
         $fieldName = $options['name'] ?? "{$modelName}[{$column}]";
-        $hintPath = "models.{$modelName}.hint.{$column}";
+        $hintPath = "{$this->packagePrefix}models.{$modelName}.hint.{$column}";
 
         if (isset($options['subColumn'])) {
-            $columnLabel = __("models.{$modelName}.{$column}.{$options['subColumn']}");
+            $columnLabel = __("{$this->packagePrefix}models.{$modelName}.{$column}.{$options['subColumn']}");
             $fieldId .= '-' . $options['subColumn'];
             $fieldName .= "[{$options['subColumn']}]";
             $hintPath .= ".{$options['subColumn']}";
@@ -356,11 +361,11 @@ class Presenter
     public function getFieldDatePicker($model, $column, $options = [])
     {
         $modelName = class_basename($model);
-        $columnLabel = __("models.{$modelName}.{$column}");
+        $columnLabel = __("{$this->packagePrefix}models.{$modelName}.{$column}");
         $fieldName = $options['name'] ?? "{$modelName}[{$column}]";
         $fieldId = "{$modelName}-{$column}";
         $fieldValue = $model->getAttribute($column) ?? '';
-        $hintPath = "models.{$modelName}.hint.{$column}";
+        $hintPath = "{$this->packagePrefix}models.{$modelName}.hint.{$column}";
         $pickerType = $options['type'] ?? 'birthdate';
 
         switch($pickerType) {
@@ -374,7 +379,7 @@ class Presenter
 
 
         if (isset($options['subColumn'])) {
-            $columnLabel = __("models.{$modelName}.{$column}.{$options['subColumn']}");
+            $columnLabel = __("{$this->packagePrefix}models.{$modelName}.{$column}.{$options['subColumn']}");
             $fieldName .= "[{$options['subColumn']}]";
             $fieldId .= '-' . $options['subColumn'];
             $fieldValue = $fieldValue == '' ? '' : ($fieldValue[$options['subColumn']] ?? '');
@@ -406,14 +411,14 @@ class Presenter
     public function getFieldTextarea($model, $column, $options = [])
     {
         $modelName = class_basename($model);
-        $columnLabel = __("models.{$modelName}.{$column}");
+        $columnLabel = __("{$this->packagePrefix}models.{$modelName}.{$column}");
         $fieldName = $options['name'] ?? "{$modelName}[{$column}]";
         $fieldId = "{$modelName}-{$column}";
         $fieldValue = $model->getAttribute($column) ?? '';
-        $hintPath = "models.{$modelName}.hint.{$column}";
+        $hintPath = "{$this->packagePrefix}models.{$modelName}.hint.{$column}";
 
         if (isset($options['subColumn'])) {
-            $columnLabel = __("models.{$modelName}.{$column}.{$options['subColumn']}");
+            $columnLabel = __("{$this->packagePrefix}models.{$modelName}.{$column}.{$options['subColumn']}");
             $fieldName .= "[{$options['subColumn']}]";
             $fieldId .= '-' . $options['subColumn'];
             $fieldValue = $fieldValue == '' ? '' : ($fieldValue[$options['subColumn']] ?? '');
@@ -444,14 +449,14 @@ class Presenter
     public function getFieldEditor($model, $column, $options = [])
     {
         $modelName = class_basename($model);
-        $columnLabel = __("models.{$modelName}.{$column}");
+        $columnLabel = __("{$this->packagePrefix}models.{$modelName}.{$column}");
         $fieldName = $options['name'] ?? "{$modelName}[{$column}]";
         $fieldId = "{$modelName}-{$column}";
         $fieldValue = $model->getAttribute($column) ?? '';
-        $hintPath = "models.{$modelName}.hint.{$column}";
+        $hintPath = "{$this->packagePrefix}models.{$modelName}.hint.{$column}";
 
         if (isset($options['subColumn'])) {
-            $columnLabel = __("models.{$modelName}.{$column}.{$options['subColumn']}");
+            $columnLabel = __("{$this->packagePrefix}models.{$modelName}.{$column}.{$options['subColumn']}");
             $fieldName .= "[{$options['subColumn']}]";
             $fieldId .= '-' . $options['subColumn'];
             $fieldValue = $fieldValue == '' ? '' : ($fieldValue[$options['subColumn']] ?? '');
@@ -483,15 +488,15 @@ class Presenter
     public function getFieldSelect($model, $column, $options = [])
     {
         $modelName = class_basename($model);
-        $columnLabel = __("models.{$modelName}.{$column}");
+        $columnLabel = __("{$this->packagePrefix}models.{$modelName}.{$column}");
         $fieldName = $options['name'] ?? "{$modelName}[{$column}]";
         $fieldId = "{$modelName}-{$column}";
         $fieldValue = $model->getAttribute($column) ?? '';
-        $hintPath = "models.{$modelName}.hint.{$column}";
+        $hintPath = "{$this->packagePrefix}models.{$modelName}.hint.{$column}";
         $parameterColumn = $column;
 
         if (isset($options['subColumn'])) {
-            $columnLabel = __("models.{$modelName}.{$column}.{$options['subColumn']}");
+            $columnLabel = __("{$this->packagePrefix}models.{$modelName}.{$column}.{$options['subColumn']}");
             $fieldName .= "[{$options['subColumn']}]";
             $fieldId .= '-' . $options['subColumn'];
             $fieldValue = $fieldValue == '' ? '' : ($fieldValue[$options['subColumn']] ?? '');
@@ -524,15 +529,15 @@ class Presenter
     public function getFieldGroupSelect($model, $column, $options = [])
     {
         $modelName = class_basename($model);
-        $columnLabel = __("models.{$modelName}.{$column}");
+        $columnLabel = __("{$this->packagePrefix}models.{$modelName}.{$column}");
         $fieldName = $options['name'] ?? "{$modelName}[{$column}]";
         $fieldId = "{$modelName}-{$column}";
         $fieldValue = $model->getAttribute($column) ?? '';
-        $hintPath = "models.{$modelName}.hint.{$column}";
+        $hintPath = "{$this->packagePrefix}models.{$modelName}.hint.{$column}";
         $parameterColumn = $column;
 
         if (isset($options['subColumn'])) {
-            $columnLabel = __("models.{$modelName}.{$column}.{$options['subColumn']}");
+            $columnLabel = __("{$this->packagePrefix}models.{$modelName}.{$column}.{$options['subColumn']}");
             $fieldName .= "[{$options['subColumn']}]";
             $fieldId .= '-' . $options['subColumn'];
             $fieldValue = $fieldValue == '' ? '' : ($fieldValue[$options['subColumn']] ?? '');
@@ -565,15 +570,15 @@ class Presenter
     public function getFieldMultiSelect($model, $column, $options = [])
     {
         $modelName = class_basename($model);
-        $columnLabel = __("models.{$modelName}.{$column}");
+        $columnLabel = __("{$this->packagePrefix}models.{$modelName}.{$column}");
         $fieldName = $options['name'] ?? "{$modelName}[{$column}]";
         $fieldId = "{$modelName}-{$column}";
         $fieldValue = $model->getAttribute($column) ?? [];
-        $hintPath = "models.{$modelName}.hint.{$column}";
+        $hintPath = "{$this->packagePrefix}models.{$modelName}.hint.{$column}";
         $parameterColumn = $column;
 
         if (isset($options['subColumn'])) {
-            $columnLabel = __("models.{$modelName}.{$column}.{$options['subColumn']}");
+            $columnLabel = __("{$this->packagePrefix}models.{$modelName}.{$column}.{$options['subColumn']}");
             $fieldName .= "[{$options['subColumn']}]";
             $fieldId .= '-' . $options['subColumn'];
             $fieldValue = $model->getAttribute($column)[$options['subColumn']] ?? [];
@@ -606,15 +611,15 @@ class Presenter
     public function getFieldCheckbox($model, $column, $options = [])
     {
         $modelName = class_basename($model);
-        $columnLabel = __("models.{$modelName}.{$column}");
+        $columnLabel = __("{$this->packagePrefix}models.{$modelName}.{$column}");
         $fieldName = $options['name'] ?? "{$modelName}[{$column}]";
         $fieldId = "{$modelName}-{$column}";
         $fieldValue = $model->getAttribute($column) ?? [];
-        $hintPath = "models.{$modelName}.hint.{$column}";
+        $hintPath = "{$this->packagePrefix}models.{$modelName}.hint.{$column}";
         $parameterColumn = $column;
 
         if (isset($options['subColumn'])) {
-            $columnLabel = __("models.{$modelName}.{$column}.{$options['subColumn']}");
+            $columnLabel = __("{$this->packagePrefix}models.{$modelName}.{$column}.{$options['subColumn']}");
             $fieldName .= "[{$options['subColumn']}]";
             $fieldId .= '-' . $options['subColumn'];
             $fieldValue = $fieldValue[$options['subColumn']] ?? [];
@@ -646,15 +651,15 @@ class Presenter
     public function getFieldRadio($model, $column, $options = [])
     {
         $modelName = class_basename($model);
-        $columnLabel = __("models.{$modelName}.{$column}");
+        $columnLabel = __("{$this->packagePrefix}models.{$modelName}.{$column}");
         $fieldName = $options['name'] ?? "{$modelName}[{$column}]";
         $fieldId = "{$modelName}-{$column}";
         $fieldValue = $model->getAttribute($column) ?? '';
-        $hintPath = "models.{$modelName}.hint.{$column}";
+        $hintPath = "{$this->packagePrefix}models.{$modelName}.hint.{$column}";
         $parameterColumn = $column;
 
         if (isset($options['subColumn'])) {
-            $columnLabel = __("models.{$modelName}.{$column}.{$options['subColumn']}");
+            $columnLabel = __("{$this->packagePrefix}models.{$modelName}.{$column}.{$options['subColumn']}");
             $fieldName .= "[{$options['subColumn']}]";
             $fieldId .= '-' . $options['subColumn'];
             $fieldValue = $fieldValue == '' ? '' : ($fieldValue[$options['subColumn']] ?? '');
@@ -686,10 +691,10 @@ class Presenter
     public function getFieldMediaImage($model, $column, $options = [])
     {
         $modelName = class_basename($model);
-        $columnLabel = __("models.{$modelName}.{$column}");
+        $columnLabel = __("{$this->packagePrefix}models.{$modelName}.{$column}");
         $fieldName = $options['name'] ?? "{$modelName}[{$column}]";
         $fieldValue = $model->getAttribute($column) ?? [];
-        $hintPath = "models.{$modelName}.hint.{$column}";
+        $hintPath = "{$this->packagePrefix}models.{$modelName}.hint.{$column}";
         $lang = app()->getLocale();
         switch ($lang) {
             case 'tw':
@@ -727,9 +732,9 @@ class Presenter
     public function getFieldMediaFile($model, $column, $options = [])
     {
         $modelName = class_basename($model);
-        $columnLabel = __("models.{$modelName}.{$column}");
+        $columnLabel = __("{$this->packagePrefix}models.{$modelName}.{$column}");
         $fieldValue = $model->getAttribute($column) ?? [];
-        $hintPath = "models.{$modelName}.hint.{$column}";
+        $hintPath = "{$this->packagePrefix}models.{$modelName}.hint.{$column}";
         $lang = app()->getLocale();
         switch ($lang) {
             case 'tw':
@@ -766,9 +771,9 @@ class Presenter
     public function getFieldUploadFile($model, $column, $options = [])
     {
         $modelName = class_basename($model);
-        $columnLabel = __("models.{$modelName}.{$column}");
+        $columnLabel = __("{$this->packagePrefix}models.{$modelName}.{$column}");
         $fileList = $model->getAttribute($column) ?? [];
-        $hintPath = "models.{$modelName}.hint.{$column}";
+        $hintPath = "{$this->packagePrefix}models.{$modelName}.hint.{$column}";
         $filenameList = [];
         foreach($fileList as $fileKey => $fileItem) {
             if(!\File::exists(public_path($fileItem))) {

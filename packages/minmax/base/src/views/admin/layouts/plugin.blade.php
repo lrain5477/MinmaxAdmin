@@ -60,7 +60,7 @@
     @case('zh-Hans')
     <script src="{{ asset('static/modules/elFinder/js/i18n/elfinder.zh_CN.js') }}"></script>
     @break
-    @case('jp')
+    @case('ja')
     <script src="{{ asset('static/modules/elFinder/js/i18n/elfinder.jp.js') }}"></script>
     @break
 @endswitch
@@ -83,8 +83,6 @@
 <script src="{{ asset('static/admin/js/validate.js') }}"></script>
 <script src="{{ asset('static/admin/js/datatables.js') }}"></script>
 <script src="{{ asset('static/admin/js/typeahead.js') }}"> </script>
-
-{{-- Others 僅此專案適用 --}}
-<script src="{{ asset('admin/js/ajax.js') }}"></script>
+<script src="{{ asset('static/admin/js/ajax.js') }}"></script>
 
 @stack('scripts')
