@@ -72,6 +72,19 @@ Route::group([
             Route::patch('firewall/ajax/switch', 'FirewallController@ajaxSwitch')->name('firewall.ajaxSwitch');
             Route::patch('firewall/ajax/sort', 'FirewallController@ajaxSort')->name('firewall.ajaxSort');
 
+            /*
+             * Role 帳號群組
+             */
+            Route::get('role', 'RoleController@index')->name('role.index');
+            Route::post('role', 'RoleController@store')->name('role.store');
+            Route::get('role/create', 'RoleController@create')->name('role.create');
+            Route::get('role/{id}', 'RoleController@show')->name('role.show');
+            Route::put('role/{id}', 'RoleController@update')->name('role.update');
+            Route::delete('role/{id}', 'RoleController@destroy')->name('role.destroy');
+            Route::get('role/{id}/edit', 'RoleController@edit')->name('role.edit');
+            Route::post('role/ajax/datatables', 'RoleController@ajaxDataTable')->name('role.ajaxDataTable');
+            Route::patch('role/ajax/switch', 'RoleController@ajaxSwitch')->name('role.ajaxSwitch');
+
         });
 
     });

@@ -41,16 +41,11 @@ class LoginController extends BaseController
     /**
      * Create a new controller instance.
      *
-     * @param  WebDataRepository $webDataRepository
      * @param  FirewallRepository $firewallRepository
      * @return void
      */
-    public function __construct(WebDataRepository $webDataRepository, FirewallRepository $firewallRepository)
+    public function __construct(FirewallRepository $firewallRepository)
     {
-        // 設定 網站資料
-        $this->webData = $webDataRepository->getData() ?? abort(404);
-        if (!$this->webData->active) abort(404, $this->webData->offline_text);
-
         // 設定 防火牆資料
         $this->firewallData = $firewallRepository->all(['guard' => 'admin', 'active' => true]);
 
@@ -58,6 +53,15 @@ class LoginController extends BaseController
         //$this->redirectTo = ($this->webData->system_language == app()->getLocale() ? '' : (app()->getLocale() . '/')) . $this->redirectTo;
 
         $this->middleware('guest')->except('logout');
+
+        $this->middleware(function ($request, $next) {
+            /** @var Request $request */
+            $thisAttributes = $request->get('controllerAttributes');
+
+            $this->webData = $thisAttributes['webData'] ?? abort(404);
+
+            return $next($request);
+        });
     }
 
     /**

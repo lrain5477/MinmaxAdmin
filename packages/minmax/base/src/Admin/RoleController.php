@@ -8,29 +8,22 @@ use Minmax\Base\Models\Permission;
 
 class RoleController extends Controller
 {
-    public function __construct(Request $request, RoleRepository $roleRepository)
+    protected $packagePrefix = 'MinmaxBase::';
+
+    public function __construct(RoleRepository $roleRepository)
     {
         $this->modelRepository = $roleRepository;
 
-        parent::__construct($request);
+        parent::__construct();
     }
 
-    /**
-     * Model Edit
-     *
-     * @param string $id
-     * @return \Illuminate\Http\Response
-     * @throws \DaveJamesMiller\Breadcrumbs\Exceptions\DuplicateBreadcrumbException
-     */
-    public function edit($id)
+    protected function setCustomViewDataEdit()
     {
         $this->viewData['permissionData'] = Permission::query()
-            ->where(['guard' => 'admin', 'active' => '1'])
+            ->where(['guard' => 'admin', 'active' => true])
             ->orderBy('id')
             ->get()
             ->groupBy('group');
-
-        return parent::edit($id);
     }
 
     /**

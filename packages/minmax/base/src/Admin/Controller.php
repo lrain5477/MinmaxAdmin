@@ -52,38 +52,38 @@ class Controller extends BaseController
     /** @var \Minmax\Base\Admin\Repository $modelRepository */
     protected $modelRepository;
 
-    public function __construct(Request $request)
+    /**
+     * Controller constructor.
+     */
+    public function __construct()
     {
-        // 設定 網站資料
-        $this->webData = (new WebDataRepository)->getData() ?? abort(404);
-        if ($this->webData->active != '1') abort(404, $this->webData->offline_text);
-
-        // 設定 Uri
-        $this->uri = explode('/', str_replace("/^\//", '', str_replace(app()->getLocale(), '', $request->path())))[1] ?? '';
-
-        // 設定語系資料
-        $this->languageData = (new WorldLanguageRepository)->getLanguageList();
-
-        // 設定 選單資料
-        $this->systemMenu = (new AdminMenuRepository())->getMenu();
-
-        // 設定 頁面資料
-        $this->pageData = (new AdminMenuRepository())->one(['uri' => $this->uri, 'active' => 1]);
-
         $this->middleware(function ($request, $next) {
             /** @var Request $request */
 
-            // 設定 帳號資料
-            $this->adminData = $request->user('admin');
+            // 設定 Controller 參數
+            $this->setAttributes($request->get('controllerAttributes'));
 
             // 設定 viewData
-            $this->setViewData();
+            $this->setDefaultViewData();
 
             return $next($request);
         });
     }
 
-    protected function setViewData()
+    /**
+     * Set this controller object attributes
+     *
+     * @param  array $attributes
+     * @return void
+     */
+    protected function setAttributes($attributes)
+    {
+        foreach ($attributes ?? [] as $attribute => $value) {
+            $this->{$attribute} = $value;
+        }
+    }
+
+    protected function setDefaultViewData()
     {
         $this->viewData['languageData'] = $this->languageData;
         $this->viewData['webData'] = $this->webData;
@@ -143,6 +143,26 @@ class Controller extends BaseController
                 $statusCode = 500; break;
         }
         if($this->adminData->can(PermissionHelper::replacePermissionName($this->pageData->permission_key, 'Destroy')) === false) abort($statusCode);
+    }
+
+    protected function setCustomViewDataIndex()
+    {
+        //
+    }
+
+    protected function setCustomViewDataShow()
+    {
+        //
+    }
+
+    protected function setCustomViewDataCreate()
+    {
+        //
+    }
+
+    protected function setCustomViewDataEdit()
+    {
+        //
     }
 
     /**
@@ -313,6 +333,8 @@ class Controller extends BaseController
     {
         $this->checkPermissionShow();
 
+        $this->setCustomViewDataIndex();
+
         $this->buildBreadcrumbsIndex();
 
         try {
@@ -335,6 +357,8 @@ class Controller extends BaseController
 
         $this->viewData['formData'] = $this->modelRepository->find($id) ?? abort(404);
 
+        $this->setCustomViewDataShow();
+
         $this->buildBreadcrumbsShow();
 
         try {
@@ -355,6 +379,8 @@ class Controller extends BaseController
         $this->checkPermissionCreate();
 
         $this->viewData['formData'] = $this->modelRepository->query()->getModel();
+
+        $this->setCustomViewDataCreate();
 
         $this->buildBreadcrumbsCreate();
 
@@ -413,6 +439,8 @@ class Controller extends BaseController
 
         $this->viewData['formDataId'] = $id;
         $this->viewData['formData'] = $this->modelRepository->find($id) ?? abort(404);
+
+        $this->setCustomViewDataEdit();
 
         $this->buildBreadcrumbsEdit($id);
 
