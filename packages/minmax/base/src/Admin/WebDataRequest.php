@@ -43,6 +43,7 @@ class WebDataRequest extends FormRequest
                     'WebData.contact.email' => 'required|email',
                     'WebData.contact.map' => 'nullable|url',
                     'WebData.seo' => 'nullable|array',
+                    'WebData.options' => 'nullable|array',
                     'WebData.active' => 'required|in:1,0',
                 ];
         }

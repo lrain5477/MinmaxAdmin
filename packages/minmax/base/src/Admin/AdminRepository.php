@@ -93,8 +93,8 @@ class AdminRepository extends Repository
 
         if ($model->save()) {
             $model = $this->saveLanguage($model);
-            if (!preg_match("/\/profile/", request()->getUri())) {
-                if (!(count($attributes) == 1 && isset($attributes['active']))) $model->syncRoles($roleSelected);
+            if (in_array('admin', explode('/', request()->getUri()))) {
+                $model->syncRoles($roleSelected);
             }
             return $model;
         }

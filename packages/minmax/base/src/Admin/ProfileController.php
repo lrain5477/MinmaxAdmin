@@ -8,13 +8,19 @@ use Minmax\Base\Helpers\Log as LogHelper;
 
 class ProfileController extends Controller
 {
-    public function __construct(Request $request, AdminRepository $adminRepository)
+    protected $packagePrefix = 'MinmaxBase::';
+
+    public function __construct(AdminRepository $adminRepository)
     {
         $this->modelRepository = $adminRepository;
 
-        parent::__construct($request);
+        parent::__construct();
     }
 
+    /**
+     * @param  string $type
+     * @return void
+     */
     protected function checkPermissionEdit($type = 'web') {}
 
     /**
@@ -26,7 +32,7 @@ class ProfileController extends Controller
         Breadcrumbs::register('edit', function ($breadcrumbs) use ($id) {
             /** @var \DaveJamesMiller\Breadcrumbs\BreadcrumbsGenerator $breadcrumbs */
             $breadcrumbs->parent('admin.home');
-            $breadcrumbs->push(__('admin.header.account'));
+            $breadcrumbs->push(__('MinmaxBase::admin.header.account'));
         });
     }
 
@@ -38,29 +44,29 @@ class ProfileController extends Controller
     /**
      * Admin profile edit.
      *
-     * @param string $id
+     * @param  string $id
      * @return \Illuminate\Http\Response
      * @throws \DaveJamesMiller\Breadcrumbs\Exceptions\DuplicateBreadcrumbException
      */
     public function edit($id = null)
     {
-        return parent::edit($this->adminData->guid);
+        return parent::edit($this->adminData->id);
     }
 
     /**
-     * Model Update
+     * Admin profile update
      *
-     * @param string $id
-     * @param Request $request
+     * @param  Request $request
+     * @param  null $id
      * @return $this|\Illuminate\Http\RedirectResponse
      */
-    public function update($id = null, Request $request)
+    public function update(Request $request, $id = null)
     {
         $this->checkPermissionEdit();
 
         $this->checkValidate();
 
-        $model = $this->modelRepository->find($this->adminData->guid) ?? abort(404);
+        $model = $this->modelRepository->find($this->adminData->id) ?? abort(404);
 
         $inputSet = $request->input('Admin');
 
@@ -70,8 +76,8 @@ class ProfileController extends Controller
 
             if ($this->modelRepository->save($model, $inputSet)) {
                 \DB::commit();
-                LogHelper::system('admin', $request->path(), $request->method(), $id, $this->adminData->username, 1, __('admin.form.message.edit_success'));
-                return redirect(langRoute("admin.profile"))->with('success', __('admin.form.message.edit_success'));
+                LogHelper::system('admin', $request->path(), $request->method(), $id, $this->adminData->username, 1, __('MinmaxBase::admin.form.message.edit_success'));
+                return redirect(langRoute("admin.profile"))->with('success', __('MinmaxBase::admin.form.message.edit_success'));
             }
 
             \DB::rollBack();
@@ -79,7 +85,7 @@ class ProfileController extends Controller
             \DB::rollBack();
         }
 
-        LogHelper::system('admin', $request->path(), $request->method(), $id, $this->adminData->username, 0, __('admin.form.message.edit_error'));
-        return redirect(langRoute("admin.profile"))->withErrors([__('admin.form.message.edit_error')])->withInput();
+        LogHelper::system('admin', $request->path(), $request->method(), $id, $this->adminData->username, 0, __('MinmaxBase::admin.form.message.edit_error'));
+        return redirect(langRoute("admin.profile"))->withErrors([__('MinmaxBase::admin.form.message.edit_error')])->withInput();
     }
 }

@@ -36,6 +36,7 @@ class RoleRequest extends FormRequest
                 return [
                     'Role.name' => 'required|string',
                     'Role.display_name' => 'required|string',
+                    'Role.permissions' => 'nullable|array',
                     'Role.active' => 'required|in:1,0',
                 ];
             case 'POST':
@@ -44,7 +45,7 @@ class RoleRequest extends FormRequest
                     'Role.guard' => 'required|in:admin,web',
                     'Role.name' => 'required|string',
                     'Role.display_name' => 'required|string',
-                    'Firewall.active' => 'required|in:1,0',
+                    'Role.active' => 'required|in:1,0',
                 ];
         }
     }
@@ -57,10 +58,11 @@ class RoleRequest extends FormRequest
     public function attributes()
     {
         return [
-            'Role.guard' => __('models.Role.guard'),
-            'Role.name' => __('models.Role.name'),
-            'Role.display_name' => __('models.Role.display_name'),
-            'Role.active' => __('models.Role.active'),
+            'Role.guard' => __('MinmaxBase::models.Role.guard'),
+            'Role.name' => __('MinmaxBase::models.Role.name'),
+            'Role.display_name' => __('MinmaxBase::models.Role.display_name'),
+            'Role.permissions' => __('MinmaxBase::admin.form.fieldSet.permission'),
+            'Role.active' => __('MinmaxBase::models.Role.active'),
         ];
     }
 

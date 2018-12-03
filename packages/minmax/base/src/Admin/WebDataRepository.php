@@ -15,7 +15,7 @@ use Minmax\Base\Models\WebData;
 class WebDataRepository extends Repository
 {
     const MODEL = WebData::class;
-    protected $languageColumns = ['company', 'contact', 'seo', 'offline_text'];
+    protected $languageColumns = ['website_name', 'company', 'contact', 'seo', 'options', 'offline_text'];
 
     /**
      * Get table name of this model

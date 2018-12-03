@@ -6,9 +6,10 @@ use Minmax\Base\Models\Firewall;
 
 class FirewallTransformer extends Transformer
 {
-    protected $model = 'Firewall';
-    protected $parameterSet = [
-        'rule', 'active',
+    protected $permissions = [
+        'R' => 'firewallShow',
+        'U' => 'firewallEdit',
+        'D' => 'firewallDestroy',
     ];
 
     /**
@@ -19,9 +20,10 @@ class FirewallTransformer extends Transformer
     {
         parent::__construct($uri);
 
-        if(request()->user('admin')->can('firewallShow')) $this->permissions[] = 'R';
-        if(request()->user('admin')->can('firewallEdit')) $this->permissions[] = 'U';
-        if(request()->user('admin')->can('firewallDestroy')) $this->permissions[] = 'D';
+        $this->parameterSet = [
+            'rule' => systemParam('rule'),
+            'active' => systemParam('active'),
+        ];
     }
 
     /**

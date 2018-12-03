@@ -1,16 +1,16 @@
 <?php
 /**
- * @var \App\Models\WebData $formData
+ * @var \Minmax\Base\Models\WebData $formData
  */
 ?>
 
-@extends('admin.default.edit')
+@extends('MinmaxBase::admin.layouts.page.edit')
 
 @section('forms')
-    @inject('modelPresenter', 'App\Presenters\Admin\WebDataPresenter')
+    @inject('modelPresenter', 'Minmax\Base\Admin\WebDataPresenter')
 
     <fieldset id="baseFieldSet">
-        <legend class="legend h6 mb-4"><i class="icon-angle-double-down2 mr-2"></i>@lang('admin.form.fieldSet.default')</legend>
+        <legend class="legend h6 mb-4"><i class="icon-angle-double-down2 mr-2"></i>@lang('MinmaxBase::admin.form.fieldSet.default')</legend>
 
         {!! $modelPresenter->getFieldText($formData, 'website_name', ['required' => true]) !!}
 
@@ -21,14 +21,14 @@
     </fieldset>
 
     <fieldset class="mt-4" id="mediaFieldSet">
-        <legend class="legend h6 mb-4"><i class="icon-angle-double-down2 mr-2"></i>@lang('admin.form.fieldSet.media')</legend>
+        <legend class="legend h6 mb-4"><i class="icon-angle-double-down2 mr-2"></i>@lang('MinmaxBase::admin.form.fieldSet.media')</legend>
 
         {!! $modelPresenter->getFieldMediaImage($formData, 'system_logo', ['required' => true, 'limit' => 1, 'hint' => true]) !!}
 
     </fieldset>
 
     <fieldset class="mt-4" id="infoFieldSet">
-        <legend class="legend h6 mb-4"><i class="icon-angle-double-down2 mr-2"></i>@lang('admin.form.fieldSet.information')</legend>
+        <legend class="legend h6 mb-4"><i class="icon-angle-double-down2 mr-2"></i>@lang('MinmaxBase::admin.form.fieldSet.information')</legend>
 
         {!! $modelPresenter->getFieldText($formData, 'company', ['required' => true, 'subColumn' => 'name']) !!}
 
@@ -44,22 +44,28 @@
 
         {!! $modelPresenter->getFieldText($formData, 'contact', ['subColumn' => 'lat', 'size' => 2]) !!}
 
-        {!! $modelPresenter->getFieldText($formData, 'contact', ['subColumn' => 'map', 'size' => 2]) !!}
+        {!! $modelPresenter->getFieldText($formData, 'contact', ['subColumn' => 'map', 'size' => 10]) !!}
 
         {!! $modelPresenter->getFieldText($formData, 'social', ['subColumn' => 'facebook', 'icon' => 'icon-facebook3']) !!}
+
+        {!! $modelPresenter->getFieldText($formData, 'social', ['subColumn' => 'instagram', 'icon' => 'icon-instagram2']) !!}
 
         {!! $modelPresenter->getFieldText($formData, 'social', ['subColumn' => 'youtube', 'icon' => 'icon-youtube2']) !!}
 
     </fieldset>
 
     <fieldset class="mt-4" id="advFieldSet">
-        <legend class="legend h6 mb-4"><i class="icon-angle-double-down2 mr-2"></i>@lang('admin.form.fieldSet.advanced')</legend>
+        <legend class="legend h6 mb-4"><i class="icon-angle-double-down2 mr-2"></i>@lang('MinmaxBase::admin.form.fieldSet.advanced')</legend>
 
         {!! $modelPresenter->getFieldTextarea($formData, 'seo', ['subColumn' => 'meta_description', 'hint' => true]) !!}
 
         {!! $modelPresenter->getFieldTextarea($formData, 'seo', ['subColumn' => 'meta_keywords', 'hint' => true]) !!}
 
-        {!! $modelPresenter->getFieldTextarea($formData, 'google_analytics') !!}
+        {!! $modelPresenter->getFieldTextarea($formData, 'options', ['subColumn' => 'head', 'hint' => true]) !!}
+
+        {!! $modelPresenter->getFieldTextarea($formData, 'options', ['subColumn' => 'body', 'hint' => true]) !!}
+
+        {!! $modelPresenter->getFieldTextarea($formData, 'options', ['subColumn' => 'foot', 'hint' => true]) !!}
 
         {!! $modelPresenter->getFieldRadio($formData, 'active', ['required' => true, 'inline' => true]) !!}
 
@@ -68,7 +74,7 @@
     </fieldset>
 
     <div class="text-center my-4 form-btn-group">
-        <input class="btn btn-main" type="submit" id="submitBut" value="@lang('admin.form.button.send')">
-        <input class="btn btn-default" type="reset" value="@lang('admin.form.button.reset')" onclick="window.location.reload(true)">
+        <input class="btn btn-main" type="submit" id="submitBut" value="@lang('MinmaxBase::admin.form.button.send')">
+        <input class="btn btn-default" type="reset" value="@lang('MinmaxBase::admin.form.button.reset')" onclick="window.location.reload(true)">
     </div>
 @endsection

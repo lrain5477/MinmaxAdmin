@@ -80,7 +80,7 @@ class CreateSystemTables extends Migration
             $table->string('username', 255)->comment('帳號');
             $table->ipAddress('ip')->comment('IP 位置');
             $table->text('remark')->nullable()->comment('文字說明');
-            $table->boolean('active')->default(true)->comment('啟用狀態');
+            $table->boolean('result')->default(true)->comment('狀態');
             $table->timestamp('created_at')->useCurrent();
         });
 
@@ -90,7 +90,7 @@ class CreateSystemTables extends Migration
             $table->string('username', 255)->comment('帳號');
             $table->ipAddress('ip')->comment('IP 位置');
             $table->text('remark')->nullable()->comment('文字說明');
-            $table->boolean('active')->default(true)->comment('啟用狀態');
+            $table->boolean('result')->default(true)->comment('狀態');
             $table->timestamp('created_at')->useCurrent();
         });
 

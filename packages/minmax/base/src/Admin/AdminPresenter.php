@@ -6,6 +6,8 @@ use Minmax\Base\Models\Role;
 
 class AdminPresenter extends Presenter
 {
+    protected $packagePrefix = 'MinmaxBase::';
+
     public function __construct()
     {
         $this->parameterSet = [
@@ -22,37 +24,22 @@ class AdminPresenter extends Presenter
     }
 
     /**
-     * @param \Minmax\Base\Models\Admin $model
-     * @param string $column
-     * @param array $options
+     * @param  \Minmax\Base\Models\Admin $model
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function getFieldRoleSelect($model, $column, $options = [])
+    public function getFieldRolesSelect($model)
     {
-        $modelName = class_basename($model);
-        $columnLabel = __("models.{$modelName}.{$column}");
-        $fieldValues = $model
-            ->roles()
-            ->get()
-            ->map(function($item) {
-                /** @var \Minmax\Base\Models\Role $item */
-                return $item->id;
-            })
-            ->toArray();
-
-        $componentData = [
-            'id' => "{$modelName}-{$column}",
-            'label' => $columnLabel,
-            'name' => "{$modelName}[{$column}][]",
-            'values' => $fieldValues,
-            'required' => $options['required'] ?? false,
-            'title' => $options['title'] ?? '',
-            'group' => $options['group'] ?? false,
-            'size' => $options['size'] ?? 10,
-            'hint' => isset($options['hint']) && $options['hint'] == true ? __("models.{$modelName}.hint.{$column}") : '',
-            'listData' => $this->parameterSet[$column] ?? [],
-        ];
-
-        return view("MinmaxBase::admin.layouts.form.multi-select", $componentData);
+        return view('MinmaxBase::admin.layouts.form.multi-select', [
+            'id' => 'Admin-role_id',
+            'label' => __('MinmaxBase::models.Admin.role_id'),
+            'name' => 'Admin[role_id][]',
+            'values' => $model->roles->pluck('id')->toArray(),
+            'required' => true,
+            'title' => '',
+            'group' => false,
+            'size' => 10,
+            'hint' => '',
+            'listData' => $this->parameterSet['role_id'] ?? [],
+        ]);
     }
 }

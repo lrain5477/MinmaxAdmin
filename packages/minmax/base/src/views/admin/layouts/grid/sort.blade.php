@@ -4,7 +4,6 @@
  * @var string $column
  * @var string $value
  * @var string $uri
- * @var string $model
  */
 ?>
 <div class="text-nowrap talbe-sort text-center">

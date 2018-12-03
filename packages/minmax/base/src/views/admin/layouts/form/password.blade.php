@@ -7,6 +7,7 @@
                name="{{ $name }}"
                value=""
                placeholder="{{ $placeholder }}"
+               autocomplete="off"
                {{ $required === true ? 'required' : '' }} />
         @else
         <div class="input-group">
@@ -18,6 +19,7 @@
                    name="{{ $name }}"
                    value=""
                    placeholder="{{ $placeholder }}"
+                   autocomplete="off"
                    {{ $required === true ? 'required' : '' }} />
         </div>
         @endif

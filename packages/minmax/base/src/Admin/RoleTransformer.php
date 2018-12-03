@@ -6,9 +6,10 @@ use Minmax\Base\Models\Role;
 
 class RoleTransformer extends Transformer
 {
-    protected $model = 'Role';
-    protected $parameterSet = [
-        'active',
+    protected $permissions = [
+        'R' => 'roleShow',
+        'U' => 'roleEdit',
+        'D' => 'roleDestroy',
     ];
 
     /**
@@ -19,9 +20,9 @@ class RoleTransformer extends Transformer
     {
         parent::__construct($uri);
 
-        if(request()->user('admin')->can('roleShow')) $this->permissions[] = 'R';
-        if(request()->user('admin')->can('roleEdit')) $this->permissions[] = 'U';
-        if(request()->user('admin')->can('roleDestroy')) $this->permissions[] = 'D';
+        $this->parameterSet = [
+            'active' => systemParam('active'),
+        ];
     }
 
     /**

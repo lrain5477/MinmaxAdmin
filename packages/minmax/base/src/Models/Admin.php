@@ -17,6 +17,8 @@ use Laratrust\Traits\LaratrustUserTrait;
  * @property boolean $active
  * @property \Illuminate\Support\Carbon $created_at
  * @property \Illuminate\Support\Carbon $updated_at
+ * @property \Illuminate\Database\Eloquent\Collection|Role[] $roles
+ * @property \Illuminate\Database\Eloquent\Collection|Permission[] $permissions
  */
 class Admin extends Authenticatable
 {

@@ -249,7 +249,11 @@ return [
             'meta_description' => 'SEO 網站描述',
             'meta_keywords' => 'SEO 關鍵字',
         ],
-        'google_analytics' => 'Google Analytics',
+        'options' => [
+            'head' => '標頭內容',
+            'body' => '頁首內容',
+            'foot' => '頁尾內容',
+        ],
         'active' => '網站狀態',
         'offline_text' => '網站離線訊息',
         'created_at' => '建立時間',
@@ -258,7 +262,12 @@ return [
             'system_logo' => '建議尺寸：190px * 30px。圖片類型：png。',
             'seo' => [
                 'meta_description' => '(Metadata Description) 利用簡短的說明讓人清楚的了解網站的主要內容、簡介方向等，搜尋引擎將會幫我們適當的顯示在介紹頁面上。',
-                'meta_keywords' => '(Metadata Keywords) 搜尋關鍵字:為了幫助搜尋引擎更容易搜尋到網站，你可以在這裡填寫相關的搜尋字詞，多組關鍵字以上請使用半形逗號區隔。',
+                'meta_keywords' => '(Metadata Keywords) 為了幫助搜尋引擎更容易搜尋到網站，你可以在這裡填寫相關的搜尋字詞，多組關鍵字以上請使用半形逗號區隔。',
+            ],
+            'options' => [
+                'head' => '此處內容將會放置於網頁標頭 (&lt;/head&gt;之前)，您可以於此處貼上 Google Analytics 或其他追蹤程式碼。',
+                'body' => '此處內容將會出現於網頁最上方 (&lt;body&gt;之後)，若您不清楚網頁結構，請勿修改此處內容。',
+                'foot' => '此處內容將會出現於網頁最下方 (&lt;/body&gt;之前)，若您不清楚網頁結構，請勿修改此處內容。',
             ],
             'offline_text' => '當網站處於離線狀態時顯示給使用者看到的訊息。',
         ],

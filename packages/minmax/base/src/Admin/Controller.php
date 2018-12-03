@@ -347,7 +347,7 @@ class Controller extends BaseController
     /**
      * Model Show
      *
-     * @param string $id
+     * @param  string $id
      * @return \Illuminate\Http\Response
      * @throws \DaveJamesMiller\Breadcrumbs\Exceptions\DuplicateBreadcrumbException
      */
@@ -394,7 +394,7 @@ class Controller extends BaseController
     /**
      * Model Store
      *
-     * @param Request $request
+     * @param  Request $request
      * @return $this|\Illuminate\Http\RedirectResponse
      */
     public function store(Request $request)
@@ -429,7 +429,7 @@ class Controller extends BaseController
     /**
      * Model Edit
      *
-     * @param string $id
+     * @param  string $id
      * @return \Illuminate\Http\Response
      * @throws \DaveJamesMiller\Breadcrumbs\Exceptions\DuplicateBreadcrumbException
      */
@@ -454,11 +454,11 @@ class Controller extends BaseController
     /**
      * Model Update
      *
-     * @param string $id
-     * @param Request $request
+     * @param  Request $request
+     * @param  string $id
      * @return $this|\Illuminate\Http\RedirectResponse
      */
-    public function update($id, Request $request)
+    public function update(Request $request, $id)
     {
         $this->checkPermissionEdit();
 
@@ -492,11 +492,11 @@ class Controller extends BaseController
     /**
      * Model Destroy
      *
-     * @param string $id
-     * @param Request $request
+     * @param  Request $request
+     * @param  string $id
      * @return $this|\Illuminate\Http\RedirectResponse
      */
-    public function destroy($id, Request $request)
+    public function destroy(Request $request, $id)
     {
         $this->checkPermissionDestroy();
 
@@ -514,7 +514,7 @@ class Controller extends BaseController
     /**
      * Grid data return for DataTables
      *
-     * @param Request $request
+     * @param  Request $request
      * @return \Illuminate\Http\Response
      * @throws \Throwable
      */
@@ -534,7 +534,7 @@ class Controller extends BaseController
     }
 
     /**
-     * @param Request $request
+     * @param  Request $request
      * @return \Illuminate\Http\Response
      */
     public function ajaxSwitch(Request $request)
@@ -567,7 +567,7 @@ class Controller extends BaseController
     }
 
     /**
-     * @param Request $request
+     * @param  Request $request
      * @return \Illuminate\Http\Response
      */
     public function ajaxSort(Request $request)

@@ -39,13 +39,13 @@ class Log
      * @param string $guard is only administrator, admin, merchant and web
      * @param string $uri
      * @param string $action is like storage, update, destroy, login etc.
-     * @param string $guid
+     * @param string $id
      * @param string $username
      * @param integer $result is only 0 or 1
      * @param string $message
      * @return bool
      */
-    public static function system($guard, $uri, $action, $guid, $username, $result, $message = '')
+    public static function system($guard, $uri, $action, $id, $username, $result, $message = '')
     {
         if(in_array($username, static::IGNORE_USERS)) return true;
 
@@ -54,7 +54,7 @@ class Log
                 'guard' => $guard,
                 'uri' => $uri,
                 'action' => $action,
-                'guid' => $guid,
+                'id' => $id,
                 'username' => $username,
                 'ip' => request()->ip(),
                 'remark' => $message,

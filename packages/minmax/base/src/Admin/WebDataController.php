@@ -2,14 +2,14 @@
 
 namespace Minmax\Base\Admin;
 
-use Illuminate\Http\Request;
-
 class WebDataController extends Controller
 {
-    public function __construct(Request $request, WebDataRepository $webDataRepository)
+    protected $packagePrefix = 'MinmaxBase::';
+
+    public function __construct(WebDataRepository $webDataRepository)
     {
         $this->modelRepository = $webDataRepository;
 
-        parent::__construct($request);
+        parent::__construct();
     }
 }

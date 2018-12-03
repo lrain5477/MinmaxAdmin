@@ -35,7 +35,7 @@ class AdminRequest extends FormRequest
             case 'PUT':
                 return [
                     'Admin.username' => 'required|string',
-                    'Admin.password' => 'sometimes|required|string|min:6|confirmed',
+                    'Admin.password' => 'nullable|string|min:6|confirmed',
                     'Admin.name' => 'required|string',
                     'Admin.email' => 'nullable|email',
                     'Admin.active' => 'required|in:1,0',
@@ -59,11 +59,12 @@ class AdminRequest extends FormRequest
     public function attributes()
     {
         return [
-            'Admin.username' => __('models.Admin.username'),
-            'Admin.password' => __('models.Admin.password'),
-            'Admin.name' => __('models.Admin.name'),
-            'Admin.email' => __('models.Admin.email'),
-            'Admin.active' => __('models.Admin.active'),
+            'Admin.username' => __('MinmaxBase::models.Admin.username'),
+            'Admin.password' => __('MinmaxBase::models.Admin.password'),
+            'Admin.password_confirmation' => __('MinmaxBase::models.Admin.password_confirmation'),
+            'Admin.name' => __('MinmaxBase::models.Admin.name'),
+            'Admin.email' => __('MinmaxBase::models.Admin.email'),
+            'Admin.active' => __('MinmaxBase::models.Admin.active'),
         ];
     }
 

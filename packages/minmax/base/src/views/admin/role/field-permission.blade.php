@@ -1,6 +1,6 @@
 <?php
 /**
- * @var \Minmax\Base\Models\Role $formData
+ * @var \Minmax\Base\Models\Role $model
  * @var \Illuminate\Database\Eloquent\Collection[] $permissionData
  */
 ?>
@@ -36,10 +36,10 @@
                                 <div class="custom-control custom-checkbox custom-control-inline">
                                     <input class="custom-control-input ignore-valid permission-item"
                                            type="checkbox"
-                                           name="Permission[]"
+                                           name="Role[permissions][]"
                                            id="permission-{{ $item->id }}"
                                            value="{{ $item->id }}"
-                                           {{ $formData->hasPermission($item->name) ? 'checked' : '' }} />
+                                           {{ $model->hasPermission($item->name) ? 'checked' : '' }} />
                                     <label class="custom-control-label"
                                            for="permission-{{ $item->id }}">{{ $item->label }}</label>
                                 </div>

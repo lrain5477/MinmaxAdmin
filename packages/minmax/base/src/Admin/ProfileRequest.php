@@ -27,7 +27,7 @@ class ProfileRequest extends FormRequest
         return [
             'Admin.name' => 'required|string',
             'Admin.email' => 'required|email',
-            'Admin.password' => 'sometimes|required|string|min:6|confirmed',
+            'Admin.password' => 'nullable|string|min:6|confirmed',
         ];
     }
 
@@ -39,9 +39,9 @@ class ProfileRequest extends FormRequest
     public function attributes()
     {
         return [
-            'Admin.name' => __('models.Admin.name'),
-            'Admin.email' => __('models.Admin.email'),
-            'Admin.password' => __('models.Admin.password'),
+            'Admin.name' => __('MinmaxBase::models.Admin.name'),
+            'Admin.email' => __('MinmaxBase::models.Admin.email'),
+            'Admin.password' => __('MinmaxBase::models.Admin.password'),
         ];
     }
 

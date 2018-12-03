@@ -56,6 +56,11 @@ class WebData extends Model
         return json_decode(langDB($this->getAttributeFromArray('seo')), true);
     }
 
+    public function getOptionsAttribute()
+    {
+        return json_decode(langDB($this->getAttributeFromArray('options')), true);
+    }
+
     public function getOfflineTextAttribute()
     {
         return langDB($this->getAttributeFromArray('offline_text'));

@@ -21,9 +21,6 @@
 <script src="{{ asset('static/modules/sweetalert/ui-sweetalert.min.js') }}"></script>
 {{-- * * * bootstrap-tabdrop 切換tab下拉選單 --}}
 <script src="{{ asset('static/modules/tabdrop/js/bootstrap-tabdrop.js') }}"></script>
-{{-- * * * swiper 圖片輪播 --}}
-<script src="{{ asset('static/modules/swiper/js/swiper.min.js') }}"></script>
-<script src="{{ asset('static/modules/swiper/js/swiper.esm.bundle.js') }}"></script>
 {{-- * / js--}}
 
 {{-- * layout-js --}}

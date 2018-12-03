@@ -157,7 +157,7 @@ class Presenter
             'id' => "{$modelName}-{$column}",
             'label' => $columnLabel,
             'images' => $images,
-            'altShow' => isset($options['alt']) ? $options['alt'] : false,
+            'additionalFields' => $options['additional'] ?? [],
         ];
 
         return view('MinmaxBase::admin.layouts.view.image-list', $componentData);
@@ -627,6 +627,10 @@ class Presenter
             $parameterColumn .= ".{$options['subColumn']}";
         }
 
+        foreach ($fieldValue as $key => $value) {
+            if (is_bool($value)) $fieldValue[$key] = intval($value);
+        }
+
         $componentData = [
             'id' => $fieldId,
             'label' => $columnLabel,
@@ -665,6 +669,10 @@ class Presenter
             $fieldValue = $fieldValue == '' ? '' : ($fieldValue[$options['subColumn']] ?? '');
             $hintPath .= ".{$options['subColumn']}";
             $parameterColumn .= ".{$options['subColumn']}";
+        }
+
+        if (is_bool($fieldValue)) {
+            $fieldValue = intval($fieldValue);
         }
 
         $componentData = [

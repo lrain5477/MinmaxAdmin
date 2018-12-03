@@ -71,10 +71,10 @@
                                                         <div class="col-sm-10">
                                                         @switch($type)
                                                             @case('text')
-                                                            <input class="form-control addi-{{ $column }}" type="text" name="{{ $name }}[{{ $loop->parent->index }}][{{ $column }}]" value="{{ $image[$column] ?? '' }}" />
+                                                            <input class="form-control addi-{{ $column }}" type="text" name="{{ $name }}[{{ $loop->parent->index }}][{{ $column }}]" value="{{ $image[$column] ?? '' }}" readonly />
                                                             @break
                                                             @case('textarea')
-                                                            <textarea class="form-control addi-{{ $column }}" type="text" name="{{ $name }}[{{ $loop->parent->index }}][{{ $column }}]">{{ $image[$column] ?? '' }}</textarea>
+                                                            <textarea class="form-control addi-{{ $column }}" type="text" name="{{ $name }}[{{ $loop->parent->index }}][{{ $column }}]" readonly>{{ $image[$column] ?? '' }}</textarea>
                                                             @break
                                                         @endswitch
                                                         </div>

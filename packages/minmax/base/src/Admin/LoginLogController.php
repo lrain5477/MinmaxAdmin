@@ -4,6 +4,8 @@ namespace Minmax\Base\Admin;
 
 class LoginLogController extends Controller
 {
+    protected $packagePrefix = 'MinmaxBase::';
+
     protected function getQueryBuilder()
     {
         return \DB::table('login_log')

@@ -57,10 +57,10 @@ class FirewallRequest extends FormRequest
     public function attributes()
     {
         return [
-            'Firewall.guard' => __('models.Firewall.guard'),
-            'Firewall.ip' => __('models.Firewall.ip'),
-            'Firewall.rule' => __('models.Firewall.rule'),
-            'Firewall.active' => __('models.Firewall.active'),
+            'Firewall.guard' => __('MinmaxBase::models.Firewall.guard'),
+            'Firewall.ip' => __('MinmaxBase::models.Firewall.ip'),
+            'Firewall.rule' => __('MinmaxBase::models.Firewall.rule'),
+            'Firewall.active' => __('MinmaxBase::models.Firewall.active'),
         ];
     }
 

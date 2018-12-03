@@ -52,7 +52,7 @@
         @php
         $guard = is_null(request()->route()) ? 'administrator' : (request()->route()->getAction()['middleware'][0] ?? 'administrator');
         @endphp
-        <div class="title">@lang($guard . '.page_not_found.message')</div>
+        <div class="title">@lang('MinmaxBase::' . $guard . '.page_not_found.message')</div>
         @else
         <div class="title">{{ $exception->getMessage() }}</div>
         @endif

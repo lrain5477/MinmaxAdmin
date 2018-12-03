@@ -6,7 +6,7 @@
  */
 ?>
 
-@extends('MinmaxBase::admin.default.view')
+@extends('MinmaxBase::admin.layouts.page.view')
 
 @section('action-buttons')
 <div class="float-right">
@@ -14,7 +14,7 @@
         <i class="icon-undo2"></i><span class="ml-1 d-none d-md-inline-block">@lang('MinmaxBase::admin.form.back_list')</span>
     </a>
     @if($adminData->can('roleEdit'))
-    <a class="btn btn-sm btn-main" href="{{ langRoute("admin.{$pageData->uri}.edit", [$formData->guid]) }}" title="@lang('MinmaxBase::admin.form.edit')">
+    <a class="btn btn-sm btn-main" href="{{ langRoute("admin.{$pageData->uri}.edit", [$formData->id]) }}" title="@lang('MinmaxBase::admin.form.edit')">
         <i class="icon-pencil"></i><span class="ml-1 d-none d-md-inline-block">@lang('MinmaxBase::admin.form.edit')</span>
     </a>
     @endif

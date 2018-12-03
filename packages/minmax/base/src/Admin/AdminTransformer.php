@@ -6,9 +6,10 @@ use Minmax\Base\Models\Admin;
 
 class AdminTransformer extends Transformer
 {
-    protected $model = 'Admin';
-    protected $parameterSet = [
-        'active',
+    protected $permissions = [
+        'R' => 'adminShow',
+        'U' => 'adminEdit',
+        'D' => 'adminDestroy',
     ];
 
     /**
@@ -19,9 +20,9 @@ class AdminTransformer extends Transformer
     {
         parent::__construct($uri);
 
-        if(request()->user('admin')->can('adminShow')) $this->permissions[] = 'R';
-        if(request()->user('admin')->can('adminEdit')) $this->permissions[] = 'U';
-        if(request()->user('admin')->can('adminDestroy')) $this->permissions[] = 'D';
+        $this->parameterSet = [
+            'active' => systemParam('active'),
+        ];
     }
 
     /**
@@ -31,24 +32,28 @@ class AdminTransformer extends Transformer
      */
     public function transform(Admin $model)
     {
+        $isSelf = $model->id === request()->user('admin')->id;
+
         // Can't destroy self. So remove Destroy permission.
-        $destroyFlag = in_array('D', $this->permissions);
-        if($destroyFlag && $model->id === request()->user('admin')->id) {
-            unset($this->permissions[$key = array_search('D', $this->permissions)]);
+        $destroyFlag = in_array('D', $this->permissionSet);
+        if($destroyFlag && $isSelf) {
+            unset($this->permissionSet[$key = array_search('D', $this->permissionSet)]);
         }
 
         $transformerData = [
             'username' => $this->getGridText($model->username),
             'name' => $this->getGridText($model->name),
             'email' => $this->getGridText($model->email),
-            'role_id' => $this->getGridText($model->roles()->get()->map(function($item) { return $item->display_name; })->implode(', ')),
-            'active' => $this->getGridSwitch($model->id, 'active', $model->active),
+            'role_id' => $this->getGridText($model->roles()->get()->pluck('display_name')->implode(', ')),
+            'active' => $isSelf
+                ? $this->getGridTextBadge($model->active, 'active')
+                : $this->getGridSwitch($model->id, 'active', $model->active),
             'action' => $this->getGridActions($model->id),
         ];
 
         // After put Destroy permission back, if it was removed at first.
-        if($destroyFlag && !in_array('D', $this->permissions)) {
-            $this->permissions[] = 'D';
+        if($destroyFlag && !in_array('D', $this->permissionSet)) {
+            $this->permissionSet[] = 'D';
         }
 
         return $transformerData;
