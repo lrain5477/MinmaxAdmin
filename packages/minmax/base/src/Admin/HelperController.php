@@ -2,6 +2,7 @@
 
 namespace Minmax\Base\Admin;
 
+use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Support\Facades\Storage;
 use Minmax\Base\Helpers\Captcha as CaptchaHelper;
@@ -55,5 +56,19 @@ class HelperController extends BaseController
             ->toJson(JSON_UNESCAPED_UNICODE);
 
         return "CKEDITOR.addTemplates('default',{templates: {$templates} });";
+    }
+
+    /**
+     * @param  Request $request
+     * @param  WorldLanguageRepository $repository
+     * @return \Illuminate\Http\Response
+     */
+    public function setFormLocal(Request $request, WorldLanguageRepository $repository)
+    {
+        if ($model = $repository->one(['code' => $request->input('language', ''), 'active' => true])) {
+            session(['admin-formLocal' => $model->code]);
+            session()->save();
+        }
+        return response('', 200);
     }
 }

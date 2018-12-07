@@ -56,6 +56,9 @@ Route::group([
                 Route::get('ckeditor', ['as' => 'elfinder.ckeditor', 'uses' => 'ElfinderController@showCKeditor4']);
             });
 
+            // 切換表單語系
+            Route::put('form/local/set', 'HelperController@setFormLocal')->name('setFormLocal');
+
             // 個人資料
             Route::get('profile', 'ProfileController@edit')->name('profile');
             Route::put('profile', 'ProfileController@update');
@@ -108,13 +111,13 @@ Route::group([
             Route::patch('firewall/ajax/sort', 'FirewallController@ajaxSort')->name('firewall.ajaxSort');
 
             /*
-             * Firewall 防火牆
+             * SystemLog 操作紀錄
              */
             Route::get('system-log', 'SystemLogController@index')->name('system-log.index');
             Route::post('system-log/ajax/datatables', 'SystemLogController@ajaxDataTable')->name('system-log.ajaxDataTable');
 
             /*
-             * Firewall 防火牆
+             * LoginLog 登入紀錄
              */
             Route::get('login-log', 'LoginLogController@index')->name('login-log.index');
             Route::post('login-log/ajax/datatables', 'LoginLogController@ajaxDataTable')->name('login-log.ajaxDataTable');

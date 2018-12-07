@@ -9,13 +9,26 @@
 @extends('MinmaxBase::admin.layouts.page.edit')
 
 @section('action-buttons')
-@if($adminData->can('roleShow'))
 <div class="float-right">
+    @if($adminData->can('roleShow'))
     <a class="btn btn-sm btn-light" href="{{ langRoute("admin.{$pageData->uri}.index") }}" title="@lang('MinmaxBase::admin.form.back_list')">
         <i class="icon-undo2"></i><span class="ml-1 d-none d-md-inline-block">@lang('MinmaxBase::admin.form.back_list')</span>
     </a>
+    @endif
+    <div class="btn-group btn-group-sm dropdown" role="group">
+        <button class="btn dropdown-toggle btn-secondary" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="@lang('MinmaxBase::admin.form.language')" id="tableLen">
+            <i class="icon-globe"></i><span class="ml-1 d-none d-md-inline-block">{{ $languageActive->where('current', true)->first()->name }}</span>
+        </button>
+        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="tableLen">
+            @foreach($languageActive as $language)
+            <a class="form-local-option dropdown-item {{ $language->current  ? 'selected' : '' }}"
+               data-code="{{ $language->code }}"
+               data-url="{{ langRoute('admin.setFormLocal') }}"
+               href="javascript:void(0);">{{ $language->name }}</a>
+            @endforeach
+        </div>
+    </div>
 </div>
-@endif
 @endsection
 
 @section('forms')

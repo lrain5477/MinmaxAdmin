@@ -105,6 +105,7 @@ return [
         'view' => '瀏覽',
         'create' => '新增',
         'edit' => '編輯',
+        'language' => '語系',
         'import' => '匯入',
         'export' => '匯出',
         'back_list' => '返回列表',

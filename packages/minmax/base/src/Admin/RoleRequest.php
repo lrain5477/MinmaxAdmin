@@ -37,7 +37,7 @@ class RoleRequest extends FormRequest
                     'Role.name' => 'required|string',
                     'Role.display_name' => 'required|string',
                     'Role.permissions' => 'nullable|array',
-                    'Role.active' => 'required|in:1,0',
+                    'Role.active' => 'required|boolean',
                 ];
             case 'POST':
             default:
@@ -45,7 +45,7 @@ class RoleRequest extends FormRequest
                     'Role.guard' => 'required|in:admin,web',
                     'Role.name' => 'required|string',
                     'Role.display_name' => 'required|string',
-                    'Role.active' => 'required|in:1,0',
+                    'Role.active' => 'required|boolean',
                 ];
         }
     }

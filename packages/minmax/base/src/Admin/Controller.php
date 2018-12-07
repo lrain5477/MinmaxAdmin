@@ -34,6 +34,9 @@ class Controller extends BaseController
     /** @var \Illuminate\Support\Collection|\Minmax\Base\Models\WorldLanguage[] $languageData */
     protected $languageData;
 
+    /** @var \Illuminate\Support\Collection|\Minmax\Base\Models\WorldLanguage[] $languageActive */
+    protected $languageActive;
+
     /** @var array $viewData */
     protected $viewData;
 
@@ -86,6 +89,7 @@ class Controller extends BaseController
     protected function setDefaultViewData()
     {
         $this->viewData['languageData'] = $this->languageData;
+        $this->viewData['languageActive'] = $this->languageActive;
         $this->viewData['webData'] = $this->webData;
         $this->viewData['systemMenu'] = $this->systemMenu;
         $this->viewData['pageData'] = $this->pageData;

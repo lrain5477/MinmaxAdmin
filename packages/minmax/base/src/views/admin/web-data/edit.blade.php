@@ -1,10 +1,29 @@
 <?php
 /**
  * @var \Minmax\Base\Models\WebData $formData
+ * @var \Illuminate\Support\Collection|\Minmax\Base\Models\WorldLanguage[] $languageData
  */
 ?>
 
 @extends('MinmaxBase::admin.layouts.page.edit')
+
+@section('action-buttons')
+<div class="float-right">
+    <div class="btn-group btn-group-sm dropdown" role="group">
+        <button class="btn dropdown-toggle btn-secondary" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="@lang('MinmaxBase::admin.form.language')" id="tableLen">
+            <i class="icon-globe"></i><span class="ml-1 d-none d-md-inline-block">@lang('MinmaxBase::admin.form.language')</span>
+        </button>
+        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="tableLen">
+            @foreach($languageActive as $language)
+            <a class="form-local-option dropdown-item {{ $language->code == session('admin-formLocal', app()->getLocale()) ? 'selected' : '' }}"
+               data-code="{{ $language->code }}"
+               data-url="{{ langRoute('admin.setFormLocal') }}"
+               href="javascript:void(0);">{{ $language->name }}</a>
+            @endforeach
+        </div>
+    </div>
+</div>
+@endsection
 
 @section('forms')
     @inject('modelPresenter', 'Minmax\Base\Admin\WebDataPresenter')

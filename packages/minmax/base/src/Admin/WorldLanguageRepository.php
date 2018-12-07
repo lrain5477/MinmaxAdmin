@@ -40,4 +40,18 @@ class WorldLanguageRepository extends Repository
             ->orderBy('sort')
             ->get();
     }
+
+    public function getLanguageActive()
+    {
+        $currentFormLocal = session('admin-formLocal', app()->getLocale());
+
+        return $this->query()
+            ->where('active', true)
+            ->orderBy('sort')
+            ->get()
+            ->map(function ($item) use ($currentFormLocal) {
+                $item->current = $item->code == $currentFormLocal;
+                return $item;
+            });
+    }
 }

@@ -38,7 +38,7 @@ class AdminRequest extends FormRequest
                     'Admin.password' => 'nullable|string|min:6|confirmed',
                     'Admin.name' => 'required|string',
                     'Admin.email' => 'nullable|email',
-                    'Admin.active' => 'required|in:1,0',
+                    'Admin.active' => 'required|boolean',
                 ];
             case 'POST':
             default:
@@ -46,7 +46,7 @@ class AdminRequest extends FormRequest
                     'Admin.username' => 'required|string',
                     'Admin.name' => 'required|string',
                     'Admin.email' => 'nullable|email',
-                    'Admin.active' => 'required|in:1,0',
+                    'Admin.active' => 'required|boolean',
                 ];
         }
     }

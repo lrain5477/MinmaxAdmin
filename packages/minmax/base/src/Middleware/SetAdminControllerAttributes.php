@@ -28,6 +28,9 @@ class SetAdminControllerAttributes
         // 設定語系資料
         $languageData = (new WorldLanguageRepository)->getLanguageList();
 
+        // 設定啟用語系資料
+        $languageActive = (new WorldLanguageRepository)->getLanguageActive();
+
         // 設定 選單資料
         $systemMenu = (new AdminMenuRepository)->getMenu();
 
@@ -42,6 +45,7 @@ class SetAdminControllerAttributes
                 'webData' => $webData,
                 'uri' => $uri,
                 'languageData' => $languageData,
+                'languageActive' => $languageActive,
                 'systemMenu' => $systemMenu,
                 'pageData' => $pageData,
                 'adminData' => $adminData,

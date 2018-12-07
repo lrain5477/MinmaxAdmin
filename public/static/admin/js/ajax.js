@@ -1,5 +1,22 @@
+var $ajaxBody = $("body");
+
+// 切換語系
+$ajaxBody.on('click', '.form-local-option', function(){
+    var $this = $(this);
+
+    $.ajax({
+        url: $this.attr('data-url'),
+        data: {language: $this.attr('data-code')},
+        type: 'PUT',
+        headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+        success: function () {
+            window.location.reload(true);
+        }
+    });
+});
+
 /*圖片alt*/
-$("body").delegate('.open_modal_picname', 'click', function () {
+$ajaxBody.delegate('.open_modal_picname', 'click', function () {
 	$('#imageName').html($(this).attr('data-filename'));
 	
 	$('#modalFileAlt').val('');
@@ -8,7 +25,7 @@ $("body").delegate('.open_modal_picname', 'click', function () {
 	
 });
 
-$("body").delegate('#altBtn', 'click', function () {
+$ajaxBody.delegate('#altBtn', 'click', function () {
 	var _id = $(this).attr('data-id');
 	
 	
@@ -19,17 +36,17 @@ $("body").delegate('#altBtn', 'click', function () {
 });
 
 //搜尋bar
-$("body").delegate('#sch_keyword', 'keyup', function () {
+$ajaxBody.delegate('#sch_keyword', 'keyup', function () {
 	$(".datatables").DataTable().draw();
 });
 
-$("body").delegate('.sch_select', 'change', function () {
+$ajaxBody.delegate('.sch_select', 'change', function () {
 	$(".datatables").DataTable().draw();
 });
 
 
 //批次修改
-$("body").delegate(".changeStatus", "click", function() {
+$ajaxBody.delegate(".changeStatus", "click", function() {
     var selID = '';
     var thisStatus = $(this).attr('data-value');
     $('._chkAll').each(function () {
@@ -85,7 +102,7 @@ $("body").delegate(".changeStatus", "click", function() {
 });
 
 /*刪除記錄*/
-$('body').delegate('.delItem', 'click', function(e){
+$ajaxBody.delegate('.delItem', 'click', function(e){
 	var _guid = $(this).attr('data-guid');
 	var _table = $(this).attr('data-tables');
     e.preventDefault();
@@ -183,35 +200,6 @@ function updateSort(column, id) {
     });
 }
 
-//切換語系
-$('body').delegate(".changInputLang", "click", function(e){
-	
-	//var _lang = $(this).attr('data-value');
-	//$('#lang').val(_lang);
-	
-	$(this).addClass('selected').siblings().removeClass('selected');
-	$('.editForm').hide();
-	$('#editForm-' + $(this).attr('data-value')).show();
-	
-	//$('.vLay').hide();
-	//$('.v_'+_lang).show();
-});
-
-
-
-//權限全選
-$('body').delegate(".topLv", "change", function(e){
-	
-	var _topLv = $(this).val();	
-	
-	if($(this).is(':checked')){
-		$('.a'+_topLv).prop("checked", true);
-	}else {
-
-		$('.n'+_topLv).prop("checked", true);
-	}
-	
-});
 
 /**
  * AJAX動作

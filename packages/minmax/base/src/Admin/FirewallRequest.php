@@ -35,16 +35,16 @@ class FirewallRequest extends FormRequest
             case 'PUT':
                 return [
                     'Firewall.ip' => 'required|ip',
-                    'Firewall.rule' => 'required|in:1,0',
-                    'Firewall.active' => 'required|in:1,0',
+                    'Firewall.rule' => 'required|boolean',
+                    'Firewall.active' => 'required|boolean',
                 ];
             case 'POST':
             default:
                 return [
                     'Firewall.guard' => 'required|in:admin,web',
                     'Firewall.ip' => 'required|ip',
-                    'Firewall.rule' => 'required|in:1,0',
-                    'Firewall.active' => 'required|in:1,0',
+                    'Firewall.rule' => 'required|boolean',
+                    'Firewall.active' => 'required|boolean',
                 ];
         }
     }

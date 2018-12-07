@@ -8,10 +8,14 @@ class RolePresenter extends Presenter
 {
     protected $packagePrefix = 'MinmaxBase::';
 
+    protected $languageColumns = ['display_name', 'description'];
+
     public function __construct()
     {
+        parent::__construct();
+
         $this->parameterSet = [
-            'active' => systemParam('active'),
+            'active' => systemParam('active', session('admin-formLocal', app()->getLocale())),
         ];
     }
 

@@ -15,9 +15,8 @@ use Minmax\Base\Models\Role;
 class RoleRepository extends Repository
 {
     const MODEL = Role::class;
-    protected $languageColumns = [
-        'display_name', 'description'
-    ];
+
+    protected $languageColumns = ['display_name', 'description'];
 
     /**
      * Get table name of this model

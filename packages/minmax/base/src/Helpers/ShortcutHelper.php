@@ -152,7 +152,7 @@ if (! function_exists('saveLang')) {
      */
     function saveLang($key, $value, $langKey = null)
     {
-        $langKey = $langKey ?? app()->getLocale();
+        $langKey = $langKey ?? session('admin-formLocal', app()->getLocale());
         $attributes = ['language_id' => langId($langKey), 'key' => $key];
         $values = ['text' => is_array($value) ? json_encode($value) : $value, 'updated_at' => date('Y-m-d H:i:s')];
 

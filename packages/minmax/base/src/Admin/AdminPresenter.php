@@ -10,6 +10,8 @@ class AdminPresenter extends Presenter
 
     public function __construct()
     {
+        parent::__construct();
+
         $this->parameterSet = [
             'role_id' => Role::query()
                 ->orderBy('display_name')

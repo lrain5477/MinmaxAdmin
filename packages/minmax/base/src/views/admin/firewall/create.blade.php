@@ -21,7 +21,7 @@
 @section('forms')
     @inject('modelPresenter', 'Minmax\Base\Admin\FirewallPresenter')
 
-    {!! $modelPresenter->getFieldHidden($formData, 'guard', 'admin') !!}
+    {!! $modelPresenter->getFieldHidden($formData, 'guard', ['defaultValue' => 'admin']) !!}
 
     <fieldset id="baseFieldSet">
         <legend class="legend h6 mb-4"><i class="icon-angle-double-down2 mr-2"></i>@lang('MinmaxBase::admin.form.fieldSet.default')</legend>
