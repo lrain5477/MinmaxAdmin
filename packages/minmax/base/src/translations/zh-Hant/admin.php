@@ -88,6 +88,7 @@ return [
             'delete' => '刪除',
         ],
         'selection' => [
+            'all' => '全部',
             'all_active' => '狀態全部',
             'all_result' => '狀態全部',
             'all_guard' => '平台全部',

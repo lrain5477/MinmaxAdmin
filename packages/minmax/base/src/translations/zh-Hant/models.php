@@ -21,12 +21,6 @@ return [
         'active' => '狀態',
         'created_at' => '建立時間',
         'updated_at' => '更新時間',
-        'selection' => [
-            'active' => [
-                '1' => '啟用',
-                '0' => '停用',
-            ],
-        ],
         'hint' => [
             'allow_ip' => '請斷行設定可登入來源IP位置，空白表示可自任何地方登入',
             'password' => '若不需更新密碼，請維持此欄位空白',
@@ -45,12 +39,6 @@ return [
         'created_at' => '建立時間',
         'updated_at' => '更新時間',
         'role_id' => '群組',
-        'selection' => [
-            'active' => [
-                '1' => '啟用',
-                '0' => '停用',
-            ],
-        ],
         'hint' => [
             'password' => '若不需更新密碼，請維持此欄位空白',
             'password_confirmation' => '請再次輸入密碼；若不需更新密碼，請維持此欄位空白',
@@ -74,14 +62,8 @@ return [
         'active' => '狀態',
         'created_at' => '建立時間',
         'updated_at' => '更新時間',
-        'selection' => [
-            'active' => [
-                '1' => '啟用',
-                '0' => '停用',
-            ],
-        ],
         'hint' => [
-            'icon' => '僅 (根列表) 使用，請參考連結選擇您所需要的圖示 <a target="_blank" href="/admin/css/fonts/icon/demo.html">圖示列表</a>',
+            'icon' => '僅 (根列表) 使用，請參考連結選擇您所需要的圖示 <a target="_blank" href="/static/admin/css/fonts/icon/demo.html">圖示列表</a>',
         ],
     ],
 
@@ -94,12 +76,6 @@ return [
         'active' => '狀態',
         'created_at' => '建立時間',
         'updated_at' => '更新時間',
-        'selection' => [
-            'active' => [
-                '1' => '啟用',
-                '0' => '停用',
-            ],
-        ],
     ],
 
     'Permission' => [
@@ -113,88 +89,20 @@ return [
         'active' => '狀態',
         'created_at' => '建立時間',
         'updated_at' => '更新時間',
-        'selection' => [
-            'active' => [
-                '1' => '啟用',
-                '0' => '停用',
-            ],
-        ],
     ],
 
     'WorldLanguage' => [
         'id' => 'ID',
-        'title' => '語系標題',
         'code' => '語系代碼',
-        'name' => '顯示文字',
-        'icon' => '圖示代碼',
+        'name' => '語系名稱',
+        'native' => '顯示文字',
+        'options' => '語系設定',
+        'currency_id' => '貨幣',
         'sort' => '排序',
-        'active' => '狀態',
+        'active_admin' => '後臺啟用',
+        'active' => '啟用狀態',
         'created_at' => '建立時間',
         'updated_at' => '更新時間',
-        'selection' => [
-            'active' => [
-                '1' => '啟用',
-                '0' => '停用',
-            ],
-        ],
-        'hint' => [
-            'icon' => '請參考連結選擇您所需要的圖示 <a target="_blank" href="/admin/css/fonts/flag/index.html">圖示列表</a>',
-        ],
-    ],
-
-    'WorldCountry' => [
-        'id' => 'ID',
-        'title' => '國家名稱',
-        'code' => '國家代碼',
-        'name' => '顯示文字',
-        'icon' => '圖示代碼',
-        'language_id' => '語言',
-        'active' => '狀態',
-        'created_at' => '建立時間',
-        'updated_at' => '更新時間',
-        'selection' => [
-            'active' => [
-                '1' => '啟用',
-                '0' => '停用',
-            ],
-        ],
-        'hint' => [
-            'icon' => '請參考連結選擇您所需要的圖示 <a target="_blank" href="/admin/css/fonts/flag/index.html">圖示列表</a>',
-        ],
-    ],
-
-    'WorldState' => [
-        'id' => 'ID',
-        'country_id' => '國家',
-        'title' => '州區名稱',
-        'code' => '州區代碼',
-        'name' => '顯示文字',
-        'active' => '狀態',
-        'created_at' => '建立時間',
-        'updated_at' => '更新時間',
-        'selection' => [
-            'active' => [
-                '1' => '啟用',
-                '0' => '停用',
-            ],
-        ],
-    ],
-
-    'WorldCity' => [
-        'id' => 'ID',
-        'state_id' => '州區',
-        'title' => '城市名稱',
-        'code' => '城市代碼',
-        'name' => '顯示文字',
-        'active' => '狀態',
-        'created_at' => '建立時間',
-        'updated_at' => '更新時間',
-        'selection' => [
-            'active' => [
-                '1' => '啟用',
-                '0' => '停用',
-            ],
-        ],
     ],
 
     'Firewall' => [
@@ -205,16 +113,6 @@ return [
         'active' => '狀態',
         'created_at' => '建立時間',
         'updated_at' => '更新時間',
-        'selection' => [
-            'rule' => [
-                '1' => '允許',
-                '0' => '禁止',
-            ],
-            'active' => [
-                '1' => '啟用',
-                '0' => '停用',
-            ],
-        ],
     ],
 
     'WebData' => [
@@ -271,35 +169,6 @@ return [
             ],
             'offline_text' => '當網站處於離線狀態時顯示給使用者看到的訊息。',
         ],
-        'selection' => [
-            'active' => [
-                '1' => '啟用',
-                '0' => '停用',
-            ],
-        ],
-    ],
-
-    'SystemParameter' => [
-        'id' => 'ID',
-        'code' => '群組代碼',
-        'title' => '群組名稱',
-        'options' => [
-            'label' => '參數標籤',
-            'value' => '參數值',
-            'class' => '顏色 Class',
-        ],
-        'active' => '狀態',
-        'created_at' => '建立時間',
-        'updated_at' => '更新時間',
-        'selection' => [
-            'options' => [
-                'class' => '請輸入該參數值所對應的 Bootstrap 元件類別識別名稱。例：badge-danger 請輸入 danger。',
-            ],
-            'active' => [
-                '1' => '啟用',
-                '0' => '停用',
-            ],
-        ],
     ],
 
     'EditorTemplate' => [
@@ -313,12 +182,6 @@ return [
         'active' => '狀態',
         'created_at' => '建立時間',
         'updated_at' => '更新時間',
-        'selection' => [
-            'active' => [
-                '1' => '啟用',
-                '0' => '停用',
-            ],
-        ],
     ],
 
     'SystemLog' => [
@@ -333,12 +196,6 @@ return [
         'result' => '狀態',
         'created_at' => '建立時間',
         'updated_at' => '更新時間',
-        'selection' => [
-            'result' => [
-                '1' => '成功',
-                '0' => '失敗',
-            ],
-        ],
     ],
 
     'LoginLog' => [
@@ -350,12 +207,51 @@ return [
         'result' => '狀態',
         'created_at' => '建立時間',
         'updated_at' => '更新時間',
-        'selection' => [
-            'result' => [
-                '1' => '成功',
-                '0' => '失敗',
-            ],
-        ],
+    ],
+
+    'SystemParameterGroup' => [
+        'id' => 'ID',
+        'code' => '群組代碼',
+        'title' => '群組名稱',
+        'options' => '群組設定',
+        'active' => '啟用狀態',
+        'created_at' => '建立時間',
+        'updated_at' => '更新時間',
+    ],
+
+    'SystemParameterItem' => [
+        'id' => 'ID',
+        'group_id' => '參數群組',
+        'value' => '參數數值',
+        'label' => '參數名稱',
+        'options' => '參數設定',
+        'sort' => '排序',
+        'active' => '啟用狀態',
+        'created_at' => '建立時間',
+        'updated_at' => '更新時間',
+    ],
+
+    'SiteParameterGroup' => [
+        'id' => 'ID',
+        'code' => '群組代碼',
+        'title' => '群組名稱',
+        'options' => '群組設定',
+        'active' => '啟用狀態',
+        'editable' => '可否編輯',
+        'created_at' => '建立時間',
+        'updated_at' => '更新時間',
+    ],
+
+    'SiteParameterItem' => [
+        'id' => 'ID',
+        'group_id' => '參數群組',
+        'value' => '參數數值',
+        'label' => '參數名稱',
+        'options' => '參數設定',
+        'sort' => '排序',
+        'active' => '啟用狀態',
+        'created_at' => '建立時間',
+        'updated_at' => '更新時間',
     ],
 
     'NewsletterSchedule' => [

@@ -1,20 +1,26 @@
 <?php
 /**
  * @var string $id
+ * @var boolean $language
  * @var string $label
  * @var string $name
  * @var string $value
  * @var array $listData
  *
  * Options
- * @var bool $required
- * @var bool $inline
+ * @var boolean $required
+ * @var boolean $inline
  * @var string $color
  * @var string $hint
  */
 ?>
 <div class="form-group row">
-    <label class="col-sm-2 col-form-label">{{ $label }}{!! $required === true ? '<span class="text-danger ml-1">*</span>' : '' !!}</label>
+    <label class="col-sm-2 col-form-label">
+        @if($language)<i class="icon-globe"></i>@endif
+        {{ $label }}<!--
+        @if($required)--><span class="text-danger ml-1">*</span><!--@endif
+        -->
+    </label>
     <div class="col-sm-10">
     @if(array_key_exists($value, $listData))
         @foreach($listData as $listKey => $listItem)

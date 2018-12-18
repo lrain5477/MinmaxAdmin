@@ -19,7 +19,7 @@
             <div class="col-md-auto col text-center">
                 <div class="login-content text-center text-sm-left">
                     <h1 class="text-main h3">
-                        <span class="login-logo d-block d-sm-inline"><img class="mr-2 mb-3" src="{{ asset('static/admin/images/common/logo.png') }}"></span><!--
+                        <span class="login-logo d-block d-sm-inline"><img class="mr-2 mb-3" src="{{ asset('static/admin/images/common/logo.png') }}" alt="" /></span><!--
                         --><span class="ml-2 d-block d-sm-inline">{{ $webData->website_name }}</span>
                     </h1>
                     <form id="loginForm" class="login-form mt-4" method="post">
@@ -44,7 +44,7 @@
                                 <input class="form-control" type="text" id="login-captcha" autocomplete="off" name="captcha" required />
                             </div>
                             <div class="col-auto d-none d-md-block">
-                                <img src="{{ langRoute('admin.captcha', ['name' => 'login']) }}" id="captcha-img" style="width:100px;height:auto;cursor:pointer;">
+                                <img src="{{ langRoute('admin.captcha', ['name' => 'login']) }}" id="captcha-img" style="width:100px;height:auto;cursor:pointer;" alt="" />
                             </div>
                         </div>
                         <div class="row align-items-center mt-4">
@@ -95,9 +95,9 @@
     <div class="login-bg">
         <div class="swiper-container" id="login-swiper">
             <div class="swiper-wrapper">
-                <a class="swiper-slide imgFill"><img src="{{ asset('static/admin/images/demo/example/01.jpg') }}"></a>
-                <a class="swiper-slide imgFill"><img src="{{ asset('static/admin/images/demo/example/02.jpg') }}"></a>
-                <a class="swiper-slide imgFill"><img src="{{ asset('static/admin/images/demo/example/03.jpg') }}"></a>
+                <a class="swiper-slide imgFill"><img src="{{ asset('static/admin/images/demo/example/01.jpg') }}" alt="" /></a>
+                <a class="swiper-slide imgFill"><img src="{{ asset('static/admin/images/demo/example/02.jpg') }}" alt="" /></a>
+                <a class="swiper-slide imgFill"><img src="{{ asset('static/admin/images/demo/example/03.jpg') }}" alt="" /></a>
             </div>
         </div>
     </div>

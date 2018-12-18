@@ -16,7 +16,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property \Illuminate\Support\Carbon $created_at
  * @property \Illuminate\Support\Carbon $updated_at
  * @property WorldCountry $worldCountry
- * @property \Illuminate\Database\Eloquent\Collection|WorldCounty $worldCounties
+ * @property \Illuminate\Database\Eloquent\Collection|WorldCounty[] $worldCounties
  */
 class WorldState extends Model
 {

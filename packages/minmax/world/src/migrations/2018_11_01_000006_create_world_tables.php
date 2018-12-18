@@ -103,6 +103,22 @@ class CreateWorldTables extends Migration
                 ->onUpdate('cascade')->onDelete('cascade');
         });
 
+        // 貨幣
+        Schema::create('world_currency', function (Blueprint $table) {
+            $table->increments('id');
+            $table->string('title', 128)->comment('貨幣名稱');
+            $table->string('code', 16)->comment('貨幣代碼');
+            $table->string('name')->comment('顯示文字');
+            $table->json('options')->comment('貨幣設定');
+            $table->unsignedInteger('sort')->default(1)->comment('排序');
+            $table->boolean('active')->default(true)->comment('狀態');
+            $table->timestamps();
+        });
+
+        Schema::table('world_language', function (Blueprint $table) {
+            $table->unsignedInteger('currency_id')->default(1)->after('options')->comment('貨幣ID');
+        });
+
         // 建立預設資料
         $this->insertDatabase();
     }
@@ -114,6 +130,11 @@ class CreateWorldTables extends Migration
      */
     public function down()
     {
+        Schema::table('world_language', function (Blueprint $table) {
+            $table->dropColumn('currency_id');
+        });
+
+        Schema::dropIfExists('world_currency');
         Schema::dropIfExists('world_bank');
         Schema::dropIfExists('world_city');
         Schema::dropIfExists('world_county');
@@ -259,6 +280,29 @@ class CreateWorldTables extends Migration
             ['name' => 'Miaoli County'], ['name' => 'Taichung City'], ['name' => 'Changhua County'], ['name' => 'Nantou County'], [' Name' => 'Yunlin County'], ['name' => 'Chiayi City'],
             ['name' => 'Chiayi County'], ['name' => 'Tainan City'], ['name' => 'Kaohsiung City'], ['name' => 'Pingdong County'], [ 'name' => 'Taitong County'], ['name' => 'Hualien County'],
             ['name' => 'Yilan County'], ['name' => 'Wuhu County'], ['name' => 'Jinmen County'], ['name' => 'Lianjiang County']
+        ], 4));
+
+        // 全球化 - 貨幣
+        $worldCurrencyData = [
+            ['title' => '新臺幣', 'code' => 'TWD', 'name' => 'world_currency.name.1', 'options' => json_encode(['symbol' => 'NT$', 'native' => 'NTD', 'exchange' => 1.00]), 'created_at' => $timestamp, 'updated_at' => $timestamp],
+            ['title' => '人民幣', 'code' => 'CNY', 'name' => 'world_currency.name.2', 'options' => json_encode(['symbol' => '¥', 'native' => 'RMB', 'exchange' => 0.223905399]), 'created_at' => $timestamp, 'updated_at' => $timestamp],
+            ['title' => '美元', 'code' => 'USD', 'name' => 'world_currency.name.3', 'options' => json_encode(['symbol' => '$', 'native' => 'USD', 'exchange' => 0.032473]), 'created_at' => $timestamp, 'updated_at' => $timestamp],
+        ];
+
+        DB::table('world_currency')->insert($worldCurrencyData);
+
+        // 多語系
+        $languageResourceData = array_merge($languageResourceData, SeederHelper::getLanguageResourceArray('world_currency', [
+            ['name' => '新臺幣'], ['name' => '人民幣'], ['name' => '美元']
+        ], 1));
+        $languageResourceData = array_merge($languageResourceData, SeederHelper::getLanguageResourceArray('world_currency', [
+            ['name' => '新台币'], ['name' => '人民币'], ['name' => '美元']
+        ], 2));
+        $languageResourceData = array_merge($languageResourceData, SeederHelper::getLanguageResourceArray('world_currency', [
+            ['name' => '台湾元'], ['name' => '人民元'], ['name' => '米ドル']
+        ], 3));
+        $languageResourceData = array_merge($languageResourceData, SeederHelper::getLanguageResourceArray('world_currency', [
+            ['name' => 'New Taiwan dollar'], ['name' => 'Renminbi'], ['name' => 'US dollar']
         ], 4));
 
         DB::table('language_resource')->insert($languageResourceData);

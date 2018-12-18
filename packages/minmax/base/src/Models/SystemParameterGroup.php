@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $code
  * @property string $title
  * @property array $options
- * @property integer $active
+ * @property boolean $active
  * @property \Illuminate\Database\Eloquent\Collection|SystemParameterItem[] $systemParameterItems
  */
 class SystemParameterGroup extends Model
@@ -19,6 +19,7 @@ class SystemParameterGroup extends Model
     protected $guarded = [];
     protected $casts = [
         'options' => 'array',
+        'active' => 'boolean',
     ];
 
     public $timestamps = false;

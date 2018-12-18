@@ -31,8 +31,8 @@ class GoogleAnalyticsClient
     public function __construct()
     {
         $this->guard = 'admin';
-        $this->setService(config('analytics.service_account_credentials_json'));
-        $this->setViewId(config('analytics.view_id'));
+        $this->setService(config('services.google_analytics.service_account_credentials_json'));
+        $this->setViewId(config('services.google_analytics.view_id'));
     }
 
     /**
@@ -164,7 +164,7 @@ class GoogleAnalyticsClient
      */
     public function getPercentNewSessions($days = 30, $decimals = 2)
     {
-        $response = Cache::remember("percentNewSessions{$days}", config('analytics.cache_lifetime_in_minutes'), function() use ($days) {
+        $response = Cache::remember("percentNewSessions{$days}", config('services.google_analytics.cache_lifetime_in_minutes'), function() use ($days) {
             return $this->query('ga', [
                 'startTime' => strtotime("-{$days} days"),
                 'endTime' => time(),
@@ -182,7 +182,7 @@ class GoogleAnalyticsClient
      */
     public function getPageViewsPerSession($days = 30, $decimals = 2)
     {
-        $response = Cache::remember("pageViewsPerSession{$days}", config('analytics.cache_lifetime_in_minutes'), function() use ($days) {
+        $response = Cache::remember("pageViewsPerSession{$days}", config('services.google_analytics.cache_lifetime_in_minutes'), function() use ($days) {
             return $this->query('ga', [
                 'startTime' => strtotime("-{$days} days"),
                 'endTime' => time(),
@@ -199,7 +199,7 @@ class GoogleAnalyticsClient
      */
     public function getAvgTimeOnPage($days = 30)
     {
-        $response = Cache::remember("avgTimeOnPage{$days}", config('analytics.cache_lifetime_in_minutes'), function() use ($days) {
+        $response = Cache::remember("avgTimeOnPage{$days}", config('services.google_analytics.cache_lifetime_in_minutes'), function() use ($days) {
             return $this->query('ga', [
                 'startTime' => strtotime("-{$days} days"),
                 'endTime' => time(),
@@ -217,7 +217,7 @@ class GoogleAnalyticsClient
      */
     public function getExitRate($days = 30, $decimals = 2)
     {
-        $response = Cache::remember("exitRate{$days}", config('analytics.cache_lifetime_in_minutes'), function() use ($days) {
+        $response = Cache::remember("exitRate{$days}", config('services.google_analytics.cache_lifetime_in_minutes'), function() use ($days) {
             return $this->query('ga', [
                 'startTime' => strtotime("-{$days} days"),
                 'endTime' => time(),
@@ -235,7 +235,7 @@ class GoogleAnalyticsClient
      */
     public function getTopBrowsers($days = 30, $maxResults = 3)
     {
-        $response = Cache::remember("topBrowsers{$days}", config('analytics.cache_lifetime_in_minutes'), function() use ($days) {
+        $response = Cache::remember("topBrowsers{$days}", config('services.google_analytics.cache_lifetime_in_minutes'), function() use ($days) {
             return $this->query('ga', [
                 'startTime' => strtotime("-{$days} days"),
                 'endTime' => time(),
@@ -306,7 +306,7 @@ class GoogleAnalyticsClient
      */
     public function getSourceMedium($days = 30)
     {
-        $response = Cache::remember("sourceMedium{$days}", config('analytics.cache_lifetime_in_minutes'), function () use ($days) {
+        $response = Cache::remember("sourceMedium{$days}", config('services.google_analytics.cache_lifetime_in_minutes'), function () use ($days) {
             return $this->query('ga', [
                 'startTime' => strtotime("-{$days} days"),
                 'endTime' => time(),
@@ -358,7 +358,7 @@ class GoogleAnalyticsClient
      */
     public function putSourceMedium($days = 30)
     {
-        $response = Cache::remember("sourceMedium{$days}", config('analytics.cache_lifetime_in_minutes'), function () use ($days) {
+        $response = Cache::remember("sourceMedium{$days}", config('services.google_analytics.cache_lifetime_in_minutes'), function () use ($days) {
             return $this->query('ga', [
                 'startTime' => strtotime("-{$days} days"),
                 'endTime' => time(),
@@ -408,7 +408,7 @@ class GoogleAnalyticsClient
     public function putWeekSourceMedium()
     {
         if(! Cache::has("weekSourceMedium")) {
-            $response = Cache::remember("weekSourceMedium", config('analytics.cache_lifetime_in_minutes'), function () {
+            $response = Cache::remember("weekSourceMedium", config('services.google_analytics.cache_lifetime_in_minutes'), function () {
                 return $this->query('ga', [
                     'startTime' => strtotime("-6 days"),
                     'endTime' => time(),
@@ -498,7 +498,7 @@ class GoogleAnalyticsClient
     public function putSourceCountry($days = 30)
     {
         if(! Cache::has("sourceCountry{$days}")) {
-            $response = Cache::remember("sourceCountry{$days}", config('analytics.cache_lifetime_in_minutes'), function () use ($days) {
+            $response = Cache::remember("sourceCountry{$days}", config('services.google_analytics.cache_lifetime_in_minutes'), function () use ($days) {
                 return $this->query('ga', [
                     'startTime' => strtotime("-{$days} days"),
                     'endTime' => time(),

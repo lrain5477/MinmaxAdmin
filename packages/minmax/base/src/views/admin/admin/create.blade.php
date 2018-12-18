@@ -9,13 +9,13 @@
 @extends('MinmaxBase::admin.layouts.page.create')
 
 @section('action-buttons')
-@if($adminData->can('adminShow'))
-<div class="float-right">
-    <a class="btn btn-sm btn-light" href="{{ langRoute("admin.{$pageData->uri}.index") }}" title="@lang('MinmaxBase::admin.form.back_list')">
-        <i class="icon-undo2"></i><span class="ml-1 d-none d-md-inline-block">@lang('MinmaxBase::admin.form.back_list')</span>
-    </a>
-</div>
-@endif
+    @component('MinmaxBase::admin.layouts.right-links')
+        @if($adminData->can('adminShow'))
+        <a class="btn btn-sm btn-light" href="{{ langRoute("admin.{$pageData->uri}.index") }}" title="@lang('MinmaxBase::admin.form.back_list')">
+            <i class="icon-undo2"></i><span class="ml-1 d-none d-md-inline-block">@lang('MinmaxBase::admin.form.back_list')</span>
+        </a>
+        @endif
+    @endcomponent
 @endsection
 
 @section('forms')

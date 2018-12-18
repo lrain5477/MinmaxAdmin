@@ -18,4 +18,8 @@ class Firewall extends Model
 {
     protected $table = 'firewall';
     protected $guarded = [];
+    protected $casts = [
+        'rule' => 'boolean',
+        'active' => 'boolean',
+    ];
 }

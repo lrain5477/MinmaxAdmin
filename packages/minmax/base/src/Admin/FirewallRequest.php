@@ -41,7 +41,6 @@ class FirewallRequest extends FormRequest
             case 'POST':
             default:
                 return [
-                    'Firewall.guard' => 'required|in:admin,web',
                     'Firewall.ip' => 'required|ip',
                     'Firewall.rule' => 'required|boolean',
                     'Firewall.active' => 'required|boolean',
@@ -57,7 +56,6 @@ class FirewallRequest extends FormRequest
     public function attributes()
     {
         return [
-            'Firewall.guard' => __('MinmaxBase::models.Firewall.guard'),
             'Firewall.ip' => __('MinmaxBase::models.Firewall.ip'),
             'Firewall.rule' => __('MinmaxBase::models.Firewall.rule'),
             'Firewall.active' => __('MinmaxBase::models.Firewall.active'),

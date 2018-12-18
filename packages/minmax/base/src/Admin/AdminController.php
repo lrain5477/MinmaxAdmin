@@ -6,9 +6,9 @@ class AdminController extends Controller
 {
     protected $packagePrefix = 'MinmaxBase::';
 
-    public function __construct(AdminRepository $adminRepository)
+    public function __construct(AdminRepository $repository)
     {
-        $this->modelRepository = $adminRepository;
+        $this->modelRepository = $repository;
 
         parent::__construct();
     }

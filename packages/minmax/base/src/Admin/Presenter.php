@@ -2,7 +2,10 @@
 
 namespace Minmax\Base\Admin;
 
-class Presenter
+/**
+ * Abstract class Presenter
+ */
+abstract class Presenter
 {
     /**
      * @var string $packagePrefix
@@ -10,9 +13,19 @@ class Presenter
     protected $packagePrefix = '';
 
     /**
+     * @var string $uri
+     */
+    protected $uri = '';
+
+    /**
      * @var array $parameterSet
      */
     protected $parameterSet = [];
+
+    /**
+     * @var array $permissionSet
+     */
+    protected $permissionSet = [];
 
     /**
      * @var array $languageColumns
@@ -30,6 +43,47 @@ class Presenter
     public function __construct()
     {
         $this->currentLanguage = session('admin-formLocal', app()->getLocale());
+    }
+
+    /**
+     * @param  string $uri
+     * @return void
+     */
+    public function setUri($uri)
+    {
+        $this->uri = $uri;
+    }
+
+    /**
+     * @param  array $permissions
+     * @param  string|array $except
+     * @return void
+     */
+    public function setPermissions($permissions, $except = null)
+    {
+        $this->permissionSet = [];
+
+        if (! is_null($except)) {
+            $permissions = array_except($permissions, array_wrap($except));
+        }
+
+        foreach ($permissions as $key => $permission) {
+            if(request()->user('admin')->can($permission)) {
+                $this->permissionSet[] = $key;
+            }
+        }
+    }
+
+    /**
+     * @param  string $value
+     * @param  bool $transLineBreak
+     * @return string
+     */
+    public function getPureString($value, $transLineBreak = true)
+    {
+        return $transLineBreak
+            ? nl2br(trim(strip_tags($value)))
+            : trim(strip_tags($value));
     }
 
     /**
@@ -55,15 +109,229 @@ class Presenter
     }
 
     /**
-     * @param  string $value
-     * @param  bool $transLineBreak
+     * @param  \Illuminate\Database\Eloquent\Model $model
+     * @param  string $column
+     * @param  array $options
      * @return string
      */
-    public function getPureString($value, $transLineBreak = true)
+    public function getGridText($model, $column, $options = [])
     {
-        return $transLineBreak
-            ? nl2br(trim(strip_tags($value)))
-            : trim(strip_tags($value));
+        $columnValue = $model->getAttribute($column) ?? '';
+
+        if ($subColumn = array_get($options, 'subColumn')) {
+            $value = is_array($columnValue) ? array_get($columnValue, $subColumn, '') : '';
+        } else {
+            $value = $columnValue;
+        }
+
+        return $this->getPureString($value, array_get($options, 'nl2br', true));
+    }
+
+    /**
+     * @param  \Illuminate\Database\Eloquent\Model $model
+     * @param  string $column
+     * @param  array $options
+     * @return string
+     */
+    public function getGridTextBadge($model, $column, $options = [])
+    {
+        $columnValue = $model->getAttribute($column) ?? '';
+
+        if ($subColumn = array_get($options, 'subColumn')) {
+            $value = is_array($columnValue) ? array_get($columnValue, $subColumn, '') : '';
+            $parameter = array_get($this->parameterSet, "{$column}.{$subColumn}.{$value}");
+        } else {
+            $value = $columnValue;
+            $parameter = array_get($this->parameterSet, "{$column}.{$value}");
+        }
+
+        try {
+            return view('MinmaxBase::admin.layouts.grid.text-badge', [
+                    'value' => $value,
+                    'parameter' => $parameter,
+                ])
+                ->render();
+        } catch (\Throwable $e) {
+            return '';
+        }
+    }
+
+    /**
+     * @param  \Illuminate\Database\Eloquent\Model $model
+     * @param  string $column
+     * @param  array $options
+     * @return string
+     */
+    public function getGridThumbnail($model, $column, $options = [])
+    {
+        $columnValue = $model->getAttribute($column) ?? [];
+
+        if ($subColumn = array_get($options, 'subColumn')) {
+            $value = is_array($columnValue) ? array_get($columnValue, $subColumn, []) : [];
+        } else {
+            $value = $columnValue;
+        }
+
+        try {
+            return view('MinmaxBase::admin.layouts.grid.thumbnail', [
+                    'value' => array_get($value, 'path', ''),
+                    'alt' => array_get($value, array_get($options, 'alt', ''), ''),
+                    'size' => array_get($options, 'size', 120),
+                ])
+                ->render();
+        } catch (\Throwable $e) {
+            return '';
+        }
+    }
+
+    /**
+     * @param  \Illuminate\Database\Eloquent\Model $model
+     * @return string
+     */
+    public function getGridCheckBox($model)
+    {
+        $id = $model->getKey();
+
+        if (in_array('U',  $this->permissionSet)) {
+            try {
+                return view('MinmaxBase::admin.layouts.grid.checkbox', [
+                        'id' => $id
+                    ])
+                    ->render();
+            } catch (\Throwable $e) {
+                return '';
+            }
+        } else {
+            return '';
+        }
+    }
+
+    /**
+     * @param  \Illuminate\Database\Eloquent\Model $model
+     * @param  string $column
+     * @param  array $options
+     * @return string
+     */
+    public function getGridSort($model, $column, $options = [])
+    {
+        $columnValue = $model->getAttribute($column) ?? '';
+
+        if ($subColumn = array_get($options, 'subColumn')) {
+            $value = is_array($columnValue) ? array_get($columnValue, $subColumn, '') : '';
+        } else {
+            $value = $columnValue;
+        }
+
+        if (in_array('U',  $this->permissionSet)) {
+            try {
+                return view('MinmaxBase::admin.layouts.grid.sort', [
+                        'id' => $model->getKey(),
+                        'column' => $column,
+                        'value' => $value,
+                        'uri' => $this->uri,
+                    ])
+                    ->render();
+            } catch (\Throwable $e) {
+                return '';
+            }
+        } else {
+            return $value;
+        }
+    }
+
+    /**
+     * @param  \Illuminate\Database\Eloquent\Model $model
+     * @param  string $column
+     * @param  array $options
+     * @return string
+     */
+    public function getGridSwitch($model, $column, $options = [])
+    {
+        $columnValue = $model->getAttribute($column) ?? '';
+
+        if ($subColumn = array_get($options, 'subColumn')) {
+            $value = is_array($columnValue) ? array_get($columnValue, $subColumn, '') : '';
+            $value = is_bool($value) ? intval($value) : $value;
+            $parameter = array_get($this->parameterSet, "{$column}.{$subColumn}.{$value}");
+        } else {
+            $value = is_bool($columnValue) ? intval($columnValue) : $columnValue;
+            $parameter = array_get($this->parameterSet, "{$column}.{$value}");
+        }
+
+        if(in_array('U',  $this->permissionSet)) {
+            try {
+                return view('MinmaxBase::admin.layouts.grid.switch', [
+                        'id' => $model->getKey(),
+                        'column' => $column,
+                        'value' => $value,
+                        'uri' => $this->uri,
+                        'parameter' => $parameter,
+                    ])
+                    ->render();
+            } catch (\Throwable $e) {
+                return '';
+            }
+        } else {
+            return array_get($parameter, 'title', '');
+        }
+    }
+
+    /**
+     * @param  \Illuminate\Database\Eloquent\Model $model
+     * @param  array $additional will format as ['permission' => 'R', 'view' => 'xxx']
+     * @return string
+     */
+    public function getGridActions($model, $additional = [])
+    {
+        $id = $model->getKey();
+
+        $result = '';
+
+        try {
+            if (in_array('R', $this->permissionSet)) {
+                $result .= view('MinmaxBase::admin.layouts.grid.action-button-show', ['id' => $id, 'uri' => $this->uri])->render();
+            }
+
+            if (in_array('U', $this->permissionSet)) {
+                $result .= view('MinmaxBase::admin.layouts.grid.action-button-edit', ['id' => $id, 'uri' => $this->uri])->render();
+            }
+
+            foreach ($additional as $viewItem) {
+                if (in_array(array_get($viewItem, 'permission', ''), $this->permissionSet)) {
+                    $result .= view(array_get($viewItem, 'view', ''), ['id' => $id, 'uri' => $this->uri])->render();
+                }
+            }
+
+            if (in_array('D', $this->permissionSet)) {
+                $result .= view('MinmaxBase::admin.layouts.grid.action-button-destroy', ['id' => $id, 'uri' => $this->uri])->render();
+            }
+        } catch (\Throwable $e) {
+            $result = '';
+        }
+
+        return $result;
+    }
+
+    /**
+     * @param  string $column
+     * @param  string $name
+     * @param  array $options
+     * @return string
+     */
+    public function getFilterSelection($column, $name, $options = [])
+    {
+        try {
+            return view('MinmaxBase::admin.layouts.grid.filter-selection', [
+                    'name' => $name,
+                    'column' => $column,
+                    'emptyLabel' => array_get($options, 'emptyLabel', 'All'),
+                    'parameters' => array_get($this->parameterSet, $column),
+                    'current' => array_get($options, 'current', ''),
+                ])
+                ->render();
+        } catch (\Throwable $e) {
+            return '';
+        }
     }
 
     /**
@@ -89,6 +357,7 @@ class Presenter
 
         $componentData = [
             'id' => $fieldId,
+            'language' => in_array($column, $this->languageColumns),
             'label' => $fieldLabel,
             'value' => $this->getPureString($fieldValue),
         ];
@@ -119,6 +388,7 @@ class Presenter
 
         $componentData = [
             'id' => $fieldId,
+            'language' => in_array($column, $this->languageColumns),
             'label' => $fieldLabel,
             'value' => $fieldValue,
             'size' => array_get($options, 'size', 10),
@@ -154,6 +424,7 @@ class Presenter
 
         $componentData = [
             'id' => $fieldId,
+            'language' => in_array($column, $this->languageColumns),
             'label' => $fieldLabel,
             'value' => $fieldDisplay,
         ];
@@ -200,6 +471,7 @@ class Presenter
 
         $componentData = [
             'id' => $fieldId,
+            'language' => in_array($column, $this->languageColumns),
             'label' => $fieldLabel,
             'value' => $fieldDisplay,
         ];
@@ -230,6 +502,7 @@ class Presenter
 
         $componentData = [
             'id' => $fieldId,
+            'language' => in_array($column, $this->languageColumns),
             'label' => $fieldLabel,
             'images' => $fieldValue,
             'additionalFields' => array_get($options, 'additional', []),
@@ -261,6 +534,7 @@ class Presenter
 
         $componentData = [
             'id' => $fieldId,
+            'language' => in_array($column, $this->languageColumns),
             'label' => $fieldLabel,
             'value' => $fieldValue,
             'plaintText' => array_get($options, 'plaintText', false),
@@ -300,6 +574,7 @@ class Presenter
 
         $componentData = [
             'id' => $fieldId,
+            'language' => in_array($column, $this->languageColumns),
             'label' => $fieldLabel,
             'name' => $fieldName,
             'value' => $fieldValue,
@@ -344,6 +619,7 @@ class Presenter
 
         $componentData = [
             'id' => $fieldId,
+            'language' => in_array($column, $this->languageColumns),
             'label' => $fieldLabel,
             'name' => $fieldName,
             'value' => $fieldValue,
@@ -388,6 +664,7 @@ class Presenter
 
         $componentData = [
             'id' => $fieldId,
+            'language' => in_array($column, $this->languageColumns),
             'label' => $fieldLabel,
             'name' => $fieldName,
             'value' => $fieldValue,
@@ -429,6 +706,7 @@ class Presenter
 
         $componentData = [
             'id' => $fieldId,
+            'language' => in_array($column, $this->languageColumns),
             'label' => $fieldLabel,
             'name' => $fieldName,
             'required' => array_get($options, 'required', false),
@@ -505,6 +783,7 @@ class Presenter
 
         $componentData = [
             'id' => $fieldId,
+            'language' => in_array($column, $this->languageColumns),
             'label' => $fieldLabel,
             'name' => $fieldName,
             'value' => $fieldValue,
@@ -550,6 +829,7 @@ class Presenter
 
         $componentData = [
             'id' => $fieldId,
+            'language' => in_array($column, $this->languageColumns),
             'label' => $fieldLabel,
             'name' => $fieldName,
             'value' => $fieldValue,
@@ -594,6 +874,7 @@ class Presenter
 
         $componentData = [
             'id' => $fieldId,
+            'language' => in_array($column, $this->languageColumns),
             'label' => $fieldLabel,
             'name' => $fieldName,
             'value' => $fieldValue,
@@ -641,6 +922,7 @@ class Presenter
 
         $componentData = [
             'id' => $fieldId,
+            'language' => in_array($column, $this->languageColumns),
             'label' => $fieldLabel,
             'name' => $fieldName,
             'value' => $fieldValue,
@@ -692,6 +974,7 @@ class Presenter
 
         $componentData = [
             'id' => $fieldId,
+            'language' => in_array($column, $this->languageColumns),
             'label' => $fieldLabel,
             'name' => $fieldName,
             'values' => $fieldValue,
@@ -743,6 +1026,7 @@ class Presenter
 
         $componentData = [
             'id' => $fieldId,
+            'language' => in_array($column, $this->languageColumns),
             'label' => $fieldLabel,
             'name' => $fieldName,
             'value' => $fieldValue,
@@ -793,6 +1077,7 @@ class Presenter
 
         $componentData = [
             'id' => $fieldId,
+            'language' => in_array($column, $this->languageColumns),
             'label' => $fieldLabel,
             'name' => $fieldName,
             'value' => $fieldValue,
@@ -851,6 +1136,7 @@ class Presenter
 
         $componentData = [
             'id' => $fieldId,
+            'language' => in_array($column, $this->languageColumns),
             'label' => $fieldLabel,
             'name' => $fieldName,
             'required' => array_get($options, 'required', false),
@@ -909,6 +1195,7 @@ class Presenter
 
         $componentData = [
             'id' => $fieldId,
+            'language' => in_array($column, $this->languageColumns),
             'label' => $fieldLabel,
             'name' => $fieldName,
             'required' => array_get($options, 'required', false),
@@ -961,6 +1248,7 @@ class Presenter
 
         $componentData = [
             'id' => $fieldId,
+            'language' => in_array($column, $this->languageColumns),
             'label' => $fieldLabel,
             'name' => $fieldName,
             'required' => array_get($options, 'required', false),

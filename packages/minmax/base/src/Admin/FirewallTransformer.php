@@ -14,30 +14,28 @@ class FirewallTransformer extends Transformer
 
     /**
      * Transformer constructor. Put action permissions.
-     * @param string $uri
+     * @param  WorldContinentPresenter $presenter
+     * @param  string $uri
      */
-    public function __construct($uri)
+    public function __construct(WorldContinentPresenter $presenter, $uri)
     {
-        parent::__construct($uri);
+        $this->presenter = $presenter;
 
-        $this->parameterSet = [
-            'rule' => systemParam('rule'),
-            'active' => systemParam('active'),
-        ];
+        parent::__construct($uri);
     }
 
     /**
-     * @param Firewall $model
+     * @param  Firewall $model
      * @return array
      * @throws \Throwable
      */
     public function transform(Firewall $model)
     {
         return [
-            'ip' => $this->getGridText($model->ip),
-            'rule' => $this->getGridSwitch($model->id, 'rule', $model->rule),
-            'active' => $this->getGridSwitch($model->id, 'active', $model->active),
-            'action' => $this->getGridActions($model->id),
+            'ip' => $this->presenter->getGridText($model, 'ip'),
+            'rule' => $this->presenter->getGridSwitch($model, 'rule'),
+            'active' => $this->presenter->getGridSwitch($model, 'active'),
+            'action' => $this->presenter->getGridActions($model),
         ];
     }
 }

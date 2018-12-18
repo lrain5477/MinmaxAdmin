@@ -9,19 +9,17 @@
 @extends('MinmaxBase::admin.layouts.page.create')
 
 @section('action-buttons')
-@if($adminData->can('firewallShow'))
-<div class="float-right">
-    <a class="btn btn-sm btn-light" href="{{ langRoute("admin.{$pageData->uri}.index") }}" title="@lang('MinmaxBase::admin.form.back_list')">
-        <i class="icon-undo2"></i><span class="ml-1 d-none d-md-inline-block">@lang('MinmaxBase::admin.form.back_list')</span>
-    </a>
-</div>
-@endif
+    @component('MinmaxBase::admin.layouts.right-links')
+        @if($adminData->can('firewallShow'))
+        <a class="btn btn-sm btn-light" href="{{ langRoute("admin.{$pageData->uri}.index") }}" title="@lang('MinmaxBase::admin.form.back_list')">
+            <i class="icon-undo2"></i><span class="ml-1 d-none d-md-inline-block">@lang('MinmaxBase::admin.form.back_list')</span>
+        </a>
+        @endif
+    @endcomponent
 @endsection
 
 @section('forms')
     @inject('modelPresenter', 'Minmax\Base\Admin\FirewallPresenter')
-
-    {!! $modelPresenter->getFieldHidden($formData, 'guard', ['defaultValue' => 'admin']) !!}
 
     <fieldset id="baseFieldSet">
         <legend class="legend h6 mb-4"><i class="icon-angle-double-down2 mr-2"></i>@lang('MinmaxBase::admin.form.fieldSet.default')</legend>

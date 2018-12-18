@@ -35,8 +35,6 @@ class AdminRepository extends Repository
     {
         $this->beforeCreate();
 
-        $attributes['password'] = \Hash::make('123456');
-
         $roleSelected = array_pull($attributes, 'role_id', []);
 
         $model = $this->serialization($attributes);
@@ -85,8 +83,8 @@ class AdminRepository extends Repository
             }
         }
 
-        if (count($this->languageBuffer) > 0) {
-            $attributes['updated_at'] = date('Y-m-d H:i:s');
+        if (count($this->languageBuffer) > 0 && !is_null(static::UPDATED_AT)) {
+            $attributes[static::UPDATED_AT] = date('Y-m-d H:i:s');
         }
 
         $model->fill($attributes);
@@ -133,5 +131,44 @@ class AdminRepository extends Repository
             \DB::rollBack();
             return false;
         }
+    }
+
+    /**
+     * Serialize input attributes to a new model
+     *
+     * @param  array $attributes
+     * @return \Illuminate\Database\Eloquent\Model
+     */
+    protected function serialization(array $attributes)
+    {
+        $this->clearLanguageBuffer();
+
+        $model = static::MODEL;
+        /** @var \Illuminate\Database\Eloquent\Model $model */
+        $model = new $model();
+
+        $primaryKey = $model->incrementing ? null : uuidl();
+
+        if (!$model->incrementing) {
+            $model->setAttribute($model->getKeyName(), $primaryKey);
+        }
+
+        if ($this->hasSort && array_key_exists('sort', $attributes)) {
+            if (is_null($attributes['sort']) || $attributes['sort'] < 1) {
+                $attributes['sort'] = 1;
+            }
+        }
+
+        foreach ($attributes as $column => $value) {
+            if (in_array($column, $this->languageColumns)) {
+                $model->setAttribute($column, $this->exchangeLanguage($attributes, $column, $primaryKey));
+            } else {
+                $model->setAttribute($column, $value);
+            }
+        }
+
+        $model->setAttribute('password', \Hash::make('123456'));
+
+        return $model;
     }
 }

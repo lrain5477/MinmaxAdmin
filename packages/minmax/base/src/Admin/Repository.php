@@ -9,11 +9,29 @@ use Closure;
  */
 abstract class Repository
 {
+    /**
+     * You must set which model using.
+     */
     const MODEL = null;
 
+    /**
+     * If doesn't have update timestamp column, please set null.
+     */
+    const UPDATED_AT = 'updated_at';
+
+    /**
+     * @var bool $hasSort
+     */
     protected $hasSort = false;
 
+    /**
+     * @var array $languageColumns
+     */
     protected $languageColumns = [];
+
+    /**
+     * @var array $languageBuffer
+     */
     protected $languageBuffer = [];
 
     /**
@@ -129,8 +147,8 @@ abstract class Repository
             }
         }
 
-        if (count($this->languageBuffer) > 0) {
-            $attributes['updated_at'] = date('Y-m-d H:i:s');
+        if (count($this->languageBuffer) > 0 && !is_null(static::UPDATED_AT)) {
+            $attributes[static::UPDATED_AT] = date('Y-m-d H:i:s');
         }
 
         $model->fill($attributes);

@@ -33,6 +33,7 @@ class AdminPresenter extends Presenter
     {
         return view('MinmaxBase::admin.layouts.form.multi-select', [
             'id' => 'Admin-role_id',
+            'language' => false,
             'label' => __('MinmaxBase::models.Admin.role_id'),
             'name' => 'Admin[role_id][]',
             'values' => $model->roles->pluck('id')->toArray(),

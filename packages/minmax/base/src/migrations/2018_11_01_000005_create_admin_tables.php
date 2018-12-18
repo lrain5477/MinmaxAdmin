@@ -103,9 +103,12 @@ class CreateAdminTables extends Migration
         $permissionsData = array_merge($permissionsData, SeederHelper::getPermissionArray('admin', 'webData', '網站基本資訊', ['U'], 302));
         $permissionsData = array_merge($permissionsData, SeederHelper::getPermissionArray('admin', 'admin', '管理員帳戶', 303));
         $permissionsData = array_merge($permissionsData, SeederHelper::getPermissionArray('admin', 'role', '群組管理', 304));
-        $permissionsData = array_merge($permissionsData, SeederHelper::getPermissionArray('admin', 'loginLog', '後臺登入紀錄', ['R'], 305));
-        $permissionsData = array_merge($permissionsData, SeederHelper::getPermissionArray('admin', 'systemLog', '後臺操作紀錄', ['R'], 306));
-        $permissionsData = array_merge($permissionsData, SeederHelper::getPermissionArray('admin', 'firewall', '防火牆', 307));
+        $permissionsData = array_merge($permissionsData, SeederHelper::getPermissionArray('admin', 'firewall', '防火牆', 305));
+        $permissionsData = array_merge($permissionsData, SeederHelper::getPermissionArray('admin', 'loginLog', '後臺登入紀錄', ['R'], 306));
+        $permissionsData = array_merge($permissionsData, SeederHelper::getPermissionArray('admin', 'systemLog', '後臺操作紀錄', ['R'], 307));
+        $permissionsData = array_merge($permissionsData, SeederHelper::getPermissionArray('admin', 'siteParameterItem', '參數項目管理', 391));
+        $permissionsData = array_merge($permissionsData, SeederHelper::getPermissionArray('admin', 'siteParameterGroup', '參數群組管理', 392));
+        $permissionsData = array_merge($permissionsData, SeederHelper::getPermissionArray('admin', 'editorTemplate', '編輯器模板管理', 393));
         DB::table('permissions')->insert($permissionsData);
 
         // 管理員選單 - 分類
@@ -284,14 +287,38 @@ class CreateAdminTables extends Migration
             [
                 'id' => $menuParentId4 = uuidl(),
                 'title' => '系統參數',
-                'uri' => 'root-parameter-control',
+                'uri' => 'control-parameter',
                 'controller' => null,
                 'model' => null,
                 'parent_id' => $menuClassId3,
                 'link' => null,
                 'icon' => 'icon-filter',
                 'permission_key' => null,
-                'sort' => 304, 'updated_at' => $timestamp, 'created_at' => $timestamp
+                'sort' => 305, 'updated_at' => $timestamp, 'created_at' => $timestamp
+            ],
+            [
+                'id' => uuidl(),
+                'title' => '參數項目',
+                'uri' => 'site-parameter-item',
+                'controller' => 'SiteParameterItemController',
+                'model' => 'SiteParameterItem',
+                'parent_id' => $menuParentId4,
+                'link' => 'site-parameter-item',
+                'icon' => null,
+                'permission_key' => 'siteParameterItemShow',
+                'sort' => 1, 'updated_at' => $timestamp, 'created_at' => $timestamp
+            ],
+            [
+                'id' => uuidl(),
+                'title' => '參數群組',
+                'uri' => 'site-parameter-group',
+                'controller' => 'SiteParameterGroupController',
+                'model' => 'SiteParameterGroup',
+                'parent_id' => $menuParentId4,
+                'link' => 'site-parameter-group',
+                'icon' => null,
+                'permission_key' => 'siteParameterGroupShow',
+                'sort' => 2, 'updated_at' => $timestamp, 'created_at' => $timestamp
             ],
             [
                 'id' => uuidl(),
@@ -303,7 +330,7 @@ class CreateAdminTables extends Migration
                 'link' => 'editor-template',
                 'icon' => null,
                 'permission_key' => 'editorTemplateShow',
-                'sort' => 1, 'updated_at' => $timestamp, 'created_at' => $timestamp
+                'sort' => 3, 'updated_at' => $timestamp, 'created_at' => $timestamp
             ],
         ]);
         DB::table('admin_menu')->insert($adminMenuData);

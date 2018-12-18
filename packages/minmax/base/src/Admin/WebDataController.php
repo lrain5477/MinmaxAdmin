@@ -6,9 +6,9 @@ class WebDataController extends Controller
 {
     protected $packagePrefix = 'MinmaxBase::';
 
-    public function __construct(WebDataRepository $webDataRepository)
+    public function __construct(WebDataRepository $repository)
     {
-        $this->modelRepository = $webDataRepository;
+        $this->modelRepository = $repository;
 
         parent::__construct();
     }

@@ -122,6 +122,34 @@ Route::group([
             Route::get('login-log', 'LoginLogController@index')->name('login-log.index');
             Route::post('login-log/ajax/datatables', 'LoginLogController@ajaxDataTable')->name('login-log.ajaxDataTable');
 
+            /*
+             * SiteParameterGroup 參數群組
+             */
+            Route::get('site-parameter-group', 'SiteParameterGroupController@index')->name('site-parameter-group.index');
+            Route::post('site-parameter-group', 'SiteParameterGroupController@store')->name('site-parameter-group.store');
+            Route::get('site-parameter-group/create', 'SiteParameterGroupController@create')->name('site-parameter-group.create');
+            Route::get('site-parameter-group/{id}', 'SiteParameterGroupController@show')->name('site-parameter-group.show');
+            Route::put('site-parameter-group/{id}', 'SiteParameterGroupController@update')->name('site-parameter-group.update');
+            Route::delete('site-parameter-group/{id}', 'SiteParameterGroupController@destroy')->name('site-parameter-group.destroy');
+            Route::get('site-parameter-group/{id}/edit', 'SiteParameterGroupController@edit')->name('site-parameter-group.edit');
+            Route::post('site-parameter-group/ajax/datatables', 'SiteParameterGroupController@ajaxDataTable')->name('site-parameter-group.ajaxDataTable');
+            Route::patch('site-parameter-group/ajax/switch', 'SiteParameterGroupController@ajaxSwitch')->name('site-parameter-group.ajaxSwitch');
+            Route::patch('site-parameter-group/ajax/sort', 'SiteParameterGroupController@ajaxSort')->name('site-parameter-group.ajaxSort');
+
+            /*
+             * SiteParameterItem 參數項目
+             */
+            Route::get('site-parameter-item', 'SiteParameterItemController@index')->name('site-parameter-item.index');
+            Route::post('site-parameter-item', 'SiteParameterItemController@store')->name('site-parameter-item.store');
+            Route::get('site-parameter-item/create', 'SiteParameterItemController@create')->name('site-parameter-item.create');
+            Route::get('site-parameter-item/{id}', 'SiteParameterItemController@show')->name('site-parameter-item.show');
+            Route::put('site-parameter-item/{id}', 'SiteParameterItemController@update')->name('site-parameter-item.update');
+            Route::delete('site-parameter-item/{id}', 'SiteParameterItemController@destroy')->name('site-parameter-item.destroy');
+            Route::get('site-parameter-item/{id}/edit', 'SiteParameterItemController@edit')->name('site-parameter-item.edit');
+            Route::post('site-parameter-item/ajax/datatables', 'SiteParameterItemController@ajaxDataTable')->name('site-parameter-item.ajaxDataTable');
+            Route::patch('site-parameter-item/ajax/switch', 'SiteParameterItemController@ajaxSwitch')->name('site-parameter-item.ajaxSwitch');
+            Route::patch('site-parameter-item/ajax/sort', 'SiteParameterItemController@ajaxSort')->name('site-parameter-item.ajaxSort');
+
         });
 
     });

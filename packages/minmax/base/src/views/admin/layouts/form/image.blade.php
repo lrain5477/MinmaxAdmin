@@ -1,21 +1,26 @@
 <?php
 /**
  * @var string $id
+ * @var boolean $language
  * @var string $label
  * @var string $name
- * @var array $value
  * @var array $images
  * @var array $additionalFields
  *
  * Options
- * @var bool $required
+ * @var boolean $required
  * @var integer $limit
  * @var string $hint
  * @var string $lang
  */
 ?>
 <div class="form-group row">
-    <label class="col-sm-2 col-form-label" for="{{ $id }}">{{ $label }}{!! $required === true ? '<span class="text-danger ml-1">*</span>' : '' !!}</label>
+    <label class="col-sm-2 col-form-label" for="{{ $id }}">
+        @if($language)<i class="icon-globe"></i>@endif
+        {{ $label }}<!--
+        @if($required)--><span class="text-danger ml-1">*</span><!--@endif
+        -->
+    </label>
     <div class="col-sm-10">
         <input type="hidden" id="{{ $id }}" name="{{ $name }}" value="" {{ $required === true ? 'required' : '' }} {{ count($images) > 0 ? 'disabled' : '' }} />
         <button class="btn btn-secondary" type="button" data-target="#{{ $id }}-modal" data-toggle="modal"><i class="icon-pictures"> </i> @lang('MinmaxBase::admin.form.button.media_image')</button>
@@ -202,9 +207,9 @@
             change: function(event, div) { div.placeholder.css({visibility: 'visible', background: '#cc0000', opacity: 0.2}) },
             stop: function() {
                 $('#{{ $id }}-list .card').each(function() {
-                    let inputName = '{{ $name }}';
-                    let thisId = '{{ $id }}';
-                    let $this = $(this);
+                    var inputName = '{{ $name }}';
+                    var thisId = '{{ $id }}';
+                    var $this = $(this);
                     $('.card-path', $this).attr('name', inputName + '[' + $this.index() + '][path]');
 
                     @if(count($additionalFields) > 0)
@@ -229,8 +234,8 @@
             },
         }).disableSelection();
 
-        let selectLimit = parseInt('{{ $limit }}');
-        let elf_{{ str_replace('-', '_', $id) }} = $('#{{ $id }}-elfinder').elfinder({
+        var selectLimit = parseInt('{{ $limit }}');
+        var elf_{{ str_replace('-', '_', $id) }} = $('#{{ $id }}-elfinder').elfinder({
             lang: '{{ $lang }}',
             customData: {
                 _token: '{{ csrf_token() }}'
@@ -290,9 +295,9 @@
                 }
 
                 $('#{{ $id }}-list .card').each(function() {
-                    let inputName = '{{ $name }}';
-                    let thisId = '{{ $id }}';
-                    let $this = $(this);
+                    var inputName = '{{ $name }}';
+                    var thisId = '{{ $id }}';
+                    var $this = $(this);
                     $('.card-path', $this).attr('name', inputName + '[' + $this.index() + '][path]');
 
                     @if(count($additionalFields) > 0)
@@ -319,7 +324,7 @@
 
         {{-- 刪除圖片 --}}
         $('body').delegate('#{{ $id }}-list .delBtn', 'click', function(){
-            let $this = $(this);
+            var $this = $(this);
             swal({
                 title: "@lang('MinmaxBase::admin.form.elfinder.remove_title')",
                 text: "@lang('MinmaxBase::admin.form.elfinder.remove_text')",
@@ -333,9 +338,9 @@
                 $this.parents('.card').remove();
 
                 $('#{{ $id }}-list .card').each(function() {
-                    let inputName = '{{ $name }}';
-                    let thisId = '{{ $id }}';
-                    let $this = $(this);
+                    var inputName = '{{ $name }}';
+                    var thisId = '{{ $id }}';
+                    var $this = $(this);
                     $('.card-path', $this).attr('name', inputName + '[' + $this.index() + '][path]');
 
                     @if(count($additionalFields) > 0)

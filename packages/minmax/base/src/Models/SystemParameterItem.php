@@ -21,6 +21,7 @@ class SystemParameterItem extends Model
     protected $guarded = [];
     protected $casts = [
         'options' => 'array',
+        'active' => 'boolean',
     ];
 
     public $timestamps = false;

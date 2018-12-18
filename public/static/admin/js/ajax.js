@@ -36,11 +36,15 @@ $ajaxBody.delegate('#altBtn', 'click', function () {
 });
 
 //搜尋bar
-$ajaxBody.delegate('#sch_keyword', 'keyup', function () {
+$ajaxBody.on('keyup', '#sch_keyword', function () {
 	$(".datatables").DataTable().draw();
 });
 
-$ajaxBody.delegate('.sch_select', 'change', function () {
+$ajaxBody.on('change', '#sch_column', function () {
+	$(".datatables").DataTable().draw();
+});
+
+$ajaxBody.on('change', '.sch_select', function () {
 	$(".datatables").DataTable().draw();
 });
 

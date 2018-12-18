@@ -1,5 +1,26 @@
+<?php
+/**
+ * @var string $id
+ * @var boolean $language
+ * @var string $label
+ * @var string $name
+ * @var string $file
+ * @var string $filename
+ *
+ * Options
+ * @var boolean $required
+ * @var string $path
+ * @var integer $limit
+ * @var string $hint
+ */
+?>
 <div class="form-group row">
-    <label class="col-sm-2 col-form-label" for="{{ $id }}">{{ $label }}{!! $required === true ? '<span class="text-danger ml-1">*</span>' : '' !!}</label>
+    <label class="col-sm-2 col-form-label" for="{{ $id }}">
+        @if($language)<i class="icon-globe"></i>@endif
+        {{ $label }}<!--
+        @if($required)--><span class="text-danger ml-1">*</span><!--@endif
+        -->
+    </label>
 
     <div class="col-sm-10">
         <input type="hidden" name="{{ $name }}[path]" value="{{ $path }}">
@@ -23,10 +44,10 @@
 <div class="form-group row" id="{{ $id }}-list">
     <div class="col-sm-10 offset-sm-2">
         <div class="file-list">
-            @foreach(explode(config('app.separate_string'), $file) as $fileItem)
-                <div class="alert alert-info alert-dismissible fade show ui-sortable-handle" role="alert">
-                    {{ $fileItem }} <a href="{{ asset($fileItem) }}" class="alert-link" target="_blank"><i class="icon-popout"></i></a>
-                </div>
+            @foreach(explode(', ', $file) as $fileItem)
+            <div class="alert alert-info alert-dismissible fade show ui-sortable-handle" role="alert">
+                {{ $fileItem }} <a href="{{ asset($fileItem) }}" class="alert-link" target="_blank"><i class="icon-popout"></i></a>
+            </div>
             @endforeach
         </div>
     </div>

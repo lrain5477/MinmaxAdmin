@@ -3,17 +3,16 @@
 namespace Minmax\Base\Admin;
 
 use Minmax\Base\Models\GoogleAnalyticsClient;
-use Illuminate\Http\Request;
 
 class SiteController extends Controller
 {
     protected $gaClient;
 
-    public function __construct(Request $request, GoogleAnalyticsClient $gaClient)
+    public function __construct(GoogleAnalyticsClient $gaClient)
     {
-        parent::__construct($request);
-
         $this->gaClient = $gaClient;
+
+        parent::__construct();
     }
 
     /**

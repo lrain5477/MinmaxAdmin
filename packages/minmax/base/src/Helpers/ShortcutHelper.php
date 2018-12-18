@@ -223,7 +223,7 @@ if (! function_exists('systemParam')) {
                             ->where('active', true)
                             ->mapWithKeys(function ($item) {
                                 /** @var \Minmax\Base\Models\SystemParameterItem $item */
-                                return [$item->value => ['title' => $item->label, 'class' => $item->options['class'] ?? null]];
+                                return [$item->value => ['title' => $item->label, 'options' => $item->options]];
                             })
                     ];
                 })
@@ -231,6 +231,42 @@ if (! function_exists('systemParam')) {
         });
 
         if (count($params) == 0) Cache::forget("systemParams.{$langKey}");
+
+        return is_null($key) ? $params : array_get($params, $key, $key);
+    }
+}
+
+if (! function_exists('siteParam')) {
+    /**
+     * Get site parameter via key.
+     *
+     * @param  string  $key
+     * @param  string  $langKey
+     * @return string|array
+     */
+    function siteParam($key = null, $langKey = null)
+    {
+        $langKey = $langKey ?? app()->getLocale();
+
+        $params = Cache::rememberForever("siteParams.{$langKey}", function () {
+            return \Minmax\Base\Models\SiteParameterGroup::with('siteParameterItems')
+                ->where('active', true)
+                ->get()
+                ->mapWithKeys(function ($item) {
+                    /** @var \Minmax\Base\Models\SiteParameterGroup $item */
+                    return [
+                        $item->code => $item->siteParameterItems
+                            ->where('active', true)
+                            ->mapWithKeys(function ($item) {
+                                /** @var \Minmax\Base\Models\SiteParameterItem $item */
+                                return [$item->value => ['title' => $item->label, 'options' => $item->options]];
+                            })
+                    ];
+                })
+                ->toArray();
+        });
+
+        if (count($params) == 0) Cache::forget("siteParams.{$langKey}");
 
         return is_null($key) ? $params : array_get($params, $key, $key);
     }

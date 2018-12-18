@@ -13,8 +13,10 @@ class ServiceProvider extends BaseServiceProvider
      */
     public function boot()
     {
-        //$this->loadRoutesFrom(__DIR__ . '/routes/admin.php');
+        $this->loadRoutesFrom(__DIR__ . '/routes/admin.php');
         $this->loadMigrationsFrom(__DIR__ . '/migrations');
+        $this->loadTranslationsFrom(__DIR__ . '/translations', 'MinmaxWorld');
+        $this->loadViewsFrom(__DIR__.'/views', 'MinmaxWorld');
     }
 
     /**

@@ -4,10 +4,10 @@ namespace Minmax\Base\Admin;
 
 use Breadcrumbs;
 use Illuminate\Foundation\Bus\DispatchesJobs;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as BaseController;
-use Illuminate\Foundation\Validation\ValidatesRequests;
-use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Minmax\Base\Helpers\Log as LogHelper;
 use Minmax\Base\Helpers\Permission as PermissionHelper;
 use Yajra\DataTables\Facades\DataTables;
@@ -273,7 +273,7 @@ class Controller extends BaseController
     }
 
     /**
-     * Upload files and return new input set.
+     * Set datatable filter.
      *
      * @param  mixed $datatables
      * @param  Request $request
@@ -441,7 +441,6 @@ class Controller extends BaseController
     {
         $this->checkPermissionEdit();
 
-        $this->viewData['formDataId'] = $id;
         $this->viewData['formData'] = $this->modelRepository->find($id) ?? abort(404);
 
         $this->setCustomViewDataEdit();
@@ -559,9 +558,9 @@ class Controller extends BaseController
                 LogHelper::system('admin', $request->path(), $request->method(), $inputSet['id'], $this->adminData->username, 1, __('MinmaxBase::admin.form.message.edit_success'));
                 return response([
                     'msg' => 'success',
-                    'oriClass' => 'badge-' . systemParam("{$inputSet['column']}.{$inputSet['oriValue']}.class"),
+                    'oriClass' => 'badge-' . systemParam("{$inputSet['column']}.{$inputSet['oriValue']}.options.class"),
                     'newLabel' => systemParam("{$inputSet['column']}.{$inputSet['switchTo']}.title"),
-                    'newClass' => 'badge-' . systemParam("{$inputSet['column']}.{$inputSet['switchTo']}.class"),
+                    'newClass' => 'badge-' . systemParam("{$inputSet['column']}.{$inputSet['switchTo']}.options.class"),
                 ], 200, ['Content-Type' => 'application/json']);
             }
         }

@@ -16,7 +16,7 @@
 
     <div class="panel-wrapper">
         <div class="panel-body">
-            <form id="editForm" class="form-horizontal validate editForm"  name="editForm"
+            <form id="editForm" class="form-horizontal validate editForm" name="editForm"
                   action="{{ langRoute('admin.profile') }}"
                   method="post"
                   enctype="multipart/form-data">
@@ -41,17 +41,7 @@
 
                     {!! $modelPresenter->getFieldPassword($formData, 'password', ['size' => 4, 'hint' => true]) !!}
 
-                    <div class="form-group row">
-                        <label class="col-sm-2 col-form-label" for="Admin-password_confirmation">@lang('MinmaxBase::models.Admin.password_confirmation')</label>
-                        <div class="col-sm-4">
-                            <input type="password" class="form-control"
-                                   id="Admin-password_confirmation"
-                                   name="Admin[password_confirmation]"
-                                   placeholder=""
-                                   autocomplete="off" />
-                        </div>
-                        <small class="form-text text-muted ml-sm-auto col-sm-10">@lang('MinmaxBase::models.Admin.hint.password_confirmation')</small>
-                    </div>
+                    {!! $modelPresenter->getFieldPassword($formData, 'password_confirmation', ['size' => 4, 'hint' => true]) !!}
 
                 </fieldset>
 

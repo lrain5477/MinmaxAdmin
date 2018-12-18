@@ -30,13 +30,39 @@ class CreateSystemTables extends Migration
             $table->unsignedInteger('group_id')->comment('群組ID');
             $table->string('value')->comment('參數數值');
             $table->string('label')->comment('參數名稱');
-            $table->json('options')->comment('參數設定');
+            $table->json('options')->nullable()->comment('參數設定');
             $table->unsignedInteger('sort')->default(1)->comment('排序');
             $table->boolean('active')->default(true)->comment('啟用狀態');
 
             $table->unique(['group_id', 'value'], 'idx-group_id-value');
 
             $table->foreign('group_id')->references('id')->on('system_parameter_group')
+                ->onUpdate('cascade')->onDelete('cascade');
+        });
+
+        // 網站參數群組
+        Schema::create('site_parameter_group', function (Blueprint $table) {
+            $table->increments('id');
+            $table->string('code')->unique()->comment('群組代碼');
+            $table->string('title')->comment('群組名稱');
+            $table->json('options')->nullable()->comment('群組設定');
+            $table->boolean('active')->default(true)->comment('啟用狀態');
+            $table->boolean('editable')->default(true)->comment('可否編輯');
+        });
+
+        // 網站參數項目
+        Schema::create('site_parameter_item', function (Blueprint $table) {
+            $table->increments('id');
+            $table->unsignedInteger('group_id')->comment('群組ID');
+            $table->string('value')->comment('參數數值');
+            $table->string('label')->comment('參數名稱');
+            $table->json('options')->nullable()->comment('參數設定');
+            $table->unsignedInteger('sort')->default(1)->comment('排序');
+            $table->boolean('active')->default(true)->comment('啟用狀態');
+
+            $table->unique(['group_id', 'value'], 'idx-group_id-value');
+
+            $table->foreign('group_id')->references('id')->on('site_parameter_group')
                 ->onUpdate('cascade')->onDelete('cascade');
         });
 
@@ -135,6 +161,8 @@ class CreateSystemTables extends Migration
         Schema::dropIfExists('system_log');
         Schema::dropIfExists('firewall');
         Schema::dropIfExists('web_data');
+        Schema::dropIfExists('site_parameter_item');
+        Schema::dropIfExists('site_parameter_group');
         Schema::dropIfExists('system_parameter_item');
         Schema::dropIfExists('system_parameter_group');
     }
@@ -180,21 +208,26 @@ class CreateSystemTables extends Migration
             ['group_id' => $groupIndex - 1, 'value' => '1', 'label' => 'system_parameter_item.label.' . $itemIndex++, 'options' => json_encode(['class' => 'danger']), 'sort' => 1],
             ['group_id' => $groupIndex - 1, 'value' => '0', 'label' => 'system_parameter_item.label.' . $itemIndex++, 'options' => json_encode(['class' => 'secondary']), 'sort' => 2],
         ]);
+        array_push($systemParameterGroupData, ['code' => 'editable', 'title' => 'system_parameter_group.title.' . $groupIndex++]);
+        $systemParameterItemData = array_merge($systemParameterItemData, [
+            ['group_id' => $groupIndex - 1, 'value' => '1', 'label' => 'system_parameter_item.label.' . $itemIndex++, 'options' => json_encode(['class' => 'danger']), 'sort' => 1],
+            ['group_id' => $groupIndex - 1, 'value' => '0', 'label' => 'system_parameter_item.label.' . $itemIndex++, 'options' => json_encode(['class' => 'secondary']), 'sort' => 2],
+        ]);
 
         DB::table('system_parameter_group')->insert($systemParameterGroupData);
         DB::table('system_parameter_item')->insert($systemParameterItemData);
 
         $languageResourceData = array_merge($languageResourceData, SeederHelper::getLanguageResourceArray('system_parameter_group', [
-            ['title' => '啟用狀態'], ['title' => '操作結果'], ['title' => '防火牆規則'], ['title' => '置頂狀態'], ['title' => '顯示狀態']
+            ['title' => '啟用狀態'], ['title' => '操作結果'], ['title' => '防火牆規則'], ['title' => '置頂狀態'], ['title' => '顯示狀態'], ['title' => '可否編輯']
         ], 1));
         $languageResourceData = array_merge($languageResourceData, SeederHelper::getLanguageResourceArray('system_parameter_group', [
-            ['title' => '启用状态'], ['title' => '操作结果'], ['title' => '防火墙规则'], ['title' => '置顶状态'], ['title' => '显示状态']
+            ['title' => '启用状态'], ['title' => '操作结果'], ['title' => '防火墙规则'], ['title' => '置顶状态'], ['title' => '显示状态'], ['title' => '可否编辑']
         ], 2));
         $languageResourceData = array_merge($languageResourceData, SeederHelper::getLanguageResourceArray('system_parameter_group', [
-            ['title' => '有効状態'], ['title' => '操作結果'], ['title' => 'ルール'], ['title' => '頂上状態'], ['title' => '表示状態']
+            ['title' => '有効状態'], ['title' => '操作結果'], ['title' => 'ルール'], ['title' => '頂上状態'], ['title' => '表示状態'], ['title' => '変更可能']
         ], 3));
         $languageResourceData = array_merge($languageResourceData, SeederHelper::getLanguageResourceArray('system_parameter_group', [
-            ['title' => 'Active'], ['title' => 'Result'], ['title' => 'Rule'], ['title' => 'Top'], ['title' => 'Visible']
+            ['title' => 'Active'], ['title' => 'Result'], ['title' => 'Rule'], ['title' => 'Top'], ['title' => 'Visible'], ['title' => 'Editable']
         ], 4));
         $languageResourceData = array_merge($languageResourceData, SeederHelper::getLanguageResourceArray('system_parameter_item', [
             ['label' => '啟用'], ['label' => '停用'],
@@ -202,6 +235,7 @@ class CreateSystemTables extends Migration
             ['label' => '允許'], ['label' => '禁止'],
             ['label' => '正常'], ['label' => '置頂'],
             ['label' => '顯示'], ['label' => '隱藏'],
+            ['label' => '啟用'], ['label' => '停用'],
         ], 1));
         $languageResourceData = array_merge($languageResourceData, SeederHelper::getLanguageResourceArray('system_parameter_item', [
             ['label' => '启用'], ['label' => '停用'],
@@ -209,6 +243,7 @@ class CreateSystemTables extends Migration
             ['label' => '允许'], ['label' => '禁止'],
             ['label' => '正常'], ['label' => '置顶'],
             ['label' => '显示'], ['label' => '隐藏'],
+            ['label' => '启用'], ['label' => '停用'],
         ], 2));
         $languageResourceData = array_merge($languageResourceData, SeederHelper::getLanguageResourceArray('system_parameter_item', [
             ['label' => '有効'], ['label' => '無効'],
@@ -216,6 +251,7 @@ class CreateSystemTables extends Migration
             ['label' => '許可'], ['label' => '禁止'],
             ['label' => '一般'], ['label' => '頂上'],
             ['label' => '表示'], ['label' => '隠す'],
+            ['label' => '有効'], ['label' => '無効'],
         ], 3));
         $languageResourceData = array_merge($languageResourceData, SeederHelper::getLanguageResourceArray('system_parameter_item', [
             ['label' => 'On'], ['label' => 'Off'],
@@ -223,6 +259,7 @@ class CreateSystemTables extends Migration
             ['label' => 'Allowed'], ['label' => 'Denied'],
             ['label' => 'Default'], ['label' => 'Top'],
             ['label' => 'Show'], ['label' => 'Hide'],
+            ['label' => 'On'], ['label' => 'Off'],
         ], 4));
 
         // 全球化 - 語言

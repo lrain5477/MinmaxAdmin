@@ -1,34 +1,40 @@
 <?php
 /**
  * @var string $id
+ * @var boolean $language
  * @var string $label
  * @var string $name
  * @var array $values
- * @var bool $required
  * @var array $listData
  *
  * Options
- * @var bool $group
+ * @var boolean $required
+ * @var boolean $group
  * @var integer $size
  * @var string $title
  * @var string $hint
  */
 ?>
 <div class="form-group row">
-    <label class="col-sm-2 col-form-label" for="{{ $id }}">{{ $label }}{!! $required === true ? '<span class="text-danger ml-1">*</span>' : '' !!}</label>
+    <label class="col-sm-2 col-form-label" for="{{ $id }}">
+        @if($language)<i class="icon-globe"></i>@endif
+        {{ $label }}<!--
+        @if($required)--><span class="text-danger ml-1">*</span><!--@endif
+        -->
+    </label>
     <div class="col-sm-{{ $size }}">
         <select class="multiSelect" id="{{ $id }}" name="{{ $name }}" multiple {{ $required === true ? 'required' : '' }}>
         @if($group)
             @foreach($listData as $groupLabel => $listSet)
             <optgroup label="{{ $groupLabel }}">
                 @foreach($listSet as $listKey => $listItem)
-                <option value="{{ $listKey }}" {{ in_array($listKey, $values) ? 'selected' : '' }}>{{ $listItem['title'] ?? '' }}</option>
+                <option value="{{ $listKey }}" {{ in_array($listKey, old(str_replace(['[', ']'], ['.', ''], $name), $values)) ? 'selected' : '' }}>{{ $listItem['title'] ?? '' }}</option>
                 @endforeach
             </optgroup>
             @endforeach
         @else
             @foreach($listData as $listKey => $listItem)
-            <option value="{{ $listKey }}" {{ in_array($listKey, $values) ? 'selected' : '' }}>{{ $listItem['title'] ?? '' }}</option>
+            <option value="{{ $listKey }}" {{ in_array($listKey, old(str_replace(['[', ']'], ['.', ''], $name), $values)) ? 'selected' : '' }}>{{ $listItem['title'] ?? '' }}</option>
             @endforeach
         @endif
         </select>

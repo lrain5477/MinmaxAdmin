@@ -6,16 +6,16 @@
  */
 ?>
 
-@extends('MinmaxBase::admin.layouts.page.edit')
+@extends('MinmaxBase::admin.layouts.page.edit', ['formDataId' => $formData->id])
 
 @section('action-buttons')
-@if($adminData->can('adminShow'))
-<div class="float-right">
-    <a class="btn btn-sm btn-light" href="{{ langRoute("admin.{$pageData->uri}.index") }}" title="@lang('MinmaxBase::admin.form.back_list')">
-        <i class="icon-undo2"></i><span class="ml-1 d-none d-md-inline-block">@lang('MinmaxBase::admin.form.back_list')</span>
-    </a>
-</div>
-@endif
+    @component('MinmaxBase::admin.layouts.right-links')
+        @if($adminData->can('adminShow'))
+        <a class="btn btn-sm btn-light" href="{{ langRoute("admin.{$pageData->uri}.index") }}" title="@lang('MinmaxBase::admin.form.back_list')">
+            <i class="icon-undo2"></i><span class="ml-1 d-none d-md-inline-block">@lang('MinmaxBase::admin.form.back_list')</span>
+        </a>
+        @endif
+    @endcomponent
 @endsection
 
 @section('forms')
@@ -28,17 +28,7 @@
 
         {!! $modelPresenter->getFieldPassword($formData, 'password', ['size' => 4, 'hint' => true]) !!}
 
-        <div class="form-group row">
-            <label class="col-sm-2 col-form-label" for="Admin-password_confirmation">@lang('MinmaxBase::models.Admin.password_confirmation')</label>
-            <div class="col-sm-4">
-                <input type="password" class="form-control"
-                       id="Admin-password_confirmation"
-                       name="Admin[password_confirmation]"
-                       placeholder=""
-                       autocomplete="off" />
-            </div>
-            <small class="form-text text-muted ml-sm-auto col-sm-10">@lang('MinmaxBase::models.Admin.hint.password_confirmation')</small>
-        </div>
+        {!! $modelPresenter->getFieldPassword($formData, 'password_confirmation', ['size' => 4, 'hint' => true]) !!}
 
         {!! $modelPresenter->getFieldText($formData, 'name', ['required' => true]) !!}
 
