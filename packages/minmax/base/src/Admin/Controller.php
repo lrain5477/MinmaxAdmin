@@ -231,9 +231,15 @@ class Controller extends BaseController
         });
     }
 
+    /**
+     * @return void
+     */
     protected function checkValidate()
     {
-        app(__NAMESPACE__ . '\\' . $this->pageData->getAttribute('model') . 'Request');
+        try {
+            $reflection = new \ReflectionClass(static::class);
+            app($reflection->getNamespaceName() . '\\' . $this->pageData->getAttribute('model') . 'Request');
+        } catch (\Exception $e) {}
     }
 
     /**
@@ -322,7 +328,10 @@ class Controller extends BaseController
      */
     protected function setDatatablesTransformer($datatables)
     {
-        $datatables->setTransformer(app(__NAMESPACE__ . '\\' . $this->pageData->getAttribute('model') . 'Transformer', ['uri' => $this->uri]));
+        try {
+            $reflection = new \ReflectionClass(static::class);
+            $datatables->setTransformer(app($reflection->getNamespaceName() . '\\' . $this->pageData->getAttribute('model') . 'Transformer', ['uri' => $this->uri]));
+        } catch (\Exception $e) {}
 
         return $datatables;
     }

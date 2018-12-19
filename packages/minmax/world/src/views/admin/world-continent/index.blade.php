@@ -34,8 +34,8 @@
 <table class="table table-responsive-md table-bordered table-striped table-hover table-checkable datatables" id="tableList">
     <thead>
     <tr role="row">
-        <th>@lang('MinmaxWorld::models.WorldContinent.title')</th>
-        <th>@lang('MinmaxWorld::models.WorldContinent.code')</th>
+        <th class="w-25">@lang('MinmaxWorld::models.WorldContinent.title')</th>
+        <th class="w-25">@lang('MinmaxWorld::models.WorldContinent.code')</th>
         <th>@lang('MinmaxWorld::models.WorldContinent.sort')</th>
         <th>@lang('MinmaxWorld::models.WorldContinent.active')</th>
         <th class="nosort">@lang('MinmaxBase::admin.grid.title.action')</th>

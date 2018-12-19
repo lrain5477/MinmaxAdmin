@@ -6,7 +6,7 @@ use Minmax\Base\Admin\Presenter;
 
 class WorldContinentPresenter extends Presenter
 {
-    protected $packagePrefix = 'MinmaxBase::';
+    protected $packagePrefix = 'MinmaxWorld::';
 
     protected $languageColumns = ['name'];
 
