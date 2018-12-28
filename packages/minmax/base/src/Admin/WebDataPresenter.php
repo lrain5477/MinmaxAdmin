@@ -2,6 +2,9 @@
 
 namespace Minmax\Base\Admin;
 
+/**
+ * Class WebDataPresenter
+ */
 class WebDataPresenter extends Presenter
 {
     protected $packagePrefix = 'MinmaxBase::';

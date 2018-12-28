@@ -4,6 +4,9 @@ namespace Minmax\World\Admin;
 
 use Minmax\Base\Admin\Presenter;
 
+/**
+ * Class WorldContinentPresenter
+ */
 class WorldContinentPresenter extends Presenter
 {
     protected $packagePrefix = 'MinmaxWorld::';

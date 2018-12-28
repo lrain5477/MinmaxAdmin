@@ -56,7 +56,7 @@ var minmax = function() {
         var contentHeight = h - contentH - pageH - 30;
         var panelLength = $panel.length;
 
-        if (panelLength == 1) {
+        if (panelLength === 1) {
             if (width < 576) {
                 $panel.css({
                     minHeight: contentHeight + pageH,
@@ -67,7 +67,7 @@ var minmax = function() {
                 });
             }
         }
-    }
+    };
     contentBodyH();
 
     /*--------------------------------------------
@@ -82,11 +82,8 @@ var minmax = function() {
        		選單螢幕自動關閉開啟
      ---------------------------------------------*/
     var navCloseAuto = function() {
-        var width = $(window).width();
-        if (width < 1620) {
-            if ($(".slide-nav-close").length > 0) {
-                return;
-            } else {
+        if (width < 1280) {
+            if ($(".slide-nav-close").length < 1) {
                 setTimeout(function() {
                     $wrapper.addClass('slide-nav-close');
                 }, 200)
@@ -96,11 +93,9 @@ var minmax = function() {
                 setTimeout(function() {
                     $wrapper.removeClass('slide-nav-close');
                 }, 200)
-            } else {
-                return;
             }
         }
-    }
+    };
 
     $(window).resize(function() {
         contentBodyH();
@@ -110,11 +105,9 @@ var minmax = function() {
     /*--------------------------------------------
        		側選單自動打開
      ---------------------------------------------*/
-    $(document).on('click', '.fixed-sidebar-left a[data-toggle="collapse"]', function(e) {
+    $(document).on('click', '.fixed-sidebar-left a[data-toggle="collapse"]', function() {
         if ($(".slide-nav-close").length > 0) {
             $wrapper.removeClass('slide-nav-close');
-        } else {
-            return;
         }
     });
     /*--------------------------------------------

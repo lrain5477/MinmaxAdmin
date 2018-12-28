@@ -7,6 +7,9 @@ use Minmax\Base\Admin\AdminMenuRepository;
 use Minmax\Base\Admin\WebDataRepository;
 use Minmax\Base\Admin\WorldLanguageRepository;
 
+/**
+ * Class SetAdminControllerAttributes
+ */
 class SetAdminControllerAttributes
 {
     /**

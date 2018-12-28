@@ -1,6 +1,6 @@
 <?php
 /**
- * @var $breadcrumbs
+ * @var \Illuminate\Support\Collection $breadcrumbs
  */
 ?>
 @if (count($breadcrumbs))

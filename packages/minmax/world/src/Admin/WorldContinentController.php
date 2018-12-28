@@ -4,6 +4,9 @@ namespace Minmax\World\Admin;
 
 use Minmax\Base\Admin\Controller;
 
+/**
+ * Class WorldContinentController
+ */
 class WorldContinentController extends Controller
 {
     protected $packagePrefix = 'MinmaxWorld::';

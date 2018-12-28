@@ -1,24 +1,23 @@
 <?php
 
-namespace App\Http\Controllers\Administrator;
+namespace Minmax\Base\Administrator;
 
-use App\Helpers\LogHelper;
-use App\Http\Requests\Administrator\ProfileRequest;
-use App\Repositories\Administrator\AdministratorRepository;
+use DaveJamesMiller\Breadcrumbs\Facades\Breadcrumbs;
 use Illuminate\Http\Request;
-use Breadcrumbs;
+use Minmax\Base\Helpers\Log as LogHelper;
 
 /**
  * Class ProfileController
- * @property \App\Models\Administrator $adminData
  */
 class ProfileController extends Controller
 {
-    public function __construct(Request $request, AdministratorRepository $administratorRepository)
-    {
-        $this->modelRepository = $administratorRepository;
+    protected $packagePrefix = 'MinmaxBase::';
 
-        parent::__construct($request);
+    public function __construct(AdministratorRepository $repository)
+    {
+        $this->modelRepository = $repository;
+
+        parent::__construct();
     }
 
     /**
@@ -30,7 +29,7 @@ class ProfileController extends Controller
         Breadcrumbs::register('edit', function ($breadcrumbs) use ($id) {
             /** @var \DaveJamesMiller\Breadcrumbs\BreadcrumbsGenerator $breadcrumbs */
             $breadcrumbs->parent('administrator.home');
-            $breadcrumbs->push(__('administrator.header.account'));
+            $breadcrumbs->push(__('MinmaxBase::administrator.header.account'));
         });
     }
 
@@ -42,27 +41,29 @@ class ProfileController extends Controller
     /**
      * Admin profile edit.
      *
-     * @param string $id
+     * @param  string $id
      * @return \Illuminate\Http\Response
      * @throws \DaveJamesMiller\Breadcrumbs\Exceptions\DuplicateBreadcrumbException
      */
     public function edit($id = null)
     {
-        return parent::edit($this->adminData->guid);
+        return parent::edit($this->adminData->id);
     }
 
     /**
      * Model Update
      *
-     * @param string $id
-     * @param Request $request
+     * @param  Request $request
+     * @param  null $id
      * @return $this|\Illuminate\Http\RedirectResponse
      */
-    public function update($id = null, Request $request)
+    public function update(Request $request, $id = null)
     {
         $this->checkValidate();
 
-        $model = $this->modelRepository->find($this->adminData->guid) ?? abort(404);
+        $id = $this->adminData->id;
+
+        $model = $this->modelRepository->find($id) ?? abort(404);
 
         $inputSet = $request->input('Administrator');
 
@@ -72,8 +73,8 @@ class ProfileController extends Controller
 
             if ($this->modelRepository->save($model, $inputSet)) {
                 \DB::commit();
-                LogHelper::system('administrator', $request->path(), $request->method(), $id, $this->adminData->username, 1, __('administrator.form.message.edit_success'));
-                return redirect(langRoute("administrator.profile"))->with('success', __('administrator.form.message.edit_success'));
+                LogHelper::system('administrator', $request->path(), $request->method(), $id, $this->adminData->username, 1, __('MinmaxBase::administrator.form.message.edit_success'));
+                return redirect(langRoute("administrator.profile"))->with('success', __('MinmaxBase::administrator.form.message.edit_success'));
             }
 
             \DB::rollBack();
@@ -81,7 +82,7 @@ class ProfileController extends Controller
             \DB::rollBack();
         }
 
-        LogHelper::system('administrator', $request->path(), $request->method(), $id, $this->adminData->username, 0, __('administrator.form.message.edit_error'));
-        return redirect(langRoute("administrator.profile"))->withErrors([__('administrator.form.message.edit_error')])->withInput();
+        LogHelper::system('administrator', $request->path(), $request->method(), $id, $this->adminData->username, 0, __('MinmaxBase::administrator.form.message.edit_error'));
+        return redirect(langRoute("administrator.profile"))->withErrors([__('MinmaxBase::administrator.form.message.edit_error')])->withInput();
     }
 }

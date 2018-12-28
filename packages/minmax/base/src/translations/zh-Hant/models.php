@@ -18,7 +18,7 @@ return [
         'password_confirmation' => '密碼確認',
         'name' => '姓名',
         'allow_ip' => 'IP白名單',
-        'active' => '狀態',
+        'active' => '啟用狀態',
         'created_at' => '建立時間',
         'updated_at' => '更新時間',
         'hint' => [
@@ -35,7 +35,7 @@ return [
         'password_confirmation' => '密碼確認',
         'name' => '姓名',
         'email' => 'Email',
-        'active' => '狀態',
+        'active' => '啟用狀態',
         'created_at' => '建立時間',
         'updated_at' => '更新時間',
         'role_id' => '群組',
@@ -59,11 +59,12 @@ return [
         'filter' => '資料過濾 (where)',
         'keeps' => '不可刪除 GUID',
         'sort' => '排序',
-        'active' => '狀態',
+        'active' => '啟用狀態',
         'created_at' => '建立時間',
         'updated_at' => '更新時間',
         'hint' => [
-            'icon' => '僅 (根列表) 使用，請參考連結選擇您所需要的圖示 <a target="_blank" href="/static/admin/css/fonts/icon/demo.html">圖示列表</a>',
+            'uri' => '此參數為唯一值，不可與其他項目重複。',
+            'icon' => '僅第二層須設定，請參考連結選擇您所需要的圖示 <a target="_blank" href="/static/admin/css/fonts/icon/demo.html">圖示列表</a>。',
         ],
     ],
 
@@ -73,7 +74,7 @@ return [
         'name' => '代碼',
         'display_name' => '角色名稱',
         'description' => '敘述',
-        'active' => '狀態',
+        'active' => '啟用狀態',
         'created_at' => '建立時間',
         'updated_at' => '更新時間',
     ],
@@ -86,7 +87,8 @@ return [
         'label' => '標籤',
         'display_name' => '權限名稱',
         'description' => '敘述',
-        'active' => '狀態',
+        'sort' => '排序',
+        'active' => '啟用狀態',
         'created_at' => '建立時間',
         'updated_at' => '更新時間',
     ],
@@ -110,7 +112,7 @@ return [
         'guard' => '平台',
         'ip' => 'IP 位址',
         'rule' => '規則',
-        'active' => '狀態',
+        'active' => '啟用狀態',
         'created_at' => '建立時間',
         'updated_at' => '更新時間',
     ],
@@ -179,34 +181,30 @@ return [
         'description' => '敘述',
         'editor' => 'HTML內容',
         'sort' => '排序',
-        'active' => '狀態',
+        'active' => '啟用狀態',
         'created_at' => '建立時間',
         'updated_at' => '更新時間',
     ],
 
     'SystemLog' => [
-        'id' => 'ID',
         'guard' => '平台',
         'uri' => '操作網址',
         'action' => '動作',
-        'guid' => '項目ID',
+        'id' => '項目ID',
         'username' => '帳號',
         'ip' => 'IP 位置',
-        'note' => '文字說明',
+        'remark' => '文字說明',
         'result' => '狀態',
-        'created_at' => '建立時間',
-        'updated_at' => '更新時間',
+        'created_at' => '紀錄時間',
     ],
 
     'LoginLog' => [
-        'id' => 'ID',
         'guard' => '平台',
         'username' => '帳號',
         'ip' => 'IP 位置',
-        'note' => '文字說明',
+        'remark' => '文字說明',
         'result' => '狀態',
-        'created_at' => '建立時間',
-        'updated_at' => '更新時間',
+        'created_at' => '紀錄時間',
     ],
 
     'SystemParameterGroup' => [
@@ -217,6 +215,10 @@ return [
         'active' => '啟用狀態',
         'created_at' => '建立時間',
         'updated_at' => '更新時間',
+        'hint' => [
+            'code' => '此代碼為唯一值，不可與其他群組重複。',
+            'options' => '可自由增加設定參數，將會以 <code>Key => Value</code> 的陣列形式存取。',
+        ],
     ],
 
     'SystemParameterItem' => [
@@ -229,6 +231,10 @@ return [
         'active' => '啟用狀態',
         'created_at' => '建立時間',
         'updated_at' => '更新時間',
+        'hint' => [
+            'value' => '此代碼為唯一值，不可與同群組的其他參數重複。',
+            'options' => '可自由增加設定參數，將會以 <code>Key => Value</code> 的陣列形式存取。',
+        ],
     ],
 
     'SiteParameterGroup' => [
@@ -240,6 +246,10 @@ return [
         'editable' => '可否編輯',
         'created_at' => '建立時間',
         'updated_at' => '更新時間',
+        'hint' => [
+            'code' => '此代碼為唯一值，不可與其他群組重複。',
+            'options' => '可自由增加設定參數，將會以 <code>Key => Value</code> 的陣列形式存取。',
+        ],
     ],
 
     'SiteParameterItem' => [
@@ -252,6 +262,10 @@ return [
         'active' => '啟用狀態',
         'created_at' => '建立時間',
         'updated_at' => '更新時間',
+        'hint' => [
+            'value' => '此代碼為唯一值，不可與同群組的其他參數重複。',
+            'options' => '可自由增加設定參數，將會以 <code>Key => Value</code> 的陣列形式存取。',
+        ],
     ],
 
     'NewsletterSchedule' => [

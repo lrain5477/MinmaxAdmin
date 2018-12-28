@@ -155,10 +155,9 @@ abstract class Repository
 
         if ($model->save()) {
             $model = $this->saveLanguage($model);
+            $this->afterSave();
             return $model;
         }
-
-        $this->afterSave();
 
         return null;
     }

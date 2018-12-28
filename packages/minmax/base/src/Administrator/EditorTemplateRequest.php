@@ -1,10 +1,13 @@
 <?php
 
-namespace App\Http\Requests\Administrator;
+namespace Minmax\Base\Administrator;
 
-use App\Helpers\LogHelper;
 use Illuminate\Foundation\Http\FormRequest;
+use Minmax\Base\Helpers\Log as LogHelper;
 
+/**
+ * Class EditorTemplateRequest
+ */
 class EditorTemplateRequest extends FormRequest
 {
     /**
@@ -14,14 +17,7 @@ class EditorTemplateRequest extends FormRequest
      */
     public function authorize()
     {
-        switch ($this->method()) {
-             case 'PUT':
-                 return $this->user('administrator')->can('editorTemplateEdit');
-             case 'POST':
-                 return $this->user('administrator')->can('editorTemplateCreate');
-             default:
-                 return false;
-        }
+        return true;
     }
 
     /**
@@ -37,10 +33,10 @@ class EditorTemplateRequest extends FormRequest
                     'EditorTemplate.guard' => 'required|string',
                     'EditorTemplate.category' => 'required|string',
                     'EditorTemplate.title' => 'required|string',
-                    'EditorTemplate.description' => 'required|string',
+                    'EditorTemplate.description' => 'nullable|string',
                     'EditorTemplate.editor' => 'required|string',
                     'EditorTemplate.sort' => 'required|integer',
-                    'EditorTemplate.active' => 'required|in:1,0',
+                    'EditorTemplate.active' => 'required|boolean',
                 ];
             case 'POST':
             default:
@@ -48,10 +44,10 @@ class EditorTemplateRequest extends FormRequest
                     'EditorTemplate.guard' => 'required|string',
                     'EditorTemplate.category' => 'required|string',
                     'EditorTemplate.title' => 'required|string',
-                    'EditorTemplate.description' => 'required|string',
+                    'EditorTemplate.description' => 'nullable|string',
                     'EditorTemplate.editor' => 'required|string',
                     'EditorTemplate.sort' => 'nullable|integer',
-                    'EditorTemplate.active' => 'required|in:1,0',
+                    'EditorTemplate.active' => 'required|boolean',
                 ];
         }
     }
@@ -64,13 +60,13 @@ class EditorTemplateRequest extends FormRequest
     public function attributes()
     {
         return [
-            'EditorTemplate.guard' => __('models.EditorTemplate.guard'),
-            'EditorTemplate.category' => __('models.EditorTemplate.category'),
-            'EditorTemplate.title' => __('models.EditorTemplate.title'),
-            'EditorTemplate.description' => __('models.EditorTemplate.description'),
-            'EditorTemplate.editor' => __('models.EditorTemplate.editor'),
-            'EditorTemplate.sort' => __('models.EditorTemplate.sort'),
-            'EditorTemplate.active' => __('models.EditorTemplate.active'),
+            'EditorTemplate.guard' => __('MinmaxBase::models.EditorTemplate.guard'),
+            'EditorTemplate.category' => __('MinmaxBase::models.EditorTemplate.category'),
+            'EditorTemplate.title' => __('MinmaxBase::models.EditorTemplate.title'),
+            'EditorTemplate.description' => __('MinmaxBase::models.EditorTemplate.description'),
+            'EditorTemplate.editor' => __('MinmaxBase::models.EditorTemplate.editor'),
+            'EditorTemplate.sort' => __('MinmaxBase::models.EditorTemplate.sort'),
+            'EditorTemplate.active' => __('MinmaxBase::models.EditorTemplate.active'),
         ];
     }
 

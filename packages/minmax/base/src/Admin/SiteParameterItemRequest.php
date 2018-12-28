@@ -6,6 +6,9 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use Minmax\Base\Helpers\Log as LogHelper;
 
+/**
+ * Class SiteParameterItemRequest
+ */
 class SiteParameterItemRequest extends FormRequest
 {
     /**
@@ -35,7 +38,7 @@ class SiteParameterItemRequest extends FormRequest
         switch ($this->method()) {
             case 'PUT':
                 return [
-                    'SiteParameterItem.value' => ['required', Rule::unique('site_parameter_item', 'value')->ignore($this->route()->parameter('id'))],
+                    'SiteParameterItem.value' => ['required', Rule::unique('site_parameter_item', 'value')->ignore($this->route('id'))],
                     'SiteParameterItem.label' => 'required|string',
                     'SiteParameterItem.sort' => 'required|integer',
                     'SiteParameterItem.active' => 'required|boolean',

@@ -26,6 +26,20 @@ Route::group([
          */
 
         /*
+         * WorldCurrency 貨幣管理
+         */
+        Route::get('world-currency', 'WorldCurrencyController@index')->name('world-currency.index');
+        Route::post('world-currency', 'WorldCurrencyController@store')->name('world-currency.store');
+        Route::get('world-currency/create', 'WorldCurrencyController@create')->name('world-currency.create');
+        Route::get('world-currency/{id}', 'WorldCurrencyController@show')->name('world-currency.show');
+        Route::put('world-currency/{id}', 'WorldCurrencyController@update')->name('world-currency.update');
+        Route::delete('world-currency/{id}', 'WorldCurrencyController@destroy')->name('world-currency.destroy');
+        Route::get('world-currency/{id}/edit', 'WorldCurrencyController@edit')->name('world-currency.edit');
+        Route::post('world-currency/ajax/datatables', 'WorldCurrencyController@ajaxDataTable')->name('world-currency.ajaxDataTable');
+        Route::patch('world-currency/ajax/switch', 'WorldCurrencyController@ajaxSwitch')->name('world-currency.ajaxSwitch');
+        Route::patch('world-currency/ajax/sort', 'WorldCurrencyController@ajaxSort')->name('world-currency.ajaxSort');
+
+        /*
          * WorldContinent 大洲管理
          */
         Route::get('world-continent', 'WorldContinentController@index')->name('world-continent.index');

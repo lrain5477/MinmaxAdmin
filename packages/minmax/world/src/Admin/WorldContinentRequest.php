@@ -6,6 +6,9 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use Minmax\Base\Helpers\Log as LogHelper;
 
+/**
+ * Class WorldContinentRequest
+ */
 class WorldContinentRequest extends FormRequest
 {
     /**
@@ -39,7 +42,7 @@ class WorldContinentRequest extends FormRequest
                     'WorldContinent.code' => [
                         'required',
                         'string',
-                        Rule::unique('world_continent', 'code')->ignore($this->route()->parameter('id')),
+                        Rule::unique('world_continent', 'code')->ignore($this->route('id')),
                     ],
                     'WorldContinent.name' => 'required|string',
                     'WorldContinent.sort' => 'required|integer',

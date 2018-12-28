@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $title
  * @property string $code
  * @property string $name
+ * @property array $options
  * @property integer $sort
  * @property boolean $active
  * @property \Illuminate\Support\Carbon $created_at
@@ -23,6 +24,7 @@ class WorldCounty extends Model
     protected $table = 'world_county';
     protected $guarded = [];
     protected $casts = [
+        'options' => 'array',
         'active' => 'boolean',
     ];
 

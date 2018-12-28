@@ -2,6 +2,9 @@
 
 namespace Minmax\Base\Admin;
 
+/**
+ * Class FirewallPresenter
+ */
 class FirewallPresenter extends Presenter
 {
     protected $packagePrefix = 'MinmaxBase::';

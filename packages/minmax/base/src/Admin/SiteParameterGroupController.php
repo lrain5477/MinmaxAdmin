@@ -2,6 +2,9 @@
 
 namespace Minmax\Base\Admin;
 
+/**
+ * Class SiteParameterGroupController
+ */
 class SiteParameterGroupController extends Controller
 {
     protected $packagePrefix = 'MinmaxBase::';

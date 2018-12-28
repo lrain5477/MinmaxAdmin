@@ -11,6 +11,29 @@ return [
     |
     */
 
+    'WorldLanguage' => [
+        'id' => 'ID',
+        'code' => '語系代碼',
+        'name' => '語系名稱',
+        'native' => '顯示文字',
+        'options' => [
+            'icon' => '圖示代碼',
+            'script' => 'Script 名稱',
+            'regional' => 'Regional 名稱',
+        ],
+        'currency_id' => '貨幣',
+        'sort' => '排序',
+        'active_admin' => '後臺啟用',
+        'active' => '啟用狀態',
+        'created_at' => '建立時間',
+        'updated_at' => '更新時間',
+        'hint' => [
+            'options' => [
+                'icon' => '請參考連結選擇您所需要的圖示 <a target="_blank" href="/static/admin/css/fonts/flag/index.html">圖示列表</a>',
+            ],
+        ],
+    ],
+
     'WorldContinent' => [
         'id' => 'ID',
         'title' => '大洲名稱',
@@ -57,6 +80,7 @@ return [
         'title' => '縣市名稱',
         'code' => '縣市代碼',
         'name' => '顯示文字',
+        'options' => '縣市設定',
         'sort' => '排序',
         'active' => '啟用狀態',
         'created_at' => '建立時間',
@@ -69,6 +93,7 @@ return [
         'title' => '城市名稱',
         'code' => '城市代碼',
         'name' => '顯示文字',
+        'options' => '城市設定',
         'sort' => '排序',
         'active' => '啟用狀態',
         'created_at' => '建立時間',
@@ -92,6 +117,11 @@ return [
         'title' => '貨幣名稱',
         'code' => '貨幣代碼',
         'name' => '顯示文字',
+        'options' => [
+            'symbol' => '貨幣符號',
+            'native' => '符號代碼',
+            'exchange' => '匯率',
+        ],
         'sort' => '排序',
         'active' => '啟用狀態',
         'created_at' => '建立時間',

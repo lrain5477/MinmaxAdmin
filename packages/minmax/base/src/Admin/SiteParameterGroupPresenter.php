@@ -2,6 +2,9 @@
 
 namespace Minmax\Base\Admin;
 
+/**
+ * Class SiteParameterGroupPresenter
+ */
 class SiteParameterGroupPresenter extends Presenter
 {
     protected $packagePrefix = 'MinmaxBase::';

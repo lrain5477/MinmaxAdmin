@@ -6,6 +6,9 @@ use DaveJamesMiller\Breadcrumbs\Facades\Breadcrumbs;
 use Illuminate\Http\Request;
 use Minmax\Base\Helpers\Log as LogHelper;
 
+/**
+ * Class ProfileController
+ */
 class ProfileController extends Controller
 {
     protected $packagePrefix = 'MinmaxBase::';
@@ -66,7 +69,9 @@ class ProfileController extends Controller
 
         $this->checkValidate();
 
-        $model = $this->modelRepository->find($this->adminData->id) ?? abort(404);
+        $id = $this->adminData->id;
+
+        $model = $this->modelRepository->find($id) ?? abort(404);
 
         $inputSet = $request->input('Admin');
 

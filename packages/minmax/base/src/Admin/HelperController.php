@@ -43,7 +43,7 @@ class HelperController extends BaseController
      */
     public function getEditorTemplate($category)
     {
-        $templates = EditorTemplate::where(['guard' => 'admin', 'category' => $category, 'active' => '1'])
+        $templates = EditorTemplate::where(['guard' => 'admin', 'category' => $category, 'active' => true])
             ->orderBy('sort')
             ->get(['title', 'description', 'editor'])
             ->map(function($item) {

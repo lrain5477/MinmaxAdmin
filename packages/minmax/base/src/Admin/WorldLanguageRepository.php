@@ -27,9 +27,33 @@ class WorldLanguageRepository extends Repository
         return 'world_language';
     }
 
-    protected function beforeCreate()
+    protected function afterCreate()
     {
-        \Cache::forget('langId');
+        try {
+            cache()->forget('langId');
+        } catch (\Exception $e) {}
+    }
+
+    protected function afterSave()
+    {
+        try {
+            cache()->forget('langId');
+        } catch (\Exception $e) {}
+    }
+
+    public function getSelectParameters($active = false)
+    {
+        if ($active) {
+            $model = $this->all('active', true);
+        } else {
+            $model = $this->all();
+        }
+        return $model
+            ->mapWithKeys(function ($item) {
+                /** @var WorldLanguage $item */
+                return [$item->id => ['title' => $item->native, 'options' => $item->options]];
+            })
+            ->toArray();
     }
 
     public function getLanguageList()

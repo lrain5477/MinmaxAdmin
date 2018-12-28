@@ -1,84 +1,76 @@
 <?php
 
-namespace App\Http\Controllers\Administrator;
+namespace Minmax\Base\Administrator;
 
-use App\Models\Permission;
-use App\Models\PermissionRole;
-use Breadcrumbs;
-use Illuminate\Http\Request;
-use Validator;
-
+/**
+ * Class RoleController
+ */
 class RoleController extends Controller
 {
-    /**
-     * Model Edit
-     *
-     * @param string $id
-     * @return \Illuminate\Http\Response
-     * @throws \DaveJamesMiller\Breadcrumbs\Exceptions\DuplicateBreadcrumbException
-     */
-    public function edit($id)
+    protected $packagePrefix = 'MinmaxBase::';
+
+    public function __construct(RoleRepository $repository)
     {
-        $this->viewData['formDataId'] = $id;
-        $this->viewData['formData'] = $this->modelRepository->one([$this->modelRepository->getIndexKey() => $id]);
-        $this->viewData['permissionData'] = Permission::Where(['guard' => $this->viewData['formData']->guard, 'active' => 1])->get()->groupBy('group');
+        $this->modelRepository = $repository;
 
-        // 設定麵包屑導航
-        Breadcrumbs::register('edit', function ($breadcrumbs) {
-            /**
-             * @var \DaveJamesMiller\Breadcrumbs\BreadcrumbsGenerator $breadcrumbs
-             */
-            $breadcrumbs->parent('administrator.home');
-            $breadcrumbs->push($this->pageData->title, route('administrator.index', [$this->uri]));
-            $breadcrumbs->push(__('administrator.form.edit'));
-        });
-
-        try {
-            return view('administrator.' . $this->uri . '.edit', $this->viewData);
-        } catch(\Exception $e) {
-            return abort(404);
-        }
+        parent::__construct();
     }
 
     /**
-     * Model Update
+     * Set datatable filter.
      *
-     * @param string $id
-     * @param Request $request
-     * @return $this|\Illuminate\Http\RedirectResponse
+     * @param  mixed $datatables
+     * @param  \Illuminate\Http\Request $request
+     * @return mixed
      */
-    public function update($id, Request $request)
+    protected function doDatatableFilter($datatables, $request)
     {
-        $validator = Validator::make($request->input($this->pageData->getAttribute('model')), $this->modelRepository->getRules() ?? []);
+        if($request->has('filter') || $request->has('equal')) {
+            $datatables->filter(function($query) use ($request) {
+                /** @var \Illuminate\Database\Query\Builder $query */
+                $whereQuery = '';
+                $whereValue = [];
 
-        if($validator->passes()) {
-            try {
-                \DB::beginTransaction();
+                if($request->has('filter')) {
+                    foreach ($request->input('filter') as $column => $value) {
+                        if (is_null($value) || $value === '') continue;
 
-                $this->modelRepository->save($request->input($this->pageData->getAttribute('model')), [$this->modelRepository->getIndexKey() => $id]);
-                $permissionData = $request->input('PermissionRole', []);
-                $permissionRoleData = [];
-                foreach ($permissionData as $permission_id) {
-                    $permissionRoleData[] = [
-                        'permission_id' => $permission_id,
-                        'role_id' => $id
-                    ];
+                        if ($column == 'display_name') {
+                            try {
+                                $filterDisplayName = collect(cache('langMap.' . app()->getLocale(), []))
+                                    ->filter(function ($item, $key) use ($value) {
+                                        return preg_match('/^roles\.display_name\./', $key) > 0 && strpos($item, $value) !== false;
+                                    })
+                                    ->keys()
+                                    ->implode(',');
+                            } catch (\Exception $e) {
+                                $filterDisplayName = '';
+                            }
+                            $whereQuery .= ($whereQuery === '' ? '' : ' or ') . "{$column} in (?)";
+                            $whereValue[] = $filterDisplayName;
+                            continue;
+                        }
+
+                        $whereQuery .= ($whereQuery === '' ? '' : ' or ') . "{$column} like ?";
+                        $whereValue[] = "%{$value}%";
+                    }
+                    if($whereQuery !== '') $whereQuery = "({$whereQuery})";
                 }
-                PermissionRole::where('role_id', $id)->delete();
-                if(count($permissionRoleData) > 0) {
-                    PermissionRole::insert($permissionRoleData);
+
+                if($request->has('equal')) {
+                    foreach($request->input('equal') as $column => $value) {
+                        if(is_null($value) || $value === '') continue;
+
+                        $whereQuery .= ($whereQuery === '' ? '' : ' and ') . "{$column} = ?";
+                        $whereValue[] = "{$value}";
+                    }
                 }
 
-                \DB::commit();
-
-                return redirect()->route('administrator.edit', [$this->uri, $id])->with('success', __('administrator.form.message.edit_success'));
-            } catch (\Exception $e) {
-                \DB::rollBack();
-
-                return redirect()->route('administrator.edit', [$this->uri, $id])->withErrors([__('administrator.form.message.edit_error')])->withInput();
-            }
+                if($whereQuery !== '' && count($whereValue) > 0)
+                    $query->whereRaw("{$whereQuery}", $whereValue);
+            });
         }
 
-        return redirect()->route('administrator.edit', [$this->uri, $id])->withErrors($validator)->withInput();
+        return $datatables;
     }
 }

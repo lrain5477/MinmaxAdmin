@@ -2,6 +2,9 @@
 
 namespace Minmax\Base\Admin;
 
+/**
+ * Class AdminController
+ */
 class AdminController extends Controller
 {
     protected $packagePrefix = 'MinmaxBase::';

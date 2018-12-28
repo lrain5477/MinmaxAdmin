@@ -15,7 +15,7 @@
             <i class="icon-undo2"></i><span class="ml-1 d-none d-md-inline-block">@lang('MinmaxBase::admin.form.back_list')</span>
         </a>
         @endif
-        @if($adminData->can('worldContinentEdit') && $formData->editable)
+        @if($adminData->can('worldContinentEdit'))
         <a class="btn btn-sm btn-main" href="{{ langRoute("admin.{$pageData->uri}.edit", [$formData->id]) }}" title="@lang('MinmaxBase::admin.form.edit')">
             <i class="icon-pencil"></i><span class="ml-1 d-none d-md-inline-block">@lang('MinmaxBase::admin.form.edit')</span>
         </a>

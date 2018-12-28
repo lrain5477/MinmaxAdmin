@@ -5,6 +5,9 @@ namespace Minmax\World\Admin;
 use Minmax\Base\Admin\Transformer;
 use Minmax\World\Models\WorldContinent;
 
+/**
+ * Class WorldContinentTransformer
+ */
 class WorldContinentTransformer extends Transformer
 {
     protected $permissions = [

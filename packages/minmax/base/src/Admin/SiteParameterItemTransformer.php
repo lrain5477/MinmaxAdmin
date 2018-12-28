@@ -4,6 +4,9 @@ namespace Minmax\Base\Admin;
 
 use Minmax\Base\Models\SiteParameterItem;
 
+/**
+ * Class SiteParameterItemTransformer
+ */
 class SiteParameterItemTransformer extends Transformer
 {
     protected $permissions = [

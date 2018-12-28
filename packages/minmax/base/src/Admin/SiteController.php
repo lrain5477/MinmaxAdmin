@@ -4,6 +4,9 @@ namespace Minmax\Base\Admin;
 
 use Minmax\Base\Models\GoogleAnalyticsClient;
 
+/**
+ * Class SiteController
+ */
 class SiteController extends Controller
 {
     protected $gaClient;

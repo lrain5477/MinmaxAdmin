@@ -21,7 +21,7 @@ class RedirectIfAuthenticated
         if($request->is('administrator*') && Auth::guard('administrator')->check()) {
             return redirect(langRoute('administrator.home'));
         }
-        if(Request::is('siteadmin*') && Auth::guard('admin')->check()) {
+        if($request->is('siteadmin*') && Auth::guard('admin')->check()) {
             return redirect(langRoute('admin.home'));
         }
 

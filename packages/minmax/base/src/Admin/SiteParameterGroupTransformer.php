@@ -4,6 +4,9 @@ namespace Minmax\Base\Admin;
 
 use Minmax\Base\Models\SiteParameterGroup;
 
+/**
+ * Class SiteParameterGroupTransformer
+ */
 class SiteParameterGroupTransformer extends Transformer
 {
     protected $permissions = [

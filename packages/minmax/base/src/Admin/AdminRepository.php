@@ -137,14 +137,14 @@ class AdminRepository extends Repository
      * Serialize input attributes to a new model
      *
      * @param  array $attributes
-     * @return \Illuminate\Database\Eloquent\Model
+     * @return Admin
      */
     protected function serialization(array $attributes)
     {
         $this->clearLanguageBuffer();
 
         $model = static::MODEL;
-        /** @var \Illuminate\Database\Eloquent\Model $model */
+        /** @var Admin $model */
         $model = new $model();
 
         $primaryKey = $model->incrementing ? null : uuidl();

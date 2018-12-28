@@ -1,16 +1,18 @@
 <?php
 
-namespace App\Http\Controllers\Administrator;
+namespace Minmax\Base\Administrator;
 
-use App\Repositories\Administrator\FirewallRepository;
-use Illuminate\Http\Request;
-
+/**
+ * Class FirewallController
+ */
 class FirewallController extends Controller
 {
-    public function __construct(Request $request, FirewallRepository $firewallRepository)
-    {
-        $this->modelRepository = $firewallRepository;
+    protected $packagePrefix = 'MinmaxBase::';
 
-        parent::__construct($request);
+    public function __construct(FirewallRepository $repository)
+    {
+        $this->modelRepository = $repository;
+
+        parent::__construct();
     }
 }

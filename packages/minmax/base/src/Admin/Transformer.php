@@ -4,6 +4,9 @@ namespace Minmax\Base\Admin;
 
 use League\Fractal\TransformerAbstract;
 
+/**
+ * Class Transformer
+ */
 class Transformer extends TransformerAbstract
 {
     /**

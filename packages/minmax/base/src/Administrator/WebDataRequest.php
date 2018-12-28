@@ -1,10 +1,13 @@
 <?php
 
-namespace App\Http\Requests\Administrator;
+namespace Minmax\Base\Administrator;
 
-use App\Helpers\LogHelper;
 use Illuminate\Foundation\Http\FormRequest;
+use Minmax\Base\Helpers\Log as LogHelper;
 
+/**
+ * Class WebDataRequest
+ */
 class WebDataRequest extends FormRequest
 {
     /**
@@ -39,7 +42,7 @@ class WebDataRequest extends FormRequest
                     'WebData.contact.email' => 'required|email',
                     'WebData.contact.map' => 'nullable|url',
                     'WebData.seo' => 'nullable|array',
-                    'WebData.active' => 'required|in:1,0',
+                    'WebData.active' => 'required|boolean',
                 ];
         }
     }
@@ -52,14 +55,14 @@ class WebDataRequest extends FormRequest
     public function attributes()
     {
         return [
-            'WebData.website_name' => __('models.WebData.website_name'),
-            'WebData.system_email' => __('models.WebData.system_email'),
-            'WebData.system_url' => __('models.WebData.system_url'),
-            'WebData.company.name' => __('models.WebData.company.name'),
-            'WebData.contact.phone' => __('models.WebData.contact.phone'),
-            'WebData.contact.email' => __('models.WebData.contact.email'),
-            'WebData.contact.map' => __('models.WebData.contact.map'),
-            'WebData.active' => __('models.WebData.active'),
+            'WebData.website_name' => __('MinmaxBase::models.WebData.website_name'),
+            'WebData.system_email' => __('MinmaxBase::models.WebData.system_email'),
+            'WebData.system_url' => __('MinmaxBase::models.WebData.system_url'),
+            'WebData.company.name' => __('MinmaxBase::models.WebData.company.name'),
+            'WebData.contact.phone' => __('MinmaxBase::models.WebData.contact.phone'),
+            'WebData.contact.email' => __('MinmaxBase::models.WebData.contact.email'),
+            'WebData.contact.map' => __('MinmaxBase::models.WebData.contact.map'),
+            'WebData.active' => __('MinmaxBase::models.WebData.active'),
         ];
     }
 

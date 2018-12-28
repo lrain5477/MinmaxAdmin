@@ -15,7 +15,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property boolean $active
  * @property \Illuminate\Support\Carbon $created_at
  * @property \Illuminate\Support\Carbon $updated_at
- * @property \Illuminate\Database\Eloquent\Collection|\Minmax\Base\Models\WorldLanguage[] $worldCounties
+ * @property \Illuminate\Database\Eloquent\Collection|\Minmax\Base\Models\WorldLanguage[] $worldLanguage
  */
 class WorldCurrency extends Model
 {

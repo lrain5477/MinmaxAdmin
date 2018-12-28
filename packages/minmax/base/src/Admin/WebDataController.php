@@ -2,6 +2,9 @@
 
 namespace Minmax\Base\Admin;
 
+/**
+ * Class WebDataController
+ */
 class WebDataController extends Controller
 {
     protected $packagePrefix = 'MinmaxBase::';

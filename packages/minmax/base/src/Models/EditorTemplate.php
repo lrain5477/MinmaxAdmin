@@ -24,4 +24,19 @@ class EditorTemplate extends Model
     protected $casts = [
         'active' => 'boolean',
     ];
+
+    public function getTitleAttribute()
+    {
+        return langDB($this->getAttributeFromArray('title'));
+    }
+
+    public function getDescriptionAttribute()
+    {
+        return langDB($this->getAttributeFromArray('description'));
+    }
+
+    public function getEditorAttribute()
+    {
+        return langDB($this->getAttributeFromArray('editor'));
+    }
 }

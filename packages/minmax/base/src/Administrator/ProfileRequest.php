@@ -1,10 +1,13 @@
 <?php
 
-namespace App\Http\Requests\Administrator;
+namespace Minmax\Base\Administrator;
 
-use App\Helpers\LogHelper;
 use Illuminate\Foundation\Http\FormRequest;
+use Minmax\Base\Helpers\Log as LogHelper;
 
+/**
+ * Class ProfileRequest
+ */
 class ProfileRequest extends FormRequest
 {
     /**
@@ -38,8 +41,8 @@ class ProfileRequest extends FormRequest
     public function attributes()
     {
         return [
-            'Administrator.name' => __('models.Administrator.name'),
-            'Administrator.password' => __('models.Administrator.password'),
+            'Administrator.name' => __('MinmaxBase::models.Administrator.name'),
+            'Administrator.password' => __('MinmaxBase::models.Administrator.password'),
         ];
     }
 

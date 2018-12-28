@@ -4,6 +4,10 @@ namespace Minmax\Base\Admin;
 
 use Minmax\Base\Models\Firewall;
 
+/**
+ * Class FirewallTransformer
+ * @package Minmax\Base\Admin
+ */
 class FirewallTransformer extends Transformer
 {
     protected $permissions = [
@@ -14,10 +18,10 @@ class FirewallTransformer extends Transformer
 
     /**
      * Transformer constructor. Put action permissions.
-     * @param  WorldContinentPresenter $presenter
+     * @param  FirewallPresenter $presenter
      * @param  string $uri
      */
-    public function __construct(WorldContinentPresenter $presenter, $uri)
+    public function __construct(FirewallPresenter $presenter, $uri)
     {
         $this->presenter = $presenter;
 

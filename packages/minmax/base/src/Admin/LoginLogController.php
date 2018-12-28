@@ -2,20 +2,24 @@
 
 namespace Minmax\Base\Admin;
 
+/**
+ * Class LoginLogController
+ */
 class LoginLogController extends Controller
 {
     protected $packagePrefix = 'MinmaxBase::';
 
-    protected function getQueryBuilder()
+    public function __construct(LoginLogRepository $repository)
     {
-        return \DB::table('login_log')
-            ->where('guard', 'admin')
-            ->where('created_at', '>=', date('Y-m-d 00:00:00', strtotime('-3 months')))
-            ->select(['username', 'ip', 'remark', 'result', 'created_at']);
+        $this->modelRepository = $repository;
+
+        parent::__construct();
     }
 
-    protected function setDatatablesTransformer($datatables)
+    protected function getQueryBuilder()
     {
-        return $datatables;
+        return $this->modelRepository->query()
+            ->where('guard', 'admin')
+            ->where('created_at', '>=', date('Y-m-d 00:00:00', strtotime('-3 months')));
     }
 }

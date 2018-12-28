@@ -2,10 +2,9 @@
 
 namespace Minmax\Base\Admin;
 
-use Illuminate\Http\Request;
-use Minmax\Base\Helpers\Log as LogHelper;
-use Minmax\Base\Models\Permission;
-
+/**
+ * Class RoleController
+ */
 class RoleController extends Controller
 {
     protected $packagePrefix = 'MinmaxBase::';

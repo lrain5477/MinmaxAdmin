@@ -2,6 +2,9 @@
 
 namespace Minmax\Base\Admin;
 
+/**
+ * Class FirewallController
+ */
 class FirewallController extends Controller
 {
     protected $packagePrefix = 'MinmaxBase::';

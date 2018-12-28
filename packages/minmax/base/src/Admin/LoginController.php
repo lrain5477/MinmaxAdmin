@@ -12,6 +12,9 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
 use Minmax\Base\Helpers\Log as LogHelper;
 
+/**
+ * Class LoginController
+ */
 class LoginController extends BaseController
 {
     use AuthenticatesUsers, AuthorizesRequests, DispatchesJobs, ValidatesRequests;
@@ -123,6 +126,19 @@ class LoginController extends BaseController
             'ip.in' => __('validation.custom.ip.white'),
             'ip.not_in' => __('validation.custom.ip.black'),
         ]);
+    }
+
+    /**
+     * Attempt to log the user into the application.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return bool
+     */
+    protected function attemptLogin(Request $request)
+    {
+        return $this->guard()->attempt(
+            $this->credentials($request), $request->filled('remember')
+        );
     }
 
     /**

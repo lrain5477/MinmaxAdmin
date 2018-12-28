@@ -1,10 +1,13 @@
 <?php
 
-namespace App\Http\Requests\Administrator;
+namespace Minmax\Base\Administrator;
 
-use App\Helpers\LogHelper;
 use Illuminate\Foundation\Http\FormRequest;
+use Minmax\Base\Helpers\Log as LogHelper;
 
+/**
+ * Class FirewallRequest
+ */
 class FirewallRequest extends FormRequest
 {
     /**
@@ -31,8 +34,8 @@ class FirewallRequest extends FormRequest
                 return [
                     'Firewall.guard' => 'required|in:admin,web',
                     'Firewall.ip' => 'required|ip',
-                    'Firewall.rule' => 'required|in:1,0',
-                    'Firewall.active' => 'required|in:1,0',
+                    'Firewall.rule' => 'required|boolean',
+                    'Firewall.active' => 'required|boolean',
                 ];
         }
     }
@@ -45,10 +48,10 @@ class FirewallRequest extends FormRequest
     public function attributes()
     {
         return [
-            'Firewall.guard' => __('models.Firewall.guard'),
-            'Firewall.ip' => __('models.Firewall.ip'),
-            'Firewall.rule' => __('models.Firewall.rule'),
-            'Firewall.active' => __('models.Firewall.active'),
+            'Firewall.guard' => __('MinmaxBase::models.Firewall.guard'),
+            'Firewall.ip' => __('MinmaxBase::models.Firewall.ip'),
+            'Firewall.rule' => __('MinmaxBase::models.Firewall.rule'),
+            'Firewall.active' => __('MinmaxBase::models.Firewall.active'),
         ];
     }
 

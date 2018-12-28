@@ -26,7 +26,6 @@ use Illuminate\Database\Eloquent\Model;
 class WebData extends Model
 {
     protected $table = 'web_data';
-    protected $primaryKey = 'id';
     protected $guarded = ['guard'];
     protected $casts = [
         'system_logo' => 'array',

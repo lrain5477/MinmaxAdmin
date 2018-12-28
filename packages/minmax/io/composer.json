@@ -1,0 +1,26 @@
+{
+    "name": "minmax/io",
+    "description": "Import and Export management",
+    "type": "library",
+    "authors": [
+        {
+            "name": "Jeffy",
+            "email": "jeffy@e-creative.tw"
+        }
+    ],
+    "require": {
+        "minmax/base": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "Minmax\\io\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Minmax\\Io\\ServiceProvider"
+            ]
+        }
+    }
+}

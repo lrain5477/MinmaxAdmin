@@ -239,7 +239,7 @@ class Controller extends BaseController
         try {
             $reflection = new \ReflectionClass(static::class);
             app($reflection->getNamespaceName() . '\\' . $this->pageData->getAttribute('model') . 'Request');
-        } catch (\Exception $e) {}
+        } catch (\ReflectionException $e) {}
     }
 
     /**
@@ -536,13 +536,13 @@ class Controller extends BaseController
 
         $queryBuilder = $this->getQueryBuilder();
 
-        $datatables = DataTables::of($queryBuilder);
+        $datatable = DataTables::of($queryBuilder);
 
-        $datatables = $this->doDatatableFilter($datatables, $request);
+        $datatable = $this->doDatatableFilter($datatable, $request);
 
-        $datatables = $this->setDatatablesTransformer($datatables);
+        $datatable = $this->setDatatablesTransformer($datatable);
 
-        return $datatables->make(true);
+        return $datatable->make(true);
     }
 
     /**
@@ -558,8 +558,8 @@ class Controller extends BaseController
         $validator = validator($inputSet, [
             'id' => 'required',
             'column' => 'required',
-            'oriValue' => 'required|in:0,1',
-            'switchTo' => 'required|in:0,1',
+            'oriValue' => 'required|boolean',
+            'switchTo' => 'required|boolean',
         ]);
 
         if (!$validator->fails() && $model = $this->modelRepository->find($inputSet['id'])) {

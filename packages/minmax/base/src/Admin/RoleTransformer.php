@@ -4,6 +4,9 @@ namespace Minmax\Base\Admin;
 
 use Minmax\Base\Models\Role;
 
+/**
+ * Class RoleTransformer
+ */
 class RoleTransformer extends Transformer
 {
     protected $permissions = [

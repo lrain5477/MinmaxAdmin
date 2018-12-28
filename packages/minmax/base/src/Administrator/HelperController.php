@@ -1,23 +1,35 @@
 <?php
 
-namespace App\Http\Controllers\Administrator;
+namespace Minmax\Base\Administrator;
 
-use App\Helpers\CaptchaHelper;
-use App\Helpers\ImageHelper;
-use App\Models\EditorTemplate;
+use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as BaseController;
-use Storage;
+use Illuminate\Support\Facades\Storage;
+use Minmax\Base\Helpers\Captcha as CaptchaHelper;
+use Minmax\Base\Helpers\Image as ImageHelper;
+use Minmax\Base\Models\EditorTemplate;
 
 /**
  * Class HelperController
  */
 class HelperController extends BaseController
 {
+    /**
+     * @param  string $name
+     * @param  integer $id
+     * @return string
+     */
     public function getCaptcha($name, $id = null)
     {
         return CaptchaHelper::createCaptcha('administrator_captcha_' . $name, 4, $id);
     }
 
+    /**
+     * @param  integer $width
+     * @param  integer $height
+     * @param  string $imagePath
+     * @return \Symfony\Component\HttpFoundation\StreamedResponse
+     */
     public function getThumbnail($width, $height, $imagePath)
     {
         if($width != $height) abort(404);
@@ -25,14 +37,19 @@ class HelperController extends BaseController
         return Storage::response($thumbnailPath);
     }
 
+    /**
+     * @param  string $category
+     * @return string
+     */
     public function getEditorTemplate($category)
     {
-        $templates = EditorTemplate::where(['guard' => 'administrator', 'category' => $category, 'active' => '1'])
+        $templates = EditorTemplate::where(['category' => $category, 'active' => true])
+            ->orderBy('guard')
             ->orderBy('sort')
-            ->get(['title', 'description', 'editor'])
+            ->get(['guard', 'title', 'description', 'editor'])
             ->map(function($item) {
                 return [
-                    'title' => $item->title,
+                    'title' => $item->guard . ' / ' . $item->title,
                     'description' => $item->description,
                     'html' => $item->editor,
                 ];
@@ -40,5 +57,19 @@ class HelperController extends BaseController
             ->toJson(JSON_UNESCAPED_UNICODE);
 
         return "CKEDITOR.addTemplates('default',{templates: {$templates} });";
+    }
+
+    /**
+     * @param  Request $request
+     * @param  WorldLanguageRepository $repository
+     * @return \Illuminate\Http\Response
+     */
+    public function setFormLocal(Request $request, WorldLanguageRepository $repository)
+    {
+        if ($model = $repository->one(['code' => $request->input('language', ''), 'active' => true])) {
+            session(['admin-formLocal' => $model->code]);
+            session()->save();
+        }
+        return response('', 200);
     }
 }

@@ -5,6 +5,9 @@ namespace Minmax\Base\Admin;
 use Illuminate\Foundation\Http\FormRequest;
 use Minmax\Base\Helpers\Log as LogHelper;
 
+/**
+ * Class AdminRequest
+ */
 class AdminRequest extends FormRequest
 {
     /**

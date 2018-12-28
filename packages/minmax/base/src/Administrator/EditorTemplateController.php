@@ -1,16 +1,18 @@
 <?php
 
-namespace App\Http\Controllers\Administrator;
+namespace Minmax\Base\Administrator;
 
-use App\Repositories\Administrator\EditorTemplateRepository;
-use Illuminate\Http\Request;
-
+/**
+ * Class EditorTemplateController
+ */
 class EditorTemplateController extends Controller
 {
-    public function __construct(Request $request, EditorTemplateRepository $editorTemplateRepository)
-    {
-        $this->modelRepository = $editorTemplateRepository;
+    protected $packagePrefix = 'MinmaxBase::';
 
-        parent::__construct($request);
+    public function __construct(EditorTemplateRepository $repository)
+    {
+        $this->modelRepository = $repository;
+
+        parent::__construct();
     }
 }

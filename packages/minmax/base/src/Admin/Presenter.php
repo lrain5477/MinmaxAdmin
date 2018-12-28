@@ -133,6 +133,59 @@ abstract class Presenter
      * @param  array $options
      * @return string
      */
+    public function getGridSelection($model, $column, $options = [])
+    {
+        $columnValue = $model->getAttribute($column) ?? '';
+
+        if (is_bool($columnValue)) {
+            $columnValue = intval($columnValue);
+        }
+
+        if ($subColumn = array_get($options, 'subColumn')) {
+            $value = is_array($columnValue) ? array_get($columnValue, $subColumn, '') : '';
+            $valueText = array_get($this->parameterSet, "{$column}.{$subColumn}.{$value}.title", '');
+        } else {
+            $value = $columnValue;
+            $valueText = array_get($this->parameterSet, "{$column}.{$value}.title", '');
+        }
+
+        return $this->getPureString($valueText, false);
+    }
+
+    /**
+     * @param  \Illuminate\Database\Eloquent\Model $model
+     * @param  string $column
+     * @param  array $options
+     * @return string
+     */
+    public function getGridMultiSelection($model, $column, $options = [])
+    {
+        $columnValue = $model->getAttribute($column) ?? [];
+
+        $titleSet = [];
+        if ($subColumn = array_get($options, 'subColumn')) {
+            $value = is_array($columnValue) ? array_get($columnValue, $subColumn, []) : [];
+            foreach ($value as $singleValue) {
+                $singleTitle = array_get($this->parameterSet, "{$column}.{$subColumn}.{$singleValue}.title", '');
+                if ($singleTitle != '') $titleSet[] = $singleTitle;
+            }
+        } else {
+            $value = $columnValue;
+            foreach ($value as $singleValue) {
+                $singleTitle = array_get($this->parameterSet, "{$column}.{$singleValue}.title", '');
+                if ($singleTitle != '') $titleSet[] = $singleTitle;
+            }
+        }
+
+        return $this->getPureString(implode(', ', $titleSet), false);
+    }
+
+    /**
+     * @param  \Illuminate\Database\Eloquent\Model $model
+     * @param  string $column
+     * @param  array $options
+     * @return string
+     */
     public function getGridTextBadge($model, $column, $options = [])
     {
         $columnValue = $model->getAttribute($column) ?? '';
@@ -278,7 +331,7 @@ abstract class Presenter
 
     /**
      * @param  \Illuminate\Database\Eloquent\Model $model
-     * @param  array $additional will format as ['permission' => 'R', 'view' => 'xxx']
+     * @param  array $additional will format as ['permission' => 'R', 'view' => 'xxx', 'uri' => '???']
      * @return string
      */
     public function getGridActions($model, $additional = [])
@@ -298,7 +351,7 @@ abstract class Presenter
 
             foreach ($additional as $viewItem) {
                 if (in_array(array_get($viewItem, 'permission', ''), $this->permissionSet)) {
-                    $result .= view(array_get($viewItem, 'view', ''), ['id' => $id, 'uri' => $this->uri])->render();
+                    $result .= view(array_get($viewItem, 'view', ''), ['id' => $id, 'uri' => array_get($viewItem, 'uri', $this->uri)])->render();
                 }
             }
 
@@ -405,6 +458,50 @@ abstract class Presenter
      * @param  array $options
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
+    public function getFieldDynamicOptionText($model, $column, $options = [])
+    {
+        $modelName = class_basename($model);
+        $columnValue = $this->getModelValue($model, $column) ?? [];
+
+        if ($subColumn = array_get($options, 'subColumn')) {
+            $fieldId = "{$modelName}-{$column}-{$subColumn}";
+            $fieldLabel = __($this->packagePrefix . "models.{$modelName}.{$column}.{$subColumn}");
+            $fieldName = array_get($options, 'name', "{$modelName}[{$column}][$subColumn]");
+            $fieldValue = array_get($options, 'defaultValue', array_get($columnValue, $subColumn, []));
+            $hintPath = $this->packagePrefix . "models.{$modelName}.hint.{$column}.{$subColumn}";
+        } else {
+            $fieldId = "{$modelName}-{$column}";
+            $fieldLabel = __($this->packagePrefix . "models.{$modelName}.{$column}");
+            $fieldName = array_get($options, 'name', "{$modelName}[{$column}]");
+            $fieldValue = array_get($options, 'defaultValue', $columnValue);
+            $hintPath = $this->packagePrefix . "models.{$modelName}.hint.{$column}";
+        }
+
+        $hintValue = array_get($options, 'hint', false) === false
+            ? ''
+            : (is_string(array_get($options, 'hint')) ? array_get($options, 'hint') : __($hintPath));
+
+        $componentData = [
+            'id' => $fieldId,
+            'language' => in_array($column, $this->languageColumns),
+            'label' => $fieldLabel,
+            'name' => $fieldName,
+            'values' => $fieldValue,
+            'required' => array_get($options, 'required', false),
+            'size' => array_get($options, 'size', 10),
+            'placeholder' => array_get($options, 'placeholder', ''),
+            'hint' => $hintValue,
+        ];
+
+        return view('MinmaxBase::admin.layouts.form.dynamic-options-text', $componentData);
+    }
+
+    /**
+     * @param  \Illuminate\Database\Eloquent\Model $model
+     * @param  string $column
+     * @param  array $options
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function getViewSelection($model, $column, $options = [])
     {
         $modelName = class_basename($model);
@@ -414,11 +511,13 @@ abstract class Presenter
             $fieldId = "{$modelName}-{$column}-{$subColumn}";
             $fieldLabel = __($this->packagePrefix . "models.{$modelName}.{$column}.{$subColumn}");
             $fieldValue = is_array($columnValue) ? array_get($columnValue, $subColumn, '') : '';
+            if (is_bool($fieldValue)) $fieldValue = intval($fieldValue);
             $fieldDisplay = array_get($options, 'defaultValue', array_get($this->parameterSet, "{$column}.{$subColumn}.{$fieldValue}.title", '(not exist)'));
         } else {
             $fieldId = "{$modelName}-{$column}";
             $fieldLabel = __($this->packagePrefix . "models.{$modelName}.{$column}");
             $fieldValue = $columnValue;
+            if (is_bool($fieldValue)) $fieldValue = intval($fieldValue);
             $fieldDisplay = array_get($options, 'defaultValue', array_get($this->parameterSet, "{$column}.{$fieldValue}.title", '(not exist)'));
         }
 

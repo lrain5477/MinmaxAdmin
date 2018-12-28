@@ -6,6 +6,9 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use Minmax\Base\Helpers\Log as LogHelper;
 
+/**
+ * Class SiteParameterGroupRequest
+ */
 class SiteParameterGroupRequest extends FormRequest
 {
     /**
@@ -35,7 +38,7 @@ class SiteParameterGroupRequest extends FormRequest
         switch ($this->method()) {
             case 'PUT':
                 return [
-                    'SiteParameterGroup.code' => ['required', Rule::unique('site_parameter_group', 'code')->ignore($this->route()->parameter('id'))],
+                    'SiteParameterGroup.code' => ['required', Rule::unique('site_parameter_group', 'code')->ignore($this->route('id'))],
                     'SiteParameterGroup.title' => 'required|string',
                     'SiteParameterGroup.active' => 'required|boolean',
                 ];

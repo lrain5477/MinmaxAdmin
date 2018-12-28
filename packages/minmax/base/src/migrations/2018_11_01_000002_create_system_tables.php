@@ -137,8 +137,8 @@ class CreateSystemTables extends Migration
             $table->string('guard', 16)->comment('平台');
             $table->string('category')->comment('使用類別');
             $table->string('title')->comment('名稱');
-            $table->text('description')->comment('敘述');
-            $table->longText('editor')->comment('HTML內容');
+            $table->string('description')->comment('敘述');
+            $table->string('editor')->comment('HTML內容');
             $table->unsignedInteger('sort')->default(1)->comment('排序');
             $table->boolean('active')->default(true)->comment('啟用狀態');
             $table->timestamps();
@@ -188,6 +188,11 @@ class CreateSystemTables extends Migration
             ['group_id' => $groupIndex - 1, 'value' => '1', 'label' => 'system_parameter_item.label.' . $itemIndex++, 'options' => json_encode(['class' => 'danger']), 'sort' => 1],
             ['group_id' => $groupIndex - 1, 'value' => '0', 'label' => 'system_parameter_item.label.' . $itemIndex++, 'options' => json_encode(['class' => 'secondary']), 'sort' => 2],
         ]);
+        array_push($systemParameterGroupData, ['code' => 'active_admin', 'title' => 'system_parameter_group.title.' . $groupIndex++]);
+        $systemParameterItemData = array_merge($systemParameterItemData, [
+            ['group_id' => $groupIndex - 1, 'value' => '1', 'label' => 'system_parameter_item.label.' . $itemIndex++, 'options' => json_encode(['class' => 'danger']), 'sort' => 1],
+            ['group_id' => $groupIndex - 1, 'value' => '0', 'label' => 'system_parameter_item.label.' . $itemIndex++, 'options' => json_encode(['class' => 'secondary']), 'sort' => 2],
+        ]);
         array_push($systemParameterGroupData, ['code' => 'result', 'title' => 'system_parameter_group.title.' . $groupIndex++]);
         $systemParameterItemData = array_merge($systemParameterItemData, [
             ['group_id' => $groupIndex - 1, 'value' => '1', 'label' => 'system_parameter_item.label.' . $itemIndex++, 'options' => json_encode(['class' => 'success']), 'sort' => 1],
@@ -218,18 +223,19 @@ class CreateSystemTables extends Migration
         DB::table('system_parameter_item')->insert($systemParameterItemData);
 
         $languageResourceData = array_merge($languageResourceData, SeederHelper::getLanguageResourceArray('system_parameter_group', [
-            ['title' => '啟用狀態'], ['title' => '操作結果'], ['title' => '防火牆規則'], ['title' => '置頂狀態'], ['title' => '顯示狀態'], ['title' => '可否編輯']
+            ['title' => '啟用狀態'], ['title' => '後臺啟用'], ['title' => '操作結果'], ['title' => '防火牆規則'], ['title' => '置頂狀態'], ['title' => '顯示狀態'], ['title' => '可否編輯']
         ], 1));
         $languageResourceData = array_merge($languageResourceData, SeederHelper::getLanguageResourceArray('system_parameter_group', [
-            ['title' => '启用状态'], ['title' => '操作结果'], ['title' => '防火墙规则'], ['title' => '置顶状态'], ['title' => '显示状态'], ['title' => '可否编辑']
+            ['title' => '启用状态'], ['title' => '后台启用'], ['title' => '操作结果'], ['title' => '防火墙规则'], ['title' => '置顶状态'], ['title' => '显示状态'], ['title' => '可否编辑']
         ], 2));
         $languageResourceData = array_merge($languageResourceData, SeederHelper::getLanguageResourceArray('system_parameter_group', [
-            ['title' => '有効状態'], ['title' => '操作結果'], ['title' => 'ルール'], ['title' => '頂上状態'], ['title' => '表示状態'], ['title' => '変更可能']
+            ['title' => '有効状態'], ['title' => '裏台有効'], ['title' => '操作結果'], ['title' => 'ルール'], ['title' => '頂上状態'], ['title' => '表示状態'], ['title' => '変更可能']
         ], 3));
         $languageResourceData = array_merge($languageResourceData, SeederHelper::getLanguageResourceArray('system_parameter_group', [
-            ['title' => 'Active'], ['title' => 'Result'], ['title' => 'Rule'], ['title' => 'Top'], ['title' => 'Visible'], ['title' => 'Editable']
+            ['title' => 'Active'], ['title' => 'Admin Enable'], ['title' => 'Result'], ['title' => 'Rule'], ['title' => 'Top'], ['title' => 'Visible'], ['title' => 'Editable']
         ], 4));
         $languageResourceData = array_merge($languageResourceData, SeederHelper::getLanguageResourceArray('system_parameter_item', [
+            ['label' => '啟用'], ['label' => '停用'],
             ['label' => '啟用'], ['label' => '停用'],
             ['label' => '成功'], ['label' => '失敗'],
             ['label' => '允許'], ['label' => '禁止'],
@@ -239,6 +245,7 @@ class CreateSystemTables extends Migration
         ], 1));
         $languageResourceData = array_merge($languageResourceData, SeederHelper::getLanguageResourceArray('system_parameter_item', [
             ['label' => '启用'], ['label' => '停用'],
+            ['label' => '启用'], ['label' => '停用'],
             ['label' => '成功'], ['label' => '失败'],
             ['label' => '允许'], ['label' => '禁止'],
             ['label' => '正常'], ['label' => '置顶'],
@@ -247,6 +254,7 @@ class CreateSystemTables extends Migration
         ], 2));
         $languageResourceData = array_merge($languageResourceData, SeederHelper::getLanguageResourceArray('system_parameter_item', [
             ['label' => '有効'], ['label' => '無効'],
+            ['label' => '有効'], ['label' => '無効'],
             ['label' => '成功'], ['label' => '失敗'],
             ['label' => '許可'], ['label' => '禁止'],
             ['label' => '一般'], ['label' => '頂上'],
@@ -254,6 +262,7 @@ class CreateSystemTables extends Migration
             ['label' => '有効'], ['label' => '無効'],
         ], 3));
         $languageResourceData = array_merge($languageResourceData, SeederHelper::getLanguageResourceArray('system_parameter_item', [
+            ['label' => 'On'], ['label' => 'Off'],
             ['label' => 'On'], ['label' => 'Off'],
             ['label' => 'Success'], ['label' => 'Failed'],
             ['label' => 'Allowed'], ['label' => 'Denied'],

@@ -4,6 +4,9 @@ namespace Minmax\Base\Admin;
 
 use Minmax\Base\Models\Admin;
 
+/**
+ * Class AdminTransformer
+ */
 class AdminTransformer extends Transformer
 {
     protected $permissions = [
@@ -42,7 +45,7 @@ class AdminTransformer extends Transformer
             'username' => $this->presenter->getGridText($model, 'username'),
             'name' => $this->presenter->getGridText($model, 'name'),
             'email' => $this->presenter->getGridText($model, 'email'),
-            'role_id' => $this->presenter->getPureString($model->roles()->get()->pluck('display_name')->implode(', ')),
+            'role_id' => $this->presenter->getPureString($model->roles->pluck('display_name')->implode(', ')),
             'active' => $isSelf
                 ? $this->presenter->getGridTextBadge($model, 'active')
                 : $this->presenter->getGridSwitch($model, 'active'),

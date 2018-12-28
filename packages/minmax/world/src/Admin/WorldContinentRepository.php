@@ -30,4 +30,14 @@ class WorldContinentRepository extends Repository
     {
         return 'world_continent';
     }
+
+    public function getSelectParameters()
+    {
+        return $this->all()
+            ->mapWithKeys(function ($item) {
+                /** @var WorldContinent $item */
+                return [$item->id => ['title' => $item->title, 'options' => []]];
+            })
+            ->toArray();
+    }
 }

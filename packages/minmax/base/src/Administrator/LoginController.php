@@ -1,18 +1,20 @@
 <?php
 
-namespace App\Http\Controllers\Administrator;
+namespace Minmax\Base\Administrator;
 
-use App\Helpers\LogHelper;
-use App\Repositories\Administrator\WebDataRepository;
-use App\Repositories\Administrator\WorldLanguageRepository;
-use Illuminate\Foundation\Auth\AuthenticatesUsers;
-use Illuminate\Http\Request;
-use Illuminate\Foundation\Bus\DispatchesJobs;
-use Illuminate\Routing\Controller as BaseController;
-use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Foundation\Bus\DispatchesJobs;
+use Illuminate\Foundation\Validation\ValidatesRequests;
+use Illuminate\Http\Request;
+use Illuminate\Routing\Controller as BaseController;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
+use Minmax\Base\Helpers\Log as LogHelper;
 
+/**
+ * Class LoginController
+ */
 class LoginController extends BaseController
 {
     use AuthenticatesUsers, AuthorizesRequests, DispatchesJobs, ValidatesRequests;
@@ -22,41 +24,38 @@ class LoginController extends BaseController
      *
      * @var string
      */
-    protected $redirectTo = '/administrator';
+    protected $redirectTo = 'administrator';
 
-    /** @var \Illuminate\Support\Collection|\App\Models\WorldLanguage[] $languageData */
+    /**
+     * @var \Illuminate\Support\Collection|\Minmax\Base\Models\WorldLanguage[] $languageData
+     */
     protected $languageData;
 
     /**
-     * @var \App\Models\WebData $webData
+     * @var \Minmax\Base\Models\WebData $webData
      */
     protected $webData;
 
     /**
      * Create a new controller instance.
      *
-     * @param  WebDataRepository $webDataRepository
      * @return void
      */
-    public function __construct(WebDataRepository $webDataRepository)
+    public function __construct()
     {
-        // 設定 語言資料
-        $this->languageData = \Cache::rememberForever('languageSet', function() {
-            return (new WorldLanguageRepository())
-                ->all(function($query) {
-                    /** @var \Illuminate\Database\Query\Builder $query */
-                    $query->where('active', '1')->orderBy('sort');
-                });
-        });
-
-        // 設定 網站資料
-        $this->webData = $webDataRepository->getData() ?? abort(404);
-        if ($this->webData->active != '1') abort(404, $this->webData->offline_text);
-
         // 設定 導向網址
-        $this->redirectTo .= $this->languageData->count() > 1 ? ('/'.app()->getLocale()) : '';
+        //$this->redirectTo .= $this->languageData->count() > 1 ? ('/'.app()->getLocale()) : '';
 
         $this->middleware('guest')->except('logout');
+
+        $this->middleware(function ($request, $next) {
+            /** @var Request $request */
+            $thisAttributes = $request->get('controllerAttributes');
+
+            $this->webData = $thisAttributes['webData'] ?? abort(404);
+
+            return $next($request);
+        });
     }
 
     /**
@@ -66,7 +65,7 @@ class LoginController extends BaseController
      */
     public function showLoginForm()
     {
-        return view('administrator.login', ['webData' => $this->webData]);
+        return view('MinmaxBase::administrator.login', ['webData' => $this->webData]);
     }
 
     /**
@@ -146,7 +145,7 @@ class LoginController extends BaseController
      */
     protected function guard()
     {
-        return \Auth::guard('administrator');
+        return Auth::guard('administrator');
     }
 
     /**

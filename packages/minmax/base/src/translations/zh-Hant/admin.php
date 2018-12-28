@@ -33,7 +33,7 @@ return [
     ],
 
     'login' => [
-        'title' => '後台管理系統',
+        'title' => '後臺管理系統',
         'forget' => '忘記密碼?',
         'username' => '您的帳號',
         'email' => '您的信箱',
@@ -86,13 +86,10 @@ return [
             'view' => '瀏覽',
             'edit' => '編輯',
             'delete' => '刪除',
+            'children' => '子項目',
         ],
         'selection' => [
             'all' => '全部',
-            'all_active' => '狀態全部',
-            'all_result' => '狀態全部',
-            'all_guard' => '平台全部',
-            'all_rule' => '規則全部',
         ],
         'back' => '返回',
         'root' => '根列表',

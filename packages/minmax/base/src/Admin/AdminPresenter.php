@@ -4,6 +4,9 @@ namespace Minmax\Base\Admin;
 
 use Minmax\Base\Models\Role;
 
+/**
+ * Class AdminPresenter
+ */
 class AdminPresenter extends Presenter
 {
     protected $packagePrefix = 'MinmaxBase::';

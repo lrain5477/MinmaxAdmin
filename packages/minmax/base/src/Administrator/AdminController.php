@@ -1,16 +1,18 @@
 <?php
 
-namespace App\Http\Controllers\Administrator;
+namespace Minmax\Base\Administrator;
 
-use App\Repositories\Administrator\AdminRepository;
-use Illuminate\Http\Request;
-
+/**
+ * Class AdminController
+ */
 class AdminController extends Controller
 {
-    public function __construct(Request $request, AdminRepository $adminRepository)
+    protected $packagePrefix = 'MinmaxBase::';
+
+    public function __construct(AdminRepository $adminRepository)
     {
         $this->modelRepository = $adminRepository;
 
-        parent::__construct($request);
+        parent::__construct();
     }
 }

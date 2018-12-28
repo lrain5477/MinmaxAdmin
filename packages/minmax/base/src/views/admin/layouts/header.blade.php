@@ -15,7 +15,7 @@
                 @foreach($languageData as $languageItem)
                 <a class="dropdown-item {{ app()->getLocale() == $languageItem->code ? 'active' : '' }}"
                    href="{{ preg_replace(['/\/'.app()->getLocale().'\//i', '/\/'.app()->getLocale().'$/i'], ["/{$languageItem->code}/"], url()->current()) }}">
-                    <i class="img-thumbnail flag flag-icon-background {{ $languageItem->icon }}"></i><span>{{ $languageItem->name }}</span>
+                    <i class="img-thumbnail flag flag-icon-background {{ array_get($languageItem->options, 'icon') }}"></i><span>{{ $languageItem->name }}</span>
                 </a>
                 @endforeach
             </div>

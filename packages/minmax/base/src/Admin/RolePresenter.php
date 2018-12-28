@@ -4,17 +4,14 @@ namespace Minmax\Base\Admin;
 
 use Minmax\Base\Models\Permission;
 
+/**
+ * Class RolePresenter
+ */
 class RolePresenter extends Presenter
 {
     protected $packagePrefix = 'MinmaxBase::';
 
     protected $languageColumns = ['display_name', 'description'];
-
-    protected $permissions = [
-        'R' => 'roleShow',
-        'U' => 'roleEdit',
-        'D' => 'roleDestroy',
-    ];
 
     public function __construct()
     {
@@ -25,13 +22,17 @@ class RolePresenter extends Presenter
         ];
     }
 
+    /**
+     * @param  \Minmax\Base\Models\Role $model
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function getFieldPermissions($model)
     {
         return view('MinmaxBase::admin.role.form-permission', [
             'model' => $model,
             'permissionData' => Permission::query()
                 ->where(['guard' => 'admin', 'active' => true])
-                ->orderBy('id')
+                ->orderBy('sort')
                 ->get()
                 ->groupBy('group'),
         ]);

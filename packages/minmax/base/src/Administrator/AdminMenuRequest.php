@@ -1,10 +1,14 @@
 <?php
 
-namespace App\Http\Requests\Administrator;
+namespace Minmax\Base\Administrator;
 
-use App\Helpers\LogHelper;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
+use Minmax\Base\Helpers\Log as LogHelper;
 
+/**
+ * Class AdminMenuRequest
+ */
 class AdminMenuRequest extends FormRequest
 {
     /**
@@ -27,32 +31,30 @@ class AdminMenuRequest extends FormRequest
         switch ($this->method()) {
             case 'PUT':
                 return [
+                    'AdminMenu.parent_id' => 'nullable|exists:admin_menu,id',
                     'AdminMenu.title' => 'required|string',
-                    'AdminMenu.uri' => 'required|unique:admin_menu,uri',
+                    'AdminMenu.uri' => ['required', Rule::unique('admin_menu', 'uri')->ignore($this->route('id'))],
                     'AdminMenu.controller' => 'nullable|string',
                     'AdminMenu.model' => 'nullable|string',
-                    'AdminMenu.class' => 'required|string',
-                    'AdminMenu.parent_id' => 'nullable|exists:admin_menu,guid',
-                    'AdminMenu.link' => 'nullable|string',
-                    'AdminMenu.icon' => 'nullable|string',
-                    'AdminMenu.permission_key' => 'nullable|string',
-                    'AdminMenu.sort' => 'nullable|integer|min:0',
-                    'AdminMenu.active' => 'required|in:1,0',
-                ];
-            case 'POST':
-            default:
-                return [
-                    'AdminMenu.title' => 'required|string',
-                    'AdminMenu.uri' => 'required|unique:admin_menu,uri',
-                    'AdminMenu.controller' => 'nullable|string',
-                    'AdminMenu.model' => 'nullable|string',
-                    'AdminMenu.class' => 'required|string',
-                    'AdminMenu.parent_id' => 'nullable|exists:admin_menu,guid',
                     'AdminMenu.link' => 'nullable|string',
                     'AdminMenu.icon' => 'nullable|string',
                     'AdminMenu.permission_key' => 'nullable|string',
                     'AdminMenu.sort' => 'required|integer|min:0',
-                    'AdminMenu.active' => 'required|in:1,0',
+                    'AdminMenu.active' => 'required|boolean',
+                ];
+            case 'POST':
+            default:
+                return [
+                    'AdminMenu.parent_id' => 'nullable|exists:admin_menu,id',
+                    'AdminMenu.title' => 'required|string',
+                    'AdminMenu.uri' => 'required|unique:admin_menu,uri',
+                    'AdminMenu.controller' => 'nullable|string',
+                    'AdminMenu.model' => 'nullable|string',
+                    'AdminMenu.link' => 'nullable|string',
+                    'AdminMenu.icon' => 'nullable|string',
+                    'AdminMenu.permission_key' => 'nullable|string',
+                    'AdminMenu.sort' => 'nullable|integer|min:0',
+                    'AdminMenu.active' => 'required|boolean',
                 ];
         }
     }
@@ -65,17 +67,16 @@ class AdminMenuRequest extends FormRequest
     public function attributes()
     {
         return [
-            'AdminMenu.title' => __('models.AdminMenu.title'),
-            'AdminMenu.uri' => __('models.AdminMenu.uri'),
-            'AdminMenu.controller' => __('models.AdminMenu.controller'),
-            'AdminMenu.model' => __('models.AdminMenu.model'),
-            'AdminMenu.class' => __('models.AdminMenu.class'),
-            'AdminMenu.parent_id' => __('models.AdminMenu.parent_id'),
-            'AdminMenu.link' => __('models.AdminMenu.link'),
-            'AdminMenu.icon' => __('models.AdminMenu.icon'),
-            'AdminMenu.permission_key' => __('models.AdminMenu.permission_key'),
-            'AdminMenu.sort' => __('models.AdminMenu.sort'),
-            'AdminMenu.active' => __('models.AdminMenu.active'),
+            'AdminMenu.parent_id' => __('MinmaxBase::models.AdminMenu.parent_id'),
+            'AdminMenu.title' => __('MinmaxBase::models.AdminMenu.title'),
+            'AdminMenu.uri' => __('MinmaxBase::models.AdminMenu.uri'),
+            'AdminMenu.controller' => __('MinmaxBase::models.AdminMenu.controller'),
+            'AdminMenu.model' => __('MinmaxBase::models.AdminMenu.model'),
+            'AdminMenu.link' => __('MinmaxBase::models.AdminMenu.link'),
+            'AdminMenu.icon' => __('MinmaxBase::models.AdminMenu.icon'),
+            'AdminMenu.permission_key' => __('MinmaxBase::models.AdminMenu.permission_key'),
+            'AdminMenu.sort' => __('MinmaxBase::models.AdminMenu.sort'),
+            'AdminMenu.active' => __('MinmaxBase::models.AdminMenu.active'),
         ];
     }
 

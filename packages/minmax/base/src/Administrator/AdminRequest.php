@@ -1,10 +1,13 @@
 <?php
 
-namespace App\Http\Requests\Administrator;
+namespace Minmax\Base\Administrator;
 
-use App\Helpers\LogHelper;
 use Illuminate\Foundation\Http\FormRequest;
+use Minmax\Base\Helpers\Log as LogHelper;
 
+/**
+ * Class AdminRequest
+ */
 class AdminRequest extends FormRequest
 {
     /**
@@ -28,10 +31,10 @@ class AdminRequest extends FormRequest
             case 'PUT':
                 return [
                     'Admin.username' => 'required|string',
-                    'Admin.password' => 'sometimes|required|string|min:6|confirmed',
+                    'Admin.password' => 'nullable|string|min:6|confirmed',
                     'Admin.name' => 'required|string',
                     'Admin.email' => 'nullable|email',
-                    'Admin.active' => 'required|in:1,0',
+                    'Admin.active' => 'required|boolean',
                 ];
             case 'POST':
             default:
@@ -39,7 +42,7 @@ class AdminRequest extends FormRequest
                     'Admin.username' => 'required|string',
                     'Admin.name' => 'required|string',
                     'Admin.email' => 'nullable|email',
-                    'Admin.active' => 'required|in:1,0',
+                    'Admin.active' => 'required|boolean',
                 ];
         }
     }
@@ -52,11 +55,12 @@ class AdminRequest extends FormRequest
     public function attributes()
     {
         return [
-            'Admin.username' => __('models.Admin.username'),
-            'Admin.password' => __('models.Admin.password'),
-            'Admin.name' => __('models.Admin.name'),
-            'Admin.email' => __('models.Admin.email'),
-            'Admin.active' => __('models.Admin.active'),
+            'Admin.username' => __('MinmaxBase::models.Admin.username'),
+            'Admin.password' => __('MinmaxBase::models.Admin.password'),
+            'Admin.password_confirmation' => __('MinmaxBase::models.Admin.password_confirmation'),
+            'Admin.name' => __('MinmaxBase::models.Admin.name'),
+            'Admin.email' => __('MinmaxBase::models.Admin.email'),
+            'Admin.active' => __('MinmaxBase::models.Admin.active'),
         ];
     }
 
