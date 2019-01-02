@@ -362,7 +362,7 @@ class Controller extends BaseController
         }
 
         LogHelper::system('administrator', $request->path(), $request->method(), '', $this->adminData->username, 0, __('MinmaxBase::administrator.form.message.create_error'));
-        return redirect(langRoute("administrator.{$this->uri}.create"))->withErrors([__('MinmaxBase::admin.form.message.create_error')])->withInput();
+        return redirect(langRoute("administrator.{$this->uri}.create"))->withErrors([__('MinmaxBase::administrator.form.message.create_error')])->withInput();
     }
 
     /**

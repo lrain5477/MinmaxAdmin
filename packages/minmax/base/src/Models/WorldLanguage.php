@@ -5,7 +5,7 @@ namespace Minmax\Base\Models;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * Class Language
+ * Class WorldLanguage
  * @property integer $id
  * @property string $code
  * @property string $name

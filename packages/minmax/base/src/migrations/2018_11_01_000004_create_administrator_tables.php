@@ -229,7 +229,7 @@ class CreateAdministratorTables extends Migration
                 'parent_id' => $menuClassId3,
                 'link' => null,
                 'icon' => 'icon-shield',
-                'sort' => 303, 'updated_at' => $timestamp, 'created_at' => $timestamp
+                'sort' => 304, 'updated_at' => $timestamp, 'created_at' => $timestamp
             ],
             [
                 'id' => uuidl(),
@@ -274,7 +274,7 @@ class CreateAdministratorTables extends Migration
                 'parent_id' => $menuClassId3,
                 'link' => null,
                 'icon' => 'icon-sphere',
-                'sort' => 304, 'updated_at' => $timestamp, 'created_at' => $timestamp
+                'sort' => 305, 'updated_at' => $timestamp, 'created_at' => $timestamp
             ],
             [
                 'id' => uuidl(),
@@ -297,7 +297,7 @@ class CreateAdministratorTables extends Migration
                 'parent_id' => $menuClassId3,
                 'link' => null,
                 'icon' => 'icon-filter',
-                'sort' => 305, 'updated_at' => $timestamp, 'created_at' => $timestamp
+                'sort' => 306, 'updated_at' => $timestamp, 'created_at' => $timestamp
             ],
             [
                 'id' => uuidl(),

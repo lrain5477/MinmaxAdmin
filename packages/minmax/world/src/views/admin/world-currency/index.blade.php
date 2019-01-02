@@ -36,6 +36,7 @@
     <tr role="row">
         <th class="w-20">@lang('MinmaxWorld::models.WorldCurrency.title')</th>
         <th class="w-20">@lang('MinmaxWorld::models.WorldCurrency.code')</th>
+        <th class="w-10 nosort">@lang('MinmaxWorld::models.WorldCurrency.options.exchange')</th>
         <th>@lang('MinmaxWorld::models.WorldCurrency.sort')</th>
         <th>@lang('MinmaxWorld::models.WorldCurrency.active')</th>
         <th class="nosort">@lang('MinmaxBase::admin.grid.title.action')</th>
@@ -81,12 +82,13 @@
             columns: [
                 {data: 'title', name: 'title'},
                 {data: 'code', name: 'code'},
+                {data: 'exchange', name: 'exchange'},
                 {data: 'sort', name: 'sort'},
                 {data: 'active', name: 'active'},
                 {data: 'action', name: 'action'}
             ],
             order: [
-                [2, 'asc']
+                [3, 'asc']
             ]
         });
     });

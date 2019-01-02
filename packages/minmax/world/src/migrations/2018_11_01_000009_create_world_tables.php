@@ -65,7 +65,7 @@ class CreateWorldTables extends Migration
             $table->string('title', 128)->comment('縣市名稱');
             $table->string('code', 32)->comment('縣市代碼');
             $table->string('name')->comment('顯示文字');
-            $table->json('options')->comment('縣市設定');
+            $table->json('options')->nullable()->comment('縣市設定');
             $table->unsignedInteger('sort')->default(1)->comment('排序');
             $table->boolean('active')->default(true)->comment('狀態');
             $table->timestamps();
@@ -81,12 +81,10 @@ class CreateWorldTables extends Migration
             $table->string('title', 128)->comment('城市名稱');
             $table->string('code', 16)->comment('城市代碼');
             $table->string('name')->comment('顯示文字');
-            $table->json('options')->comment('城市設定');
+            $table->json('options')->nullable()->comment('城市設定');
             $table->unsignedInteger('sort')->default(1)->comment('排序');
             $table->boolean('active')->default(true)->comment('狀態');
             $table->timestamps();
-
-            $table->unique(['county_id', 'code']);
 
             $table->foreign('county_id')->references('id')->on('world_county')
                 ->onUpdate('cascade')->onDelete('cascade');
@@ -98,7 +96,7 @@ class CreateWorldTables extends Migration
             $table->string('title', 128)->comment('銀行名稱');
             $table->string('code', 16)->comment('銀行代碼');
             $table->string('name')->comment('顯示文字');
-            $table->json('options')->comment('銀行設定');
+            $table->json('options')->nullable()->comment('銀行設定');
             $table->unsignedInteger('sort')->default(1)->comment('排序');
             $table->boolean('active')->default(true)->comment('狀態');
             $table->timestamps();

@@ -9,7 +9,8 @@
         }
     ],
     "require": {
-        "minmax/base": "*"
+        "minmax/base": "*",
+        "minmax/io": "*"
     },
     "autoload": {
         "psr-4": {

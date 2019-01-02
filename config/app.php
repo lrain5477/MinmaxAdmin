@@ -182,6 +182,7 @@ return [
          * Package Service Providers...
          */
         Minmax\Base\ServiceProvider::class,
+        Minmax\Io\ServiceProvider::class,
         Minmax\World\ServiceProvider::class,
 
         /*

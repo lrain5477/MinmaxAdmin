@@ -247,7 +247,7 @@
                     ui : 'uploadbutton'
                 }
             },
-            soundPath: '{{ asset('components/elFinder/sounds') }}',
+            soundPath: '{{ asset('static/modules/elFinder/sounds') }}',
             reloadClearHistory: true,
             resizable: false,
             rememberLastDir: false,
@@ -321,6 +321,8 @@
                 });
             }
         }).elfinder('instance');
+
+        $('#{{ $id }}-modal').on('shown.bs.modal', function () { $(window).resize(); });
 
         {{-- 刪除圖片 --}}
         $('body').delegate('#{{ $id }}-list .delBtn', 'click', function(){

@@ -101,11 +101,11 @@ class CreateAdminTables extends Migration
             'sort' => 301, 'active' => true, 'created_at' => $timestamp, 'updated_at' => $timestamp
         ];
         $permissionsData = array_merge($permissionsData, SeederHelper::getPermissionArray('admin', 'webData', '網站基本資訊', ['U'], 302));
-        $permissionsData = array_merge($permissionsData, SeederHelper::getPermissionArray('admin', 'admin', '管理員帳戶', 303));
-        $permissionsData = array_merge($permissionsData, SeederHelper::getPermissionArray('admin', 'role', '群組管理', 304));
-        $permissionsData = array_merge($permissionsData, SeederHelper::getPermissionArray('admin', 'firewall', '防火牆', 305));
-        $permissionsData = array_merge($permissionsData, SeederHelper::getPermissionArray('admin', 'loginLog', '後臺登入紀錄', ['R'], 306));
-        $permissionsData = array_merge($permissionsData, SeederHelper::getPermissionArray('admin', 'systemLog', '後臺操作紀錄', ['R'], 307));
+        $permissionsData = array_merge($permissionsData, SeederHelper::getPermissionArray('admin', 'admin', '管理員帳戶', 311));
+        $permissionsData = array_merge($permissionsData, SeederHelper::getPermissionArray('admin', 'role', '群組管理', 312));
+        $permissionsData = array_merge($permissionsData, SeederHelper::getPermissionArray('admin', 'firewall', '防火牆', 371));
+        $permissionsData = array_merge($permissionsData, SeederHelper::getPermissionArray('admin', 'loginLog', '後臺登入紀錄', ['R'], 372));
+        $permissionsData = array_merge($permissionsData, SeederHelper::getPermissionArray('admin', 'systemLog', '後臺操作紀錄', ['R'], 373));
         $permissionsData = array_merge($permissionsData, SeederHelper::getPermissionArray('admin', 'siteParameterItem', '參數項目管理', 391));
         $permissionsData = array_merge($permissionsData, SeederHelper::getPermissionArray('admin', 'siteParameterGroup', '參數群組管理', 392));
         DB::table('permissions')->insert($permissionsData);
@@ -244,7 +244,7 @@ class CreateAdminTables extends Migration
                 'link' => null,
                 'icon' => 'icon-shield',
                 'permission_key' => null,
-                'sort' => 303, 'updated_at' => $timestamp, 'created_at' => $timestamp
+                'sort' => 304, 'updated_at' => $timestamp, 'created_at' => $timestamp
             ],
             [
                 'id' => uuidl(),
@@ -293,7 +293,7 @@ class CreateAdminTables extends Migration
                 'link' => null,
                 'icon' => 'icon-filter',
                 'permission_key' => null,
-                'sort' => 305, 'updated_at' => $timestamp, 'created_at' => $timestamp
+                'sort' => 306, 'updated_at' => $timestamp, 'created_at' => $timestamp
             ],
             [
                 'id' => uuidl(),

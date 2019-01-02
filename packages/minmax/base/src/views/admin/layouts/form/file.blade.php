@@ -144,6 +144,8 @@
                 }
             }
         }).elfinder('instance');
+
+        $('#{{ $id }}-modal').on('shown.bs.modal', function () { $(window).resize(); });
     });
 })(jQuery);
 </script>

@@ -56,9 +56,6 @@
     @case('zh-Hans')
     <script src="{{ asset('static/modules/elFinder/js/i18n/elfinder.zh_CN.js') }}"></script>
     @break
-    @case('ja')
-    <script src="{{ asset('static/modules/elFinder/js/i18n/elfinder.jp.js') }}"></script>
-    @break
 @endswitch
 {{-- * * * jquery.repeater.min.js 新增欄位 --}}
 <script src="{{ asset('static/modules/repeater/jquery.repeater.min.js') }}"></script>

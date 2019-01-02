@@ -38,6 +38,7 @@ class WorldCurrencyTransformer extends Transformer
         return [
             'title' => $this->presenter->getGridText($model, 'title'),
             'code' => $this->presenter->getGridText($model, 'code'),
+            'exchange' => $this->presenter->getPureString(array_get($model->options, 'exchange')),
             'sort' => $this->presenter->getGridSort($model, 'sort'),
             'active' => $this->presenter->getGridSwitch($model, 'active'),
             'action' => $this->presenter->getGridActions($model),
