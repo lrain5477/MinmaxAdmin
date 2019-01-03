@@ -99,8 +99,6 @@ return [
     |
     */
 
-    'taiwan_identity' => '您輸入的身分證字號無效.',
-
     'custom' => [
         'username' => [
             'exists' => '您的帳號不存在或所屬群組禁用.',
@@ -128,21 +126,6 @@ return [
     |
     */
 
-    'attributes' => [
-        'lang' => '語系',
-        'username' => '帳號',
-        'password' => '密碼',
-        'password_confirmation' => '密碼確認',
-        'email' => 'Email',
-        'phone' => '電話號碼',
-        'fax' => '傳真號買',
-        'address' => '地址',
-        'seo_description' => 'SEO 網站描述',
-        'seo_keywords' => 'SEO 關鍵字',
-        'sort' => '排序',
-        'active' => '狀態',
-        'created_at' => '建立時間',
-        'updated_at' => '更新時間',
-    ],
+    'attributes' => [],
 
 ];

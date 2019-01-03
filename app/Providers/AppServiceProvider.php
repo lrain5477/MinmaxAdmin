@@ -25,9 +25,5 @@ class AppServiceProvider extends ServiceProvider
     public function register()
     {
         require app_path('/Helpers/ProjectHelper.php');
-
-        if ($this->app->environment() !== 'production') {
-            $this->app->register(IdeHelperServiceProvider::class);
-        }
     }
 }

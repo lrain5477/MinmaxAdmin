@@ -18,6 +18,7 @@
 
 @section('grid-filter')
     @component('MinmaxBase::administrator.layouts.grid.filter-keyword')
+    <option value="title">@lang('MinmaxIo::models.IoConstruct.title')</option>
     <option value="uri">@lang('MinmaxIo::models.IoConstruct.uri')</option>
     @endcomponent
 
@@ -34,7 +35,7 @@
         <th class="w-25">@lang('MinmaxIo::models.IoConstruct.uri')</th>
         <th>@lang('MinmaxIo::models.IoConstruct.sort')</th>
         <th>@lang('MinmaxIo::models.IoConstruct.active')</th>
-        <th class="nosort">@lang('MinmaxBase::admin.grid.title.action')</th>
+        <th class="nosort">@lang('MinmaxBase::administrator.grid.title.action')</th>
     </tr>
     </thead>
     <tbody>
@@ -57,6 +58,7 @@
                     var searchColumn = $('#sch_column').val();
 
                     d.filter = {
+                        "title": searchKeyword,
                         "uri": searchKeyword
                     };
 

@@ -80,7 +80,7 @@
             @if(count($images) < 1)
             <div class="card mr-2 d-inline-block ui-sortable-handle">
                 <div class="thumb">
-                    <span class="imgFill imgLiquid_bgSize imgLiquid_ready"><img src="{{ asset('admin/images/noimage.gif') }}" alt="" /></span>
+                    <span class="imgFill imgLiquid_bgSize imgLiquid_ready"><img src="{{ asset('static/admin/images/common/noimage.gif') }}" alt="" /></span>
                 </div>
             </div>
             @endif

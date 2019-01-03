@@ -37,7 +37,7 @@
         <th class="w-20">@lang('MinmaxWorld::models.WorldState.code')</th>
         <th>@lang('MinmaxWorld::models.WorldState.sort')</th>
         <th>@lang('MinmaxWorld::models.WorldState.active')</th>
-        <th class="nosort">@lang('MinmaxBase::admin.grid.title.action')</th>
+        <th class="nosort">@lang('MinmaxBase::administrator.grid.title.action')</th>
     </tr>
     </thead>
     <tbody>

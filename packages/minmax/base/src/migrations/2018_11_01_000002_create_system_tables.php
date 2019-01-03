@@ -280,7 +280,7 @@ class CreateSystemTables extends Migration
                 'system_language' => 'zh-Hant',
                 'system_email' => config('mail.from.address'),
                 'system_url' => config('app.url') . '/administrator',
-                'system_logo' => json_encode([['path' => '/admin/images/logo-b.png']]),
+                'system_logo' => json_encode([['path' => '/static/admin/images/common/logo-b.png']]),
                 'company' => "web_data.company.{$webDataId1}",
                 'contact' => "web_data.contact.{$webDataId1}",
                 'social' => json_encode([
@@ -301,7 +301,7 @@ class CreateSystemTables extends Migration
                 'system_language' => 'zh-Hant',
                 'system_email' => config('mail.from.address'),
                 'system_url' => config('app.url') . '/siteadmin',
-                'system_logo' => json_encode([['path' => '/admin/images/logo-b.png']]),
+                'system_logo' => json_encode([['path' => '/static/admin/images/common/logo-b.png']]),
                 'company' => "web_data.company.{$webDataId2}",
                 'contact' => "web_data.contact.{$webDataId2}",
                 'social' => json_encode([
@@ -322,7 +322,7 @@ class CreateSystemTables extends Migration
                 'system_language' => 'zh-Hant',
                 'system_email' => config('mail.from.address'),
                 'system_url' => config('app.url'),
-                'system_logo' => json_encode([['path' => '/admin/images/logo-b.png']]),
+                'system_logo' => json_encode([['path' => '/static/admin/images/common/logo-b.png']]),
                 'company' => "web_data.company.{$webDataId3}",
                 'contact' => "web_data.contact.{$webDataId3}",
                 'social' => json_encode([

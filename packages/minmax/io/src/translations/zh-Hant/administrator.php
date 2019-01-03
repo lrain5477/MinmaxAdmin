@@ -4,10 +4,10 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Models (Database Column) Language Lines
+    | Administrator Language Lines
     |--------------------------------------------------------------------------
     |
-    | The following language lines contain the system text in backend platform page.
+    | The following language lines contain the system text in admin page.
     |
     */
 

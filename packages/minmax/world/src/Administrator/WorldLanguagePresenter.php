@@ -18,6 +18,7 @@ class WorldLanguagePresenter extends Presenter
         parent::__construct();
 
         $this->parameterSet = [
+            'currency_id' => (new WorldCurrencyRepository)->getSelectParameters(),
             'active_admin' => systemParam('active_admin'),
             'active' => systemParam('active'),
         ];

@@ -50,7 +50,7 @@
                     </div>
                     @endif
                     @if($formData->export_enable && ! is_null($formData->export_view))
-                    <div class="tab-pane fade" id="tab-pane-export" role="tabpanel" aria-labelledby="tab-export">
+                    <div class="tab-pane fade {{ $formData->import_enable ? '' : 'show active' }}" id="tab-pane-export" role="tabpanel" aria-labelledby="tab-export">
                         @include($formData->export_view)
                     </div>
                     @endif

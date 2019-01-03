@@ -101,6 +101,7 @@ class CreateAdminTables extends Migration
             'sort' => 301, 'active' => true, 'created_at' => $timestamp, 'updated_at' => $timestamp
         ];
         $permissionsData = array_merge($permissionsData, SeederHelper::getPermissionArray('admin', 'webData', '網站基本資訊', ['U'], 302));
+        $permissionsData = array_merge($permissionsData, SeederHelper::getPermissionArray('admin', 'webMenu', '前臺選單目錄', 303));
         $permissionsData = array_merge($permissionsData, SeederHelper::getPermissionArray('admin', 'admin', '管理員帳戶', 311));
         $permissionsData = array_merge($permissionsData, SeederHelper::getPermissionArray('admin', 'role', '群組管理', 312));
         $permissionsData = array_merge($permissionsData, SeederHelper::getPermissionArray('admin', 'firewall', '防火牆', 371));
@@ -174,6 +175,18 @@ class CreateAdminTables extends Migration
             ],
             [
                 'id' => uuidl(),
+                'title' => '檔案總管',
+                'uri' => 'file-manager',
+                'controller' => 'FileManagerController',
+                'model' => null,
+                'parent_id' => $menuParentId1,
+                'link' => 'file-manager',
+                'icon' => null,
+                'permission_key' => 'systemUpload',
+                'sort' => 1, 'updated_at' => $timestamp, 'created_at' => $timestamp
+            ],
+            [
+                'id' => uuidl(),
                 'title' => '網站基本資訊',
                 'uri' => 'web-data',
                 'controller' => 'WebDataController',
@@ -182,7 +195,7 @@ class CreateAdminTables extends Migration
                 'link' => "web-data/{$webData->id}/edit",
                 'icon' => null,
                 'permission_key' => 'webDataEdit',
-                'sort' => 1, 'updated_at' => $timestamp, 'created_at' => $timestamp
+                'sort' => 2, 'updated_at' => $timestamp, 'created_at' => $timestamp
             ],
             [
                 'id' => uuidl(),
@@ -194,7 +207,7 @@ class CreateAdminTables extends Migration
                 'link' => 'web-menu',
                 'icon' => null,
                 'permission_key' => 'webMenuShow',
-                'sort' => 2, 'updated_at' => $timestamp, 'created_at' => $timestamp
+                'sort' => 3, 'updated_at' => $timestamp, 'created_at' => $timestamp
             ],
 
             [

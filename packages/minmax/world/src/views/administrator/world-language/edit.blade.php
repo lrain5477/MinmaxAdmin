@@ -33,6 +33,8 @@
 
         {!! $modelPresenter->getFieldText($formData, 'options', ['required' => true, 'subColumn' => 'regional']) !!}
 
+        {!! $modelPresenter->getFieldSelect($formData, 'currency_id', ['required' => true]) !!}
+
     </fieldset>
 
     <fieldset class="mt-4" id="advFieldSet">

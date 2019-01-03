@@ -43,7 +43,7 @@ class InsertAdminMenuIoData extends Migration
         $permissionsData = [
             [
                 'guard' => 'admin', 'group' => 'ioData',
-                'name' => 'ioDataView', 'label' => '瀏覽', 'display_name' => '資料匯入匯出 [瀏覽]', 'description' => '資料匯入匯出 [瀏覽]',
+                'name' => 'ioDataShow', 'label' => '瀏覽', 'display_name' => '資料匯入匯出 [瀏覽]', 'description' => '資料匯入匯出 [瀏覽]',
                 'sort' => 371, 'active' => true, 'created_at' => $timestamp, 'updated_at' => $timestamp
             ],
             [
@@ -83,7 +83,7 @@ class InsertAdminMenuIoData extends Migration
                     'parent_id' => $menuParentId,
                     'link' => 'io-data',
                     'icon' => null,
-                    'permission_key' => 'ioDataView',
+                    'permission_key' => 'ioDataShow',
                     'sort' => 1, 'updated_at' => $timestamp, 'created_at' => $timestamp
                 ],
             ];

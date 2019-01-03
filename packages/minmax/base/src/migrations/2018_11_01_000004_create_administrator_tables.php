@@ -143,6 +143,17 @@ class CreateAdministratorTables extends Migration
             ],
             [
                 'id' => uuidl(),
+                'title' => '檔案總管',
+                'uri' => 'file-manager',
+                'controller' => 'FileManagerController',
+                'model' => null,
+                'parent_id' => $menuParentId1,
+                'link' => 'file-manager',
+                'icon' => null,
+                'sort' => 1, 'updated_at' => $timestamp, 'created_at' => $timestamp
+            ],
+            [
+                'id' => uuidl(),
                 'title' => '網站基本資訊',
                 'uri' => 'web-data',
                 'controller' => 'WebDataController',
@@ -150,7 +161,7 @@ class CreateAdministratorTables extends Migration
                 'parent_id' => $menuParentId1,
                 'link' => 'web-data',
                 'icon' => null,
-                'sort' => 1, 'updated_at' => $timestamp, 'created_at' => $timestamp
+                'sort' => 2, 'updated_at' => $timestamp, 'created_at' => $timestamp
             ],
             [
                 'id' => uuidl(),
@@ -161,7 +172,7 @@ class CreateAdministratorTables extends Migration
                 'parent_id' => $menuParentId1,
                 'link' => 'admin-menu',
                 'icon' => null,
-                'sort' => 2, 'updated_at' => $timestamp, 'created_at' => $timestamp
+                'sort' => 3, 'updated_at' => $timestamp, 'created_at' => $timestamp
             ],
             [
                 'id' => uuidl(),
@@ -172,7 +183,7 @@ class CreateAdministratorTables extends Migration
                 'parent_id' => $menuParentId1,
                 'link' => 'web-menu',
                 'icon' => null,
-                'sort' => 3, 'updated_at' => $timestamp, 'created_at' => $timestamp
+                'sort' => 4, 'updated_at' => $timestamp, 'created_at' => $timestamp
             ],
 
             [

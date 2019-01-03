@@ -13,10 +13,10 @@ return [
     |
     */
 
-    'password' => 'Passwords must be at least six characters and match the confirmation.',
-    'reset' => 'Your password has been reset!',
-    'sent' => 'We have e-mailed your password reset link!',
-    'token' => 'This password reset token is invalid.',
-    'user' => "We can't find a user with that e-mail address.",
+    'password' => '密碼最少必須 6 個字元長度，並且確認輸入正確。',
+    'reset' => '您的密碼已經重設！',
+    'sent' => '我們已經將重設密碼連結寄送給您！',
+    'token' => '重設密碼的金鑰無效。',
+    'user' => "使用者的信箱地址不存在。",
 
 ];

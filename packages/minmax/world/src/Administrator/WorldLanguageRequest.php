@@ -36,8 +36,9 @@ class WorldLanguageRequest extends FormRequest
                     'WorldLanguage.options.icon' => 'required|string',
                     'WorldLanguage.options.script' => 'required|string',
                     'WorldLanguage.options.regional' => 'required|string',
+                    'WorldLanguage.currency_id' => 'nullable|exists:world_currency,id',
                     'WorldLanguage.sort' => 'required|integer',
-                    'WorldLanguage.admin_active' => 'required|boolean',
+                    'WorldLanguage.active_admin' => 'required|boolean',
                     'WorldLanguage.active' => 'required|boolean',
                 ];
             case 'POST':
@@ -49,8 +50,9 @@ class WorldLanguageRequest extends FormRequest
                     'WorldLanguage.options.icon' => 'required|string',
                     'WorldLanguage.options.script' => 'required|string',
                     'WorldLanguage.options.regional' => 'required|string',
+                    'WorldLanguage.currency_id' => 'nullable|exists:world_currency,id',
                     'WorldLanguage.sort' => 'nullable|integer',
-                    'WorldLanguage.admin_active' => 'required|boolean',
+                    'WorldLanguage.active_admin' => 'required|boolean',
                     'WorldLanguage.active' => 'required|boolean',
                 ];
         }
@@ -70,8 +72,9 @@ class WorldLanguageRequest extends FormRequest
             'WorldLanguage.options.icon' => __('MinmaxBase::models.WorldLanguage.options.icon'),
             'WorldLanguage.options.script' => __('MinmaxBase::models.WorldLanguage.options.script'),
             'WorldLanguage.options.regional' => __('MinmaxBase::models.WorldLanguage.options.regional'),
+            'WorldLanguage.currency_id' => __('MinmaxBase::models.WorldLanguage.currency_id'),
             'WorldLanguage.sort' => __('MinmaxBase::models.WorldLanguage.sort'),
-            'WorldLanguage.admin_active' => __('MinmaxBase::models.WorldLanguage.admin_active'),
+            'WorldLanguage.active_admin' => __('MinmaxBase::models.WorldLanguage.active_admin'),
             'WorldLanguage.active' => __('MinmaxBase::models.WorldLanguage.active'),
         ];
     }

@@ -36,7 +36,7 @@
         <th class="w-10 nosort">@lang('MinmaxWorld::models.WorldCurrency.options.exchange')</th>
         <th>@lang('MinmaxWorld::models.WorldCurrency.sort')</th>
         <th>@lang('MinmaxWorld::models.WorldCurrency.active')</th>
-        <th class="nosort">@lang('MinmaxBase::admin.grid.title.action')</th>
+        <th class="nosort">@lang('MinmaxBase::administrator.grid.title.action')</th>
     </tr>
     </thead>
     <tbody>

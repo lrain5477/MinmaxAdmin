@@ -48,7 +48,7 @@
 {{-- * * * inputmask 表單格式 --}}
 <script src="{{ asset('static/modules/inputmask/jquery.inputmask.bundle.min.js') }}"></script>
 {{-- * * * elFinder 檔案管理 --}}
-<script src="{{ asset('static/modules/elFinder/js/elfinder.full.js') }}"></script>
+<script src="{{ asset('static/modules/elFinder/js/elfinder.min.js') }}"></script>
 @switch(app()->getLocale())
     @case('zh-Hant')
     <script src="{{ asset('static/modules/elFinder/js/i18n/elfinder.zh_TW.js') }}"></script>

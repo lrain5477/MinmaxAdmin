@@ -50,11 +50,9 @@ Route::group([
             Route::get('editor/template/{category}.js', 'HelperController@getEditorTemplate')->name('editorTemplate');
 
             // elFinder
-            Route::group(['prefix' => 'elfinder'], function () {
-                Route::get('/', ['as' => 'elfinder.index', 'uses' => 'ElfinderController@showIndex']);
-                Route::any('connector', ['as' => 'elfinder.connector', 'uses' => 'ElfinderController@showConnector']);
-                Route::get('ckeditor', ['as' => 'elfinder.ckeditor', 'uses' => 'ElfinderController@showCKeditor4']);
-            });
+            Route::get('elfinder', 'ElfinderController@showIndex')->name('elfinder.index');
+            Route::get('elfinder/ckeditor', 'ElfinderController@showCKeditor4')->name('elfinder.ckeditor');
+            Route::any('elfinder/connector', 'ElfinderController@showConnector')->name('elfinder.connector');
 
             // 切換表單語系
             Route::put('form/local/set', 'HelperController@setFormLocal')->name('setFormLocal');
@@ -62,6 +60,11 @@ Route::group([
             // 個人資料
             Route::get('profile', 'ProfileController@edit')->name('profile');
             Route::put('profile', 'ProfileController@update');
+
+            /*
+             * FileManager 檔案總管
+             */
+            Route::get('file-manager', 'FileManagerController@index')->name('file-manager.index');
 
             /*
              * WebData 網站基本資訊
