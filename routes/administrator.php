@@ -13,8 +13,12 @@
 
 /*
 
-Route::group(['middleware' => 'auth:administrator'], function() {
-    //
+Route::group(['prefix' => 'siteadmin'], function () {
+
+    Route::group(['middleware' => 'auth:administrator'], function() {
+        //
+    });
+
 });
 
 */

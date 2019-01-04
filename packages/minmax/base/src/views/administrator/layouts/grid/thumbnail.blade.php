@@ -8,8 +8,8 @@
 @if(!is_null($value) && $value !== '' && File::exists(public_path($value)))
 <a class="thumb" href="{{ asset($value) }}" data-fancybox="" data-caption="{{ $alt }}">
     <span class="imgFill imgLiquid_bgSize imgLiquid_ready"
-          style="background: url('{{ langRoute('administrator.thumbnail', ['width' => $size, 'height' => $size, 'imagePath' => $value]) }}') center center no-repeat; background-size: cover;">
-        <img src="{{ langRoute('administrator.thumbnail', ['width' => $size, 'height' => $size, 'imagePath' => $value]) }}" alt="{{ $alt }}" style="display: none;">
+          style="background: url('{{ getThumbnailPath($value, $size, false) }}') center center no-repeat; background-size: cover;">
+        <img src="{{ getThumbnailPath($value, $size, false) }}" alt="{{ $alt }}" style="display: none;">
     </span>
 </a>
 @else

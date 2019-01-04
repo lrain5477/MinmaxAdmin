@@ -95,6 +95,20 @@ Route::group([
             Route::patch('admin-menu/ajax/sort', 'AdminMenuController@ajaxSort')->name('admin-menu.ajaxSort');
 
             /*
+             * WebMenu 前臺選單管理
+             */
+            Route::get('web-menu', 'WebMenuController@index')->name('web-menu.index');
+            Route::post('web-menu', 'WebMenuController@store')->name('web-menu.store');
+            Route::get('web-menu/create', 'WebMenuController@create')->name('web-menu.create');
+            Route::get('web-menu/{id}', 'WebMenuController@show')->name('web-menu.show');
+            Route::put('web-menu/{id}', 'WebMenuController@update')->name('web-menu.update');
+            Route::delete('web-menu/{id}', 'WebMenuController@destroy')->name('web-menu.destroy');
+            Route::get('web-menu/{id}/edit', 'WebMenuController@edit')->name('web-menu.edit');
+            Route::post('web-menu/ajax/datatables', 'WebMenuController@ajaxDataTable')->name('web-menu.ajaxDataTable');
+            Route::patch('web-menu/ajax/switch', 'WebMenuController@ajaxSwitch')->name('web-menu.ajaxSwitch');
+            Route::patch('web-menu/ajax/sort', 'WebMenuController@ajaxSort')->name('web-menu.ajaxSort');
+
+            /*
              * Admin 帳號管理
              */
             Route::get('admin', 'AdminController@index')->name('admin.index');

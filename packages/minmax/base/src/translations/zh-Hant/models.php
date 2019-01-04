@@ -56,8 +56,6 @@ return [
         'link' => '項目連結',
         'icon' => '圖示 Class',
         'permission_key' => '權限綁定代碼',
-        'filter' => '資料過濾 (where)',
-        'keeps' => '不可刪除 GUID',
         'sort' => '排序',
         'active' => '啟用狀態',
         'created_at' => '建立時間',
@@ -65,6 +63,29 @@ return [
         'hint' => [
             'uri' => '此參數為唯一值，不可與其他項目重複。',
             'icon' => '僅第二層須設定，請參考連結選擇您所需要的圖示 <a target="_blank" href="/static/admin/css/fonts/icon/demo.html">圖示列表</a>。',
+        ],
+    ],
+
+    'WebMenu' => [
+        'guid' => 'ID',
+        'title' => '選單名稱',
+        'uri' => '識別標籤',
+        'controller' => 'Controller 名稱',
+        'model' => 'Model 名稱',
+        'class' => '類別',
+        'parent_id' => '上層目錄',
+        'link' => '項目連結',
+        'permission_key' => '權限綁定代碼',
+        'options' => [
+            'target' => '目標視窗',
+        ],
+        'sort' => '排序',
+        'editable' => '可否編輯',
+        'active' => '啟用狀態',
+        'created_at' => '建立時間',
+        'updated_at' => '更新時間',
+        'hint' => [
+            'uri' => '此參數用於判斷當前頁面是否與此項目相關。若外部連結可留白。',
         ],
     ],
 
@@ -266,34 +287,6 @@ return [
             'value' => '此代碼為唯一值，不可與同群組的其他參數重複。',
             'options' => '可自由增加設定參數，將會以 <code>Key => Value</code> 的陣列形式存取。',
         ],
-    ],
-
-    'NewsletterSchedule' => [
-        'id' => 'ID',
-        'title' => '電子報主題',
-        'subject' => '信件主旨',
-        'content' => '信件內容',
-        'schedule_at' => '排程時間',
-        'groups' => '發送類別',
-        'objects' => '發送目標',
-        'created_at' => '建立時間',
-        'updated_at' => '更新時間',
-    ],
-
-    'NewsletterTemplate' => [
-        'id' => 'ID',
-        'title' => '電子報主題',
-        'subject' => '信件主旨',
-        'content' => '信件內容',
-        'created_at' => '建立時間',
-        'updated_at' => '更新時間',
-    ],
-
-    'NewsletterGroup' => [
-        'id' => 'ID',
-        'title' => '類別名稱',
-        'created_at' => '建立時間',
-        'updated_at' => '更新時間',
     ],
 
 ];

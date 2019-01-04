@@ -10,6 +10,7 @@
     <title>{{ $webData->website_name }} | @lang('MinmaxBase::admin.header.login')</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <meta charset="UTF-8" />
+    <meta name="robots" content="noindex" />
     <link href="{{ asset('static/admin/css/app.css') }}" rel="stylesheet" type="text/css" />
 </head>
 <body class="login">
@@ -19,8 +20,8 @@
             <div class="col-md-auto col text-center">
                 <div class="login-content text-center text-sm-left">
                     <h1 class="text-main h3">
-                        <span class="login-logo d-block d-sm-inline"><img class="mr-2 mb-3" src="{{ asset('static/admin/images/common/logo.png') }}" alt="" /></span><!--
-                        --><span class="ml-2 d-block d-sm-inline">{{ $webData->website_name }}</span>
+                        <span class="login-logo d-block d-sm-inline"><img class="mb-3" src="{{ getImagePath($webData->system_logo[0]['path']) }}" style="max-height: 42px" alt="" /></span><br />
+                        <span class="d-block d-sm-inline">{{ $webData->website_name }}</span>
                     </h1>
                     <form id="loginForm" class="login-form mt-4" method="post">
                         @csrf

@@ -135,7 +135,7 @@ return [
     |
     */
 
-    'separate_string' => env('SEPARATE_STRING', '#}spec%$'),
+    'menu_layer_limit' => env('MENU_LAYER_LIMIT', 2),
 
     'thumbnail_size' => env('THUMBNAIL_SIZE', '(80|120|300)'),
 

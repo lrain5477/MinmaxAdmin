@@ -28,9 +28,9 @@ class PermissionRepository extends Repository
         return 'permissions';
     }
 
-    public function getSelectParameters()
+    public function getSelectParameters($guard = 'admin')
     {
-        return $this->all()
+        return $this->all('guard', $guard)
             ->sortBy('sort')
             ->mapWithKeys(function ($item) {
                 /** @var Permission $item */

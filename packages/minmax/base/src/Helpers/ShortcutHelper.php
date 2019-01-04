@@ -171,8 +171,8 @@ if (! function_exists('deleteLang')) {
     /**
      * Delete local contents via key or key set.
      *
-     * @param  array  $keys
-     * @param  string  $langKey
+     * @param  array $keys
+     * @param  string $langKey
      * @return bool
      */
     function deleteLang($keys, $langKey = null)
@@ -204,8 +204,8 @@ if (! function_exists('systemParam')) {
     /**
      * Get system parameter via key.
      *
-     * @param  string  $key
-     * @param  string  $langKey
+     * @param  string $key
+     * @param  string $langKey
      * @return string|array
      */
     function systemParam($key = null, $langKey = null)
@@ -236,38 +236,57 @@ if (! function_exists('systemParam')) {
     }
 }
 
-if (! function_exists('siteParam')) {
+if (! function_exists('getImagePath')) {
     /**
-     * Get site parameter via key.
+     * Check and get image path.
      *
-     * @param  string  $key
-     * @param  string  $langKey
-     * @return string|array
+     * @param  string  $path
+     * @param  boolean  $transparent
+     * @return string
      */
-    function siteParam($key = null, $langKey = null)
+    function getImagePath($path, $transparent = true)
     {
-        $langKey = $langKey ?? app()->getLocale();
+        $imgTransparent = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
+        $imgNoImage = asset('static/admin/images/common/noimage.gif');
 
-        $params = Cache::rememberForever("siteParams.{$langKey}", function () {
-            return \Minmax\Base\Models\SiteParameterGroup::with('siteParameterItems')
-                ->where('active', true)
-                ->get()
-                ->mapWithKeys(function ($item) {
-                    /** @var \Minmax\Base\Models\SiteParameterGroup $item */
-                    return [
-                        $item->code => $item->siteParameterItems
-                            ->where('active', true)
-                            ->mapWithKeys(function ($item) {
-                                /** @var \Minmax\Base\Models\SiteParameterItem $item */
-                                return [$item->value => ['title' => $item->label, 'options' => $item->options]];
-                            })
-                    ];
-                })
-                ->toArray();
-        });
+        if (! isset($path)) {
+            return $transparent ? $imgTransparent : $imgNoImage;
+        }
 
-        if (count($params) == 0) Cache::forget("siteParams.{$langKey}");
+        if (is_null($path)) {
+            return $transparent ? $imgTransparent : $imgNoImage;
+        }
 
-        return is_null($key) ? $params : array_get($params, $key, $key);
+        if (is_string($path) && $path == '') {
+            return $transparent ? $imgTransparent : $imgNoImage;
+        }
+
+        if (! file_exists(public_path($path))) {
+            return $transparent ? $imgTransparent : $imgNoImage;
+        }
+
+        return asset($path);
+    }
+}
+
+if (! function_exists('getThumbnailPath')) {
+    /**
+     * Check and get thumbnail path.
+     *
+     * @param  string  $path
+     * @param  integer|boolean  $size
+     * @param  boolean  $transparent
+     * @return string
+     */
+    function getThumbnailPath($path, $size = 80, $transparent = true)
+    {
+        if (is_bool($size)) {
+            $transparent = $size;
+            $size = 80;
+        }
+
+        $thumbnailPath = \Minmax\Base\Helpers\Image::makeThumbnail($path, $size, $size);
+
+        return getImagePath($thumbnailPath, $transparent);
     }
 }

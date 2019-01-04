@@ -6,7 +6,6 @@ use Minmax\Base\Models\Firewall;
 
 /**
  * Class FirewallTransformer
- * @package Minmax\Base\Admin
  */
 class FirewallTransformer extends Transformer
 {

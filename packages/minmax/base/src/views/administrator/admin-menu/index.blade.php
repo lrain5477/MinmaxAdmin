@@ -28,7 +28,7 @@
     @endcomponent
 
     @component('MinmaxBase::administrator.layouts.grid.filter-equal')
-    {!! $modelPresenter->getFilterSelection('active', 'searchActive', ['emptyLabel' => __('MinmaxBase::models.Firewall.active')]) !!}
+    {!! $modelPresenter->getFilterSelection('active', 'searchActive', ['emptyLabel' => __('MinmaxBase::models.AdminMenu.active')]) !!}
     @endcomponent
 @endsection
 

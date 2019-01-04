@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
+use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 
 class RouteServiceProvider extends ServiceProvider
 {
@@ -35,34 +36,10 @@ class RouteServiceProvider extends ServiceProvider
      */
     public function map()
     {
-//        $languageMap = \Cache::rememberForever('langId', function() {
-//            try {
-//                $langTable = \DB::table('world_language')
-//                    ->where('active', '1')
-//                    ->orderBy('sort')
-//                    ->select(['id', 'code'])
-//                    ->get();
-//                return $langTable
-//                    ->mapWithKeys(function ($item) { return [$item->code => $item->id]; })
-//                    ->toArray();
-//            } catch (\Exception $e) {
-//                return [];
-//            }
-//        });
-//
-//        if (count($languageMap) < 2) {
-//            $this->mapApiRoutes();
-//            $this->mapWebRoutes();
-//            $this->mapAdminRoutes();
-//            $this->mapAdministratorRoutes();
-//        } else {
-//            foreach ($languageMap as $langCode => $langId) {
-//                $this->mapApiRoutes($langCode);
-//                $this->mapWebRoutes($langCode);
-//                $this->mapAdminRoutes($langCode);
-//                $this->mapAdministratorRoutes($langCode);
-//            }
-//        }
+        //$this->mapApiRoutes();
+        $this->mapWebRoutes();
+        //$this->mapAdminRoutes();
+        //$this->mapAdministratorRoutes();
     }
 
     /**
@@ -70,24 +47,15 @@ class RouteServiceProvider extends ServiceProvider
      *
      * These routes all receive session state, CSRF protection, etc.
      *
-     * @param  string $langPrefix
      * @return void
      */
-    protected function mapWebRoutes($langPrefix = null)
+    protected function mapWebRoutes()
     {
-        if ($langPrefix) {
-            Route::middleware('web')->get('/', $this->namespace . '\Web\SiteController@index');
-
-            Route::prefix($langPrefix)
-                ->middleware('web')
-                ->name("{$langPrefix}.")
-                ->namespace($this->namespace . '\Web')
-                ->group(base_path('routes/web.php'));
-        } else {
-            Route::middleware('web')
-                ->namespace($this->namespace . '\Web')
-                ->group(base_path('routes/web.php'));
-        }
+        Route::prefix(LaravelLocalization::setLocale())
+            ->middleware(['web', 'localizationRedirect'])
+            ->namespace($this->namespace . '\Web')
+            ->name('web.' . app()->getLocale() . '.')
+            ->group(base_path('routes/web.php'));
     }
 
     /**
@@ -95,19 +63,14 @@ class RouteServiceProvider extends ServiceProvider
      *
      * These routes all receive session state, CSRF protection, etc.
      *
-     * @param  string $langPrefix
      * @return void
      */
-    protected function mapAdminRoutes($langPrefix = null)
+    protected function mapAdminRoutes()
     {
-        if (!is_null($langPrefix)) {
-            Route::middleware('admin')->get('siteadmin', $this->namespace . '\Admin\SiteController@index');
-        }
-
-        Route::prefix('siteadmin' . (is_null($langPrefix) ? '' : "/{$langPrefix}"))
-            ->middleware('admin')
-            ->name('admin.' . (is_null($langPrefix) ? '' : "{$langPrefix}."))
+        Route::prefix(LaravelLocalization::setLocale())
+            ->middleware(['admin', 'localizationRedirect'])
             ->namespace($this->namespace . '\Admin')
+            ->name('admin.' . app()->getLocale() . '.')
             ->group(base_path('routes/admin.php'));
     }
 
@@ -116,19 +79,14 @@ class RouteServiceProvider extends ServiceProvider
      *
      * These routes all receive session state, CSRF protection, etc.
      *
-     * @param  string $langPrefix
      * @return void
      */
-    protected function mapAdministratorRoutes($langPrefix = null)
+    protected function mapAdministratorRoutes()
     {
-        if (!is_null($langPrefix)) {
-            Route::middleware('administrator')->get('administrator', $this->namespace . '\Administrator\SiteController@index');
-        }
-
-        Route::prefix('administrator' . (is_null($langPrefix) ? '' : "/{$langPrefix}"))
-            ->middleware('administrator')
-            ->name('administrator.' . (is_null($langPrefix) ? '' : "{$langPrefix}."))
+        Route::prefix(LaravelLocalization::setLocale())
+            ->middleware(['administrator', 'localizationRedirect'])
             ->namespace($this->namespace . '\Administrator')
+            ->name('administrator.' . app()->getLocale() . '.')
             ->group(base_path('routes/administrator.php'));
     }
 
@@ -137,14 +95,13 @@ class RouteServiceProvider extends ServiceProvider
      *
      * These routes are typically stateless.
      *
-     * @param  string $langPrefix
      * @return void
      */
-    protected function mapApiRoutes($langPrefix = null)
+    protected function mapApiRoutes()
     {
-        Route::prefix('api' . (is_null($langPrefix) ? '' : "/{$langPrefix}"))
+        Route::prefix('api')
              ->middleware('api')
-             ->namespace($this->namespace)
+             ->namespace($this->namespace . '\Api')
              ->group(base_path('routes/api.php'));
     }
 }

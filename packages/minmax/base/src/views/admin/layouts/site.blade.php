@@ -9,6 +9,7 @@
     <title>{{ $webData->website_name }}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <meta charset="UTF-8" />
+    <meta name="robots" content="noindex" />
     <meta name="csrf-token" content="{{ csrf_token() }}" />
     <link href="{{ asset('static/modules/elFinder/css/elfinder.min.css') }}" rel="stylesheet" type="text/css" />
     <link href="{{ asset('static/modules/elFinder/css/theme.css') }}" rel="stylesheet" type="text/css" />

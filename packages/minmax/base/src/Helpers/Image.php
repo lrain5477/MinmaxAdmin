@@ -19,14 +19,15 @@ class Image
     {
         if(is_int($overwrite)) { $quality = $overwrite; $overwrite = false; }
 
+        $filePath = preg_replace('/^\//i', '', $filePath);
+
         if(File::exists(public_path($filePath))) {
-            // $fileFullname = File::basename($filePath);
-            $filename = str_replace(['/', '.' . File::extension($filePath)], '_', $filePath); //File::name($filePath);
+            $filename = str_replace(['/', '.' . File::extension($filePath)], '_', $filePath);
             $fileExtension = strtolower(File::extension($filePath));
-            $thumbnailPath = "thumbnail/{$filename}{$maxWidth}x{$maxHeight}.{$fileExtension}";
+            $thumbnailPath = "files/thumbnails/{$filename}{$maxWidth}x{$maxHeight}.{$fileExtension}";
 
             try {
-                if(Storage::exists($thumbnailPath) && !$overwrite) {
+                if(file_exists(public_path($thumbnailPath)) && !$overwrite) {
                     return $thumbnailPath;
                 } else {
                     $image = null;
@@ -61,19 +62,19 @@ class Image
                     switch ($fileExtension) {
                         case 'jpg':
                             imagecopyresized($thumbnail, $image, 0, 0, 0, 0, $newWidth, $newHeight, $width, $height);
-                            $storageStatus = imagejpeg($thumbnail, Storage::path($thumbnailPath), $quality);
+                            $storageStatus = imagejpeg($thumbnail, public_path($thumbnailPath), $quality);
                             break;
                         case 'png':
                             imagesavealpha($thumbnail, true);
                             imagefill($thumbnail, 0, 0, imagecolorallocatealpha($thumbnail, 0, 0, 0, 127));
                             imagecopyresampled($thumbnail, $image, 0, 0, 0, 0, $newWidth, $newHeight, $width, $height);
-                            $storageStatus = imagepng($thumbnail, Storage::path($thumbnailPath));
+                            $storageStatus = imagepng($thumbnail, public_path($thumbnailPath));
                             break;
                         case 'gif':
                             imagesavealpha($thumbnail, true);
                             imagefill($thumbnail, 0, 0, imagecolorallocatealpha($thumbnail, 0, 0, 0, 127));
                             imagecopyresampled($thumbnail, $image, 0, 0, 0, 0, $newWidth, $newHeight, $width, $height);
-                            $storageStatus = imagegif($thumbnail, Storage::path($thumbnailPath));
+                            $storageStatus = imagegif($thumbnail, public_path($thumbnailPath));
                             break;
                     }
 

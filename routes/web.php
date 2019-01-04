@@ -11,6 +11,4 @@
 |
 */
 
-Route::get('/', function() {
-    abort(404);
-})->name('home');
+Route::get('/', 'SiteController@index')->name('home');

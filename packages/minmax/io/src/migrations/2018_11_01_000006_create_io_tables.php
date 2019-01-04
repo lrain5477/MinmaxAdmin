@@ -108,24 +108,28 @@ class CreateIoTables extends Migration
                 'value' => '1',
                 'label' => 'system_parameter_item.label.' . $startItemId++,
                 'options' => json_encode(['class' => 'danger']),
+                'sort' => 1,
             ],
             [
                 'group_id' => $lastGroupId + 1,
                 'value' => '0',
                 'label' => 'system_parameter_item.label.' . $startItemId++,
                 'options' => json_encode(['class' => 'secondary']),
+                'sort' => 2,
             ],
             [
                 'group_id' => $lastGroupId + 2,
                 'value' => '1',
                 'label' => 'system_parameter_item.label.' . $startItemId++,
                 'options' => json_encode(['class' => 'danger']),
+                'sort' => 1,
             ],
             [
                 'group_id' => $lastGroupId + 2,
                 'value' => '0',
                 'label' => 'system_parameter_item.label.' . $startItemId++,
                 'options' => json_encode(['class' => 'secondary']),
+                'sort' => 2,
             ],
         ];
 
