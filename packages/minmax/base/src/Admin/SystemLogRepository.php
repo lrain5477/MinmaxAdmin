@@ -6,6 +6,7 @@ use Minmax\Base\Models\SystemLog;
 
 /**
  * Class SystemLogRepository
+ * @property SystemLog $model
  * @method SystemLog one($column = null, $operator = null, $value = null, $boolean = 'and')
  * @method SystemLog create($attributes)
  * @method SystemLog saveLanguage($model)

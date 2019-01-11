@@ -6,6 +6,7 @@ use Minmax\Base\Models\SystemParameterItem;
 
 /**
  * Class SystemParameterItemRepository
+ * @property SystemParameterItem $model
  * @method SystemParameterItem find($id)
  * @method SystemParameterItem one($column = null, $operator = null, $value = null, $boolean = 'and')
  * @method SystemParameterItem create($attributes)

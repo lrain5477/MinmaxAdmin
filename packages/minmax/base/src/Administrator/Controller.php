@@ -518,4 +518,90 @@ class Controller extends BaseController
         LogHelper::system('administrator', $request->path(), $request->method(), $inputSet['id'], $this->adminData->username, 0, __('MinmaxBase::administrator.form.message.edit_error'));
         return response(['msg' => 'error'], 400, ['Content-Type' => 'application/json']);
     }
+
+    /**
+     * @param  Request $request
+     * @return \Illuminate\Http\Response
+     */
+    public function ajaxMultiSwitch(Request $request)
+    {
+        $validator = validator($request->input(), [
+            'selected' => 'required|array|min:1',
+            'column' => 'required|string',
+            'switchTo' => 'required',
+        ]);
+
+        $selectedIds = $request->input('selected', []);
+        $column = $request->input('column');
+        $switchValue = $request->input('switchTo');
+
+        if (!$validator->fails() && count($selectedIds) > 0 && !is_null($column) && !is_null($switchValue)) {
+            try {
+                \DB::beginTransaction();
+
+                foreach ($selectedIds as $selectedId) {
+                    if ($model = $this->modelRepository->find($selectedId)) {
+                        if (is_null($this->modelRepository->save($model, [$column => $switchValue]))) {
+                            throw new \Exception();
+                        }
+                    } else {
+                        throw new \Exception();
+                    }
+                }
+
+                \DB::commit();
+
+                foreach ($selectedIds as $selectedId) {
+                    LogHelper::system('administrator', $request->path(), $request->method(), $selectedId, $this->adminData->username, 1, __('MinmaxBase::administrator.form.message.edit_success'));
+                }
+                return response(['msg' => 'success'], 200, ['Content-Type' => 'application/json']);
+            } catch (\Exception $e) {
+                \DB::rollBack();
+            }
+        }
+
+        LogHelper::system('administrator', $request->path(), $request->method(), '', $this->adminData->username, 0, __('MinmaxBase::administrator.form.message.edit_error'));
+        return response(['msg' => 'error'], 400, ['Content-Type' => 'application/json']);
+    }
+
+    /**
+     * @param  Request $request
+     * @return \Illuminate\Http\Response
+     */
+    public function ajaxMultiDestroy(Request $request)
+    {
+        $validator = validator($request->input(), [
+            'selected' => 'required|array|min:1',
+        ]);
+
+        $selectedIds = $request->input('selected', []);
+
+        if (!$validator->fails() && count($selectedIds) > 0) {
+            try {
+                \DB::beginTransaction();
+
+                foreach ($selectedIds as $selectedId) {
+                    if ($model = $this->modelRepository->find($selectedId)) {
+                        if (! $this->modelRepository->delete($model)) {
+                            throw new \Exception();
+                        }
+                    } else {
+                        throw new \Exception();
+                    }
+                }
+
+                \DB::commit();
+
+                foreach ($selectedIds as $selectedId) {
+                    LogHelper::system('administrator', $request->path(), $request->method(), $selectedId, $this->adminData->username, 1, __('MinmaxBase::administrator.form.message.delete_success'));
+                }
+                return response(['msg' => 'success'], 200, ['Content-Type' => 'application/json']);
+            } catch (\Exception $e) {
+                \DB::rollBack();
+            }
+        }
+
+        LogHelper::system('administrator', $request->path(), $request->method(), '', $this->adminData->username, 0, __('MinmaxBase::administrator.form.message.delete_error'));
+        return response(['msg' => 'error'], 400, ['Content-Type' => 'application/json']);
+    }
 }

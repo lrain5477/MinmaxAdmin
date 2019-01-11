@@ -26,6 +26,7 @@
     @endcomponent
 
     @component('MinmaxBase::admin.layouts.grid.filter-equal')
+    {!! $modelPresenter->getFilterSelection('guard', 'searchGuard', ['emptyLabel' => __('MinmaxBase::models.Role.guard')]) !!}
     {!! $modelPresenter->getFilterSelection('active', 'searchActive', ['emptyLabel' => __('MinmaxBase::models.Role.active')]) !!}
     @endcomponent
 @endsection
@@ -34,8 +35,9 @@
 <table class="table table-responsive-md table-bordered table-striped table-hover table-checkable datatables" id="tableList">
     <thead>
     <tr role="row">
-        <th>@lang('MinmaxBase::models.Role.name')</th>
-        <th class="nosort">@lang('MinmaxBase::models.Role.display_name')</th>
+        <th class="w-15">@lang('MinmaxBase::models.Role.guard')</th>
+        <th class="w-20">@lang('MinmaxBase::models.Role.name')</th>
+        <th class="w-25 nosort">@lang('MinmaxBase::models.Role.display_name')</th>
         <th>@lang('MinmaxBase::models.Role.active')</th>
         <th class="nosort">@lang('MinmaxBase::admin.grid.title.action')</th>
     </tr>
@@ -72,18 +74,20 @@ $(document).ready(function() {
                 }
 
                 d.equal = {
+                    "guard": $('#searchGuard').val(),
                     "active": $('#searchActive').val()
                 };
             }
         },
         columns: [
+            {data: 'guard', name: 'guard'},
             {data: 'name', name: 'name'},
             {data: 'display_name', name: 'display_name'},
             {data: 'active', name: 'active'},
             {data: 'action', name: 'action'}
         ],
         order: [
-            [0, 'asc']
+            [0, 'asc'], [1, 'asc']
         ]
     });
 });

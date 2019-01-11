@@ -6,6 +6,7 @@ use Minmax\Base\Models\Firewall;
 
 /**
  * Class FirewallRepository
+ * @property Firewall $model
  * @method Firewall find($id)
  * @method Firewall one($column = null, $operator = null, $value = null, $boolean = 'and')
  * @method Firewall create($attributes)
@@ -26,42 +27,8 @@ class FirewallRepository extends Repository
         return 'firewall';
     }
 
-    /**
-     * Serialize input attributes to a new model
-     *
-     * @param  array $attributes
-     * @return \Illuminate\Database\Eloquent\Model
-     */
-    protected function serialization(array $attributes)
+    protected function beforeCreate()
     {
-        $this->clearLanguageBuffer();
-
-        $model = static::MODEL;
-        /** @var \Illuminate\Database\Eloquent\Model $model */
-        $model = new $model();
-
-        $primaryKey = $model->incrementing ? null : uuidl();
-
-        if (!$model->incrementing) {
-            $model->setAttribute($model->getKeyName(), $primaryKey);
-        }
-
-        if ($this->hasSort && array_key_exists('sort', $attributes)) {
-            if (is_null($attributes['sort']) || $attributes['sort'] < 1) {
-                $attributes['sort'] = 1;
-            }
-        }
-
-        foreach ($attributes as $column => $value) {
-            if (in_array($column, $this->languageColumns)) {
-                $model->setAttribute($column, $this->exchangeLanguage($attributes, $column, $primaryKey));
-            } else {
-                $model->setAttribute($column, $value);
-            }
-        }
-
-        $model->setAttribute('guard', 'admin');
-
-        return $model;
+        $this->attributes['guard'] = 'admin';
     }
 }

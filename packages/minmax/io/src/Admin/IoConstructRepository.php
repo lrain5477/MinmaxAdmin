@@ -7,6 +7,7 @@ use Minmax\Io\Models\IoConstruct;
 
 /**
  * Class IoConstructRepository
+ * @property IoConstruct $model
  * @method IoConstruct find($id)
  * @method IoConstruct one($column = null, $operator = null, $value = null, $boolean = 'and')
  * @method IoConstruct create($attributes)

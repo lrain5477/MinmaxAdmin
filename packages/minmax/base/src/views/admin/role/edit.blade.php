@@ -43,7 +43,7 @@
     <fieldset class="mt-4" id="permFieldSet">
         <legend class="legend h6 mb-4"><i class="icon-angle-double-down2 mr-2"></i>@lang('MinmaxBase::admin.form.fieldSet.permission')</legend>
 
-        {!! $modelPresenter->getFieldPermissions($formData) !!}
+        {!! $modelPresenter->getFieldPermissions($formData, $formData->guard) !!}
 
     </fieldset>
 

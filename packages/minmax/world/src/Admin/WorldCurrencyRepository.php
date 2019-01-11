@@ -7,6 +7,7 @@ use Minmax\World\Models\WorldCurrency;
 
 /**
  * Class WorldCurrencyRepository
+ * @property WorldCurrency $model
  * @method WorldCurrency find($id)
  * @method WorldCurrency one($column = null, $operator = null, $value = null, $boolean = 'and')
  * @method WorldCurrency create($attributes)

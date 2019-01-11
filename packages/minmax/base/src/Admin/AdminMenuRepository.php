@@ -7,6 +7,7 @@ use Minmax\Base\Models\AdminMenu;
 
 /**
  * Class AdminMenuRepository
+ * @property AdminMenu $model
  * @method AdminMenu find($id)
  * @method AdminMenu one($column = null, $operator = null, $value = null, $boolean = 'and')
  * @method AdminMenu create($attributes)

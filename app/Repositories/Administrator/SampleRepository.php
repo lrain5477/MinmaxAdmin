@@ -7,6 +7,7 @@ use Minmax\Base\Administrator\Repository;
 
 /**
  * Class SampleRepository
+ * @property PasswordReset $model
  * @method PasswordReset find($id)
  * @method PasswordReset one($column = null, $operator = null, $value = null, $boolean = 'and')
  * @method PasswordReset create($attributes)

@@ -6,6 +6,7 @@ use Minmax\Base\Models\SiteParameterItem;
 
 /**
  * Class SiteParameterItemRepository
+ * @property SiteParameterItem $model
  * @method SiteParameterItem find($id)
  * @method SiteParameterItem one($column = null, $operator = null, $value = null, $boolean = 'and')
  * @method SiteParameterItem create($attributes)

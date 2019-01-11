@@ -7,6 +7,7 @@ use Minmax\World\Models\WorldCounty;
 
 /**
  * Class WorldCountyRepository
+ * @property WorldCounty $model
  * @method WorldCounty find($id)
  * @method WorldCounty one($column = null, $operator = null, $value = null, $boolean = 'and')
  * @method WorldCounty create($attributes)

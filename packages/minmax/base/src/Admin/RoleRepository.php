@@ -6,6 +6,7 @@ use Minmax\Base\Models\Role;
 
 /**
  * Class RoleRepository
+ * @property Role $model
  * @method Role find($id)
  * @method Role one($column = null, $operator = null, $value = null, $boolean = 'and')
  * @method Role create($attributes)
@@ -18,6 +19,8 @@ class RoleRepository extends Repository
 
     protected $languageColumns = ['display_name', 'description'];
 
+    protected $permissionSelected = [];
+
     /**
      * Get table name of this model
      *
@@ -28,78 +31,30 @@ class RoleRepository extends Repository
         return 'roles';
     }
 
-    /**
-     * @param  Role $model
-     * @param  array $attributes
-     * @return Role
-     */
-    public function save($model, $attributes)
+    protected function beforeSave()
     {
-        $this->beforeSave();
+        $this->permissionSelected = array_pull($this->attributes, 'permissions', []);
+    }
 
-        $this->clearLanguageBuffer();
-
-        foreach ($this->languageColumns as $column) {
-            if (array_key_exists($column, $attributes)) {
-                $attributes[$column] = $this->exchangeLanguage($attributes, $column, $model->getAttribute($model->getKeyName()));
-            }
-        }
-
-        if (count($this->languageBuffer) > 0 && !is_null(static::UPDATED_AT)) {
-            $attributes[static::UPDATED_AT] = date('Y-m-d H:i:s');
-        }
-
-        $permissions = array_pull($attributes, 'permissions', []);
-
-        $model->fill($attributes);
-
-        if ($model->save()) {
-            $model = $this->saveLanguage($model);
-            $model->syncPermissions($permissions);
-            return $model;
-        }
-
-        $this->afterSave();
-
-        return null;
+    protected function afterSave()
+    {
+        $this->model->syncPermissions($this->permissionSelected);
     }
 
     /**
-     * Serialize input attributes to a new model
-     *
-     * @param  array $attributes
-     * @return \Illuminate\Database\Eloquent\Model
+     * @param  string $guard
+     * @return array
      */
-    protected function serialization(array $attributes)
+    public function getSelectParameters($guard = 'admin')
     {
-        $this->clearLanguageBuffer();
-
-        $model = static::MODEL;
-        /** @var \Illuminate\Database\Eloquent\Model $model */
-        $model = new $model();
-
-        $primaryKey = $model->incrementing ? null : uuidl();
-
-        if (!$model->incrementing) {
-            $model->setAttribute($model->getKeyName(), $primaryKey);
-        }
-
-        if ($this->hasSort && array_key_exists('sort', $attributes)) {
-            if (is_null($attributes['sort']) || $attributes['sort'] < 1) {
-                $attributes['sort'] = 1;
-            }
-        }
-
-        foreach ($attributes as $column => $value) {
-            if (in_array($column, $this->languageColumns)) {
-                $model->setAttribute($column, $this->exchangeLanguage($attributes, $column, $primaryKey));
-            } else {
-                $model->setAttribute($column, $value);
-            }
-        }
-
-        $model->setAttribute('guard', 'admin');
-
-        return $model;
+        return $this->query()
+            ->where('guard', $guard)
+            ->orderBy('name')
+            ->get()
+            ->mapWithKeys(function($item) {
+                /** @var \Minmax\Base\Models\Role $item */
+                return [$item->id => ['title' => $item->display_name, 'class' => null]];
+            })
+            ->toArray();
     }
 }

@@ -6,6 +6,7 @@ use Minmax\Base\Models\LoginLog;
 
 /**
  * Class LoginLogRepository
+ * @property LoginLog $model
  * @method LoginLog one($column = null, $operator = null, $value = null, $boolean = 'and')
  * @method LoginLog create($attributes)
  * @method LoginLog save($model, $attributes)

@@ -7,6 +7,7 @@ use Minmax\Base\Models\WebMenu;
 
 /**
  * Class WebMenuRepository
+ * @property WebMenu $model
  * @method WebMenu find($id)
  * @method WebMenu one($column = null, $operator = null, $value = null, $boolean = 'and')
  * @method WebMenu create($attributes)

@@ -1,0 +1,27 @@
+{
+    "name": "minmax/member",
+    "description": "Member account management",
+    "type": "library",
+    "authors": [
+        {
+            "name": "Jeffy",
+            "email": "jeffy@e-creative.tw"
+        }
+    ],
+    "require": {
+        "minmax/base": "*",
+        "minmax/io": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "Minmax\\Member\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Minmax\\Member\\ServiceProvider"
+            ]
+        }
+    }
+}

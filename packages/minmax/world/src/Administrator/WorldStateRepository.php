@@ -7,6 +7,7 @@ use Minmax\World\Models\WorldState;
 
 /**
  * Class WorldStateRepository
+ * @property WorldState $model
  * @method WorldState find($id)
  * @method WorldState one($column = null, $operator = null, $value = null, $boolean = 'and')
  * @method WorldState create($attributes)

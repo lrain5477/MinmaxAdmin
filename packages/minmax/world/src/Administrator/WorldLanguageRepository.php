@@ -7,6 +7,7 @@ use Minmax\Base\Models\WorldLanguage;
 
 /**
  * Class WorldLanguageRepository
+ * @property WorldLanguage $model
  * @method WorldLanguage find($id)
  * @method WorldLanguage one($column = null, $operator = null, $value = null, $boolean = 'and')
  * @method WorldLanguage create($attributes)

@@ -35,6 +35,7 @@ class RoleTransformer extends Transformer
     public function transform(Role $model)
     {
         return [
+            'guard' => $this->presenter->getGridSelection($model, 'guard'),
             'name' => $this->presenter->getGridText($model, 'name'),
             'display_name' => $this->presenter->getGridText($model, 'display_name'),
             'active' => $this->presenter->getGridSwitch($model, 'active'),

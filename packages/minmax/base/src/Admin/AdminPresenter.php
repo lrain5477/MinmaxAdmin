@@ -2,8 +2,6 @@
 
 namespace Minmax\Base\Admin;
 
-use Minmax\Base\Models\Role;
-
 /**
  * Class AdminPresenter
  */
@@ -16,14 +14,7 @@ class AdminPresenter extends Presenter
         parent::__construct();
 
         $this->parameterSet = [
-            'role_id' => Role::query()
-                ->orderBy('display_name')
-                ->get()
-                ->mapWithKeys(function($item) {
-                    /** @var \Minmax\Base\Models\Role $item */
-                    return [$item->id => ['title' => $item->display_name, 'class' => null]];
-                })
-                ->toArray(),
+            'role_id' => (new RoleRepository)->getSelectParameters('admin'),
             'active' => systemParam('active'),
         ];
     }

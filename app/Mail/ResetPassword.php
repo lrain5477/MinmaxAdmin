@@ -2,7 +2,7 @@
 
 namespace App\Mail;
 
-use App\Models\WebData;
+use Minmax\Base\Models\WebData;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;

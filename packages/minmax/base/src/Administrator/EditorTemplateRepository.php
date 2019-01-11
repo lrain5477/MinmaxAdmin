@@ -6,6 +6,7 @@ use Minmax\Base\Models\EditorTemplate;
 
 /**
  * Class EditorTemplateRepository
+ * @property EditorTemplate $model
  * @method EditorTemplate find($id)
  * @method EditorTemplate one($column = null, $operator = null, $value = null, $boolean = 'and')
  * @method EditorTemplate create($attributes)

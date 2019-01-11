@@ -18,20 +18,25 @@ class RolePresenter extends Presenter
         parent::__construct();
 
         $this->parameterSet = [
+            'guard' => [
+                'admin' => ['title' => 'Admin', 'options' => []],
+                'web' => ['title' => 'Web', 'options' => []],
+            ],
             'active' => systemParam('active', session('admin-formLocal', app()->getLocale())),
         ];
     }
 
     /**
      * @param  \Minmax\Base\Models\Role $model
+     * @param  string $guard
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function getFieldPermissions($model)
+    public function getFieldPermissions($model, $guard = 'admin')
     {
         return view('MinmaxBase::admin.role.form-permission', [
             'model' => $model,
             'permissionData' => Permission::query()
-                ->where(['guard' => 'admin', 'active' => true])
+                ->where(['guard' => $guard, 'active' => true])
                 ->orderBy('sort')
                 ->get()
                 ->groupBy('group'),

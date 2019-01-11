@@ -87,7 +87,7 @@ return [
 
         'member' => [
             'driver' => 'eloquent',
-            'model' => \Minmax\Base\Models\Admin::class,
+            'model' => \Minmax\Member\Models\Member::class,
         ],
     ],
 

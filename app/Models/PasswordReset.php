@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $token
  * @property \Illuminate\Support\Carbon $expired_at
  * @property \Illuminate\Support\Carbon $created_at
- * @property \App\Models\Member $member
+ * @property \Minmax\Member\Models\Member $member
  */
 class PasswordReset extends Model
 {
@@ -24,6 +24,6 @@ class PasswordReset extends Model
     const UPDATED_AT = null;
 
     public function member() {
-        return $this->hasOne('App\Models\Member', 'email', 'email');
+        return $this->hasOne('Minmax\Member\Models\Member', 'email', 'email');
     }
 }

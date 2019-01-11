@@ -1,0 +1,28 @@
+{
+  "single_delete": {
+    "title": "是否確認刪除",
+    "text": "您將刪除選取內容，一但刪除將無法還原",
+    "cancelButtonText": "取消",
+    "confirmButtonText": "確認"
+  },
+  "multi_switch": {
+    "title": "是否確認批次更新狀態",
+    "text": "您將批次刪除更新內容的狀態",
+    "cancelButtonText": "取消",
+    "confirmButtonText": "確認",
+    "error_title": "批次更新失敗",
+    "error_text": "批次更新資料狀態失敗，請再次嘗試"
+  },
+  "multi_delete": {
+    "title": "是否確認批次刪除",
+    "text": "您將批次刪除選取內容，一但刪除將無法還原",
+    "cancelButtonText": "取消",
+    "confirmButtonText": "確認",
+    "error_title": "批次刪除失敗",
+    "error_text": "批次刪除資料失敗，請再次嘗試"
+  },
+  "selected_none": {
+    "title": "操作錯誤",
+    "text": "請勾選您要進行操作的項目"
+  }
+}

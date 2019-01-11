@@ -1,5 +1,4 @@
 "use strict";
-//console.log(1);
 var $wrapper = $(".wrapper");
 var $pageHeader = $(".page-header");
 var $pageContent = $(".page-content");
@@ -30,21 +29,15 @@ if (width < $mobileW) {
     $wrapper.addClass('slide-nav-close');
 }
 
-/*****Ready function start*****/
-$(document).ready(function() {
-    minmax();
-});
-
 var minmax = function() {
 
     /*--------------------------------------------
        		textarea 自動增高
      ---------------------------------------------*/
-     
     $("textarea.autoHeight").each(function() {
-        $(this).css("overflow","hidden").bind("keydown keyup", function(){  
-            $(this).height('0px').height($(this).prop("scrollHeight")+"px");  
-        }).keydown();  
+        $(this).css("overflow", "hidden").bind("keydown keyup", function() {
+            $(this).height('0px').height($(this).prop("scrollHeight") + 'px');
+        }).keydown();
     });
 
     /*--------------------------------------------
@@ -60,16 +53,12 @@ var minmax = function() {
 
         if (panelLength === 1) {
             if (width < 576) {
-                $panel.css({
-                    minHeight: contentHeight + pageH,
-                });
+                $panel.css({minHeight: contentHeight + pageH});
             } else {
-                $panel.css({
-                    minHeight: contentHeight,
-                });
+                $panel.css({minHeight: contentHeight});
             }
         }
-    }
+    };
     contentBodyH();
 
     /*--------------------------------------------
@@ -86,9 +75,7 @@ var minmax = function() {
     var navCloseAuto = function() {
         var width = $(window).width();
         if (width < $mobileW) {
-            if ($(".slide-nav-close").length > 0) {
-                return;
-            } else {
+            if ($(".slide-nav-close").length < 1) {
                 setTimeout(function() {
                     $wrapper.addClass('slide-nav-close');
                 }, 200)
@@ -98,11 +85,9 @@ var minmax = function() {
                 setTimeout(function() {
                     $wrapper.removeClass('slide-nav-close');
                 }, 200)
-            } else {
-                return;
             }
         }
-    }
+    };
 
     $(window).resize(function() {
         contentBodyH();
@@ -115,8 +100,6 @@ var minmax = function() {
     $(document).on('click', '.fixed-sidebar-left a[data-toggle="collapse"]', function(e) {
         if ($(".slide-nav-close").length > 0) {
             $wrapper.removeClass('slide-nav-close');
-        } else {
-            return;
         }
     });
     /*--------------------------------------------
@@ -143,7 +126,7 @@ var minmax = function() {
               },
               effect: 'fade',
               speed:1000
-          });
+        });
     });
     /*--------------------------------------------
        		代碼顏色
@@ -173,6 +156,31 @@ var minmax = function() {
             $('.highlight').toggle();
         });
     });
-
-    
 };
+
+/**
+ * Get language text.
+ * @param   {object} $languageObj
+ * @param   {string} parameters
+ * @returns {*}
+ */
+function getLanguage($languageObj, parameters) {
+    var $currentLayer = $languageObj, paramArray = parameters.split('.');
+    for (var layer = 0; layer < paramArray.length; layer++) {
+        var currentParam = paramArray[layer];
+        if (typeof $currentLayer === 'object' && $currentLayer.hasOwnProperty(currentParam)) {
+            $currentLayer = $currentLayer[currentParam];
+        }
+    }
+
+    if (typeof $currentLayer === 'object') {
+        return parameters;
+    } else {
+        return $currentLayer;
+    }
+}
+
+/***** Ready function start *****/
+$(function() {
+    minmax();
+});

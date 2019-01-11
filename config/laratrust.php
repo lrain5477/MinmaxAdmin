@@ -68,7 +68,8 @@ return [
     */
     'user_models' => [
         'admin' => 'Minmax\Base\Models\Admin',
-        'member' => 'Minmax\Base\Models\Member',
+        'member' => 'Minmax\Member\Models\Member',
+        // 'member' => 'Minmax\Ecommerce\Models\Member',
     ],
 
     /*

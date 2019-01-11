@@ -6,6 +6,7 @@ use Minmax\Base\Models\SystemParameterGroup;
 
 /**
  * Class SystemParameterGroupRepository
+ * @property SystemParameterGroup $model
  * @method SystemParameterGroup find($id)
  * @method SystemParameterGroup one($column = null, $operator = null, $value = null, $boolean = 'and')
  * @method SystemParameterGroup create($attributes)

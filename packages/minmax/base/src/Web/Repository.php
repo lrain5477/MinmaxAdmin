@@ -15,11 +15,53 @@ abstract class Repository
     const MODEL = null;
 
     /**
+     * @var \Illuminate\Database\Eloquent\Model $model
+     */
+    protected $model;
+
+    /**
+     * @var array $attributes
+     */
+    protected $attributes = [];
+
+    /**
      * Get table name of this model
      *
      * @return string
      */
     abstract protected function getTable();
+
+    /**
+     * @param  \Illuminate\Database\Eloquent\Model $model
+     */
+    public function setModel($model)
+    {
+        $this->model = $model;
+    }
+
+    /**
+     * @param  array $attributes
+     */
+    public function setAttributes($attributes)
+    {
+        $this->attributes = $attributes;
+    }
+
+    /**
+     * Set $model to null
+     */
+    public function clearModel()
+    {
+        $this->setModel(null);
+    }
+
+    /**
+     * Set $attributes to empty array
+     */
+    public function clearAttributes()
+    {
+        $this->setAttributes([]);
+    }
 
     /**
      * Search by primary key
@@ -92,16 +134,21 @@ abstract class Repository
      */
     public function create($attributes)
     {
+        $this->clearAttributes();
+        $this->clearModel();
+
+        $this->setAttributes($attributes);
+
         $this->beforeCreate();
 
-        $model = $this->serialization($attributes);
+        $model = $this->serialization();
 
         try {
             if ($model->save()) {
-
+                $this->setModel($model);
                 $this->afterCreate();
 
-                return $model;
+                return $this->model;
             }
             return null;
         } catch (\Exception $e) {
@@ -116,15 +163,21 @@ abstract class Repository
      */
     public function save($model, $attributes)
     {
+        $this->clearAttributes();
+        $this->clearModel();
+
+        $this->setAttributes($attributes);
+        $this->setModel($model);
+
         $this->beforeSave();
 
-        $model->fill($attributes);
+        $this->model->fill($this->attributes);
 
-        if ($model->save()) {
+        if ($this->model->save()) {
 
             $this->afterSave();
 
-            return $model;
+            return $this->model;
         }
 
         return null;
@@ -137,18 +190,22 @@ abstract class Repository
      */
     public function delete($model, $force = false)
     {
+        $this->clearModel();
+
+        $this->setModel($model);
+
         $this->beforeDelete();
 
         try {
             \DB::beginTransaction();
 
-            $deleteResult = $force ? $model->forceDelete() : $model->delete();
+            $deleteResult = $force ? $this->model->forceDelete() : $this->model->delete();
 
             if ($deleteResult) {
-
                 $this->afterDelete();
-
+                $this->clearModel();
                 \DB::commit();
+                return $deleteResult;
             }
 
             \DB::rollBack();
@@ -175,8 +232,10 @@ abstract class Repository
      * @param  array $attributes
      * @return \Illuminate\Database\Eloquent\Model
      */
-    protected function serialization(array $attributes)
+    protected function serialization($attributes = null)
     {
+        $attributes = $attributes ?? $this->attributes;
+
         $model = static::MODEL;
         /** @var \Illuminate\Database\Eloquent\Model $model */
         $model = new $model();
@@ -196,31 +255,37 @@ abstract class Repository
 
     /**
      * Before create method
+     * In here can use or change $this->attributes
      */
     protected function beforeCreate() {}
 
     /**
      * Before save method
+     * In here can use or change $this->attributes and $this->model
      */
     protected function beforeSave() {}
 
     /**
      * Before delete method
+     * In here can use or change $this->model
      */
     protected function beforeDelete() {}
 
     /**
      * After create method
+     * In here can use or change $this->attributes and $this->model
      */
     protected function afterCreate() {}
 
     /**
      * After save method
+     * In here can use or change $this->attributes and $this->model
      */
     protected function afterSave() {}
 
     /**
      * After delete method
+     * In here can use or change $this->model
      */
     protected function afterDelete() {}
 }

@@ -6,6 +6,7 @@ use Minmax\Base\Models\Permission;
 
 /**
  * Class PermissionRepository
+ * @property Permission $model
  * @method Permission find($id)
  * @method Permission one($column = null, $operator = null, $value = null, $boolean = 'and')
  * @method Permission create($attributes)

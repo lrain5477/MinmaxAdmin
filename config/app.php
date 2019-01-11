@@ -184,6 +184,7 @@ return [
         Minmax\Base\ServiceProvider::class,
         Minmax\Io\ServiceProvider::class,
         Minmax\World\ServiceProvider::class,
+        Minmax\Member\ServiceProvider::class,
 
         /*
          * Application Service Providers...

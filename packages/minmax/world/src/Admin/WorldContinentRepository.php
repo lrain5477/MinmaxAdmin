@@ -7,6 +7,7 @@ use Minmax\World\Models\WorldContinent;
 
 /**
  * Class WorldContinentRepository
+ * @property WorldContinent $model
  * @method WorldContinent find($id)
  * @method WorldContinent one($column = null, $operator = null, $value = null, $boolean = 'and')
  * @method WorldContinent create($attributes)

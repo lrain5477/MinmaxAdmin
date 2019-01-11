@@ -45,6 +45,7 @@ class RoleRequest extends FormRequest
             case 'POST':
             default:
                 return [
+                    'Role.guard' => 'required|string|in:admin,web',
                     'Role.name' => 'required|string',
                     'Role.display_name' => 'required|string',
                     'Role.active' => 'required|boolean',
@@ -60,6 +61,7 @@ class RoleRequest extends FormRequest
     public function attributes()
     {
         return [
+            'Role.guard' => __('MinmaxBase::models.Role.guard'),
             'Role.name' => __('MinmaxBase::models.Role.name'),
             'Role.display_name' => __('MinmaxBase::models.Role.display_name'),
             'Role.permissions' => __('MinmaxBase::admin.form.fieldSet.permission'),

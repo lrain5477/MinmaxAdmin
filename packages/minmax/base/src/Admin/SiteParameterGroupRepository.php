@@ -7,6 +7,7 @@ use Minmax\Base\Models\SiteParameterGroup;
 
 /**
  * Class SiteParameterGroupRepository
+ * @property SiteParameterGroup $model
  * @method SiteParameterGroup find($id)
  * @method SiteParameterGroup one($column = null, $operator = null, $value = null, $boolean = 'and')
  * @method SiteParameterGroup create($attributes)

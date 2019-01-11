@@ -25,6 +25,8 @@
     <fieldset id="baseFieldSet">
         <legend class="legend h6 mb-4"><i class="icon-angle-double-down2 mr-2"></i>@lang('MinmaxBase::admin.form.fieldSet.default')</legend>
 
+        {!! $modelPresenter->getFieldSelect($formData, 'guard', ['required' => true]) !!}
+
         {!! $modelPresenter->getFieldText($formData, 'name', ['required' => true, 'size' => 4]) !!}
 
         {!! $modelPresenter->getFieldText($formData, 'display_name', ['required' => true, 'size' => 4]) !!}

@@ -7,6 +7,7 @@ use Minmax\World\Models\WorldCity;
 
 /**
  * Class WorldCityRepository
+ * @property WorldCity $model
  * @method WorldCity find($id)
  * @method WorldCity one($column = null, $operator = null, $value = null, $boolean = 'and')
  * @method WorldCity create($attributes)

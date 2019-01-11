@@ -18,6 +18,12 @@
 {{-- * * * bootstrap-sweetalert 彈跳訊息視窗 --}}
 <script src="{{ asset('static/modules/sweetalert/sweetalert.min.js') }}"></script>
 <script src="{{ asset('static/modules/sweetalert/ui-sweetalert.min.js') }}"></script>
+<script>
+var sweetAlertLanguage;
+jQuery.getJSON('{{ asset('static/admin/js/lang/' . app()->getLocale() . '/sweet_alert.json') }}', function(data) {
+    sweetAlertLanguage = data;
+});
+</script>
 {{-- * * * bootstrap-tabdrop 切換tab下拉選單 --}}
 <script src="{{ asset('static/modules/tabdrop/js/bootstrap-tabdrop.js') }}"></script>
 {{-- * / js--}}

@@ -6,6 +6,7 @@ use Minmax\Base\Models\Firewall;
 
 /**
  * Class FirewallRepository
+ * @property Firewall $model
  * @method Firewall find($id)
  * @method Firewall one($column = null, $operator = null, $value = null, $boolean = 'and')
  * @method Firewall create($attributes)

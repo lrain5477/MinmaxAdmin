@@ -6,6 +6,7 @@ use Minmax\Base\Models\WebData;
 
 /**
  * Class WebDataRepository
+ * @property WebData $model
  * @method WebData find($id)
  * @method WebData one($column = null, $operator = null, $value = null, $boolean = 'and')
  * @method WebData create($attributes)
@@ -32,8 +33,8 @@ class WebDataRepository extends Repository
      * @param string $guard
      * @return WebData
      */
-    public function getData($guard = null)
+    public function getData($guard = 'admin')
     {
-        return $this->one('guard', $guard ?? 'admin');
+        return $this->one('guard', $guard);
     }
 }

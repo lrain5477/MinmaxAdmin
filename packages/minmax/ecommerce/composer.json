@@ -1,0 +1,28 @@
+{
+    "name": "minmax/ecommerce",
+    "description": "E-commerce management",
+    "type": "library",
+    "authors": [
+        {
+            "name": "Jeffy",
+            "email": "jeffy@e-creative.tw"
+        }
+    ],
+    "require": {
+        "minmax/base": "*",
+        "minmax/io": "*",
+        "minmax/member": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "Minmax\\Ecommerce\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Minmax\\Ecommerce\\ServiceProvider"
+            ]
+        }
+    }
+}

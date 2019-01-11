@@ -6,6 +6,7 @@ use Minmax\Base\Models\WebData;
 
 /**
  * Class WebDataRepository
+ * @property WebData $model
  * @method WebData find($id)
  * @method WebData one($column = null, $operator = null, $value = null, $boolean = 'and')
  * @method WebData create($attributes)

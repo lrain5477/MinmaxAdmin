@@ -146,5 +146,9 @@ class InsertAdminMenuWorldData extends Migration
         $uriSet = ['control-world', 'world-currency', 'world-continent', 'world-country', 'world-state', 'world-county', 'world-city'];
 
         DB::table('admin_menu')->whereIn('uri', $uriSet)->delete();
+
+        $permissionSet = ['worldCurrency', 'worldContinent', 'worldCountry', 'worldState', 'worldCounty', 'worldCity'];
+
+        DB::table('permissions')->whereIn('group', $permissionSet)->delete();
     }
 }

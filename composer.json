@@ -42,6 +42,7 @@
             "Minmax\\Base\\": "packages/minmax/base/src/",
             "Minmax\\Io\\": "packages/minmax/io/src/",
             "Minmax\\World\\": "packages/minmax/world/src/",
+            "Minmax\\Member\\": "packages/minmax/member/src/",
             "Minmax\\Newsletter\\": "packages/minmax/newsletter/src/"
         }
     },
