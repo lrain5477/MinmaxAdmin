@@ -38,8 +38,7 @@
 (function($) {
     $(function() {
         CKEDITOR.replace('{{ $id }}', {
-            customConfig: 'config.js',
-            width: '100%',
+            customConfig: 'admin-config.js',
             height: '{{ $height }}',
             contentsCss: '{{ $stylesheet }}',
             @if($template)
@@ -49,7 +48,8 @@
             @endif
             filebrowserBrowseUrl: '{{ langRoute('admin.elfinder.ckeditor') }}'
         });
-        CKEDITOR.dtd.$removeEmpty['i'] = false;
+        CKEDITOR.dtd.$removeEmpty['i'] = 0;
+        CKEDITOR.dtd.$removeEmpty['span'] = 0;
     });
 })(jQuery);
 </script>

@@ -10,8 +10,9 @@ use Minmax\Member\Models\Member;
  * @property Member $model
  * @method Member find($id)
  * @method Member one($column = null, $operator = null, $value = null, $boolean = 'and')
+ * @method Member create($attributes)
+ * @method Member save($model, $attributes)
  * @method Member|\Illuminate\Database\Eloquent\Builder query()
- * @method Member saveLanguage($model, $columns = [])
  */
 class MemberRepository extends Repository
 {
@@ -54,6 +55,8 @@ class MemberRepository extends Repository
             'code' => 'created',
             'details' => ['tag' => 'Created', 'remark' => 'New member ' . $this->model->username . ' is created.'],
         ]);
+
+        sendNotifyEmail('registered', $this->model->email, [$this->model]);
     }
 
     protected function beforeSave()

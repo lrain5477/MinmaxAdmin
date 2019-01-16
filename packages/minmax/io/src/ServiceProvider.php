@@ -17,7 +17,7 @@ class ServiceProvider extends BaseServiceProvider
         $this->loadRoutesFrom(__DIR__ . '/routes/administrator.php');
         $this->loadMigrationsFrom(__DIR__ . '/migrations');
         $this->loadTranslationsFrom(__DIR__ . '/translations', 'MinmaxIo');
-        $this->loadViewsFrom(__DIR__.'/views', 'MinmaxIo');
+        $this->loadViewsFrom(__DIR__ . '/views', 'MinmaxIo');
     }
 
     /**

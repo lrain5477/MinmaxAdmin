@@ -34,7 +34,7 @@
                     customData: { 
                         _token: '{{ csrf_token() }}'
                     },
-                    url : '{{ langRoute('admin.elfinder.connector') }}',  // connector URL
+                    url : '{{ langRoute('administrator.elfinder.connector') }}',  // connector URL
                     height: '100%',
                     commandsOptions: {
                         upload : {
@@ -44,29 +44,13 @@
                     soundPath: '{{ asset($dir.'/sounds') }}',
                     uiOptions: {
                         toolbar: [
-                            @if(request()->user('admin')->can('systemUpload'))
                             ['back', 'forward', 'up'], ['view', 'sort'], ['copy', 'cut', 'paste'], ['rm'],
-                            ['duplicate', 'rename'], ['mkdir', 'upload'], ['getfile', 'open', 'download'], ['info'],
-                            @else
-                            ['back', 'forward', 'up'], ['view', 'sort'], ['getfile', 'open', 'download'], ['info'],
-                            @endif
+                            ['duplicate', 'rename'], ['mkdir', 'upload'], ['getfile', 'open', 'download'], ['info']
                         ]
                     },
                     contextmenu: {
-                        cwd: [
-                            @if(request()->user('admin')->can('systemUpload'))
-                            'reload', '|', 'upload', 'mkdir', 'paste', '|', 'view', 'sort', 'selectall', '|', 'info',
-                            @else
-                            'reload', '|', 'view', 'sort', 'selectall', '|', 'info',
-                            @endif
-                        ],
-                        files: [
-                            @if(request()->user('admin')->can('systemUpload'))
-                            'getfile', 'open', 'download', '|', 'copy', 'cut', 'paste', 'rm', '|', 'rename', '|', 'info',
-                            @else
-                            'getfile', 'open', 'download', 'info',
-                            @endif
-                        ]
+                        cwd: ['reload', '|', 'upload', 'mkdir', 'paste', '|', 'view', 'sort', 'selectall', '|', 'info'],
+                        files: ['getfile', 'open', 'download', '|', 'copy', 'cut', 'paste', 'rm', '|', 'rename', '|', 'info']
                     }
                 });
             });

@@ -1,0 +1,26 @@
+{
+    "name": "minmax/notify",
+    "description": "System notify management",
+    "type": "library",
+    "authors": [
+        {
+            "name": "Jeffy",
+            "email": "jeffy@e-creative.tw"
+        }
+    ],
+    "require": {
+        "minmax/base": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "Minmax\\Notify\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Minmax\\Notify\\ServiceProvider"
+            ]
+        }
+    }
+}

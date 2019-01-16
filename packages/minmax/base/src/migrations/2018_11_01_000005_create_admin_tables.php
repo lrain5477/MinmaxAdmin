@@ -102,13 +102,13 @@ class CreateAdminTables extends Migration
         ];
         $permissionsData = array_merge($permissionsData, SeederHelper::getPermissionArray('admin', 'webData', '網站基本資訊', ['U'], 302));
         $permissionsData = array_merge($permissionsData, SeederHelper::getPermissionArray('admin', 'webMenu', '前臺選單目錄', 303));
+        $permissionsData = array_merge($permissionsData, SeederHelper::getPermissionArray('admin', 'siteParameterItem', '參數項目管理', 304));
+        $permissionsData = array_merge($permissionsData, SeederHelper::getPermissionArray('admin', 'siteParameterGroup', '參數群組管理', 305));
         $permissionsData = array_merge($permissionsData, SeederHelper::getPermissionArray('admin', 'admin', '管理員帳戶', 311));
         $permissionsData = array_merge($permissionsData, SeederHelper::getPermissionArray('admin', 'role', '群組管理', 312));
         $permissionsData = array_merge($permissionsData, SeederHelper::getPermissionArray('admin', 'firewall', '防火牆', 371));
         $permissionsData = array_merge($permissionsData, SeederHelper::getPermissionArray('admin', 'loginLog', '後臺登入紀錄', ['R'], 372));
         $permissionsData = array_merge($permissionsData, SeederHelper::getPermissionArray('admin', 'systemLog', '後臺操作紀錄', ['R'], 373));
-        $permissionsData = array_merge($permissionsData, SeederHelper::getPermissionArray('admin', 'siteParameterItem', '參數項目管理', 391));
-        $permissionsData = array_merge($permissionsData, SeederHelper::getPermissionArray('admin', 'siteParameterGroup', '參數群組管理', 392));
         DB::table('permissions')->insert($permissionsData);
 
         // 管理員選單 - 分類
@@ -209,6 +209,30 @@ class CreateAdminTables extends Migration
                 'permission_key' => 'webMenuShow',
                 'sort' => 3, 'updated_at' => $timestamp, 'created_at' => $timestamp
             ],
+            [
+                'id' => uuidl(),
+                'title' => '參數項目',
+                'uri' => 'site-parameter-item',
+                'controller' => 'SiteParameterItemController',
+                'model' => 'SiteParameterItem',
+                'parent_id' => $menuParentId1,
+                'link' => 'site-parameter-item',
+                'icon' => null,
+                'permission_key' => 'siteParameterItemShow',
+                'sort' => 4, 'updated_at' => $timestamp, 'created_at' => $timestamp
+            ],
+            [
+                'id' => uuidl(),
+                'title' => '參數群組',
+                'uri' => 'site-parameter-group',
+                'controller' => 'SiteParameterGroupController',
+                'model' => 'SiteParameterGroup',
+                'parent_id' => $menuParentId1,
+                'link' => 'site-parameter-group',
+                'icon' => null,
+                'permission_key' => 'siteParameterGroupShow',
+                'sort' => 5, 'updated_at' => $timestamp, 'created_at' => $timestamp
+            ],
 
             [
                 'id' => $menuParentId2 = uuidl(),
@@ -294,43 +318,6 @@ class CreateAdminTables extends Migration
                 'icon' => null,
                 'permission_key' => 'loginLogShow',
                 'sort' => 3, 'updated_at' => $timestamp, 'created_at' => $timestamp
-            ],
-
-            [
-                'id' => $menuParentId4 = uuidl(),
-                'title' => '系統參數',
-                'uri' => 'control-parameter',
-                'controller' => null,
-                'model' => null,
-                'parent_id' => $menuClassId3,
-                'link' => null,
-                'icon' => 'icon-filter',
-                'permission_key' => null,
-                'sort' => 306, 'updated_at' => $timestamp, 'created_at' => $timestamp
-            ],
-            [
-                'id' => uuidl(),
-                'title' => '參數項目',
-                'uri' => 'site-parameter-item',
-                'controller' => 'SiteParameterItemController',
-                'model' => 'SiteParameterItem',
-                'parent_id' => $menuParentId4,
-                'link' => 'site-parameter-item',
-                'icon' => null,
-                'permission_key' => 'siteParameterItemShow',
-                'sort' => 1, 'updated_at' => $timestamp, 'created_at' => $timestamp
-            ],
-            [
-                'id' => uuidl(),
-                'title' => '參數群組',
-                'uri' => 'site-parameter-group',
-                'controller' => 'SiteParameterGroupController',
-                'model' => 'SiteParameterGroup',
-                'parent_id' => $menuParentId4,
-                'link' => 'site-parameter-group',
-                'icon' => null,
-                'permission_key' => 'siteParameterGroupShow',
-                'sort' => 2, 'updated_at' => $timestamp, 'created_at' => $timestamp
             ],
         ]);
         DB::table('admin_menu')->insert($adminMenuData);

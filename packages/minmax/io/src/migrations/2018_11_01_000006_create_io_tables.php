@@ -160,9 +160,17 @@ class CreateIoTables extends Migration
      */
     public function deleteSystemParameters()
     {
-        DB::table('system_parameter_group')->whereIn('code', ['import_enable', 'export_enable'])->delete();
+        $parameterCodeSet = ['import_enable', 'export_enable'];
 
-        DB::table('language_resource')->where('title', 'like', 'system_parameter_group.title.%')->delete();
-        DB::table('language_resource')->where('title', 'like', 'system_parameter_item.label.%')->delete();
+        DB::table('system_parameter_group')->whereIn('code', $parameterCodeSet)->get()
+            ->each(function ($group) {
+                DB::table('system_parameter_item')->where('group_id', $group->id)->get()
+                    ->each(function ($item) {
+                        DB::table('language_resource')->where('title', 'like', 'system_parameter_item.label.' . $item->id)->delete();
+                    });
+                DB::table('language_resource')->where('title', 'like', 'system_parameter_group.title.' . $group->id)->delete();
+            });
+
+        DB::table('system_parameter_group')->whereIn('code', $parameterCodeSet)->delete();
     }
 }

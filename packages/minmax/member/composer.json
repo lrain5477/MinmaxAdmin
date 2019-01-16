@@ -10,7 +10,8 @@
     ],
     "require": {
         "minmax/base": "*",
-        "minmax/io": "*"
+        "minmax/io": "*",
+        "minmax/notify-email": "*"
     },
     "autoload": {
         "psr-4": {

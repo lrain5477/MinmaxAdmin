@@ -10,8 +10,9 @@ use Minmax\Member\Models\MemberTerm;
  * @property MemberTerm $model
  * @method MemberTerm find($id)
  * @method MemberTerm one($column = null, $operator = null, $value = null, $boolean = 'and')
+ * @method MemberTerm create($attributes)
+ * @method MemberTerm save($model, $attributes)
  * @method MemberTerm|\Illuminate\Database\Eloquent\Builder query()
- * @method MemberTerm saveLanguage($model, $columns = [])
  */
 class MemberTermRepository extends Repository
 {

@@ -54,6 +54,8 @@ class MemberRepository extends Repository
             'code' => 'created',
             'details' => ['tag' => 'Created', 'remark' => 'New member ' . $this->model->username . ' is created.'],
         ]);
+
+        sendNotifyEmail('registered', $this->model->email, [$this->model]);
     }
 
     protected function beforeSave()

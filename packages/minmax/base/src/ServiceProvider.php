@@ -20,7 +20,7 @@ class ServiceProvider extends BaseServiceProvider
         $this->loadRoutesFrom(__DIR__ . '/routes/web.php');
         $this->loadMigrationsFrom(__DIR__ . '/migrations');
         $this->loadTranslationsFrom(__DIR__ . '/translations', 'MinmaxBase');
-        $this->loadViewsFrom(__DIR__.'/views', 'MinmaxBase');
+        $this->loadViewsFrom(__DIR__ . '/views', 'MinmaxBase');
         $this->loadBreadcrumbs();
     }
 

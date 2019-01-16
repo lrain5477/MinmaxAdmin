@@ -185,6 +185,28 @@ class CreateAdministratorTables extends Migration
                 'icon' => null,
                 'sort' => 4, 'updated_at' => $timestamp, 'created_at' => $timestamp
             ],
+            [
+                'id' => uuidl(),
+                'title' => '網站參數項目',
+                'uri' => 'site-parameter-item',
+                'controller' => 'SiteParameterItemController',
+                'model' => 'SiteParameterItem',
+                'parent_id' => $menuParentId1,
+                'link' => 'site-parameter-item',
+                'icon' => null,
+                'sort' => 5, 'updated_at' => $timestamp, 'created_at' => $timestamp
+            ],
+            [
+                'id' => uuidl(),
+                'title' => '網站參數群組',
+                'uri' => 'site-parameter-group',
+                'controller' => 'SiteParameterGroupController',
+                'model' => 'SiteParameterGroup',
+                'parent_id' => $menuParentId1,
+                'link' => 'site-parameter-group',
+                'icon' => null,
+                'sort' => 6, 'updated_at' => $timestamp, 'created_at' => $timestamp
+            ],
 
             [
                 'id' => $menuParentId2 = uuidl(),
@@ -312,28 +334,6 @@ class CreateAdministratorTables extends Migration
             ],
             [
                 'id' => uuidl(),
-                'title' => '網站參數項目',
-                'uri' => 'site-parameter-item',
-                'controller' => 'SiteParameterItemController',
-                'model' => 'SiteParameterItem',
-                'parent_id' => $menuParentId5,
-                'link' => 'site-parameter-item',
-                'icon' => null,
-                'sort' => 1, 'updated_at' => $timestamp, 'created_at' => $timestamp
-            ],
-            [
-                'id' => uuidl(),
-                'title' => '網站參數群組',
-                'uri' => 'site-parameter-group',
-                'controller' => 'SiteParameterGroupController',
-                'model' => 'SiteParameterGroup',
-                'parent_id' => $menuParentId5,
-                'link' => 'site-parameter-group',
-                'icon' => null,
-                'sort' => 2, 'updated_at' => $timestamp, 'created_at' => $timestamp
-            ],
-            [
-                'id' => uuidl(),
                 'title' => '系統參數項目',
                 'uri' => 'system-parameter-item',
                 'controller' => 'SystemParameterItemController',
@@ -341,7 +341,7 @@ class CreateAdministratorTables extends Migration
                 'parent_id' => $menuParentId5,
                 'link' => 'system-parameter-item',
                 'icon' => null,
-                'sort' => 3, 'updated_at' => $timestamp, 'created_at' => $timestamp
+                'sort' => 1, 'updated_at' => $timestamp, 'created_at' => $timestamp
             ],
             [
                 'id' => uuidl(),
@@ -352,7 +352,7 @@ class CreateAdministratorTables extends Migration
                 'parent_id' => $menuParentId5,
                 'link' => 'system-parameter-group',
                 'icon' => null,
-                'sort' => 4, 'updated_at' => $timestamp, 'created_at' => $timestamp
+                'sort' => 2, 'updated_at' => $timestamp, 'created_at' => $timestamp
             ],
             [
                 'id' => uuidl(),
@@ -363,7 +363,7 @@ class CreateAdministratorTables extends Migration
                 'parent_id' => $menuParentId5,
                 'link' => 'editor-template',
                 'icon' => null,
-                'sort' => 5, 'updated_at' => $timestamp, 'created_at' => $timestamp
+                'sort' => 3, 'updated_at' => $timestamp, 'created_at' => $timestamp
             ],
         ]);
         DB::table('administrator_menu')->insert($administratorMenuData);

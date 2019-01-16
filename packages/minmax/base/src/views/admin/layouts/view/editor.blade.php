@@ -25,8 +25,15 @@
 <script>
 (function($) {
     $(function() {
-        CKEDITOR.replace('{{ $id }}', {customConfig: 'config.js', width: '100%', height: '{{ $height }}', toolbar:[{ name: 'document', items: [ 'Source']}], resize_enabled:false, removePlugins: 'elementspath', contentsCss: '{{ $stylesheet }}'});
-        CKEDITOR.dtd.$removeEmpty['i'] = false;
+        CKEDITOR.replace('{{ $id }}', {
+            customConfig: 'admin-config.js',
+            height: '{{ $height }}',
+            readOnly: true,
+            resize_enabled:false,
+            contentsCss: '{{ $stylesheet }}'
+        });
+        CKEDITOR.dtd.$removeEmpty['i'] = 0;
+        CKEDITOR.dtd.$removeEmpty['span'] = 0;
     });
 })(jQuery);
 </script>

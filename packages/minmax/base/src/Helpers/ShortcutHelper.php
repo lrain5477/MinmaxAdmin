@@ -290,3 +290,36 @@ if (! function_exists('getThumbnailPath')) {
         return getImagePath($thumbnailPath, $transparent);
     }
 }
+
+if(!function_exists('sendProxyMail')) {
+    /**
+     * @param  array|string $to
+     * @param  \Illuminate\Mail\Mailable  $mailable
+     * @param  string $from
+     * @return array|mixed
+     */
+    function sendProxyMail($to = [], $mailable = null, $from = '')
+    {
+        $proxyUrl = "http://proxy.mailer.youweb.tw/send";
+
+        $parameters = [
+            'project' => config('mail.username'),
+            'auth_key' => config('mail.password'),
+            'to' => $to,
+            'body' => $mailable->render(),
+            'subject' => $mailable->subject,
+            'from' => $from == '' ? config('mail.from.address') : $from,
+        ];
+
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $proxyUrl);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($parameters));
+        curl_setopt($ch, CURLOPT_FRESH_CONNECT, true);
+        $output = curl_exec($ch);
+        curl_close($ch);
+
+        return empty($output) ? false : json_decode($output, true);
+    }
+}
