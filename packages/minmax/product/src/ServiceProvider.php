@@ -1,6 +1,6 @@
 <?php
 
-namespace Minmax\Ecommerce;
+namespace Minmax\Product;
 
 use Illuminate\Support\ServiceProvider as BaseServiceProvider;
 
@@ -16,8 +16,8 @@ class ServiceProvider extends BaseServiceProvider
         //$this->loadRoutesFrom(__DIR__ . '/routes/admin.php');
         //$this->loadRoutesFrom(__DIR__ . '/routes/administrator.php');
         $this->loadMigrationsFrom(__DIR__ . '/migrations');
-        //$this->loadTranslationsFrom(__DIR__ . '/translations', 'MinmaxMember');
-        //$this->loadViewsFrom(__DIR__ . '/views', 'MinmaxMember');
+        //$this->loadTranslationsFrom(__DIR__ . '/translations', 'MinmaxProduct');
+        //$this->loadViewsFrom(__DIR__ . '/views', 'MinmaxProduct');
     }
 
     /**

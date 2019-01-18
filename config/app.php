@@ -186,6 +186,8 @@ return [
         Minmax\World\ServiceProvider::class,
         Minmax\Notify\ServiceProvider::class,
         Minmax\Member\ServiceProvider::class,
+        Minmax\Product\ServiceProvider::class,
+        Minmax\Ecommerce\ServiceProvider::class,
 
         /*
          * Application Service Providers...

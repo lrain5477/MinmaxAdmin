@@ -1,0 +1,28 @@
+{
+    "name": "minmax/product",
+    "description": "Product management",
+    "type": "library",
+    "authors": [
+        {
+            "name": "Jeffy",
+            "email": "jeffy@e-creative.tw"
+        }
+    ],
+    "require": {
+        "minmax/base": "*",
+        "minmax/io": "*",
+        "minmax/notify": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "Minmax\\Product\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Minmax\\Product\\ServiceProvider"
+            ]
+        }
+    }
+}

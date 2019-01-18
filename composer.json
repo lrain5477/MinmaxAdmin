@@ -44,7 +44,9 @@
             "Minmax\\Io\\": "packages/minmax/io/src/",
             "Minmax\\World\\": "packages/minmax/world/src/",
             "Minmax\\Notify\\": "packages/minmax/notify/src/",
-            "Minmax\\Member\\": "packages/minmax/member/src/"
+            "Minmax\\Member\\": "packages/minmax/member/src/",
+            "Minmax\\Product\\": "packages/minmax/product/src/",
+            "Minmax\\Ecommerce\\": "packages/minmax/ecommerce/src/"
         }
     },
     "autoload-dev": {
