@@ -5,7 +5,7 @@
  */
 ?>
 <div class="page-header fixed-top">
-    <h1 class="navbar-brand left-width pl-3 navbar navbar-expand-lg"><a class="font-weight-bold text-uppercase" href="{{ langRoute('admin.home') }}"><img class="mr-1 align-middle" src="{{ isset($webData->system_logo[0]['path']) ? asset($webData->system_logo[0]['path']) : 'data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=' }}"></a></h1>
+    <h1 class="navbar-brand left-width pl-3 navbar navbar-expand-lg"><a class="font-weight-bold text-uppercase" href="{{ langRoute('admin.home') }}"><img class="mr-1 align-middle" src="{{ getImagePath($webData->system_logo[0]['path']) }}" alt=""></a></h1>
     <button class="btn btn-link toggle-left-nav-btn no-decoration" id="toggle_nav_btn" type="button"><span class="text-hide">@lang('MinmaxBase::admin.header.menu')</span><span class="line"></span></button>
     <div class="top-right pr-2 mt-1">
         @if(isset($languageData) && $languageData->count() > 1)
