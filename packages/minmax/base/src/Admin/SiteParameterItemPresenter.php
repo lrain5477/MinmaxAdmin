@@ -9,7 +9,7 @@ class SiteParameterItemPresenter extends Presenter
 {
     protected $packagePrefix = 'MinmaxBase::';
 
-    protected $languageColumns = ['label'];
+    protected $languageColumns = ['label', 'details'];
 
     public function __construct()
     {

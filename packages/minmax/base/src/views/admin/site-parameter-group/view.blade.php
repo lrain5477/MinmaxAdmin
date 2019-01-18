@@ -38,6 +38,8 @@
     <fieldset class="mt-4" id="advFieldSet">
         <legend class="legend h6 mb-4"><i class="icon-angle-double-down2 mr-2"></i>@lang('MinmaxBase::admin.form.fieldSet.advanced')</legend>
 
+        {!! $modelPresenter->getViewNormalText($formData, 'category') !!}
+
         {!! $modelPresenter->getViewSelection($formData, 'active') !!}
 
     </fieldset>

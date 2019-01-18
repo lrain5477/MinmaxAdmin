@@ -2,7 +2,7 @@
 
 namespace Minmax\Io\Admin;
 
-use Breadcrumbs;
+use DaveJamesMiller\Breadcrumbs\Facades\Breadcrumbs;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Minmax\Base\Admin\Controller;
@@ -38,50 +38,46 @@ class IoConstructController extends Controller
     /**
      * Set datatable filter.
      *
-     * @param  mixed $datatables
+     * @param  mixed $datatable
      * @param  Request $request
      * @return mixed
      */
-    protected function doDatatableFilter($datatables, $request)
+    protected function doDatatableFilter($datatable, $request)
     {
-        if($request->has('filter')) {
-            $datatables->filter(function($query) use ($request) {
-                /** @var \Illuminate\Database\Query\Builder $query */
-                $whereQuery = '';
-                $whereValue = [];
+        $datatable->filter(function($query) use ($request) {
+            /** @var \Illuminate\Database\Query\Builder $query */
 
-                if($request->has('filter')) {
-                    foreach ($request->input('filter') as $column => $value) {
-                        if (is_null($value) || $value === '') continue;
+            if($request->has('filter')) {
+                foreach ($request->input('filter', []) as $column => $value) {
+                    if (empty($column) || is_null($value) || $value === '') continue;
 
-                        if ($column == 'title') {
-                            try {
-                                $filterDisplayName = collect(cache('langMap.' . app()->getLocale(), []))
-                                    ->filter(function ($item, $key) use ($value) {
-                                        return preg_match('/^io-construct\.title\./', $key) > 0 && strpos($item, $value) !== false;
-                                    })
-                                    ->keys()
-                                    ->implode(',');
-                            } catch (\Exception $e) {
-                                $filterDisplayName = '';
-                            }
-                            $whereQuery .= ($whereQuery === '' ? '' : ' or ') . "{$column} in (?)";
-                            $whereValue[] = $filterDisplayName;
-                            continue;
-                        }
-
-                        $whereQuery .= ($whereQuery === '' ? '' : ' or ') . "{$column} like ?";
-                        $whereValue[] = "%{$value}%";
+                    if ($column == 'title') {
+                        try {
+                            $filterDisplayName = collect(cache('langMap.' . app()->getLocale(), []))
+                                ->filter(function ($item, $key) use ($value) {
+                                    return preg_match('/^io-construct\.title\./', $key) > 0 && strpos($item, $value) !== false;
+                                })
+                                ->keys()
+                                ->toArray();
+                            $query->orWhereIn($column, $filterDisplayName);
+                        } catch (\Exception $e) {}
+                        continue;
                     }
-                    if($whereQuery !== '') $whereQuery = "({$whereQuery})";
+
+                    $query->orWhere($column, 'like', "%{$value}%");
                 }
+            }
 
-                if($whereQuery !== '' && count($whereValue) > 0)
-                    $query->whereRaw("{$whereQuery}", $whereValue);
-            });
-        }
+            if($request->has('equal')) {
+                foreach($request->input('equal', []) as $column => $value) {
+                    if (empty($column) || is_null($value) || $value === '') continue;
 
-        return $datatables;
+                    $query->where($column, $value);
+                }
+            }
+        });
+
+        return $datatable;
     }
 
     /**

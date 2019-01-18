@@ -38,6 +38,7 @@ class SiteParameterGroupRequest extends FormRequest
         switch ($this->method()) {
             case 'PUT':
                 return [
+                    'SiteParameterGroup.category' => 'nullable|string',
                     'SiteParameterGroup.code' => ['required', Rule::unique('site_parameter_group', 'code')->ignore($this->route('id'))],
                     'SiteParameterGroup.title' => 'required|string',
                     'SiteParameterGroup.active' => 'required|boolean',
@@ -45,6 +46,7 @@ class SiteParameterGroupRequest extends FormRequest
             case 'POST':
             default:
                 return [
+                    'SiteParameterGroup.category' => 'nullable|string',
                     'SiteParameterGroup.code' => 'required|unique:site_parameter_group,code',
                     'SiteParameterGroup.title' => 'required|string',
                     'SiteParameterGroup.active' => 'required|boolean',
@@ -60,6 +62,7 @@ class SiteParameterGroupRequest extends FormRequest
     public function attributes()
     {
         return [
+            'SiteParameterGroup.category' => __('MinmaxBase::models.SiteParameterGroup.category'),
             'SiteParameterGroup.code' => __('MinmaxBase::models.SiteParameterGroup.code'),
             'SiteParameterGroup.title' => __('MinmaxBase::models.SiteParameterGroup.title'),
             'SiteParameterGroup.active' => __('MinmaxBase::models.SiteParameterGroup.active'),

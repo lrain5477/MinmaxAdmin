@@ -40,6 +40,9 @@ class SiteParameterItemRequest extends FormRequest
                 return [
                     'SiteParameterItem.value' => ['required', Rule::unique('site_parameter_item', 'value')->ignore($this->route('id'))],
                     'SiteParameterItem.label' => 'required|string',
+                    'SiteParameterItem.details.description' => 'nullable|string',
+                    'SiteParameterItem.details.editor' => 'nullable|string',
+                    'SiteParameterItem.details.pic' => 'nullable|array',
                     'SiteParameterItem.sort' => 'required|integer',
                     'SiteParameterItem.active' => 'required|boolean',
                 ];
@@ -49,6 +52,9 @@ class SiteParameterItemRequest extends FormRequest
                     'SiteParameterItem.group_id' => 'required|exists:site_parameter_group,id',
                     'SiteParameterItem.value' => 'required|unique:site_parameter_item,value',
                     'SiteParameterItem.label' => 'required|string',
+                    'SiteParameterItem.details.description' => 'nullable|string',
+                    'SiteParameterItem.details.editor' => 'nullable|string',
+                    'SiteParameterItem.details.pic' => 'nullable|array',
                     'SiteParameterItem.sort' => 'nullable|integer',
                     'SiteParameterItem.active' => 'required|boolean',
                 ];
@@ -66,6 +72,9 @@ class SiteParameterItemRequest extends FormRequest
             'SiteParameterItem.group_id' => __('MinmaxBase::models.SiteParameterItem.group_id'),
             'SiteParameterItem.value' => __('MinmaxBase::models.SiteParameterItem.value'),
             'SiteParameterItem.label' => __('MinmaxBase::models.SiteParameterItem.label'),
+            'SiteParameterItem.details.description' => __('MinmaxBase::models.SiteParameterItem.details.description'),
+            'SiteParameterItem.details.editor' => __('MinmaxBase::models.SiteParameterItem.details.editor'),
+            'SiteParameterItem.details.pic' => __('MinmaxBase::models.SiteParameterItem.details.pic'),
             'SiteParameterItem.sort' => __('MinmaxBase::models.SiteParameterItem.sort'),
             'SiteParameterItem.active' => __('MinmaxBase::models.SiteParameterItem.active'),
         ];

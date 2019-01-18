@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property integer $group_id
  * @property string $value
  * @property string $label
+ * @property array $details
  * @property array $options
  * @property integer $sort
  * @property boolean $active
@@ -29,6 +30,11 @@ class SiteParameterItem extends Model
     public function getLabelAttribute()
     {
         return langDB($this->getAttributeFromArray('label'));
+    }
+
+    public function getDetailsAttribute()
+    {
+        return json_decode(langDB($this->getAttributeFromArray('details')), true);
     }
 
     public function siteParameterGroup()

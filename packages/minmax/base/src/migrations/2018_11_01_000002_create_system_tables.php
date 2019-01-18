@@ -45,6 +45,7 @@ class CreateSystemTables extends Migration
             $table->increments('id');
             $table->string('code')->unique()->comment('群組代碼');
             $table->string('title')->comment('群組名稱');
+            $table->string('category')->nullable()->comment('群組類別');
             $table->json('options')->nullable()->comment('群組設定');
             $table->boolean('active')->default(true)->comment('啟用狀態');
             $table->boolean('editable')->default(true)->comment('可否編輯');
@@ -56,6 +57,7 @@ class CreateSystemTables extends Migration
             $table->unsignedInteger('group_id')->comment('群組ID');
             $table->string('value')->comment('參數數值');
             $table->string('label')->comment('參數名稱');
+            $table->string('details')->nullable()->comment('參數細節');         // {description, editor, pic}
             $table->json('options')->nullable()->comment('參數設定');
             $table->unsignedInteger('sort')->default(1)->comment('排序');
             $table->boolean('active')->default(true)->comment('啟用狀態');
@@ -76,7 +78,7 @@ class CreateSystemTables extends Migration
             $table->string('system_url')->comment('網站網址');
             $table->json('system_logo')->nullable()->comment('網站Logo');
             $table->string('company')->comment('公司資訊');                 // {name, name_en, id}
-            $table->string('contact')->comment('聯絡資訊');                 // {[phone, fax, email, address, map, lng, lat]}
+            $table->string('contact')->comment('聯絡資訊');                 // {phone, fax, email, address, map, lng, lat}
             $table->json('social')->nullable()->comment('社群連結');        // {facebook, instagram, youtube}
             $table->string('seo')->comment('搜尋引擎');                     // {meta_description, meta_keywords, og_image}
             $table->json('options')->nullable()->comment('網站設定');       // {head, body, foot}

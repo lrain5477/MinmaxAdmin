@@ -30,6 +30,12 @@
 
         {!! $modelPresenter->getFieldText($formData, 'value', ['required' => true, 'size' => 4]) !!}
 
+        {!! $modelPresenter->getFieldTextarea($formData, 'details', ['subColumn' => 'description']) !!}
+
+        {!! $modelPresenter->getFieldEditor($formData, 'details', ['subColumn' => 'editor']) !!}
+
+        {!! $modelPresenter->getFieldMediaImage($formData, 'details', ['subColumn' => 'pic', 'limit' => 1, 'hint' => true]) !!}
+
     </fieldset>
 
     <fieldset class="mt-4" id="advFieldSet">

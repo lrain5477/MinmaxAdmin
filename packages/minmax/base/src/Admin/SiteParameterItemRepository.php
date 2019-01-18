@@ -22,7 +22,7 @@ class SiteParameterItemRepository extends Repository
 
     protected $hasSort = true;
 
-    protected $languageColumns = ['label'];
+    protected $languageColumns = ['label', 'details'];
 
     /**
      * Get table name of this model

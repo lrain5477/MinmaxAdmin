@@ -19,7 +19,7 @@ class SiteParameterItemRepository extends Repository
 
     protected $hasSort = true;
 
-    protected $languageColumns = ['label'];
+    protected $languageColumns = ['label', 'details'];
 
     const UPDATED_AT = null;
 

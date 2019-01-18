@@ -2,7 +2,7 @@
 
 namespace Minmax\Base\Admin;
 
-use Breadcrumbs;
+use DaveJamesMiller\Breadcrumbs\Facades\Breadcrumbs;
 
 /**
  * Class WebMenuController

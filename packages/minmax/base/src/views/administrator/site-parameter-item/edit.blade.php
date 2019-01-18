@@ -27,6 +27,12 @@
 
         {!! $modelPresenter->getFieldText($formData, 'value', ['required' => true, 'hint' => true]) !!}
 
+        {!! $modelPresenter->getFieldTextarea($formData, 'details', ['subColumn' => 'description']) !!}
+
+        {!! $modelPresenter->getFieldEditor($formData, 'details', ['subColumn' => 'editor']) !!}
+
+        {!! $modelPresenter->getFieldMediaImage($formData, 'details', ['subColumn' => 'pic', 'limit' => 1, 'hint' => true]) !!}
+
         {!! $modelPresenter->getFieldDynamicOptionText($formData, 'options', ['hint' => true]) !!}
 
     </fieldset>

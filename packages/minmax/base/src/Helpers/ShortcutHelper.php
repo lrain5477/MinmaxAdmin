@@ -236,6 +236,62 @@ if (! function_exists('systemParam')) {
     }
 }
 
+if (! function_exists('siteParam')) {
+    /**
+     * Get site parameter via key.
+     *
+     * @param  string $key
+     * @param  string $langKey
+     * @param  string $category
+     * @return string|array
+     */
+    function siteParam($key = null, $langKey = null, $category = null)
+    {
+        $langKey = $langKey ?? app()->getLocale();
+
+        if (is_null($category)) {
+            $params = Cache::rememberForever("siteParams.{$langKey}", function () {
+                return \Minmax\Base\Models\SiteParameterGroup::with('siteParameterItems')
+                    ->where('active', true)
+                    ->get()
+                    ->mapWithKeys(function ($item) {
+                        /** @var \Minmax\Base\Models\SiteParameterGroup $item */
+                        return [
+                            $item->code => $item->siteParameterItems
+                                ->where('active', true)
+                                ->mapWithKeys(function ($item) {
+                                    /** @var \Minmax\Base\Models\SiteParameterItem $item */
+                                    return [$item->value => ['title' => $item->label, 'options' => $item->options, 'details' => $item->details]];
+                                })
+                        ];
+                    })
+                    ->toArray();
+            });
+
+            if (count($params) == 0) Cache::forget("siteParams.{$langKey}");
+        } else {
+            $params = \Minmax\Base\Models\SiteParameterGroup::with('siteParameterItems')
+                ->where('category', $category)
+                ->where('active', true)
+                ->get()
+                ->mapWithKeys(function ($item) {
+                    /** @var \Minmax\Base\Models\SiteParameterGroup $item */
+                    return [
+                        $item->code => $item->siteParameterItems
+                            ->where('active', true)
+                            ->mapWithKeys(function ($item) {
+                                /** @var \Minmax\Base\Models\SiteParameterItem $item */
+                                return [$item->value => ['title' => $item->label, 'options' => $item->options, 'details' => $item->details]];
+                            })
+                    ];
+                })
+                ->toArray();
+        }
+
+        return is_null($key) ? $params : array_get($params, $key, $key);
+    }
+}
+
 if (! function_exists('getImagePath')) {
     /**
      * Check and get image path.

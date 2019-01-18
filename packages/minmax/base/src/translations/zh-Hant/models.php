@@ -262,6 +262,7 @@ return [
         'id' => 'ID',
         'code' => '群組代碼',
         'title' => '群組名稱',
+        'category' => '群組類別',
         'options' => '群組設定',
         'active' => '啟用狀態',
         'editable' => '可否編輯',
@@ -278,6 +279,11 @@ return [
         'group_id' => '參數群組',
         'value' => '參數數值',
         'label' => '參數名稱',
+        'details' => [
+            'description' => '描述說明',
+            'editor' => '詳細內容',
+            'pic' => '顯示圖片',
+        ],
         'options' => '參數設定',
         'sort' => '排序',
         'active' => '啟用狀態',
@@ -285,6 +291,9 @@ return [
         'updated_at' => '更新時間',
         'hint' => [
             'value' => '此代碼為唯一值，不可與同群組的其他參數重複。',
+            'details' => [
+                'pic' => '圖片類型：jpg、png。數量限制：1 張。',
+            ],
             'options' => '可自由增加設定參數，將會以 <code>Key => Value</code> 的陣列形式存取。',
         ],
     ],

@@ -35,6 +35,12 @@
 
         {!! $modelPresenter->getViewNormalText($formData, 'value') !!}
 
+        {!! $modelPresenter->getViewNormalText($formData, 'details', ['subColumn' => 'description']) !!}
+
+        {!! $modelPresenter->getViewEditor($formData, 'details', ['subColumn' => 'editor']) !!}
+
+        {!! $modelPresenter->getViewMediaImage($formData, 'details', ['subColumn' => 'pic']) !!}
+
     </fieldset>
 
     <fieldset class="mt-4" id="advFieldSet">

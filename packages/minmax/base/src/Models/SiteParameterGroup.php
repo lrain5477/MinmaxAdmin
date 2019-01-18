@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property integer $id
  * @property string $code
  * @property string $title
+ * @property string $category
  * @property array $options
  * @property boolean $active
  * @property boolean $editable
