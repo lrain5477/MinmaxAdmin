@@ -26,7 +26,7 @@ class SetWebControllerAttributes
         if (! $webData->active) abort(404, $webData->offline_text);
 
         // 設定 Uri
-        $uri = explode('/', str_replace("/^\//", '', str_replace(app()->getLocale(), '', $request->path())))[0] ?? '';
+        $uri = explode('/', preg_replace("/^\//", '', str_replace(app()->getLocale(), '', $request->path())))[0] ?? '';
 
         // 設定語系資料
         $languageData = (new WorldLanguageRepository)->getLanguageList();
