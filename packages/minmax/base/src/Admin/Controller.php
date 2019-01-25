@@ -293,11 +293,15 @@ class Controller extends BaseController
             /** @var \Illuminate\Database\Query\Builder $query */
 
             if($request->has('filter')) {
-                foreach ($request->input('filter', []) as $column => $value) {
-                    if (empty($column) || is_null($value) || $value === '') continue;
+                $query->where(function ($query) use ($request) {
+                    /** @var \Illuminate\Database\Query\Builder $query */
 
-                    $query->orWhere($column, 'like', "%{$value}%");
-                }
+                    foreach ($request->input('filter', []) as $column => $value) {
+                        if (empty($column) || is_null($value) || $value === '') continue;
+
+                        $query->orWhere($column, 'like', "%{$value}%");
+                    }
+                });
             }
 
             if($request->has('equal')) {

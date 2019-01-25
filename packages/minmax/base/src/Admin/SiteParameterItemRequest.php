@@ -3,6 +3,7 @@
 namespace Minmax\Base\Admin;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 use Minmax\Base\Helpers\Log as LogHelper;
 
@@ -37,8 +38,14 @@ class SiteParameterItemRequest extends FormRequest
     {
         switch ($this->method()) {
             case 'PUT':
+                $thisGroupId = DB::table('site_parameter_item')->where('id', $this->route('id'))->value('group_id');
                 return [
-                    'SiteParameterItem.value' => ['required', Rule::unique('site_parameter_item', 'value')->ignore($this->route('id'))],
+                    'SiteParameterItem.value' => [
+                        'nullable',
+                        Rule::unique('site_parameter_item', 'value')
+                            ->where('group_id', $thisGroupId)
+                            ->ignore($this->route('id'))
+                    ],
                     'SiteParameterItem.label' => 'required|string',
                     'SiteParameterItem.details.description' => 'nullable|string',
                     'SiteParameterItem.details.editor' => 'nullable|string',
@@ -50,7 +57,11 @@ class SiteParameterItemRequest extends FormRequest
             default:
                 return [
                     'SiteParameterItem.group_id' => 'required|exists:site_parameter_group,id',
-                    'SiteParameterItem.value' => 'required|unique:site_parameter_item,value',
+                    'SiteParameterItem.value' => [
+                        'nullable',
+                        Rule::unique('site_parameter_item', 'value')
+                            ->where('group_id', $this->input('SiteParameterItem.group_id'))
+                    ],
                     'SiteParameterItem.label' => 'required|string',
                     'SiteParameterItem.details.description' => 'nullable|string',
                     'SiteParameterItem.details.editor' => 'nullable|string',

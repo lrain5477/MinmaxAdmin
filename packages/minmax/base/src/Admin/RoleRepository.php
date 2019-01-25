@@ -53,7 +53,7 @@ class RoleRepository extends Repository
             ->get()
             ->mapWithKeys(function($item) {
                 /** @var \Minmax\Base\Models\Role $item */
-                return [$item->id => ['title' => $item->display_name, 'class' => null]];
+                return [$item->id => ['title' => $item->display_name, 'options' => null]];
             })
             ->toArray();
     }

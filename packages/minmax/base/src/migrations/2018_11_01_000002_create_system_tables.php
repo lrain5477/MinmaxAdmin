@@ -55,7 +55,7 @@ class CreateSystemTables extends Migration
         Schema::create('site_parameter_item', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('group_id')->comment('群組ID');
-            $table->string('value')->comment('參數數值');
+            $table->string('value')->nullable()->comment('參數數值');
             $table->string('label')->comment('參數名稱');
             $table->string('details')->nullable()->comment('參數細節');         // {description, editor, pic}
             $table->json('options')->nullable()->comment('參數設定');

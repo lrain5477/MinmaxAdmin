@@ -261,7 +261,7 @@ if (! function_exists('siteParam')) {
                                 ->where('active', true)
                                 ->mapWithKeys(function ($item) {
                                     /** @var \Minmax\Base\Models\SiteParameterItem $item */
-                                    return [$item->value => ['title' => $item->label, 'options' => $item->options, 'details' => $item->details]];
+                                    return [($item->value ?? $item->id) => ['title' => $item->label, 'options' => $item->options, 'details' => $item->details]];
                                 })
                         ];
                     })
@@ -281,7 +281,7 @@ if (! function_exists('siteParam')) {
                             ->where('active', true)
                             ->mapWithKeys(function ($item) {
                                 /** @var \Minmax\Base\Models\SiteParameterItem $item */
-                                return [$item->value => ['title' => $item->label, 'options' => $item->options, 'details' => $item->details]];
+                                return [($item->value ?? $item->id) => ['title' => $item->label, 'options' => $item->options, 'details' => $item->details]];
                             })
                     ];
                 })

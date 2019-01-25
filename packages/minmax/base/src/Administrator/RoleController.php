@@ -29,24 +29,29 @@ class RoleController extends Controller
             /** @var \Illuminate\Database\Query\Builder $query */
 
             if($request->has('filter')) {
-                foreach ($request->input('filter', []) as $column => $value) {
-                    if (empty($column) || is_null($value) || $value === '') continue;
+                $query->where(function ($query) use ($request) {
+                    /** @var \Illuminate\Database\Query\Builder $query */
 
-                    if ($column == 'display_name') {
-                        try {
-                            $filterDisplayName = collect(cache('langMap.' . app()->getLocale(), []))
-                                ->filter(function ($item, $key) use ($value) {
-                                    return preg_match('/^roles\.display_name\./', $key) > 0 && strpos($item, $value) !== false;
-                                })
-                                ->keys()
-                                ->toArray();
-                            $query->orWhereIn($column, $filterDisplayName);
-                        } catch (\Exception $e) {}
-                        continue;
+                    foreach ($request->input('filter', []) as $column => $value) {
+                        if (empty($column) || is_null($value) || $value === '') continue;
+
+                        if ($column == 'display_name') {
+                            try {
+                                $filterDisplayName = collect(cache('langMap.' . app()->getLocale(), []))
+                                    ->filter(function ($item, $key) use ($value) {
+                                        return preg_match('/^roles\.display_name\./', $key) > 0 && strpos($item, $value) !== false;
+                                    })
+                                    ->keys()
+                                    ->toArray();
+                                $query->orWhereIn($column, $filterDisplayName);
+                            } catch (\Exception $e) {
+                            }
+                            continue;
+                        }
+
+                        $query->orWhere($column, 'like', "%{$value}%");
                     }
-
-                    $query->orWhere($column, 'like', "%{$value}%");
-                }
+                });
             }
 
             if($request->has('equal')) {

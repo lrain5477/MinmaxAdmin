@@ -200,6 +200,8 @@ abstract class Presenter
             $value = $columnValue;
         }
 
+        $value = $value[array_get($options, 'index', 0)] ?? [];
+
         try {
             return view('MinmaxBase::administrator.layouts.grid.thumbnail', [
                     'value' => array_get($value, 'path', ''),
@@ -1197,7 +1199,7 @@ abstract class Presenter
             'limit' => array_get($options, 'limit', 0),
             'hint' => $hintValue,
             'lang' => $lang,
-            'images' => $fieldValue,
+            'images' => $fieldValue ?? [],
             'additionalFields' => array_get($options, 'additional', []),
         ];
 

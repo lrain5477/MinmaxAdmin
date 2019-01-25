@@ -222,8 +222,10 @@ abstract class Presenter
         if ($subColumn = array_get($options, 'subColumn')) {
             $value = is_array($columnValue) ? array_get($columnValue, $subColumn, []) : [];
         } else {
-            $value = $columnValue;
+            $value = $columnValue ?? [];
         }
+
+        $value = $value[array_get($options, 'index', 0)] ?? [];
 
         try {
             return view('MinmaxBase::admin.layouts.grid.thumbnail', [
@@ -1242,7 +1244,7 @@ abstract class Presenter
             'limit' => array_get($options, 'limit', 0),
             'hint' => $hintValue,
             'lang' => $lang,
-            'images' => $fieldValue,
+            'images' => $fieldValue ?? [],
             'additionalFields' => array_get($options, 'additional', []),
         ];
 

@@ -29,24 +29,29 @@ class SiteParameterItemController extends Controller
             /** @var \Illuminate\Database\Query\Builder $query */
 
             if($request->has('filter')) {
-                foreach ($request->input('filter', []) as $column => $value) {
-                    if (empty($column) || is_null($value) || $value === '') continue;
+                $query->where(function ($query) use ($request) {
+                    /** @var \Illuminate\Database\Query\Builder $query */
 
-                    if ($column == 'label') {
-                        try {
-                            $filterLabel = collect(cache('langMap.' . app()->getLocale(), []))
-                                ->filter(function ($item, $key) use ($value) {
-                                    return preg_match('/^site_parameter_item\.label\./', $key) > 0 && strpos($item, $value) !== false;
-                                })
-                                ->keys()
-                                ->toArray();
-                            $query->orWhereIn($column, $filterLabel);
-                        } catch (\Exception $e) {}
-                        continue;
+                    foreach ($request->input('filter', []) as $column => $value) {
+                        if (empty($column) || is_null($value) || $value === '') continue;
+
+                        if ($column == 'label') {
+                            try {
+                                $filterLabel = collect(cache('langMap.' . app()->getLocale(), []))
+                                    ->filter(function ($item, $key) use ($value) {
+                                        return preg_match('/^site_parameter_item\.label\./', $key) > 0 && strpos($item, $value) !== false;
+                                    })
+                                    ->keys()
+                                    ->toArray();
+                                $query->orWhereIn($column, $filterLabel);
+                            } catch (\Exception $e) {
+                            }
+                            continue;
+                        }
+
+                        $query->orWhere($column, 'like', "%{$value}%");
                     }
-
-                    $query->orWhere($column, 'like', "%{$value}%");
-                }
+                });
             }
 
             if($request->has('equal')) {

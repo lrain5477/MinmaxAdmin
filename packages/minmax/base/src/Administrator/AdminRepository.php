@@ -65,4 +65,21 @@ class AdminRepository extends Repository
         \DB::table('role_user')->where(['user_id' => $this->model->getKey(), 'user_type' => get_class($this->model)])->delete();
         \DB::table('permission_user')->where(['user_id' => $this->model->getKey(), 'user_type' => get_class($this->model)])->delete();
     }
+
+    /**
+     * @param  string $guard
+     * @return array
+     */
+    public function getSelectParameters()
+    {
+        return $this->query()
+            ->where('username', '!=', 'sysadmin')
+            ->orderBy('name')
+            ->get()
+            ->mapWithKeys(function($item) {
+                /** @var \Minmax\Base\Models\Admin $item */
+                return [$item->id => ['title' => "{$item->name} ({$item->username})", 'options' => null]];
+            })
+            ->toArray();
+    }
 }

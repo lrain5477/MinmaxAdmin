@@ -31,4 +31,14 @@ class WorldCurrencyRepository extends Repository
     {
         return 'world_currency';
     }
+
+    public function getSelectParameters()
+    {
+        return $this->all(...func_get_args())
+            ->mapWithKeys(function ($item) {
+                /** @var WorldCurrency $item */
+                return [$item->code => ['title' => $item->title, 'options' => $item->options]];
+            })
+            ->toArray();
+    }
 }

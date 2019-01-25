@@ -6,7 +6,6 @@ use DaveJamesMiller\Breadcrumbs\Facades\Breadcrumbs;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Minmax\Base\Admin\Controller;
-use Minmax\Base\Helpers\Permission as PermissionHelper;
 
 /**
  * Class IoConstructController
@@ -48,24 +47,29 @@ class IoConstructController extends Controller
             /** @var \Illuminate\Database\Query\Builder $query */
 
             if($request->has('filter')) {
-                foreach ($request->input('filter', []) as $column => $value) {
-                    if (empty($column) || is_null($value) || $value === '') continue;
+                $query->where(function ($query) use ($request) {
+                    /** @var \Illuminate\Database\Query\Builder $query */
 
-                    if ($column == 'title') {
-                        try {
-                            $filterDisplayName = collect(cache('langMap.' . app()->getLocale(), []))
-                                ->filter(function ($item, $key) use ($value) {
-                                    return preg_match('/^io-construct\.title\./', $key) > 0 && strpos($item, $value) !== false;
-                                })
-                                ->keys()
-                                ->toArray();
-                            $query->orWhereIn($column, $filterDisplayName);
-                        } catch (\Exception $e) {}
-                        continue;
+                    foreach ($request->input('filter', []) as $column => $value) {
+                        if (empty($column) || is_null($value) || $value === '') continue;
+
+                        if ($column == 'title') {
+                            try {
+                                $filterDisplayName = collect(cache('langMap.' . app()->getLocale(), []))
+                                    ->filter(function ($item, $key) use ($value) {
+                                        return preg_match('/^io_construct\.title\./', $key) > 0 && strpos($item, $value) !== false;
+                                    })
+                                    ->keys()
+                                    ->toArray();
+                                $query->orWhereIn($column, $filterDisplayName);
+                            } catch (\Exception $e) {
+                            }
+                            continue;
+                        }
+
+                        $query->orWhere($column, 'like', "%{$value}%");
                     }
-
-                    $query->orWhere($column, 'like', "%{$value}%");
-                }
+                });
             }
 
             if($request->has('equal')) {

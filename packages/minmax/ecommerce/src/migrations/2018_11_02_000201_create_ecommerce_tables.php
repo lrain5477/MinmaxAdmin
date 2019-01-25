@@ -31,30 +31,6 @@ class CreateEcommerceTables extends Migration
             $table->timestamp('updated_at')->useCurrent();
         });
 
-        // 賣場管理
-        Schema::create('ec_market', function (Blueprint $table) {
-            $table->string('id')->primary();
-            $table->string('code')->unique()->comment('賣場代碼');
-            $table->string('title')->comment('賣場名稱');
-            $table->string('admin_id')->nullable()->comment('管理員ID');
-            $table->string('details')->nullable()->comment('說明細節');     // {editor, pic}
-            $table->json('options')->nullable()->comment('參數設定');
-            $table->unsignedInteger('sort')->default(1)->comment('排序');
-            $table->boolean('active')->default(true)->comment('啟用狀態');
-            $table->timestamps();
-        });
-
-        // 賣場-商品組合 (Many-to-Many)
-        Schema::create('ec_market_package', function (Blueprint $table) {
-            $table->string('market_id')->comment('賣場ID');
-            $table->unsignedInteger('package_id')->comment('組合ID');
-
-            $table->foreign('market_id')->references('id')->on('ec_market')
-                ->onUpdate('cascade')->onDelete('cascade');
-            $table->foreign('package_id')->references('id')->on('product_package')
-                ->onUpdate('cascade')->onDelete('cascade');
-        });
-
         // 取貨方式
         Schema::create('ec_delivery', function (Blueprint $table) {
             $table->increments('id');
@@ -100,8 +76,7 @@ class CreateEcommerceTables extends Migration
 
         Schema::dropIfExists('ec_payment');
         Schema::dropIfExists('ec_delivery');
-        Schema::dropIfExists('ec_market_package');
-        Schema::dropIfExists('ec_market');
+        Schema::dropIfExists('ec_config');
     }
 
     /**

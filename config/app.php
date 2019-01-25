@@ -137,6 +137,8 @@ return [
 
     'menu_layer_limit' => env('MENU_LAYER_LIMIT', 2),
 
+    'ecommerce_layer_limit' => env('ECOMMERCE_LAYER_LIMIT', 3),
+
     'thumbnail_size' => env('THUMBNAIL_SIZE', '(80|120|300)'),
 
     /*

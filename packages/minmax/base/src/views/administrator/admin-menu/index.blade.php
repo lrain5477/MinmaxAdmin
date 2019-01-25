@@ -8,11 +8,11 @@
 
 @section('action-buttons')
     @component('MinmaxBase::administrator.layouts.right-links')
-        @if(!is_null($parentModel))
+        @isset($parentModel)
         <a class="btn btn-sm btn-light" href="{{ langRoute("administrator.{$pageData->uri}.index", ['parent' => $parentModel->parent_id]) }}" title="@lang('MinmaxBase::administrator.grid.back')">
             <i class="icon-undo2"></i><span class="ml-1 d-none d-md-inline-block">@lang('MinmaxBase::administrator.grid.back')</span>
         </a>
-        @endif
+        @endisset
         <a class="btn btn-sm btn-main" href="{{ langRoute("administrator.{$pageData->uri}.create", ['parent' => request('parent')]) }}" title="@lang('MinmaxBase::administrator.form.create')">
             <i class="icon-plus2"></i><span class="ml-1 d-none d-md-inline-block">@lang('MinmaxBase::administrator.form.create')</span>
         </a>

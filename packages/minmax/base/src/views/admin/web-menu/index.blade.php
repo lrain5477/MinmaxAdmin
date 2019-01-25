@@ -2,6 +2,7 @@
 /**
  * @var \Minmax\Base\Models\Admin $adminData
  * @var \Minmax\Base\Models\AdminMenu $pageData
+ * @var \Minmax\Base\Models\WebMenu $parentModel
  */
 ?>
 
@@ -9,11 +10,11 @@
 
 @section('action-buttons')
     @component('MinmaxBase::admin.layouts.right-links')
-        @if(!is_null($parentModel))
+        @isset($parentModel)
         <a class="btn btn-sm btn-light" href="{{ langRoute("admin.{$pageData->uri}.index", ['parent' => $parentModel->parent_id]) }}" title="@lang('MinmaxBase::admin.grid.back')">
             <i class="icon-undo2"></i><span class="ml-1 d-none d-md-inline-block">@lang('MinmaxBase::admin.grid.back')</span>
         </a>
-        @endif
+        @endisset
         @if($adminData->can('webMenuCreate'))
         <a class="btn btn-sm btn-main" href="{{ langRoute("admin.{$pageData->uri}.create", ['parent' => request('parent')]) }}" title="@lang('MinmaxBase::admin.form.create')">
             <i class="icon-plus2"></i><span class="ml-1 d-none d-md-inline-block">@lang('MinmaxBase::admin.form.create')</span>
