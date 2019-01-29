@@ -18,7 +18,9 @@ class IoConstructRepository extends Repository
 {
     const MODEL = IoConstruct::class;
 
-    protected $hasSort = true;
+    protected $sort = 'sort';
+
+    protected $sorting = true;
 
     protected $languageColumns = ['title', 'filename'];
 

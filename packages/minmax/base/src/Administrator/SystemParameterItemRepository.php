@@ -17,7 +17,9 @@ class SystemParameterItemRepository extends Repository
 {
     const MODEL = SystemParameterItem::class;
 
-    protected $hasSort = true;
+    protected $sort = 'sort';
+
+    protected $sorting = true;
 
     protected $languageColumns = ['label'];
 
@@ -31,6 +33,11 @@ class SystemParameterItemRepository extends Repository
     protected function getTable()
     {
         return 'system_parameter_item';
+    }
+
+    protected function getSortWhere()
+    {
+        return "group_id = '{$this->model->group_id}'";
     }
 
     protected function afterCreate()

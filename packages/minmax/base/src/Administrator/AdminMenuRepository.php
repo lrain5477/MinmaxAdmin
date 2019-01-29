@@ -18,7 +18,7 @@ class AdminMenuRepository extends Repository
 {
     const MODEL = AdminMenu::class;
 
-    protected $hasSort = true;
+    protected $sort = 'sort';
 
     /**
      * Get table name of this model

@@ -18,7 +18,9 @@ class WorldLanguageRepository extends Repository
 {
     const MODEL = WorldLanguage::class;
 
-    protected $hasSort = true;
+    protected $sort = 'sort';
+
+    protected $sorting = true;
 
     protected $languageColumns = ['native'];
 

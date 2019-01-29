@@ -18,7 +18,7 @@ class NotifyEmailRepository extends Repository
 {
     const MODEL = NotifyEmail::class;
 
-    protected $hasSort = true;
+    protected $sort = 'sort';
 
     protected $languageColumns = [
         'title',

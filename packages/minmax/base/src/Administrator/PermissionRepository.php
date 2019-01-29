@@ -17,7 +17,7 @@ class PermissionRepository extends Repository
 {
     const MODEL = Permission::class;
 
-    protected $hasSort = true;
+    protected $sort = 'sort';
 
     /**
      * Get table name of this model

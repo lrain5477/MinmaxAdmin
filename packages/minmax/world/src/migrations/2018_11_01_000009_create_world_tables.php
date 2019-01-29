@@ -669,10 +669,10 @@ class CreateWorldTables extends Migration
 
         // 全球化 - 貨幣
         $worldCurrencyData = [
-            ['title' => '新臺幣', 'code' => 'TWD', 'name' => 'world_currency.name.1', 'options' => json_encode(['symbol' => 'NT$', 'native' => 'NTD', 'exchange' => 1.00]), 'created_at' => $timestamp, 'updated_at' => $timestamp],
-            ['title' => '人民幣', 'code' => 'CNY', 'name' => 'world_currency.name.2', 'options' => json_encode(['symbol' => '¥', 'native' => 'RMB', 'exchange' => 0.223905399]), 'created_at' => $timestamp, 'updated_at' => $timestamp],
-            ['title' => '日圓', 'code' => 'JPY', 'name' => 'world_currency.name.3', 'options' => json_encode(['symbol' => '¥', 'native' => 'JPY', 'exchange' => 3.65070264]), 'created_at' => $timestamp, 'updated_at' => $timestamp],
-            ['title' => '美元', 'code' => 'USD', 'name' => 'world_currency.name.4', 'options' => json_encode(['symbol' => '$', 'native' => 'USD', 'exchange' => 0.032473]), 'created_at' => $timestamp, 'updated_at' => $timestamp],
+            ['title' => '新臺幣', 'code' => 'TWD', 'name' => 'world_currency.name.1', 'options' => json_encode(['symbol' => 'NT$', 'native' => 'NTD', 'exchange' => 1.00]), 'active' => true, 'created_at' => $timestamp, 'updated_at' => $timestamp],
+            ['title' => '人民幣', 'code' => 'CNY', 'name' => 'world_currency.name.2', 'options' => json_encode(['symbol' => '¥', 'native' => 'RMB', 'exchange' => 0.223905399]), 'active' => false, 'created_at' => $timestamp, 'updated_at' => $timestamp],
+            ['title' => '日圓', 'code' => 'JPY', 'name' => 'world_currency.name.3', 'options' => json_encode(['symbol' => '¥', 'native' => 'JPY', 'exchange' => 3.65070264]), 'active' => false, 'created_at' => $timestamp, 'updated_at' => $timestamp],
+            ['title' => '美元', 'code' => 'USD', 'name' => 'world_currency.name.4', 'options' => json_encode(['symbol' => '$', 'native' => 'USD', 'exchange' => 0.032473]), 'active' => false, 'created_at' => $timestamp, 'updated_at' => $timestamp],
         ];
 
         DB::table('world_currency')->insert($worldCurrencyData);

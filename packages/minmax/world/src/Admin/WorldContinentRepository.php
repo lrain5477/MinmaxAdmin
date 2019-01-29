@@ -18,7 +18,9 @@ class WorldContinentRepository extends Repository
 {
     const MODEL = WorldContinent::class;
 
-    protected $hasSort = true;
+    protected $sort = 'sort';
+
+    protected $sorting = true;
 
     protected $languageColumns = ['name'];
 

@@ -18,7 +18,9 @@ class WorldCurrencyRepository extends Repository
 {
     const MODEL = WorldCurrency::class;
 
-    protected $hasSort = true;
+    protected $sort = 'sort';
+
+    protected $sorting = true;
 
     protected $languageColumns = ['name'];
 

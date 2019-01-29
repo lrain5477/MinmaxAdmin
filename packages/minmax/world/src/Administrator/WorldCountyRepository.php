@@ -18,7 +18,9 @@ class WorldCountyRepository extends Repository
 {
     const MODEL = WorldCounty::class;
 
-    protected $hasSort = true;
+    protected $sort = 'sort';
+
+    protected $sorting = true;
 
     protected $languageColumns = ['name'];
 
@@ -30,6 +32,11 @@ class WorldCountyRepository extends Repository
     protected function getTable()
     {
         return 'world_county';
+    }
+
+    protected function getSortWhere()
+    {
+        return "state_id = '{$this->model->state_id}'";
     }
 
     public function getSelectParameters()

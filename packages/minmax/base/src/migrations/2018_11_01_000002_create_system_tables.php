@@ -243,25 +243,34 @@ class CreateSystemTables extends Migration
             ['group_id' => $groupIndex - 1, 'value' => '_self', 'label' => 'system_parameter_item.label.' . $itemIndex++, 'options' => json_encode(['class' => 'secondary']), 'sort' => 1],
             ['group_id' => $groupIndex - 1, 'value' => '_blank', 'label' => 'system_parameter_item.label.' . $itemIndex++, 'options' => json_encode(['class' => 'danger']), 'sort' => 2],
         ]);
+        array_push($systemParameterGroupData, ['code' => 'searchable', 'title' => 'system_parameter_group.title.' . $groupIndex++]);
+        $systemParameterItemData = array_merge($systemParameterItemData, [
+            ['group_id' => $groupIndex - 1, 'value' => '1', 'label' => 'system_parameter_item.label.' . $itemIndex++, 'options' => json_encode(['class' => 'danger']), 'sort' => 1],
+            ['group_id' => $groupIndex - 1, 'value' => '0', 'label' => 'system_parameter_item.label.' . $itemIndex++, 'options' => json_encode(['class' => 'secondary']), 'sort' => 2],
+        ]);
 
         DB::table('system_parameter_group')->insert($systemParameterGroupData);
         DB::table('system_parameter_item')->insert($systemParameterItemData);
 
         $languageResourceData = array_merge($languageResourceData, SeederHelper::getLanguageResourceArray('system_parameter_group', [
             ['title' => '啟用狀態'], ['title' => '後臺啟用'], ['title' => '操作結果'], ['title' => '防火牆規則'],
-            ['title' => '置頂狀態'], ['title' => '顯示狀態'], ['title' => '可否編輯'], ['title' => '目標視窗']
+            ['title' => '置頂狀態'], ['title' => '顯示狀態'], ['title' => '可否編輯'], ['title' => '目標視窗'],
+            ['title' => '搜尋顯示']
         ], 1));
         $languageResourceData = array_merge($languageResourceData, SeederHelper::getLanguageResourceArray('system_parameter_group', [
             ['title' => '启用状态'], ['title' => '后台启用'], ['title' => '操作结果'], ['title' => '防火墙规则'],
-            ['title' => '置顶状态'], ['title' => '显示状态'], ['title' => '可否编辑'], ['title' => '目的页框']
+            ['title' => '置顶状态'], ['title' => '显示状态'], ['title' => '可否编辑'], ['title' => '目的页框'],
+            ['title' => '搜寻显示']
         ], 2));
         $languageResourceData = array_merge($languageResourceData, SeederHelper::getLanguageResourceArray('system_parameter_group', [
             ['title' => '有効状態'], ['title' => '裏台有効'], ['title' => '操作結果'], ['title' => 'ルール'],
-            ['title' => '頂上状態'], ['title' => '表示状態'], ['title' => '変更可能'], ['title' => '対象ウィンドウ']
+            ['title' => '頂上状態'], ['title' => '表示状態'], ['title' => '変更可能'], ['title' => '対象ウィンドウ'],
+            ['title' => '検索表示']
         ], 3));
         $languageResourceData = array_merge($languageResourceData, SeederHelper::getLanguageResourceArray('system_parameter_group', [
             ['title' => 'Active'], ['title' => 'Admin Enable'], ['title' => 'Result'], ['title' => 'Rule'],
-            ['title' => 'Top'], ['title' => 'Visible'], ['title' => 'Editable'], ['title' => 'Target Window']
+            ['title' => 'Top'], ['title' => 'Visible'], ['title' => 'Editable'], ['title' => 'Target Window'],
+            ['title' => 'Searchable']
         ], 4));
         $languageResourceData = array_merge($languageResourceData, SeederHelper::getLanguageResourceArray('system_parameter_item', [
             ['label' => '啟用'], ['label' => '停用'],
@@ -272,6 +281,7 @@ class CreateSystemTables extends Migration
             ['label' => '顯示'], ['label' => '隱藏'],
             ['label' => '啟用'], ['label' => '停用'],
             ['label' => '原本視窗'], ['label' => '開啟新視窗'],
+            ['label' => '顯示'], ['label' => '隱藏'],
         ], 1));
         $languageResourceData = array_merge($languageResourceData, SeederHelper::getLanguageResourceArray('system_parameter_item', [
             ['label' => '启用'], ['label' => '停用'],
@@ -282,6 +292,7 @@ class CreateSystemTables extends Migration
             ['label' => '显示'], ['label' => '隐藏'],
             ['label' => '启用'], ['label' => '停用'],
             ['label' => '原本页框'], ['label' => '开启新页框'],
+            ['label' => '显示'], ['label' => '隐藏'],
         ], 2));
         $languageResourceData = array_merge($languageResourceData, SeederHelper::getLanguageResourceArray('system_parameter_item', [
             ['label' => '有効'], ['label' => '無効'],
@@ -292,6 +303,7 @@ class CreateSystemTables extends Migration
             ['label' => '表示'], ['label' => '隠す'],
             ['label' => '有効'], ['label' => '無効'],
             ['label' => '自分のウィンドウ'], ['label' => '新しいウィンドウを開く'],
+            ['label' => '表示'], ['label' => '隠す'],
         ], 3));
         $languageResourceData = array_merge($languageResourceData, SeederHelper::getLanguageResourceArray('system_parameter_item', [
             ['label' => 'On'], ['label' => 'Off'],
@@ -302,6 +314,7 @@ class CreateSystemTables extends Migration
             ['label' => 'Show'], ['label' => 'Hide'],
             ['label' => 'On'], ['label' => 'Off'],
             ['label' => 'Self'], ['label' => 'New Window'],
+            ['label' => 'Show'], ['label' => 'Hide'],
         ], 4));
 
         // 全球化 - 語言

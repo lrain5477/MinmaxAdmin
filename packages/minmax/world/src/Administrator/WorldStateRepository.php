@@ -18,7 +18,9 @@ class WorldStateRepository extends Repository
 {
     const MODEL = WorldState::class;
 
-    protected $hasSort = true;
+    protected $sort = 'sort';
+
+    protected $sorting = true;
 
     protected $languageColumns = ['name'];
 
@@ -30,6 +32,11 @@ class WorldStateRepository extends Repository
     protected function getTable()
     {
         return 'world_state';
+    }
+
+    protected function getSortWhere()
+    {
+        return "country_id = '{$this->model->country_id}'";
     }
 
     public function getSelectParameters()

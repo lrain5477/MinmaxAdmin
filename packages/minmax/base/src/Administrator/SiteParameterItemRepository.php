@@ -17,7 +17,9 @@ class SiteParameterItemRepository extends Repository
 {
     const MODEL = SiteParameterItem::class;
 
-    protected $hasSort = true;
+    protected $sort = 'sort';
+
+    protected $sorting = true;
 
     protected $languageColumns = ['label', 'details'];
 
@@ -31,6 +33,11 @@ class SiteParameterItemRepository extends Repository
     protected function getTable()
     {
         return 'site_parameter_item';
+    }
+
+    protected function getSortWhere()
+    {
+        return "group_id = '{$this->model->group_id}'";
     }
 
     protected function afterCreate()

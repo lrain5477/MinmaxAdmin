@@ -17,7 +17,7 @@ class EditorTemplateRepository extends Repository
 {
     const MODEL = EditorTemplate::class;
 
-    protected $hasSort = true;
+    protected $sort = 'sort';
 
     protected $languageColumns = ['title', 'description', 'editor'];
 

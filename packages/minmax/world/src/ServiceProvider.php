@@ -27,5 +27,11 @@ class ServiceProvider extends BaseServiceProvider
      */
     public function register()
     {
+        $this->registerHelper();
+    }
+
+    protected function registerHelper()
+    {
+        include(__DIR__ . '/Helpers/ShortcutHelper.php');
     }
 }

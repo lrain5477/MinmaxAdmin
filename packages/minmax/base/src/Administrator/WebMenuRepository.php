@@ -18,7 +18,9 @@ class WebMenuRepository extends Repository
 {
     const MODEL = WebMenu::class;
 
-    protected $hasSort = true;
+    protected $sort = 'sort';
+
+    protected $sorting = true;
 
     protected $languageColumns = ['title'];
 
@@ -30,6 +32,15 @@ class WebMenuRepository extends Repository
     protected function getTable()
     {
         return 'web_menu';
+    }
+
+    protected function getSortWhere()
+    {
+        if (is_null($this->model->parent_id)) {
+            return "parent_id is null";
+        } else {
+            return "parent_id = '{$this->model->parent_id}'";
+        }
     }
 
     public function getSelectParameters()

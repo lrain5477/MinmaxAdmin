@@ -20,9 +20,14 @@ abstract class Repository
     const UPDATED_AT = 'updated_at';
 
     /**
-     * @var bool $hasSort
+     * @var string $sort
      */
-    protected $hasSort = false;
+    protected $sort = null;
+
+    /**
+     * @var bool $sorting
+     */
+    protected $sorting = false;
 
     /**
      * @var array $languageColumns
@@ -167,6 +172,7 @@ abstract class Repository
             if ($model->save()) {
                 $model = $this->saveLanguage($model);
                 $this->setModel($model);
+                $this->sorting();
                 $this->afterCreate();
 
                 return $this->model;
@@ -208,6 +214,7 @@ abstract class Repository
         if ($this->model->save()) {
             $model = $this->saveLanguage($this->model);
             $this->setModel($model);
+            $this->sorting();
             $this->afterSave();
             return $this->model;
         }
@@ -238,6 +245,7 @@ abstract class Repository
             }
 
             if ($deleteResult) {
+                $this->sorting('delete');
                 $this->afterDelete();
                 $this->clearModel();
                 \DB::commit();
@@ -370,9 +378,10 @@ abstract class Repository
             $model->setAttribute($model->getKeyName(), $primaryKey);
         }
 
-        if ($this->hasSort && array_key_exists('sort', $attributes)) {
-            if (is_null($attributes['sort']) || $attributes['sort'] < 1) {
-                $attributes['sort'] = 1;
+        if (! is_null($this->sort) && array_key_exists($this->sort, $attributes)) {
+            if (is_null($attributes[$this->sort]) || $attributes[$this->sort] < 1) {
+                $amount = \DB::table($this->getTable())->count();
+                $attributes[$this->sort] = $amount + 1;
             }
         }
 
@@ -385,6 +394,66 @@ abstract class Repository
         }
 
         return $model;
+    }
+
+    /**
+     * Auto sorting rows.
+     * @param  string $func
+     */
+    protected function sorting($func = null)
+    {
+        if ($this->sorting && ! is_null($this->sort)) {
+            $table = $this->getTable();
+            $primaryKey = $this->model->getKeyName();
+            $rowKey = $this->model->getKey();
+            $where = $this->getSortWhere();
+            $where = $where == '' ? '' : "and ({$where}) ";
+            $orderBy = is_null($this->model->getAttribute('created_at'))
+                ? "{$this->sort} asc"
+                : "{$this->sort} asc, created_at asc";
+
+            switch ($func) {
+                case 'delete':
+                    \DB::update(
+                        "update {$table} a inner join (" .
+                            "select t.{$primaryKey}, @rowNumber := @rowNumber + 1 as rn from " .
+                                "(select {$primaryKey} from {$table} where {$primaryKey} != '{$rowKey}' {$where}" .
+                                    "order by {$orderBy}) t, " .
+                                "(select @rowNumber := 0) var " .
+                        ") as b on a.{$primaryKey} = b.{$primaryKey} set a.{$this->sort} = b.rn");
+                    break;
+                default:
+                    if (array_key_exists($this->sort, $this->attributes)) {
+                        $amount = \DB::table($this->getTable())->count();
+                        $currentSort = $this->model->getAttribute($this->sort);
+                        $prevAmount = $currentSort - 1;
+                        $nextAmount = $amount - $currentSort;
+                        \DB::update(
+                            "update {$table} a inner join (" .
+                                "select t.{$primaryKey}, @rowNumber := @rowNumber + 1 as rn from " .
+                                    "(select {$primaryKey} from {$table} where {$primaryKey} != '{$rowKey}' {$where}" .
+                                        "order by {$orderBy} limit 0, {$prevAmount}) t, " .
+                                    "(select @rowNumber := 0) var " .
+                            ") as b on a.{$primaryKey} = b.{$primaryKey} set a.{$this->sort} = b.rn");
+                        \DB::update(
+                            "update {$table} a inner join (" .
+                                "select t.{$primaryKey}, @rowNumber := @rowNumber + 1 as rn from " .
+                                    "(select {$primaryKey} from {$table} where {$primaryKey} != '{$rowKey}' {$where}" .
+                                        "order by {$orderBy} limit {$prevAmount}, {$nextAmount}) t, " .
+                                    "(select @rowNumber := {$currentSort}) var " .
+                            ") as b on a.{$primaryKey} = b.{$primaryKey} set a.{$this->sort} = b.rn");
+                        break;
+                    }
+            }
+        }
+    }
+
+    /**
+     * @return string
+     */
+    protected function getSortWhere()
+    {
+        return '';
     }
 
     /**
