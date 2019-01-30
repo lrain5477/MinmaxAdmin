@@ -82,7 +82,7 @@ HTML;
      * @param  array $options
      * @return string
      */
-    public function getFilterStatusTag($name, $options)
+    public function getFilterStatusTag($name, $options = [])
     {
         $tags = [
             'qty_safety' => ['title' => __('MinmaxProduct::admin.grid.ProductItem.tags.qty_safety')],

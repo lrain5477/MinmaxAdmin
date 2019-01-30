@@ -19,7 +19,9 @@ class ProductCategoryRepository extends Repository
 {
     const MODEL = ProductCategory::class;
 
-    protected $hasSort = true;
+    protected $sort = 'sort';
+
+    protected $sorting = true;
 
     protected $languageColumns = ['title', 'details'];
 
@@ -33,25 +35,31 @@ class ProductCategoryRepository extends Repository
         return 'product_category';
     }
 
-    public function getSelectParameters()
+    protected function getSortWhere()
     {
-        $menuSet = TreeHelper::getMenu($this->all()->sortBy('sort')->toArray());
+        if (is_null($this->model->parent_id)) {
+            return "parent_id is null";
+        } else {
+            return "parent_id = '{$this->model->parent_id}'";
+        }
+    }
 
-        $result = [
-            '' => ['title' => '(' . __('MinmaxBase::admin.grid.root') . ')', 'options' => []]
-        ];
+    public function getSelectParameters($hasRoot = true, $showDeepest = false)
+    {
+        $categories = TreeHelper::getMenu($this->all()->sortBy('sort')->toArray());
+        $list = TreeHelper::getList($categories, 1, config('app.ecommerce_layer_limit', 3) - ($showDeepest ? 0 : 1));
 
-        foreach ($menuSet as $classMenu) {
-            $result[$classMenu['id']] = ['title' => $classMenu['title'], 'options' => []];
+        $result = $hasRoot
+            ? [
+                '' => ['title' => '(' . __('MinmaxBase::admin.grid.root') . ')', 'options' => ['text' => 'root']]
+            ]
+            : [];
 
-            for ($current = 1; $current < config('app.ecommerce_layer_limit', 3); $current++) {
-                $prefix = '├';
-                for ($s = 1; $s < $current; $s++) $prefix .= '─';
-
-                foreach ($classMenu['children'] as $rootMenu) {
-                    $result[$rootMenu['id']] = ['title' => $prefix . ' ' . $rootMenu['title'], 'options' => []];
-                }
-            }
+        foreach ($list as $item) {
+            $prefix = '├';
+            for ($current = $hasRoot ? 1 : 2; $current < $item['layer']; $current++) $prefix .= '─';
+            $prefix = !$hasRoot && $item['layer'] == 1 ? '' : $prefix;
+            $result[$item['id']] = ['title' => $prefix . ' ' . $item['title'], 'options' => ['text' => $item['title']]];
         }
 
         return $result;

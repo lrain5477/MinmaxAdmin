@@ -18,7 +18,9 @@ class ProductMarketRepository extends Repository
 {
     const MODEL = ProductMarket::class;
 
-    protected $hasSort = true;
+    protected $sort = 'sort';
+
+    protected $sorting = true;
 
     protected $languageColumns = ['title', 'details'];
 

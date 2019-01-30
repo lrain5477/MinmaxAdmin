@@ -9,7 +9,7 @@
 
 @section('action-buttons')
     @component('MinmaxBase::admin.layouts.right-links')
-        @if($adminData->can('productItemCreate'))
+        @if($adminData->can('productSetCreate'))
         <a class="btn btn-sm btn-main" href="{{ langRoute("admin.{$pageData->uri}.create") }}" title="@lang('MinmaxBase::admin.form.create')">
             <i class="icon-plus2"></i><span class="ml-1 d-none d-md-inline-block">@lang('MinmaxBase::admin.form.create')</span>
         </a>
@@ -17,18 +17,18 @@
     @endcomponent
 @endsection
 
-@inject('modelPresenter', 'Minmax\Product\Admin\ProductItemPresenter')
+@inject('modelPresenter', 'Minmax\Product\Admin\ProductSetPresenter')
 
 @section('grid-filter')
     @component('MinmaxBase::admin.layouts.grid.filter-keyword')
-    <option value="title">@lang('MinmaxProduct::models.ProductItem.title')</option>
-    <option value="sku">@lang('MinmaxProduct::models.ProductItem.sku')</option>
-    <option value="serial">@lang('MinmaxProduct::models.ProductItem.serial')</option>
+    <option value="title">@lang('MinmaxProduct::models.ProductSet.title')</option>
+    <option value="sku">@lang('MinmaxProduct::models.ProductSet.sku')</option>
+    <option value="serial">@lang('MinmaxProduct::models.ProductSet.serial')</option>
     @endcomponent
 
     @component('MinmaxBase::admin.layouts.grid.filter-equal')
-    {!! $modelPresenter->getFilterSelection('active', 'searchActive', ['emptyLabel' => __('MinmaxProduct::models.ProductItem.active')]) !!}
-    {!! $modelPresenter->getFilterStatusTag('searchTag', ['emptyLabel' => __('MinmaxProduct::admin.grid.ProductItem.tags.title')]) !!}
+    {!! $modelPresenter->getFilterSelection('categories', 'searchCategory', ['emptyLabel' => __('MinmaxProduct::models.ProductSet.categories')]) !!}
+    {!! $modelPresenter->getFilterSelection('active', 'searchActive', ['emptyLabel' => __('MinmaxProduct::models.ProductSet.active')]) !!}
     @endcomponent
 @endsection
 
@@ -36,12 +36,14 @@
 <table class="table table-responsive-md table-bordered table-striped table-hover table-checkable datatables" id="tableList">
     <thead>
     <tr role="row">
-        <th class="nosort w-5">@lang('MinmaxProduct::models.ProductItem.pic')</th>
-        <th class="nosort w-50">@lang('MinmaxProduct::models.ProductItem.title')</th>
-        <th class="nosort">@lang('MinmaxProduct::models.ProductItem.qty')</th>
-        <th>@lang('MinmaxProduct::models.ProductItem.updated_at')</th>
-        <th>@lang('MinmaxProduct::models.ProductItem.active')</th>
-        <th class="nosort">@lang('MinmaxBase::admin.grid.title.action')</th>
+        <th class="nosort w-5">@lang('MinmaxProduct::models.ProductSet.pic')</th>
+        <th class="nosort">@lang('MinmaxProduct::models.ProductSet.title')</th>
+        <th class="nosort w-5">@lang('MinmaxProduct::models.ProductSet.price')</th>
+        <th class="nosort w-5">@lang('MinmaxProduct::admin.grid.ProductSet.relation')</th>
+        <th class="w-5">@lang('MinmaxProduct::models.ProductSet.updated_at')</th>
+        <th class="w-5">@lang('MinmaxProduct::models.ProductSet.sort')</th>
+        <th class="w-5">@lang('MinmaxProduct::models.ProductSet.active')</th>
+        <th class="nosort w-10">@lang('MinmaxBase::admin.grid.title.action')</th>
     </tr>
     </thead>
     <tbody>
@@ -78,21 +80,23 @@
                     }
 
                     d.equal = {
-                        "active": $('#searchActive').val(),
-                        "status_tag": $('#searchTag').val()
+                        "category": $('#searchCategory').val(),
+                        "active": $('#searchActive').val()
                     };
                 }
             },
             columns: [
                 {data: 'pic', name: 'pic'},
                 {data: 'title', name: 'title'},
-                {data: 'qty', name: 'qty'},
-                {data: 'updated_at', name: 'updated_at'},
+                {data: 'price', name: 'price', className: 'text-right text-nowrap'},
+                {data: 'relation', name: 'relation'},
+                {data: 'updated_at', name: 'updated_at', className: 'text-nowrap'},
+                {data: 'sort', name: 'sort'},
                 {data: 'active', name: 'active'},
                 {data: 'action', name: 'action'}
             ],
             order: [
-                [3, 'desc']
+                [5, 'asc'], [4, 'desc']
             ]
         });
     });

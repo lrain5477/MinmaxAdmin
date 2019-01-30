@@ -303,7 +303,7 @@ if (! function_exists('getImagePath')) {
     function getImagePath($path, $transparent = true)
     {
         $imgTransparent = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
-        $imgNoImage = asset('static/admin/images/common/noimage.gif');
+        $imgNoImage = asset('static/images/noimage.gif');
 
         if (! isset($path)) {
             return $transparent ? $imgTransparent : $imgNoImage;

@@ -15,8 +15,8 @@
 @else
 <div class="thumb">
     <span class="imgFill imgLiquid_bgSize imgLiquid_ready"
-          style="background: url('{{ asset('static/admin/images/common/noimage.gif') }}') center center no-repeat; background-size: cover;">
-        <img src="{{ asset('static/admin/images/common/noimage.gif') }}" alt="" style="display: none;">
+          style="background: url('{{ asset('static/images/noimage.gif') }}') center center no-repeat; background-size: cover;">
+        <img src="{{ asset('static/images/noimage.gif') }}" alt="" style="display: none;">
     </span>
 </div>
 @endif

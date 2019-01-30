@@ -43,24 +43,20 @@ class WebMenuRepository extends Repository
         }
     }
 
-    public function getSelectParameters()
+    public function getSelectParameters($showDeepest = false)
     {
         $menuSet = TreeHelper::getMenu($this->all()->sortBy('sort')->toArray());
+        $list = TreeHelper::getList($menuSet, 1, config('app.menu_layer_limit', 2) - ($showDeepest ? 0 : 1));
 
         $result = [
             '' => ['title' => '(' . __('MinmaxBase::administrator.grid.root') . ')', 'options' => []]
         ];
-        foreach ($menuSet as $classMenu) {
-            $result[$classMenu['id']] = ['title' => $classMenu['title'], 'options' => []];
 
-            for ($current = 1; $current < config('app.menu_layer_limit', 2); $current++) {
-                $prefix = '├';
-                for ($s = 0; $s < $current; $s++) $prefix .= '─';
-
-                foreach ($classMenu['children'] as $rootMenu) {
-                    $result[$rootMenu['id']] = ['title' => $prefix . ' ' . $rootMenu['title'], 'options' => []];
-                }
-            }
+        foreach ($list as $menuItem) {
+            $prefix = '├';
+            for ($current = 2; $current < $menuItem['layer']; $current++) $prefix .= '─';
+            $prefix = $menuItem['layer'] == 1 ? '' : $prefix;
+            $result[$menuItem['id']] = ['title' => $prefix . ' ' . $menuItem['title'], 'options' => []];
         }
 
         return $result;

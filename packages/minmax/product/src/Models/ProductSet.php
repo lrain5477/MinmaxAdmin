@@ -3,6 +3,7 @@
 namespace Minmax\Product\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Carbon;
 
 /**
  * Class ProductSet
@@ -79,5 +80,62 @@ class ProductSet extends Model
     public function productCategories()
     {
         return $this->belongsToMany(ProductCategory::class, 'product_category_set', 'set_id', 'category_id');
+    }
+
+    /**
+     * Get product's price.
+     * @param  string $type can be 'sell' or 'advice'
+     * @param  string $market is market's code
+     * @param  string $currency
+     * @param  boolean $withSymbol
+     * @return mixed
+     */
+    public function price($type = 'sell', $market = null, $currency = null, $withSymbol = false)
+    {
+        $currentTime = Carbon::now();
+        $currency = $currency ?? getCurrency(null, app()->getLocale());
+
+        $package = $this->productPackages
+            ->filter(function ($item) use ($currentTime, $market) {
+                /**
+                 * @var ProductPackage $item
+                 * @var \Illuminate\Database\Eloquent\Collection|ProductMarket[] $markets
+                 */
+                $markets = $item->productMarkets->sortBy('sort');
+
+                if ($markets->count() == 0) {
+                    $marketBoolean = true;
+                } else {
+                    if (is_null($market)) {
+                        $marketBoolean = intval($markets->first()->sort) == 1;
+                    } else {
+                        $marketBoolean = $markets->where('code', $market)->count() > 0;
+                    }
+                }
+
+                return $item->active
+                    && $marketBoolean
+                    && (is_null($item->start_at) || $item->start_at->lessThanOrEqualTo($currentTime))
+                    && (is_null($item->end_at) || $item->end_at->lessThanOrEqualTo($currentTime));
+            });
+
+        if ($package->count() < 1) {
+            return null;
+        }
+
+        if ($withSymbol) {
+            $prefix = getCurrency('symbol', app()->getLocale());
+            return "{$prefix} " . $package
+                    ->sum(function ($item) use ($currency, $type) {
+                        /** @var ProductPackage $item */
+                        return array_get($item->getAttribute("price_{$type}"), $currency, 0);
+                    });
+        }
+
+        return $package
+            ->sum(function ($item) use ($currency, $type) {
+                /** @var ProductPackage $item */
+                return array_get($item->getAttribute("price_{$type}"), $currency, 0);
+            });
     }
 }

@@ -22,6 +22,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property \Illuminate\Support\Carbon $updated_at
  * @property ProductSet $productSet
  * @property ProductItem $productItem
+ * @property \Illuminate\Database\Eloquent\Collection|ProductMarket[] $productMarkets
  */
 class ProductPackage extends Model
 {
@@ -54,5 +55,10 @@ class ProductPackage extends Model
     public function productItem()
     {
         return $this->hasOne(ProductItem::class, 'sku', 'item_sku');
+    }
+
+    public function productMarkets()
+    {
+        return $this->belongsToMany(ProductMarket::class, 'product_market_package', 'package_id', 'market_id');
     }
 }

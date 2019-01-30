@@ -18,7 +18,9 @@ class ProductBrandRepository extends Repository
 {
     const MODEL = ProductBrand::class;
 
-    protected $hasSort = true;
+    protected $sort = 'sort';
+
+    protected $sorting = true;
 
     protected $languageColumns = ['title', 'details'];
 
@@ -30,5 +32,19 @@ class ProductBrandRepository extends Repository
     protected function getTable()
     {
         return 'product_brand';
+    }
+
+    /**
+     * @return array
+     */
+    public function getSelectParameters()
+    {
+        return $this->all(...func_get_args())
+            ->sortBy('sort')
+            ->mapWithKeys(function($item) {
+                /** @var ProductBrand $item */
+                return [$item->id => ['title' => $item->title, 'options' => null]];
+            })
+            ->toArray();
     }
 }

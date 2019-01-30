@@ -39,6 +39,7 @@ class ProductItemTransformer extends Transformer
             'pic' => $this->presenter->getGridThumbnail($model, 'pic'),
             'title' => $this->presenter->getGridTitle($model),
             'qty' => $this->presenter->getGridText($model, 'qty'),
+            'updated_at' => $this->presenter->getGridText($model, 'updated_at'),
             'active' => $this->presenter->getGridSwitch($model, 'active'),
             'action' => $this->presenter->getGridActions($model),
         ];
