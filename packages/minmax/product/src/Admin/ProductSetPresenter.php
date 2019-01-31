@@ -20,6 +20,14 @@ class ProductSetPresenter extends Presenter
         $this->parameterSet = [
             'brand_id' => (new ProductBrandRepository)->getSelectParameters(),
             'categories' => (new ProductCategoryRepository)->getSelectParameters(false, true),
+            'rank' => [
+                0 => ['title' => '0', 'options' => null],
+                1 => ['title' => '1', 'options' => null],
+                2 => ['title' => '2', 'options' => null],
+                3 => ['title' => '3', 'options' => null],
+                4 => ['title' => '4', 'options' => null],
+                5 => ['title' => '5', 'options' => null],
+            ],
             'searchable' => systemParam('searchable'),
             'visible' => systemParam('visible'),
             'active' => systemParam('active'),

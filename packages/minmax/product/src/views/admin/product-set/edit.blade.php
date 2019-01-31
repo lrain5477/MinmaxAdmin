@@ -48,10 +48,16 @@
 
         {!! $modelPresenter->getFieldEditor($formData, 'details', ['subColumn' => 'accessory']) !!}
 
+        {!! $modelPresenter->getFieldSelect($formData, 'rank', ['size' => 2, 'required' => true, 'hint' => true]) !!}
+
     </fieldset>
 
     <fieldset class="mt-4" id="advFieldSet">
         <legend class="legend h6 mb-4"><i class="icon-angle-double-down2 mr-2"></i>@lang('MinmaxBase::admin.form.fieldSet.advanced')</legend>
+
+        {!! $modelPresenter->getFieldDatePicker($formData, 'start_at', ['type' => 'datetime', 'hint' => true]) !!}
+
+        {!! $modelPresenter->getFieldDatePicker($formData, 'end_at', ['type' => 'datetime', 'hint' => true]) !!}
 
         {!! $modelPresenter->getFieldRadio($formData, 'searchable', ['required' => true, 'inline' => true]) !!}
 
