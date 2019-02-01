@@ -3,6 +3,7 @@
 namespace Minmax\Product\Admin;
 
 use Minmax\Base\Admin\Presenter;
+use Minmax\Base\Admin\SiteParameterGroupRepository;
 
 /**
  * Class ProductSetPresenter
@@ -20,18 +21,27 @@ class ProductSetPresenter extends Presenter
         $this->parameterSet = [
             'brand_id' => (new ProductBrandRepository)->getSelectParameters(),
             'categories' => (new ProductCategoryRepository)->getSelectParameters(false, true),
-            'rank' => [
-                0 => ['title' => '0', 'options' => null],
-                1 => ['title' => '1', 'options' => null],
-                2 => ['title' => '2', 'options' => null],
-                3 => ['title' => '3', 'options' => null],
-                4 => ['title' => '4', 'options' => null],
-                5 => ['title' => '5', 'options' => null],
-            ],
+            'rank' => siteParam('rank'),
+            'specifications' => siteParam(null, null, 'spec'),
+            'properties' => siteParam('property'),
             'searchable' => systemParam('searchable'),
             'visible' => systemParam('visible'),
             'active' => systemParam('active'),
         ];
+
+        if (in_array(\Minmax\Ecommerce\ServiceProvider::class, config('app.providers'))) {
+            $this->parameterSet['ec_parameters'] = [
+                'payment_types' => siteParam('payment_type'),
+                'delivery_types' => siteParam('delivery_type'),
+                'billing' => siteParam('billing'),
+                'shipping' => siteParam('shipping'),
+                'continued' => systemParam('continued'),
+                'additional' => systemParam('additional'),
+                'wrapped' => systemParam('wrapped'),
+                'returnable' => systemParam('returnable'),
+                'rewarded' => systemParam('rewarded'),
+            ];
+        }
     }
 
     /**
@@ -130,5 +140,35 @@ HTML;
         ];
 
         return view('MinmaxProduct::admin.product-set.form-product-category-selection', $componentData);
+    }
+
+    /**
+     * @param  \Minmax\Product\Models\ProductSet $model
+     * @param  array $options
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function getFieldDynamicSpecificationList($model, $options = [])
+    {
+        $fieldLabel = __("MinmaxProduct::models.ProductSet.specifications");
+        $fieldValue = $this->getModelValue($model, 'specifications') ?? [];
+
+        $specifications = (new SiteParameterGroupRepository)->all('active', true)
+            ->sortBy('sort')
+            ->filter(function ($item) { return array_key_exists($item->code, array_get($this->parameterSet, 'specifications', [])); })
+            ->map(function ($item) {
+                $item->children = array_get($this->parameterSet, "specifications.{$item->code}", []);
+                return $item;
+            });
+
+        $componentData = [
+            'id' => 'ProductSet-specifications',
+            'label' => $fieldLabel,
+            'name' => 'ProductSet',
+            'values' => $fieldValue,
+            'listData' => $specifications,
+            'hint' => __('MinmaxProduct::models.ProductSet.hint.specifications', ['link' => langRoute('admin.site-parameter-item.index')]),
+        ];
+
+        return view('MinmaxProduct::admin.product-set.form-dynamic-specification-list', $componentData);
     }
 }

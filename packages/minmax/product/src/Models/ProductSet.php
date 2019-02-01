@@ -18,10 +18,12 @@ use Illuminate\Support\Carbon;
  * @property string $brand_id
  * @property integer $rank
  * @property string $spec_group
+ * @property array $specifications
  * @property array $tags
  * @property array $seo
  * @property boolean $searchable
  * @property boolean $visible
+ * @property array $properties
  * @property array $ec_parameters
  * @property integer $sort
  * @property boolean $active
@@ -39,9 +41,11 @@ class ProductSet extends Model
     protected $dates = ['start_at', 'end_at', 'created_at', 'updated_at'];
     protected $casts = [
         'pic' => 'array',
+        'specifications' => 'array',
         'searchable' => 'boolean',
         'visible' => 'boolean',
         'active' => 'boolean',
+        'properties' => 'array',
         'ec_parameters' => 'array',
     ];
 

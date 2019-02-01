@@ -42,13 +42,20 @@ return [
     ],
 
     'form' => [
+        'fieldSet' => [
+            'spec' => '規格設定',
+            'ecommerce' => '購物車屬性',
+        ],
         'ProductItem' => [
             'money' => '價格設定',
             'currency' => '貨幣別',
-            'actions' => '執行',
+            'actions' => '動作',
             'please_select' => '請選擇',
         ],
         'ProductSet' => [
+            'specification_name' => '規格名稱',
+            'specification_value' => '規格內容',
+            'actions' => '動作',
             'please_select' => '請選擇',
         ],
     ],

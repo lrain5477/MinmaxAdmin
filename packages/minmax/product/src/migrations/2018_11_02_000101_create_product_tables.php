@@ -294,23 +294,25 @@ class CreateProductTables extends Migration
 
         $startGroupId = $lastGroupId + 1;
         $siteGroupData = [
-            ['code' => 'color', 'title' => 'site_parameter_group.title.' . $startGroupId++],
+            ['code' => 'rank', 'title' => 'site_parameter_group.title.' . $startGroupId++, 'category' => null, 'editable' => false],
+            ['code' => 'property', 'title' => 'site_parameter_group.title.' . $startGroupId++, 'category' => null, 'editable' => false],
+            ['code' => 'color', 'title' => 'site_parameter_group.title.' . $startGroupId++, 'category' => 'spec', 'editable' => true],
         ];
 
         DB::table('site_parameter_group')->insert($siteGroupData);
 
         // 多語系
         $languageResourceData = array_merge($languageResourceData, SeederHelper::getLanguageResourceArray('site_parameter_group', [
-            ['title' => '顏色']
+            ['title' => '評價分數'], ['title' => '綜合屬性'], ['title' => '顏色']
         ], 1, $lastGroupId + 1));
         $languageResourceData = array_merge($languageResourceData, SeederHelper::getLanguageResourceArray('site_parameter_group', [
-            ['title' => '颜色']
+            ['title' => '评价分数'], ['title' => '综合属性'], ['title' => '颜色']
         ], 2, $lastGroupId + 1));
         $languageResourceData = array_merge($languageResourceData, SeederHelper::getLanguageResourceArray('site_parameter_group', [
-            ['title' => '色']
+            ['title' => '評価スコア'], ['title' => '総合属性'], ['title' => '色']
         ], 3, $lastGroupId + 1));
         $languageResourceData = array_merge($languageResourceData, SeederHelper::getLanguageResourceArray('site_parameter_group', [
-            ['title' => 'Color']
+            ['title' => 'Rank Score'], ['title' => 'Property'], ['title' => 'Color']
         ], 4, $lastGroupId + 1));
 
 
@@ -320,18 +322,78 @@ class CreateProductTables extends Migration
         $siteItemData = [
             [
                 'group_id' => $lastGroupId + 1,
-                'value' => null,
+                'value' => '0',
                 'label' => 'site_parameter_item.label.' . $startItemId++,
                 'sort' => 1,
             ],
             [
                 'group_id' => $lastGroupId + 1,
-                'value' => null,
+                'value' => '1',
                 'label' => 'site_parameter_item.label.' . $startItemId++,
                 'sort' => 2,
             ],
             [
                 'group_id' => $lastGroupId + 1,
+                'value' => '2',
+                'label' => 'site_parameter_item.label.' . $startItemId++,
+                'sort' => 3,
+            ],
+            [
+                'group_id' => $lastGroupId + 1,
+                'value' => '3',
+                'label' => 'site_parameter_item.label.' . $startItemId++,
+                'sort' => 4,
+            ],
+            [
+                'group_id' => $lastGroupId + 1,
+                'value' => '4',
+                'label' => 'site_parameter_item.label.' . $startItemId++,
+                'sort' => 5,
+            ],
+            [
+                'group_id' => $lastGroupId + 1,
+                'value' => '5',
+                'label' => 'site_parameter_item.label.' . $startItemId++,
+                'sort' => 6,
+            ],
+            [
+                'group_id' => $lastGroupId + 2,
+                'value' => 'top',
+                'label' => 'site_parameter_item.label.' . $startItemId++,
+                'sort' => 1,
+            ],
+            [
+                'group_id' => $lastGroupId + 2,
+                'value' => 'hot-sell',
+                'label' => 'site_parameter_item.label.' . $startItemId++,
+                'sort' => 2,
+            ],
+            [
+                'group_id' => $lastGroupId + 2,
+                'value' => 'selected-recommend',
+                'label' => 'site_parameter_item.label.' . $startItemId++,
+                'sort' => 3,
+            ],
+            [
+                'group_id' => $lastGroupId + 2,
+                'value' => 'category-recommend',
+                'label' => 'site_parameter_item.label.' . $startItemId++,
+                'sort' => 4,
+            ],
+            [
+                'group_id' => $lastGroupId + 3,
+                'value' => null,
+                'label' => 'site_parameter_item.label.' . $startItemId++,
+                'sort' => 1,
+            ],
+            [
+                'group_id' => $lastGroupId + 3,
+                'value' => null,
+                'label' => 'site_parameter_item.label.' . $startItemId++,
+                'sort' => 2,
+            ],
+            [
+                'group_id' => $lastGroupId + 3,
                 'value' => null,
                 'label' => 'site_parameter_item.label.' . $startItemId++,
                 'sort' => 3,
@@ -342,15 +404,23 @@ class CreateProductTables extends Migration
 
         // 多語系
         $languageResourceData = array_merge($languageResourceData, SeederHelper::getLanguageResourceArray('site_parameter_item', [
+            ['label' => '自動'], ['label' => '一星評價'], ['label' => '二星評價'], ['label' => '三星評價'], ['label' => '四星評價'], ['label' => '五星評價'],
+            ['label' => '置頂'], ['label' => '熱門商品'], ['label' => '嚴選推薦'], ['label' => '分類推薦'],
             ['label' => '紅色'], ['label' => '黃色'], ['label' => '藍色']
         ], 1, $lastItemId + 1));
         $languageResourceData = array_merge($languageResourceData, SeederHelper::getLanguageResourceArray('site_parameter_item', [
+            ['label' => '自动'], ['label' => '一星评价'], ['label' => '二星评价'], ['label' => '三星评价'], ['label' => '四星评价'], ['label' => '五星评价'],
+            ['label' => '置顶'], ['label' => '热门商品'], ['label' => '严选推荐'], ['label' => '分类推荐'],
             ['label' => '红色'], ['label' => '黄色'], ['label' => '蓝色']
         ], 2, $lastItemId + 1));
         $languageResourceData = array_merge($languageResourceData, SeederHelper::getLanguageResourceArray('site_parameter_item', [
+            ['label' => '自動'], ['label' => '1つ星評価'], ['label' => '2つ星評価'], ['label' => '3つ星評価'], ['label' => '4つ星評価'], ['label' => '5つ星評価'],
+            ['label' => '頂上'], ['label' => '人気販売'], ['label' => '特別な推奨'], ['label' => '分類の推奨'],
             ['label' => '赤'], ['label' => 'イエロー'], ['label' => 'ブルー']
         ], 3, $lastItemId + 1));
         $languageResourceData = array_merge($languageResourceData, SeederHelper::getLanguageResourceArray('site_parameter_item', [
+            ['label' => 'Auto'], ['label' => '1 Star'], ['label' => '2 Stars'], ['label' => '3 Stars'], ['label' => '4 Stars'], ['label' => '5 Stars'],
+            ['label' => 'Top'], ['label' => 'Hot Sell'], ['label' => 'Selected Recommend'], ['label' => 'Category Recommend'],
             ['label' => 'Red'], ['label' => 'Yellow'], ['label' => 'Blue']
         ], 4, $lastItemId + 1));
 
@@ -424,7 +494,7 @@ class CreateProductTables extends Migration
      */
     public function deleteSiteParameters()
     {
-        $parameterCodeSet = ['color'];
+        $parameterCodeSet = ['property', 'color'];
 
         DB::table('site_parameter_group')->whereIn('code', $parameterCodeSet)->get()
             ->each(function ($group) {

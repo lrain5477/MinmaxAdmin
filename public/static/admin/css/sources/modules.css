@@ -25,9 +25,6 @@
 @import url(../../../modules/jcrop/image-crop.min.css);
 @import url(../../../modules/highlight/default.min.css);
 @import url(../../../modules/bootstrap4/docs.min.css);
-/*假期設定*/
-@import url(../../../modules/bootstrap-year-calendar/css/bootstrap-year-calendar.min.css);
-@import url(../../../modules/bootstrap-datepicker/bootstrap-datepicker.min.css);
 /*行事曆*/
 @import url(../../../modules/fullcalendar/fullcalendar.min.css);
 /*標籤*/

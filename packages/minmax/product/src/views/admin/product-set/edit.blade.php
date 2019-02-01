@@ -48,12 +48,48 @@
 
         {!! $modelPresenter->getFieldEditor($formData, 'details', ['subColumn' => 'accessory']) !!}
 
-        {!! $modelPresenter->getFieldSelect($formData, 'rank', ['size' => 2, 'required' => true, 'hint' => true]) !!}
+        {!! $modelPresenter->getFieldSelect($formData, 'rank', ['size' => 2, 'required' => true]) !!}
 
     </fieldset>
 
+    <fieldset class="mt-4" id="specFieldSet">
+        <legend class="legend h6 mb-4"><i class="icon-angle-double-down2 mr-2"></i>@lang('MinmaxProduct::admin.form.fieldSet.spec')</legend>
+
+        {!! $modelPresenter->getFieldDynamicSpecificationList($formData) !!}
+
+        {!! $modelPresenter->getFieldText($formData, 'spec_group', ['size' => 4]) !!}
+
+    </fieldset>
+
+    @if(in_array(\Minmax\Ecommerce\ServiceProvider::class, config('app.providers')))
+    <fieldset class="mt-4" id="ecommerceFieldSet">
+        <legend class="legend h6 mb-4"><i class="icon-angle-double-down2 mr-2"></i>@lang('MinmaxProduct::admin.form.fieldSet.ecommerce')</legend>
+
+        {!! $modelPresenter->getFieldMultiSelect($formData, 'ec_parameters', ['subColumn' => 'payment_types', 'required' => true]) !!}
+
+        {!! $modelPresenter->getFieldMultiSelect($formData, 'ec_parameters', ['subColumn' => 'delivery_types', 'required' => true]) !!}
+
+        {!! $modelPresenter->getFieldRadio($formData, 'ec_parameters', ['subColumn' => 'billing', 'required' => true]) !!}
+
+        {!! $modelPresenter->getFieldRadio($formData, 'ec_parameters', ['subColumn' => 'shipping', 'required' => true]) !!}
+
+        {!! $modelPresenter->getFieldRadio($formData, 'ec_parameters', ['subColumn' => 'continued', 'required' => true, 'inline' => true]) !!}
+
+        {!! $modelPresenter->getFieldRadio($formData, 'ec_parameters', ['subColumn' => 'additional', 'required' => true, 'inline' => true]) !!}
+
+        {!! $modelPresenter->getFieldRadio($formData, 'ec_parameters', ['subColumn' => 'wrapped', 'required' => true, 'inline' => true]) !!}
+
+        {!! $modelPresenter->getFieldRadio($formData, 'ec_parameters', ['subColumn' => 'returnable', 'required' => true, 'inline' => true]) !!}
+
+        {!! $modelPresenter->getFieldRadio($formData, 'ec_parameters', ['subColumn' => 'rewarded', 'required' => true, 'inline' => true]) !!}
+
+    </fieldset>
+    @endif
+
     <fieldset class="mt-4" id="advFieldSet">
         <legend class="legend h6 mb-4"><i class="icon-angle-double-down2 mr-2"></i>@lang('MinmaxBase::admin.form.fieldSet.advanced')</legend>
+
+        {!! $modelPresenter->getFieldCheckbox($formData, 'properties', ['inline' => true]) !!}
 
         {!! $modelPresenter->getFieldDatePicker($formData, 'start_at', ['type' => 'datetime', 'hint' => true]) !!}
 
