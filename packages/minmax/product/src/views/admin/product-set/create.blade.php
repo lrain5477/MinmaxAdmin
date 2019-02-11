@@ -40,6 +40,8 @@
 
         {!! $modelPresenter->getFieldSelect($formData, 'rank', ['size' => 2, 'required' => true]) !!}
 
+        {!! $modelPresenter->getFieldTagsInput($formData) !!}
+
     </fieldset>
 
     <fieldset class="mt-4" id="specFieldSet">

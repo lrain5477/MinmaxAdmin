@@ -22,6 +22,7 @@ class ProductSetPresenter extends Presenter
             'brand_id' => (new ProductBrandRepository)->getSelectParameters(),
             'categories' => (new ProductCategoryRepository)->getSelectParameters(false, true),
             'rank' => siteParam('rank'),
+            'tags' => siteParam('tags'),
             'specifications' => siteParam(null, null, 'spec'),
             'properties' => siteParam('property'),
             'searchable' => systemParam('searchable'),
@@ -156,5 +157,24 @@ HTML;
         ];
 
         return view('MinmaxProduct::admin.product-set.form-dynamic-specification-list', $componentData);
+    }
+
+    /**
+     * @param  \Minmax\Product\Models\ProductSet $model
+     * @param  array $options
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function getFieldTagsInput($model, $options = [])
+    {
+        $componentData = [
+            'id' => 'ProductSet-tags',
+            'label' => __('MinmaxProduct::models.ProductSet.tags'),
+            'name' => 'ProductSet[tags][]',
+            'values' => $model->tags ?? [],
+            'hint' => __('MinmaxProduct::models.ProductSet.hint.tags', ['link' => langRoute('admin.site-parameter-item.index')]),
+            'listData' => array_get($this->parameterSet, 'tags', []),
+        ];
+
+        return view('MinmaxProduct::admin.product-set.form-tags-input', $componentData);
     }
 }

@@ -346,3 +346,13 @@ $(document).ready(function () {
     });
 
 });
+
+var substringMatcher = function(strings) {
+    return function findMatches(q, cb) {
+        var matches = [], substringRegex = new RegExp(q, 'i');
+        $.each(strings, function(i, str) {
+            if (substringRegex.test(str)) matches.push(str);
+        });
+        cb(matches);
+    };
+};

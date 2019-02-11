@@ -74,6 +74,7 @@ return [
                 'meta_keywords' => '(Metadata Keywords) 為了幫助搜尋引擎更容易搜尋到網站，你可以在這裡填寫相關的搜尋字詞，多組關鍵字以上請使用半形逗號區隔。',
             ],
             'specifications' => '更多規格設定請前往 <a href=":link">參數項目</a> 新增。',
+            'tags' => '更多標籤設定請前往 <a href=":link">參數項目</a> 新增。',
             'categories' => '您可以將一商品放置於多個分類顯示。',
         ],
         'price' => '價格',

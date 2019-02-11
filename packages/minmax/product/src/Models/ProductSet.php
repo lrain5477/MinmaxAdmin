@@ -42,6 +42,7 @@ class ProductSet extends Model
     protected $casts = [
         'pic' => 'array',
         'specifications' => 'array',
+        'tags' => 'array',
         'searchable' => 'boolean',
         'visible' => 'boolean',
         'active' => 'boolean',

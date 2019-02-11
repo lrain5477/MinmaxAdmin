@@ -326,22 +326,23 @@ class CreateProductTables extends Migration
             ['code' => 'rank', 'title' => 'site_parameter_group.title.' . $startGroupId++, 'category' => null, 'editable' => false],
             ['code' => 'property', 'title' => 'site_parameter_group.title.' . $startGroupId++, 'category' => null, 'editable' => false],
             ['code' => 'color', 'title' => 'site_parameter_group.title.' . $startGroupId++, 'category' => 'spec', 'editable' => true],
+            ['code' => 'tags', 'title' => 'site_parameter_group.title.' . $startGroupId++, 'category' => null, 'editable' => true],
         ];
 
         DB::table('site_parameter_group')->insert($siteGroupData);
 
         // 多語系
         $languageResourceData = array_merge($languageResourceData, SeederHelper::getLanguageResourceArray('site_parameter_group', [
-            ['title' => '評價分數'], ['title' => '綜合屬性'], ['title' => '顏色']
+            ['title' => '評價分數'], ['title' => '綜合屬性'], ['title' => '顏色'], ['title' => '標籤']
         ], 1, $lastGroupId + 1));
         $languageResourceData = array_merge($languageResourceData, SeederHelper::getLanguageResourceArray('site_parameter_group', [
-            ['title' => '评价分数'], ['title' => '综合属性'], ['title' => '颜色']
+            ['title' => '评价分数'], ['title' => '综合属性'], ['title' => '颜色'], ['title' => '标签']
         ], 2, $lastGroupId + 1));
         $languageResourceData = array_merge($languageResourceData, SeederHelper::getLanguageResourceArray('site_parameter_group', [
-            ['title' => '評価スコア'], ['title' => '総合属性'], ['title' => '色']
+            ['title' => '評価スコア'], ['title' => '総合属性'], ['title' => '色'], ['title' => 'タグ']
         ], 3, $lastGroupId + 1));
         $languageResourceData = array_merge($languageResourceData, SeederHelper::getLanguageResourceArray('site_parameter_group', [
-            ['title' => 'Rank Score'], ['title' => 'Property'], ['title' => 'Color']
+            ['title' => 'Rank Score'], ['title' => 'Property'], ['title' => 'Color'], ['title' => 'Tag']
         ], 4, $lastGroupId + 1));
 
 
@@ -427,6 +428,24 @@ class CreateProductTables extends Migration
                 'label' => 'site_parameter_item.label.' . $startItemId++,
                 'sort' => 3,
             ],
+            [
+                'group_id' => $lastGroupId + 4,
+                'value' => null,
+                'label' => 'site_parameter_item.label.' . $startItemId++,
+                'sort' => 1,
+            ],
+            [
+                'group_id' => $lastGroupId + 4,
+                'value' => null,
+                'label' => 'site_parameter_item.label.' . $startItemId++,
+                'sort' => 2,
+            ],
+            [
+                'group_id' => $lastGroupId + 4,
+                'value' => null,
+                'label' => 'site_parameter_item.label.' . $startItemId++,
+                'sort' => 3,
+            ],
         ];
 
         DB::table('site_parameter_item')->insert($siteItemData);
@@ -435,22 +454,26 @@ class CreateProductTables extends Migration
         $languageResourceData = array_merge($languageResourceData, SeederHelper::getLanguageResourceArray('site_parameter_item', [
             ['label' => '自動'], ['label' => '一星評價'], ['label' => '二星評價'], ['label' => '三星評價'], ['label' => '四星評價'], ['label' => '五星評價'],
             ['label' => '置頂'], ['label' => '熱門商品'], ['label' => '嚴選推薦'], ['label' => '分類推薦'],
-            ['label' => '紅色'], ['label' => '黃色'], ['label' => '藍色']
+            ['label' => '紅色'], ['label' => '黃色'], ['label' => '藍色'],
+            ['label' => '10歲'], ['label' => '新品'], ['label' => '日韓風']
         ], 1, $lastItemId + 1));
         $languageResourceData = array_merge($languageResourceData, SeederHelper::getLanguageResourceArray('site_parameter_item', [
             ['label' => '自动'], ['label' => '一星评价'], ['label' => '二星评价'], ['label' => '三星评价'], ['label' => '四星评价'], ['label' => '五星评价'],
             ['label' => '置顶'], ['label' => '热门商品'], ['label' => '严选推荐'], ['label' => '分类推荐'],
-            ['label' => '红色'], ['label' => '黄色'], ['label' => '蓝色']
+            ['label' => '红色'], ['label' => '黄色'], ['label' => '蓝色'],
+            ['label' => '10岁'], ['label' => '新品'], ['label' => '日韩风']
         ], 2, $lastItemId + 1));
         $languageResourceData = array_merge($languageResourceData, SeederHelper::getLanguageResourceArray('site_parameter_item', [
             ['label' => '自動'], ['label' => '1つ星評価'], ['label' => '2つ星評価'], ['label' => '3つ星評価'], ['label' => '4つ星評価'], ['label' => '5つ星評価'],
             ['label' => '頂上'], ['label' => '人気販売'], ['label' => '特別な推奨'], ['label' => '分類の推奨'],
-            ['label' => '赤'], ['label' => 'イエロー'], ['label' => 'ブルー']
+            ['label' => '赤'], ['label' => 'イエロー'], ['label' => 'ブルー'],
+            ['label' => '10歳'], ['label' => '新品'], ['label' => '日韓スタイル']
         ], 3, $lastItemId + 1));
         $languageResourceData = array_merge($languageResourceData, SeederHelper::getLanguageResourceArray('site_parameter_item', [
             ['label' => 'Auto'], ['label' => '1 Star'], ['label' => '2 Stars'], ['label' => '3 Stars'], ['label' => '4 Stars'], ['label' => '5 Stars'],
             ['label' => 'Top'], ['label' => 'Hot Sell'], ['label' => 'Selected Recommend'], ['label' => 'Category Recommend'],
-            ['label' => 'Red'], ['label' => 'Yellow'], ['label' => 'Blue']
+            ['label' => 'Red'], ['label' => 'Yellow'], ['label' => 'Blue'],
+            ['label' => '10 years old'], ['label' => 'New arrival'], ['label' => 'J&K POP']
         ], 4, $lastItemId + 1));
 
 

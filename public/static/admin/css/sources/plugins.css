@@ -419,8 +419,8 @@ table.dataTable > tbody > tr.child ul.dtr-details > li {
 .tt-suggestion.tt-cursor {
   background-color: #eceeef; }
 
-.twitter-typeahead {
-  width: 100%; }
+/*.twitter-typeahead {
+  width: 100%; }*/
 
 @media (min-width: 576px) {
   .highlight {
