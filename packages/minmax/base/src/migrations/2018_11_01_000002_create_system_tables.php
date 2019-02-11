@@ -197,6 +197,7 @@ class CreateSystemTables extends Migration
         Schema::dropIfExists('site_parameter_group');
         Schema::dropIfExists('system_parameter_item');
         Schema::dropIfExists('system_parameter_group');
+        Schema::dropIfExists('column_extension');
     }
 
     /**
