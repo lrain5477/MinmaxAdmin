@@ -276,6 +276,35 @@ class CreateProductTables extends Migration
             ['label' => 'Enable'], ['label' => 'Disable']
         ], 4, $lastItemId + 1));
 
+        // 欄位擴充
+        $lastExtensionId = DB::table('column_extension')->latest('id')->value('id') ?? 0;
+        $columnExtensionData = [
+            ['table_name' => 'product_set', 'column_name' => 'details', 'sub_column_name' => 'description', 'sort' => 1, 'active' => true,
+                'title' => 'column_extension.title.' . ($lastExtensionId + 1), 'options' => json_encode(['method' => 'getFieldTextarea'])],
+            ['table_name' => 'product_set', 'column_name' => 'details', 'sub_column_name' => 'feature', 'sort' => 2, 'active' => true,
+                'title' => 'column_extension.title.' . ($lastExtensionId + 2), 'options' => json_encode(['method' => 'getFieldEditor'])],
+            ['table_name' => 'product_set', 'column_name' => 'details', 'sub_column_name' => 'detail', 'sort' => 3, 'active' => true,
+                'title' => 'column_extension.title.' . ($lastExtensionId + 3), 'options' => json_encode(['method' => 'getFieldEditor'])],
+            ['table_name' => 'product_set', 'column_name' => 'details', 'sub_column_name' => 'specification', 'sort' => 4, 'active' => true,
+                'title' => 'column_extension.title.' . ($lastExtensionId + 4), 'options' => json_encode(['method' => 'getFieldEditor'])],
+            ['table_name' => 'product_set', 'column_name' => 'details', 'sub_column_name' => 'video', 'sort' => 5, 'active' => true,
+                'title' => 'column_extension.title.' . ($lastExtensionId + 5), 'options' => json_encode(['method' => 'getFieldEditor'])],
+            ['table_name' => 'product_set', 'column_name' => 'details', 'sub_column_name' => 'accessory', 'sort' => 6, 'active' => true,
+                'title' => 'column_extension.title.' . ($lastExtensionId + 6), 'options' => json_encode(['method' => 'getFieldEditor'])],
+        ];
+
+        DB::table('column_extension')->insert($columnExtensionData);
+
+        // 多語系
+        $columnExtensionLanguage = [
+            ['title' => '簡短敘述'], ['title' => '商品特色'], ['title' => '詳細介紹'],
+            ['title' => '規格資訊'], ['title' => '影音資訊'], ['title' => '配件說明'],
+        ];
+        $languageResourceData = array_merge($languageResourceData, SeederHelper::getLanguageResourceArray('column_extension', $columnExtensionLanguage, 1, $lastExtensionId + 1));
+        $languageResourceData = array_merge($languageResourceData, SeederHelper::getLanguageResourceArray('column_extension', $columnExtensionLanguage, 2, $lastExtensionId + 1));
+        $languageResourceData = array_merge($languageResourceData, SeederHelper::getLanguageResourceArray('column_extension', $columnExtensionLanguage, 3, $lastExtensionId + 1));
+        $languageResourceData = array_merge($languageResourceData, SeederHelper::getLanguageResourceArray('column_extension', $columnExtensionLanguage, 4, $lastExtensionId + 1));
+
 
         DB::table('language_resource')->insert($languageResourceData);
     }
@@ -485,6 +514,10 @@ class CreateProductTables extends Migration
             });
 
         DB::table('system_parameter_group')->whereIn('code', $parameterCodeSet)->delete();
+
+        $columnExtensionTableSet = ['product_set'];
+
+        DB::table('column_extension')->whereIn('table_name', $columnExtensionTableSet)->delete();
     }
 
     /**

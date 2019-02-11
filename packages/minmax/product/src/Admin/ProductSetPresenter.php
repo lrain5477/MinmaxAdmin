@@ -28,20 +28,6 @@ class ProductSetPresenter extends Presenter
             'visible' => systemParam('visible'),
             'active' => systemParam('active'),
         ];
-
-        if (in_array(\Minmax\Ecommerce\ServiceProvider::class, config('app.providers'))) {
-            $this->parameterSet['ec_parameters'] = [
-                'payment_types' => siteParam('payment_type'),
-                'delivery_types' => siteParam('delivery_type'),
-                'billing' => siteParam('billing'),
-                'shipping' => siteParam('shipping'),
-                'continued' => systemParam('continued'),
-                'additional' => systemParam('additional'),
-                'wrapped' => systemParam('wrapped'),
-                'returnable' => systemParam('returnable'),
-                'rewarded' => systemParam('rewarded'),
-            ];
-        }
     }
 
     /**

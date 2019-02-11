@@ -36,17 +36,7 @@
 
         {!! $modelPresenter->getFieldMediaImage($formData, 'pic', ['limit' => 1, 'hint' => true]) !!}
 
-        {!! $modelPresenter->getFieldTextarea($formData, 'details', ['subColumn' => 'description']) !!}
-
-        {!! $modelPresenter->getFieldEditor($formData, 'details', ['subColumn' => 'feature']) !!}
-
-        {!! $modelPresenter->getFieldEditor($formData, 'details', ['subColumn' => 'detail']) !!}
-
-        {!! $modelPresenter->getFieldEditor($formData, 'details', ['subColumn' => 'specification']) !!}
-
-        {!! $modelPresenter->getFieldEditor($formData, 'details', ['subColumn' => 'video']) !!}
-
-        {!! $modelPresenter->getFieldEditor($formData, 'details', ['subColumn' => 'accessory']) !!}
+        {!! $modelPresenter->getFieldColumnExtension($formData, 'details') !!}
 
         {!! $modelPresenter->getFieldSelect($formData, 'rank', ['size' => 2, 'required' => true]) !!}
 
@@ -65,23 +55,7 @@
     <fieldset class="mt-4" id="ecommerceFieldSet">
         <legend class="legend h6 mb-4"><i class="icon-angle-double-down2 mr-2"></i>@lang('MinmaxProduct::admin.form.fieldSet.ecommerce')</legend>
 
-        {!! $modelPresenter->getFieldMultiSelect($formData, 'ec_parameters', ['subColumn' => 'payment_types', 'required' => true]) !!}
-
-        {!! $modelPresenter->getFieldMultiSelect($formData, 'ec_parameters', ['subColumn' => 'delivery_types', 'required' => true]) !!}
-
-        {!! $modelPresenter->getFieldRadio($formData, 'ec_parameters', ['subColumn' => 'billing', 'required' => true]) !!}
-
-        {!! $modelPresenter->getFieldRadio($formData, 'ec_parameters', ['subColumn' => 'shipping', 'required' => true]) !!}
-
-        {!! $modelPresenter->getFieldRadio($formData, 'ec_parameters', ['subColumn' => 'continued', 'required' => true, 'inline' => true]) !!}
-
-        {!! $modelPresenter->getFieldRadio($formData, 'ec_parameters', ['subColumn' => 'additional', 'required' => true, 'inline' => true]) !!}
-
-        {!! $modelPresenter->getFieldRadio($formData, 'ec_parameters', ['subColumn' => 'wrapped', 'required' => true, 'inline' => true]) !!}
-
-        {!! $modelPresenter->getFieldRadio($formData, 'ec_parameters', ['subColumn' => 'returnable', 'required' => true, 'inline' => true]) !!}
-
-        {!! $modelPresenter->getFieldRadio($formData, 'ec_parameters', ['subColumn' => 'rewarded', 'required' => true, 'inline' => true]) !!}
+        {!! $modelPresenter->getFieldColumnExtension($formData, 'ec_parameters') !!}
 
     </fieldset>
     @endif

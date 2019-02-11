@@ -41,21 +41,20 @@
 
         {!! $modelPresenter->getViewMediaImage($formData, 'pic') !!}
 
-        {!! $modelPresenter->getViewNormalText($formData, 'details', ['subColumn' => 'description']) !!}
-
-        {!! $modelPresenter->getViewEditor($formData, 'details', ['subColumn' => 'feature']) !!}
-
-        {!! $modelPresenter->getViewEditor($formData, 'details', ['subColumn' => 'detail']) !!}
-
-        {!! $modelPresenter->getViewEditor($formData, 'details', ['subColumn' => 'specification']) !!}
-
-        {!! $modelPresenter->getViewEditor($formData, 'details', ['subColumn' => 'video']) !!}
-
-        {!! $modelPresenter->getViewEditor($formData, 'details', ['subColumn' => 'accessory']) !!}
+        {!! $modelPresenter->getViewColumnExtension($formData, 'details') !!}
 
         {!! $modelPresenter->getViewSelection($formData, 'rank') !!}
 
     </fieldset>
+
+    @if(in_array(\Minmax\Ecommerce\ServiceProvider::class, config('app.providers')))
+    <fieldset class="mt-4" id="ecommerceFieldSet">
+        <legend class="legend h6 mb-4"><i class="icon-angle-double-down2 mr-2"></i>@lang('MinmaxProduct::admin.form.fieldSet.ecommerce')</legend>
+
+        {!! $modelPresenter->getViewColumnExtension($formData, 'ec_parameters') !!}
+
+    </fieldset>
+    @endif
 
     <fieldset class="mt-4" id="advFieldSet">
         <legend class="legend h6 mb-4"><i class="icon-angle-double-down2 mr-2"></i>@lang('MinmaxBase::admin.form.fieldSet.advanced')</legend>

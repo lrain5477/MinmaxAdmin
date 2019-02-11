@@ -590,6 +590,15 @@ abstract class Presenter
 
                 $subOptions = $subColumnItem->options;
                 $subOptions['label'] = $subColumnItem->title;
+
+                if ($systemParam = array_pull($subOptions, 'systemParam')) {
+                    $this->parameterSet[$column][$subColumn] = systemParam($systemParam);
+                }
+
+                if ($siteParam = array_pull($subOptions, 'siteParam')) {
+                    $this->parameterSet[$column][$subColumn] = siteParam($siteParam);
+                }
+
                 $subMethod = null;
 
                 switch (array_pull($subOptions, 'method')) {
@@ -1442,6 +1451,15 @@ abstract class Presenter
                 $subColumn = $subColumnItem->sub_column_name;
                 $subOptions = $subColumnItem->options;
                 $subOptions['label'] = $subColumnItem->title;
+
+                if ($systemParam = array_pull($subOptions, 'systemParam')) {
+                    $this->parameterSet[$column][$subColumn] = systemParam($systemParam);
+                }
+
+                if ($siteParam = array_pull($subOptions, 'siteParam')) {
+                    $this->parameterSet[$column][$subColumn] = siteParam($siteParam);
+                }
+
                 if ($subMethod = array_pull($subOptions, 'method')) {
                     $fields .= $this->{$subMethod}($model, $column, ['subColumn' => $subColumn] + $subOptions + $options)->render();
                 }
