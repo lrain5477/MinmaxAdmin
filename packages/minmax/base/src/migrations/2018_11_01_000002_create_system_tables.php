@@ -15,6 +15,18 @@ class CreateSystemTables extends Migration
      */
     public function up()
     {
+        // 欄位擴充管理
+        Schema::create('column_extension', function (Blueprint $table) {
+            $table->increments('id');
+            $table->string('table_name')->comment('資料表');
+            $table->string('column_name')->comment('主欄位名稱');
+            $table->string('sub_column_name')->comment('欄位名稱');
+            $table->string('title')->comment('欄位標籤');
+            $table->json('options')->nullable()->comment('欄位設定');
+            $table->unsignedInteger('sort')->default(1)->comment('排序');
+            $table->boolean('active')->default(true)->comment('啟用狀態');
+        });
+
         // 系統參數群組
         Schema::create('system_parameter_group', function (Blueprint $table) {
             $table->increments('id');
@@ -317,7 +329,7 @@ class CreateSystemTables extends Migration
             ['label' => 'Show'], ['label' => 'Hide'],
         ], 4));
 
-        // 全球化 - 語言
+        // 網站基本資訊
         $webData = [
             [
                 'id' => $webDataId1 = uuidl(),
@@ -435,6 +447,49 @@ class CreateSystemTables extends Migration
         $languageResourceData = array_merge($languageResourceData, SeederHelper::getLanguageResourceArray('web_data', $webDataLanguage, 2));
         $languageResourceData = array_merge($languageResourceData, SeederHelper::getLanguageResourceArray('web_data', $webDataLanguage, 3));
         $languageResourceData = array_merge($languageResourceData, SeederHelper::getLanguageResourceArray('web_data', $webDataLanguage, 4));
+
+        // 欄位擴充
+        $columnExtensionData = [
+            ['table_name' => 'web_data', 'column_name' => 'company', 'sub_column_name' => 'name', 'sort' => 1, 'active' => true,
+                'title' => 'column_extension.title.1', 'options' => json_encode(['method' => 'getFieldText', 'required' => true])],
+            ['table_name' => 'web_data', 'column_name' => 'company', 'sub_column_name' => 'name_en', 'sort' => 2, 'active' => false,
+                'title' => 'column_extension.title.2', 'options' => json_encode(['method' => 'getFieldText'])],
+            ['table_name' => 'web_data', 'column_name' => 'company', 'sub_column_name' => 'id', 'sort' => 3, 'active' => false,
+                'title' => 'column_extension.title.3', 'options' => json_encode(['method' => 'getFieldText'])],
+            ['table_name' => 'web_data', 'column_name' => 'contact', 'sub_column_name' => 'phone', 'sort' => 1, 'active' => true,
+                'title' => 'column_extension.title.4', 'options' => json_encode(['method' => 'getFieldTel', 'required' => true])],
+            ['table_name' => 'web_data', 'column_name' => 'contact', 'sub_column_name' => 'fax', 'sort' => 2, 'active' => false,
+                'title' => 'column_extension.title.5', 'options' => json_encode(['method' => 'getFieldTel'])],
+            ['table_name' => 'web_data', 'column_name' => 'contact', 'sub_column_name' => 'email', 'sort' => 3, 'active' => true,
+                'title' => 'column_extension.title.6', 'options' => json_encode(['method' => 'getFieldEmail', 'required' => true])],
+            ['table_name' => 'web_data', 'column_name' => 'contact', 'sub_column_name' => 'address', 'sort' => 4, 'active' => true,
+                'title' => 'column_extension.title.7', 'options' => json_encode(['method' => 'getFieldText'])],
+            ['table_name' => 'web_data', 'column_name' => 'contact', 'sub_column_name' => 'map', 'sort' => 5, 'active' => true,
+                'title' => 'column_extension.title.8', 'options' => json_encode(['method' => 'getFieldText', 'size' => 10])],
+            ['table_name' => 'web_data', 'column_name' => 'contact', 'sub_column_name' => 'lng', 'sort' => 6, 'active' => false,
+                'title' => 'column_extension.title.9', 'options' => json_encode(['method' => 'getFieldText', 'size' => 2])],
+            ['table_name' => 'web_data', 'column_name' => 'contact', 'sub_column_name' => 'lat', 'sort' => 7, 'active' => false,
+                'title' => 'column_extension.title.10', 'options' => json_encode(['method' => 'getFieldText', 'size' => 2])],
+            ['table_name' => 'web_data', 'column_name' => 'social', 'sub_column_name' => 'facebook', 'sort' => 1, 'active' => true,
+                'title' => 'column_extension.title.11', 'options' => json_encode(['method' => 'getFieldText', 'icon' => 'icon-facebook3'])],
+            ['table_name' => 'web_data', 'column_name' => 'social', 'sub_column_name' => 'instagram', 'sort' => 2, 'active' => false,
+                'title' => 'column_extension.title.12', 'options' => json_encode(['method' => 'getFieldText', 'icon' => 'icon-instagram2'])],
+            ['table_name' => 'web_data', 'column_name' => 'social', 'sub_column_name' => 'youtube', 'sort' => 3, 'active' => false,
+                'title' => 'column_extension.title.13', 'options' => json_encode(['method' => 'getFieldText', 'icon' => 'icon-youtube2'])],
+        ];
+
+        DB::table('column_extension')->insert($columnExtensionData);
+
+        // 多語系
+        $columnExtensionLanguage = [
+            ['title' => '公司名稱'], ['title' => '公司英文名稱'], ['title' => '統一編號'],
+            ['title' => '客服電話'], ['title' => '傳真號碼'], ['title' => '客服信箱'], ['title' => '公司地址'], ['title' => '地址連結'], ['title' => '地圖經度'], ['title' => '地圖緯度'],
+            ['title' => 'Facebook'], ['title' => 'Instagram'], ['title' => 'Youtube'],
+        ];
+        $languageResourceData = array_merge($languageResourceData, SeederHelper::getLanguageResourceArray('column_extension', $columnExtensionLanguage, 1));
+        $languageResourceData = array_merge($languageResourceData, SeederHelper::getLanguageResourceArray('column_extension', $columnExtensionLanguage, 2));
+        $languageResourceData = array_merge($languageResourceData, SeederHelper::getLanguageResourceArray('column_extension', $columnExtensionLanguage, 3));
+        $languageResourceData = array_merge($languageResourceData, SeederHelper::getLanguageResourceArray('column_extension', $columnExtensionLanguage, 4));
 
         DB::table('language_resource')->insert($languageResourceData);
     }

@@ -356,6 +356,17 @@ class CreateAdministratorTables extends Migration
             ],
             [
                 'id' => uuidl(),
+                'title' => '欄位擴充管理',
+                'uri' => 'column-extension',
+                'controller' => 'ColumnExtensionController',
+                'model' => 'ColumnExtension',
+                'parent_id' => $menuParentId5,
+                'link' => 'column-extension',
+                'icon' => null,
+                'sort' => 3, 'updated_at' => $timestamp, 'created_at' => $timestamp
+            ],
+            [
+                'id' => uuidl(),
                 'title' => '編輯器模板管理',
                 'uri' => 'editor-template',
                 'controller' => 'EditorTemplateController',
@@ -363,7 +374,7 @@ class CreateAdministratorTables extends Migration
                 'parent_id' => $menuParentId5,
                 'link' => 'editor-template',
                 'icon' => null,
-                'sort' => 3, 'updated_at' => $timestamp, 'created_at' => $timestamp
+                'sort' => 4, 'updated_at' => $timestamp, 'created_at' => $timestamp
             ],
         ]);
         DB::table('administrator_menu')->insert($administratorMenuData);

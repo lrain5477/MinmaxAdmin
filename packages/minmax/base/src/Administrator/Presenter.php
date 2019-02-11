@@ -357,11 +357,11 @@ abstract class Presenter
 
         if ($subColumn = array_get($options, 'subColumn')) {
             $fieldId = "{$modelName}-{$column}-{$subColumn}";
-            $fieldLabel = __($this->packagePrefix . "models.{$modelName}.{$column}.{$subColumn}");
+            $fieldLabel = array_get($options, 'label', __($this->packagePrefix . "models.{$modelName}.{$column}.{$subColumn}"));
             $fieldValue = array_get($options, 'defaultValue', is_array($columnValue) ? array_get($columnValue, $subColumn, '') : '');
         } else {
             $fieldId = "{$modelName}-{$column}";
-            $fieldLabel = __($this->packagePrefix . "models.{$modelName}.{$column}");
+            $fieldLabel = array_get($options, 'label', __($this->packagePrefix . "models.{$modelName}.{$column}"));
             $fieldValue = array_get($options, 'defaultValue', $columnValue);
         }
 
@@ -388,11 +388,11 @@ abstract class Presenter
 
         if ($subColumn = array_get($options, 'subColumn')) {
             $fieldId = "{$modelName}-{$column}-{$subColumn}";
-            $fieldLabel = __($this->packagePrefix . "models.{$modelName}.{$column}.{$subColumn}");
+            $fieldLabel = array_get($options, 'label', __($this->packagePrefix . "models.{$modelName}.{$column}.{$subColumn}"));
             $fieldValue = array_get($options, 'defaultValue', is_array($columnValue) ? array_get($columnValue, $subColumn, '') : '');
         } else {
             $fieldId = "{$modelName}-{$column}";
-            $fieldLabel = __($this->packagePrefix . "models.{$modelName}.{$column}");
+            $fieldLabel = array_get($options, 'label', __($this->packagePrefix . "models.{$modelName}.{$column}"));
             $fieldValue = array_get($options, 'defaultValue', $columnValue);
         }
 
@@ -422,13 +422,13 @@ abstract class Presenter
 
         if ($subColumn = array_get($options, 'subColumn')) {
             $fieldId = "{$modelName}-{$column}-{$subColumn}";
-            $fieldLabel = __($this->packagePrefix . "models.{$modelName}.{$column}.{$subColumn}");
+            $fieldLabel = array_get($options, 'label', __($this->packagePrefix . "models.{$modelName}.{$column}.{$subColumn}"));
             $fieldValue = is_array($columnValue) ? array_get($columnValue, $subColumn, '') : '';
             if (is_bool($fieldValue)) $fieldValue = intval($fieldValue);
             $fieldDisplay = array_get($options, 'defaultValue', array_get($this->parameterSet, "{$column}.{$subColumn}.{$fieldValue}.title", '(not exist)'));
         } else {
             $fieldId = "{$modelName}-{$column}";
-            $fieldLabel = __($this->packagePrefix . "models.{$modelName}.{$column}");
+            $fieldLabel = array_get($options, 'label', __($this->packagePrefix . "models.{$modelName}.{$column}"));
             $fieldValue = $columnValue;
             if (is_bool($fieldValue)) $fieldValue = intval($fieldValue);
             $fieldDisplay = array_get($options, 'defaultValue', array_get($this->parameterSet, "{$column}.{$fieldValue}.title", '(not exist)'));
@@ -457,7 +457,7 @@ abstract class Presenter
 
         if ($subColumn = array_get($options, 'subColumn')) {
             $fieldId = "{$modelName}-{$column}-{$subColumn}";
-            $fieldLabel = __($this->packagePrefix . "models.{$modelName}.{$column}.{$subColumn}");
+            $fieldLabel = array_get($options, 'label', __($this->packagePrefix . "models.{$modelName}.{$column}.{$subColumn}"));
             $fieldValue = is_array($columnValue) ? array_get($columnValue, $subColumn, []) : [];
             $fieldDisplay = array_get($options, 'defaultValue',
                 collect(array_get($this->parameterSet, "{$column}.{$subColumn}", []))
@@ -469,7 +469,7 @@ abstract class Presenter
             );
         } else {
             $fieldId = "{$modelName}-{$column}";
-            $fieldLabel = __($this->packagePrefix . "models.{$modelName}.{$column}");
+            $fieldLabel = array_get($options, 'label', __($this->packagePrefix . "models.{$modelName}.{$column}"));
             $fieldValue = is_array($columnValue) ? $columnValue : [];
             $fieldDisplay = array_get($options, 'defaultValue',
                 collect(array_get($this->parameterSet, "{$column}", []))
@@ -504,11 +504,11 @@ abstract class Presenter
 
         if ($subColumn = array_get($options, 'subColumn')) {
             $fieldId = "{$modelName}-{$column}-{$subColumn}";
-            $fieldLabel = __($this->packagePrefix . "models.{$modelName}.{$column}.{$subColumn}");
+            $fieldLabel = array_get($options, 'label', __($this->packagePrefix . "models.{$modelName}.{$column}.{$subColumn}"));
             $fieldValue = is_array($columnValue) ? array_get($columnValue, $subColumn, []) : [];
         } else {
             $fieldId = "{$modelName}-{$column}";
-            $fieldLabel = __($this->packagePrefix . "models.{$modelName}.{$column}");
+            $fieldLabel = array_get($options, 'label', __($this->packagePrefix . "models.{$modelName}.{$column}"));
             $fieldValue = is_array($columnValue) ? $columnValue : [];
         }
 
@@ -527,6 +527,66 @@ abstract class Presenter
      * @param  \Illuminate\Database\Eloquent\Model $model
      * @param  string $column
      * @param  array $options
+     * @return string
+     * @throws \Throwable
+     */
+    public function getViewColumnExtension($model, $column, $options = [])
+    {
+        $columns = (new ColumnExtensionRepository)->getFields($model->getTable(), $column);
+
+        $fields = '';
+
+        try {
+            foreach ($columns as $subColumnItem) {
+                /** @var \Minmax\Base\Models\ColumnExtension $subColumnItem */
+                $subColumn = $subColumnItem->sub_column_name;
+
+                if (in_array($subColumn, array_get($options, 'excepts', []))) continue;
+
+                $subOptions = $subColumnItem->options;
+                $subOptions['label'] = $subColumnItem->title;
+                $subMethod = null;
+
+                switch (array_pull($subOptions, 'method')) {
+                    case 'getFieldNormalText':
+                    case 'getFieldText':
+                    case 'getFieldEmail':
+                    case 'getFieldTel':
+                    case 'getFieldDatePicker':
+                    case 'getFieldTextarea':
+                        $subMethod = 'getViewNormalText';
+                        break;
+                    case 'getFieldEditor':
+                        $subMethod = 'getViewEditor';
+                        break;
+                    case 'getFieldSelection':
+                    case 'getFieldRadio':
+                        $subMethod = 'getViewSelection';
+                        break;
+                    case 'getFieldMultiSelect':
+                    case 'getFieldCheckbox':
+                        $subMethod = 'getViewMultiSelection';
+                        break;
+                    case 'getFieldMediaImage':
+                        $subMethod = 'getViewMediaImage';
+                        break;
+                }
+
+                if (! is_null($subMethod)) {
+                    $fields .= $this->{$subMethod}($model, $column, ['subColumn' => $subColumn] + $subOptions + $options)->render();
+                }
+            }
+        } catch (\Exception $e) {
+            $fields = '';
+        }
+
+        return $fields;
+    }
+
+    /**
+     * @param  \Illuminate\Database\Eloquent\Model $model
+     * @param  string $column
+     * @param  array $options
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function getFieldNormalText($model, $column, $options = [])
@@ -536,11 +596,11 @@ abstract class Presenter
 
         if ($subColumn = array_get($options, 'subColumn')) {
             $fieldId = "{$modelName}-{$column}-{$subColumn}";
-            $fieldLabel = __($this->packagePrefix . "models.{$modelName}.{$column}.{$subColumn}");
+            $fieldLabel = array_get($options, 'label', __($this->packagePrefix . "models.{$modelName}.{$column}.{$subColumn}"));
             $fieldValue = array_get($options, 'defaultValue', is_array($columnValue) ? array_get($columnValue, $subColumn, '') : '');
         } else {
             $fieldId = "{$modelName}-{$column}";
-            $fieldLabel = __($this->packagePrefix . "models.{$modelName}.{$column}");
+            $fieldLabel = array_get($options, 'label', __($this->packagePrefix . "models.{$modelName}.{$column}"));
             $fieldValue = array_get($options, 'defaultValue', $columnValue);
         }
 
@@ -568,13 +628,13 @@ abstract class Presenter
 
         if ($subColumn = array_get($options, 'subColumn')) {
             $fieldId = "{$modelName}-{$column}-{$subColumn}";
-            $fieldLabel = __($this->packagePrefix . "models.{$modelName}.{$column}.{$subColumn}");
-            $fieldName = array_get($options, 'name', "{$modelName}[{$column}][$subColumn]");
+            $fieldLabel = array_get($options, 'label', __($this->packagePrefix . "models.{$modelName}.{$column}.{$subColumn}"));
+            $fieldName = array_get($options, 'name', "{$modelName}[{$column}][{$subColumn}]");
             $fieldValue = array_get($options, 'defaultValue', is_array($columnValue) ? array_get($columnValue, $subColumn, '') : '');
             $hintPath = $this->packagePrefix . "models.{$modelName}.hint.{$column}.{$subColumn}";
         } else {
             $fieldId = "{$modelName}-{$column}";
-            $fieldLabel = __($this->packagePrefix . "models.{$modelName}.{$column}");
+            $fieldLabel = array_get($options, 'label', __($this->packagePrefix . "models.{$modelName}.{$column}"));
             $fieldName = array_get($options, 'name', "{$modelName}[{$column}]");
             $fieldValue = array_get($options, 'defaultValue', $columnValue);
             $hintPath = $this->packagePrefix . "models.{$modelName}.hint.{$column}";
@@ -613,13 +673,13 @@ abstract class Presenter
 
         if ($subColumn = array_get($options, 'subColumn')) {
             $fieldId = "{$modelName}-{$column}-{$subColumn}";
-            $fieldLabel = __($this->packagePrefix . "models.{$modelName}.{$column}.{$subColumn}");
-            $fieldName = array_get($options, 'name', "{$modelName}[{$column}][$subColumn]");
+            $fieldLabel = array_get($options, 'label', __($this->packagePrefix . "models.{$modelName}.{$column}.{$subColumn}"));
+            $fieldName = array_get($options, 'name', "{$modelName}[{$column}][{$subColumn}]");
             $fieldValue = array_get($options, 'defaultValue', is_array($columnValue) ? array_get($columnValue, $subColumn, '') : '');
             $hintPath = $this->packagePrefix . "models.{$modelName}.hint.{$column}.{$subColumn}";
         } else {
             $fieldId = "{$modelName}-{$column}";
-            $fieldLabel = __($this->packagePrefix . "models.{$modelName}.{$column}");
+            $fieldLabel = array_get($options, 'label', __($this->packagePrefix . "models.{$modelName}.{$column}"));
             $fieldName = array_get($options, 'name', "{$modelName}[{$column}]");
             $fieldValue = array_get($options, 'defaultValue', $columnValue);
             $hintPath = $this->packagePrefix . "models.{$modelName}.hint.{$column}";
@@ -658,13 +718,13 @@ abstract class Presenter
 
         if ($subColumn = array_get($options, 'subColumn')) {
             $fieldId = "{$modelName}-{$column}-{$subColumn}";
-            $fieldLabel = __($this->packagePrefix . "models.{$modelName}.{$column}.{$subColumn}");
-            $fieldName = array_get($options, 'name', "{$modelName}[{$column}][$subColumn]");
+            $fieldLabel = array_get($options, 'label', __($this->packagePrefix . "models.{$modelName}.{$column}.{$subColumn}"));
+            $fieldName = array_get($options, 'name', "{$modelName}[{$column}][{$subColumn}]");
             $fieldValue = array_get($options, 'defaultValue', is_array($columnValue) ? array_get($columnValue, $subColumn, '') : '');
             $hintPath = $this->packagePrefix . "models.{$modelName}.hint.{$column}.{$subColumn}";
         } else {
             $fieldId = "{$modelName}-{$column}";
-            $fieldLabel = __($this->packagePrefix . "models.{$modelName}.{$column}");
+            $fieldLabel = array_get($options, 'label', __($this->packagePrefix . "models.{$modelName}.{$column}"));
             $fieldName = array_get($options, 'name', "{$modelName}[{$column}]");
             $fieldValue = array_get($options, 'defaultValue', $columnValue);
             $hintPath = $this->packagePrefix . "models.{$modelName}.hint.{$column}";
@@ -702,12 +762,12 @@ abstract class Presenter
 
         if ($subColumn = array_get($options, 'subColumn')) {
             $fieldId = "{$modelName}-{$column}-{$subColumn}";
-            $fieldLabel = __($this->packagePrefix . "models.{$modelName}.{$column}.{$subColumn}");
-            $fieldName = array_get($options, 'name', "{$modelName}[{$column}][$subColumn]");
+            $fieldLabel = array_get($options, 'label', __($this->packagePrefix . "models.{$modelName}.{$column}.{$subColumn}"));
+            $fieldName = array_get($options, 'name', "{$modelName}[{$column}][{$subColumn}]");
             $hintPath = $this->packagePrefix . "models.{$modelName}.hint.{$column}.{$subColumn}";
         } else {
             $fieldId = "{$modelName}-{$column}";
-            $fieldLabel = __($this->packagePrefix . "models.{$modelName}.{$column}");
+            $fieldLabel = array_get($options, 'label', __($this->packagePrefix . "models.{$modelName}.{$column}"));
             $fieldName = array_get($options, 'name', "{$modelName}[{$column}]");
             $hintPath = $this->packagePrefix . "models.{$modelName}.hint.{$column}";
         }
@@ -742,7 +802,7 @@ abstract class Presenter
         $columnValue = $this->getModelValue($model, $column) ?? '';
 
         if ($subColumn = array_get($options, 'subColumn')) {
-            $fieldName = array_get($options, 'name', "{$modelName}[{$column}][$subColumn]");
+            $fieldName = array_get($options, 'name', "{$modelName}[{$column}][{$subColumn}]");
             $fieldValue = array_get($options, 'defaultValue', is_array($columnValue) ? array_get($columnValue, $subColumn, '') : '');
         } else {
             $fieldName = array_get($options, 'name', "{$modelName}[{$column}]");
@@ -765,13 +825,13 @@ abstract class Presenter
 
         if ($subColumn = array_get($options, 'subColumn')) {
             $fieldId = "{$modelName}-{$column}-{$subColumn}";
-            $fieldLabel = __($this->packagePrefix . "models.{$modelName}.{$column}.{$subColumn}");
-            $fieldName = array_get($options, 'name', "{$modelName}[{$column}][$subColumn]");
+            $fieldLabel = array_get($options, 'label', __($this->packagePrefix . "models.{$modelName}.{$column}.{$subColumn}"));
+            $fieldName = array_get($options, 'name', "{$modelName}[{$column}][{$subColumn}]");
             $fieldValue = array_get($options, 'defaultValue', is_array($columnValue) ? array_get($columnValue, $subColumn, '') : '');
             $hintPath = $this->packagePrefix . "models.{$modelName}.hint.{$column}.{$subColumn}";
         } else {
             $fieldId = "{$modelName}-{$column}";
-            $fieldLabel = __($this->packagePrefix . "models.{$modelName}.{$column}");
+            $fieldLabel = array_get($options, 'label', __($this->packagePrefix . "models.{$modelName}.{$column}"));
             $fieldName = array_get($options, 'name', "{$modelName}[{$column}]");
             $fieldValue = array_get($options, 'defaultValue', $columnValue);
             $hintPath = $this->packagePrefix . "models.{$modelName}.hint.{$column}";
@@ -823,13 +883,13 @@ abstract class Presenter
 
         if ($subColumn = array_get($options, 'subColumn')) {
             $fieldId = "{$modelName}-{$column}-{$subColumn}";
-            $fieldLabel = __($this->packagePrefix . "models.{$modelName}.{$column}.{$subColumn}");
-            $fieldName = array_get($options, 'name', "{$modelName}[{$column}][$subColumn]");
+            $fieldLabel = array_get($options, 'label', __($this->packagePrefix . "models.{$modelName}.{$column}.{$subColumn}"));
+            $fieldName = array_get($options, 'name', "{$modelName}[{$column}][{$subColumn}]");
             $fieldValue = array_get($options, 'defaultValue', is_array($columnValue) ? array_get($columnValue, $subColumn, '') : '');
             $hintPath = $this->packagePrefix . "models.{$modelName}.hint.{$column}.{$subColumn}";
         } else {
             $fieldId = "{$modelName}-{$column}";
-            $fieldLabel = __($this->packagePrefix . "models.{$modelName}.{$column}");
+            $fieldLabel = array_get($options, 'label', __($this->packagePrefix . "models.{$modelName}.{$column}"));
             $fieldName = array_get($options, 'name', "{$modelName}[{$column}]");
             $fieldValue = array_get($options, 'defaultValue', $columnValue);
             $hintPath = $this->packagePrefix . "models.{$modelName}.hint.{$column}";
@@ -868,13 +928,13 @@ abstract class Presenter
 
         if ($subColumn = array_get($options, 'subColumn')) {
             $fieldId = "{$modelName}-{$column}-{$subColumn}";
-            $fieldLabel = __($this->packagePrefix . "models.{$modelName}.{$column}.{$subColumn}");
-            $fieldName = array_get($options, 'name', "{$modelName}[{$column}][$subColumn]");
+            $fieldLabel = array_get($options, 'label', __($this->packagePrefix . "models.{$modelName}.{$column}.{$subColumn}"));
+            $fieldName = array_get($options, 'name', "{$modelName}[{$column}][{$subColumn}]");
             $fieldValue = array_get($options, 'defaultValue', is_array($columnValue) ? array_get($columnValue, $subColumn, '') : '');
             $hintPath = $this->packagePrefix . "models.{$modelName}.hint.{$column}.{$subColumn}";
         } else {
             $fieldId = "{$modelName}-{$column}";
-            $fieldLabel = __($this->packagePrefix . "models.{$modelName}.{$column}");
+            $fieldLabel = array_get($options, 'label', __($this->packagePrefix . "models.{$modelName}.{$column}"));
             $fieldName = array_get($options, 'name', "{$modelName}[{$column}]");
             $fieldValue = array_get($options, 'defaultValue', $columnValue);
             $hintPath = $this->packagePrefix . "models.{$modelName}.hint.{$column}";
@@ -914,13 +974,13 @@ abstract class Presenter
 
         if ($subColumn = array_get($options, 'subColumn')) {
             $fieldId = "{$modelName}-{$column}-{$subColumn}";
-            $fieldLabel = __($this->packagePrefix . "models.{$modelName}.{$column}.{$subColumn}");
-            $fieldName = array_get($options, 'name', "{$modelName}[{$column}][$subColumn]");
+            $fieldLabel = array_get($options, 'label', __($this->packagePrefix . "models.{$modelName}.{$column}.{$subColumn}"));
+            $fieldName = array_get($options, 'name', "{$modelName}[{$column}][{$subColumn}]");
             $fieldValue = array_get($options, 'defaultValue', array_get($columnValue, $subColumn, []));
             $hintPath = $this->packagePrefix . "models.{$modelName}.hint.{$column}.{$subColumn}";
         } else {
             $fieldId = "{$modelName}-{$column}";
-            $fieldLabel = __($this->packagePrefix . "models.{$modelName}.{$column}");
+            $fieldLabel = array_get($options, 'label', __($this->packagePrefix . "models.{$modelName}.{$column}"));
             $fieldName = array_get($options, 'name', "{$modelName}[{$column}]");
             $fieldValue = array_get($options, 'defaultValue', $columnValue);
             $hintPath = $this->packagePrefix . "models.{$modelName}.hint.{$column}";
@@ -958,14 +1018,14 @@ abstract class Presenter
 
         if ($subColumn = array_get($options, 'subColumn')) {
             $fieldId = "{$modelName}-{$column}-{$subColumn}";
-            $fieldLabel = __($this->packagePrefix . "models.{$modelName}.{$column}.{$subColumn}");
-            $fieldName = array_get($options, 'name', "{$modelName}[{$column}][$subColumn]");
+            $fieldLabel = array_get($options, 'label', __($this->packagePrefix . "models.{$modelName}.{$column}.{$subColumn}"));
+            $fieldName = array_get($options, 'name', "{$modelName}[{$column}][{$subColumn}]");
             $fieldValue = array_get($options, 'defaultValue', is_array($columnValue) ? array_get($columnValue, $subColumn, '') : '');
             $fieldList = array_get($this->parameterSet, "{$column}.{$subColumn}", []);
             $hintPath = $this->packagePrefix . "models.{$modelName}.hint.{$column}.{$subColumn}";
         } else {
             $fieldId = "{$modelName}-{$column}";
-            $fieldLabel = __($this->packagePrefix . "models.{$modelName}.{$column}");
+            $fieldLabel = array_get($options, 'label', __($this->packagePrefix . "models.{$modelName}.{$column}"));
             $fieldName = array_get($options, 'name', "{$modelName}[{$column}]");
             $fieldValue = array_get($options, 'defaultValue', $columnValue);
             $fieldList = array_get($this->parameterSet, "{$column}", []);
@@ -1010,14 +1070,14 @@ abstract class Presenter
 
         if ($subColumn = array_get($options, 'subColumn')) {
             $fieldId = "{$modelName}-{$column}-{$subColumn}";
-            $fieldLabel = __($this->packagePrefix . "models.{$modelName}.{$column}.{$subColumn}");
-            $fieldName = array_get($options, 'name', "{$modelName}[{$column}][$subColumn][]");
+            $fieldLabel = array_get($options, 'label', __($this->packagePrefix . "models.{$modelName}.{$column}.{$subColumn}"));
+            $fieldName = array_get($options, 'name', "{$modelName}[{$column}][{$subColumn}][]");
             $fieldValue = array_get($options, 'defaultValue', is_array($columnValue) ? array_get($columnValue, $subColumn, []) : []);
             $fieldList = array_get($this->parameterSet, "{$column}.{$subColumn}", []);
             $hintPath = $this->packagePrefix . "models.{$modelName}.hint.{$column}.{$subColumn}";
         } else {
             $fieldId = "{$modelName}-{$column}";
-            $fieldLabel = __($this->packagePrefix . "models.{$modelName}.{$column}");
+            $fieldLabel = array_get($options, 'label', __($this->packagePrefix . "models.{$modelName}.{$column}"));
             $fieldName = array_get($options, 'name', "{$modelName}[{$column}][]");
             $fieldValue = array_get($options, 'defaultValue', is_array($columnValue) ? $columnValue : []);
             $fieldList = array_get($this->parameterSet, "{$column}", []);
@@ -1058,14 +1118,14 @@ abstract class Presenter
 
         if ($subColumn = array_get($options, 'subColumn')) {
             $fieldId = "{$modelName}-{$column}-{$subColumn}";
-            $fieldLabel = __($this->packagePrefix . "models.{$modelName}.{$column}.{$subColumn}");
-            $fieldName = array_get($options, 'name', "{$modelName}[{$column}][$subColumn][]");
+            $fieldLabel = array_get($options, 'label', __($this->packagePrefix . "models.{$modelName}.{$column}.{$subColumn}"));
+            $fieldName = array_get($options, 'name', "{$modelName}[{$column}][{$subColumn}][]");
             $fieldValue = array_get($options, 'defaultValue', is_array($columnValue) ? array_get($columnValue, $subColumn, []) : []);
             $fieldList = array_get($this->parameterSet, "{$column}.{$subColumn}", []);
             $hintPath = $this->packagePrefix . "models.{$modelName}.hint.{$column}.{$subColumn}";
         } else {
             $fieldId = "{$modelName}-{$column}";
-            $fieldLabel = __($this->packagePrefix . "models.{$modelName}.{$column}");
+            $fieldLabel = array_get($options, 'label', __($this->packagePrefix . "models.{$modelName}.{$column}"));
             $fieldName = array_get($options, 'name', "{$modelName}[{$column}][]");
             $fieldValue = array_get($options, 'defaultValue', is_array($columnValue) ? $columnValue : []);
             $fieldList = array_get($this->parameterSet, "{$column}", []);
@@ -1109,14 +1169,14 @@ abstract class Presenter
 
         if ($subColumn = array_get($options, 'subColumn')) {
             $fieldId = "{$modelName}-{$column}-{$subColumn}";
-            $fieldLabel = __($this->packagePrefix . "models.{$modelName}.{$column}.{$subColumn}");
-            $fieldName = array_get($options, 'name', "{$modelName}[{$column}][$subColumn]");
+            $fieldLabel = array_get($options, 'label', __($this->packagePrefix . "models.{$modelName}.{$column}.{$subColumn}"));
+            $fieldName = array_get($options, 'name', "{$modelName}[{$column}][{$subColumn}]");
             $fieldValue = array_get($options, 'defaultValue', is_array($columnValue) ? array_get($columnValue, $subColumn, '') : '');
             $fieldList = array_get($this->parameterSet, "{$column}.{$subColumn}", []);
             $hintPath = $this->packagePrefix . "models.{$modelName}.hint.{$column}.{$subColumn}";
         } else {
             $fieldId = "{$modelName}-{$column}";
-            $fieldLabel = __($this->packagePrefix . "models.{$modelName}.{$column}");
+            $fieldLabel = array_get($options, 'label', __($this->packagePrefix . "models.{$modelName}.{$column}"));
             $fieldName = array_get($options, 'name', "{$modelName}[{$column}]");
             $fieldValue = array_get($options, 'defaultValue', $columnValue);
             $fieldList = array_get($this->parameterSet, "{$column}", []);
@@ -1160,13 +1220,13 @@ abstract class Presenter
 
         if ($subColumn = array_get($options, 'subColumn')) {
             $fieldId = "{$modelName}-{$column}-{$subColumn}";
-            $fieldLabel = __($this->packagePrefix . "models.{$modelName}.{$column}.{$subColumn}");
-            $fieldName = array_get($options, 'name', "{$modelName}[{$column}][$subColumn]");
+            $fieldLabel = array_get($options, 'label', __($this->packagePrefix . "models.{$modelName}.{$column}.{$subColumn}"));
+            $fieldName = array_get($options, 'name', "{$modelName}[{$column}][{$subColumn}]");
             $fieldValue = is_array($columnValue) ? array_get($columnValue, $subColumn, []) : [];
             $hintPath = $this->packagePrefix . "models.{$modelName}.hint.{$column}.{$subColumn}";
         } else {
             $fieldId = "{$modelName}-{$column}";
-            $fieldLabel = __($this->packagePrefix . "models.{$modelName}.{$column}");
+            $fieldLabel = array_get($options, 'label', __($this->packagePrefix . "models.{$modelName}.{$column}"));
             $fieldName = array_get($options, 'name', "{$modelName}[{$column}]");
             $fieldValue = is_array($columnValue) ? $columnValue : [];
             $hintPath = $this->packagePrefix . "models.{$modelName}.hint.{$column}";
@@ -1219,13 +1279,13 @@ abstract class Presenter
 
         if ($subColumn = array_get($options, 'subColumn')) {
             $fieldId = "{$modelName}-{$column}-{$subColumn}";
-            $fieldLabel = __($this->packagePrefix . "models.{$modelName}.{$column}.{$subColumn}");
-            $fieldName = array_get($options, 'name', "{$modelName}[{$column}][$subColumn]");
+            $fieldLabel = array_get($options, 'label', __($this->packagePrefix . "models.{$modelName}.{$column}.{$subColumn}"));
+            $fieldName = array_get($options, 'name', "{$modelName}[{$column}][{$subColumn}]");
             $fieldValue = is_array($columnValue) ? array_get($columnValue, $subColumn, []) : [];
             $hintPath = $this->packagePrefix . "models.{$modelName}.hint.{$column}.{$subColumn}";
         } else {
             $fieldId = "{$modelName}-{$column}";
-            $fieldLabel = __($this->packagePrefix . "models.{$modelName}.{$column}");
+            $fieldLabel = array_get($options, 'label', __($this->packagePrefix . "models.{$modelName}.{$column}"));
             $fieldName = array_get($options, 'name', "{$modelName}[{$column}]");
             $fieldValue = is_array($columnValue) ? $columnValue : [];
             $hintPath = $this->packagePrefix . "models.{$modelName}.hint.{$column}";
@@ -1277,13 +1337,13 @@ abstract class Presenter
 
         if ($subColumn = array_get($options, 'subColumn')) {
             $fieldId = "{$modelName}-{$column}-{$subColumn}";
-            $fieldLabel = __($this->packagePrefix . "models.{$modelName}.{$column}.{$subColumn}");
-            $fieldName = array_get($options, 'name', "{$modelName}[uploads][{$column}][$subColumn]");
+            $fieldLabel = array_get($options, 'label', __($this->packagePrefix . "models.{$modelName}.{$column}.{$subColumn}"));
+            $fieldName = array_get($options, 'name', "{$modelName}[uploads][{$column}][{$subColumn}]");
             $fieldFiles = is_array($columnValue) ? array_get($columnValue, $subColumn, []) : [];
             $hintPath = $this->packagePrefix . "models.{$modelName}.hint.{$column}.{$subColumn}";
         } else {
             $fieldId = "{$modelName}-{$column}";
-            $fieldLabel = __($this->packagePrefix . "models.{$modelName}.{$column}");
+            $fieldLabel = array_get($options, 'label', __($this->packagePrefix . "models.{$modelName}.{$column}"));
             $fieldName = array_get($options, 'name', "{$modelName}[uploads][{$column}]");
             $fieldFiles = is_array($columnValue) ? $columnValue : [];
             $hintPath = $this->packagePrefix . "models.{$modelName}.hint.{$column}";
@@ -1316,5 +1376,35 @@ abstract class Presenter
         ];
 
         return view('MinmaxBase::administrator.layouts.form.file-upload', $componentData);
+    }
+
+    /**
+     * @param  \Illuminate\Database\Eloquent\Model $model
+     * @param  string $column
+     * @param  array $options
+     * @return string
+     * @throws \Throwable
+     */
+    public function getFieldColumnExtension($model, $column, $options = [])
+    {
+        $columns = (new ColumnExtensionRepository)->getFields($model->getTable(), $column);
+
+        $fields = '';
+
+        try {
+            foreach ($columns as $subColumnItem) {
+                /** @var \Minmax\Base\Models\ColumnExtension $subColumnItem */
+                $subColumn = $subColumnItem->sub_column_name;
+                $subOptions = $subColumnItem->options;
+                $subOptions['label'] = $subColumnItem->title;
+                if ($subMethod = array_pull($subOptions, 'method')) {
+                    $fields .= $this->{$subMethod}($model, $column, ['subColumn' => $subColumn] + $subOptions + $options)->render();
+                }
+            }
+        } catch (\Exception $e) {
+            $fields = '';
+        }
+
+        return $fields;
     }
 }

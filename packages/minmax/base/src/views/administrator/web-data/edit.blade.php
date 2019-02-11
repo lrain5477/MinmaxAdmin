@@ -33,34 +33,18 @@
     <fieldset class="mt-4" id="mediaFieldSet">
         <legend class="legend h6 mb-4"><i class="icon-angle-double-down2 mr-2"></i>@lang('MinmaxBase::administrator.form.fieldSet.media')</legend>
 
-        {!! $modelPresenter->getFieldMediaImage($formData, 'system_logo', ['required' => true, 'limit' => 1, 'hint' => true]) !!}
+        {!! $modelPresenter->getFieldMediaImage($formData, 'system_logo', ['required' => true, 'hint' => true]) !!}
 
     </fieldset>
 
     <fieldset class="mt-4" id="infoFieldSet">
         <legend class="legend h6 mb-4"><i class="icon-angle-double-down2 mr-2"></i>@lang('MinmaxBase::administrator.form.fieldSet.information')</legend>
 
-        {!! $modelPresenter->getFieldText($formData, 'company', ['required' => true, 'subColumn' => 'name']) !!}
+        {!! $modelPresenter->getFieldColumnExtension($formData, 'company') !!}
 
-        {!! $modelPresenter->getFieldTel($formData, 'contact', ['required' => true, 'subColumn' => 'phone']) !!}
+        {!! $modelPresenter->getFieldColumnExtension($formData, 'contact') !!}
 
-        {!! $modelPresenter->getFieldTel($formData, 'contact', ['subColumn' => 'fax']) !!}
-
-        {!! $modelPresenter->getFieldEmail($formData, 'contact', ['required' => true, 'subColumn' => 'email']) !!}
-
-        {!! $modelPresenter->getFieldText($formData, 'contact', ['subColumn' => 'address']) !!}
-
-        {!! $modelPresenter->getFieldText($formData, 'contact', ['subColumn' => 'lng', 'size' => 2]) !!}
-
-        {!! $modelPresenter->getFieldText($formData, 'contact', ['subColumn' => 'lat', 'size' => 2]) !!}
-
-        {!! $modelPresenter->getFieldText($formData, 'contact', ['subColumn' => 'map', 'size' => 10]) !!}
-
-        {!! $modelPresenter->getFieldText($formData, 'social', ['subColumn' => 'facebook', 'icon' => 'icon-facebook3']) !!}
-
-        {!! $modelPresenter->getFieldText($formData, 'social', ['subColumn' => 'instagram', 'icon' => 'icon-instagram2']) !!}
-
-        {!! $modelPresenter->getFieldText($formData, 'social', ['subColumn' => 'youtube', 'icon' => 'icon-youtube2']) !!}
+        {!! $modelPresenter->getFieldColumnExtension($formData, 'social') !!}
 
     </fieldset>
 

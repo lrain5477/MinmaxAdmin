@@ -9,6 +9,8 @@ class WebDataPresenter extends Presenter
 {
     protected $packagePrefix = 'MinmaxBase::';
 
+    protected $languageColumns = ['website_name', 'company', 'contact', 'seo', 'options', 'offline_text'];
+
     public function __construct()
     {
         parent::__construct();

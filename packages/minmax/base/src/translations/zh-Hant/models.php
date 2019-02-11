@@ -145,27 +145,9 @@ return [
         'system_email' => '系統信箱',
         'system_url' => '網站網址',
         'system_logo' => '網站Logo',
-        'company' => [
-            'name' => '公司名稱',
-            'name_en' => '公司英文名稱',
-            'id' => '統一編號'
-        ],
-        'contact' => [
-            'phone' => '客服電話',
-            'fax' => '傳真號碼',
-            'email' => '客服信箱',
-            'address' => '公司地址',
-            'map' => '地址連結',
-            'lng' => '地圖經度',
-            'lat' => '地圖緯度',
-        ],
-        'social' => [
-            'facebook' => 'Facebook',
-            'instagram' => 'Instagram',
-            'twitter' => 'Twitter',
-            'gplus' => 'Google+',
-            'youtube' => 'Youtube',
-        ],
+        'company' => '公司資訊',
+        'contact' => '聯絡資訊',
+        'social' => '社群連結',
         'seo' => [
             'meta_description' => 'SEO 網站描述',
             'meta_keywords' => 'SEO 關鍵字',
@@ -295,6 +277,20 @@ return [
                 'pic' => '圖片類型：jpg、png。數量限制：1 張。',
             ],
             'options' => '可自由增加設定參數，將會以 <code>Key => Value</code> 的陣列形式存取。',
+        ],
+    ],
+
+    'ColumnExtension' => [
+        'id' => 'ID',
+        'table_name' => '資料表',
+        'column_name' => '主欄位名稱',
+        'sub_column_name' => '欄位名稱',
+        'title' => '欄位標籤',
+        'options' => '欄位設定',
+        'sort' => '排序',
+        'active' => '啟用狀態',
+        'hint' => [
+            'options' => '必須有 <code>method</code> 參數，其他依欄位需求增減。',
         ],
     ],
 

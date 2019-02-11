@@ -44,27 +44,11 @@
     <fieldset class="mt-4" id="infoFieldSet">
         <legend class="legend h6 mb-4"><i class="icon-angle-double-down2 mr-2"></i>@lang('MinmaxBase::administrator.form.fieldSet.information')</legend>
 
-        {!! $modelPresenter->getViewNormalText($formData, 'company', ['subColumn' => 'name']) !!}
+        {!! $modelPresenter->getViewColumnExtension($formData, 'company') !!}
 
-        {!! $modelPresenter->getViewNormalText($formData, 'contact', ['subColumn' => 'phone']) !!}
+        {!! $modelPresenter->getViewColumnExtension($formData, 'contact') !!}
 
-        {!! $modelPresenter->getViewNormalText($formData, 'contact', ['subColumn' => 'fax']) !!}
-
-        {!! $modelPresenter->getViewNormalText($formData, 'contact', ['subColumn' => 'email']) !!}
-
-        {!! $modelPresenter->getViewNormalText($formData, 'contact', ['subColumn' => 'address']) !!}
-
-        {!! $modelPresenter->getViewNormalText($formData, 'contact', ['subColumn' => 'lng']) !!}
-
-        {!! $modelPresenter->getViewNormalText($formData, 'contact', ['subColumn' => 'lat']) !!}
-
-        {!! $modelPresenter->getViewNormalText($formData, 'contact', ['subColumn' => 'map']) !!}
-
-        {!! $modelPresenter->getViewNormalText($formData, 'social', ['subColumn' => 'facebook', 'icon' => 'icon-facebook3']) !!}
-
-        {!! $modelPresenter->getViewNormalText($formData, 'social', ['subColumn' => 'instagram', 'icon' => 'icon-instagram2']) !!}
-
-        {!! $modelPresenter->getViewNormalText($formData, 'social', ['subColumn' => 'youtube', 'icon' => 'icon-youtube2']) !!}
+        {!! $modelPresenter->getViewColumnExtension($formData, 'social') !!}
 
     </fieldset>
 

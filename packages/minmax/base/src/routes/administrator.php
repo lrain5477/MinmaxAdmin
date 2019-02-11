@@ -232,6 +232,20 @@ Route::group([
             Route::patch('system-parameter-item/ajax/sort', 'SystemParameterItemController@ajaxSort')->name('system-parameter-item.ajaxSort');
 
             /*
+             * ColumnExtension 欄位擴充管理
+             */
+            Route::get('column-extension', 'ColumnExtensionController@index')->name('column-extension.index');
+            Route::post('column-extension', 'ColumnExtensionController@store')->name('column-extension.store');
+            Route::get('column-extension/create', 'ColumnExtensionController@create')->name('column-extension.create');
+            Route::get('column-extension/{id}', 'ColumnExtensionController@show')->name('column-extension.show');
+            Route::put('column-extension/{id}', 'ColumnExtensionController@update')->name('column-extension.update');
+            Route::delete('column-extension/{id}', 'ColumnExtensionController@destroy')->name('column-extension.destroy');
+            Route::get('column-extension/{id}/edit', 'ColumnExtensionController@edit')->name('column-extension.edit');
+            Route::post('column-extension/ajax/datatables', 'ColumnExtensionController@ajaxDataTable')->name('column-extension.ajaxDataTable');
+            Route::patch('column-extension/ajax/switch', 'ColumnExtensionController@ajaxSwitch')->name('column-extension.ajaxSwitch');
+            Route::patch('column-extension/ajax/sort', 'ColumnExtensionController@ajaxSort')->name('column-extension.ajaxSort');
+
+            /*
              * EditorTemplate 編輯器模板管理
              */
             Route::get('editor-template', 'EditorTemplateController@index')->name('editor-template.index');
