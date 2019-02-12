@@ -45,8 +45,12 @@ class ProductSetRequest extends FormRequest
                     'ProductSet.serial' => 'nullable|string',
                     'ProductSet.title' => 'required|string',
                     'ProductSet.pic' => 'nullable|array',
-                    'ProductSet.details.description' => 'nullable|string',
-                    'ProductSet.details.editor' => 'nullable|string',
+                    'ProductSet.brand_id' => 'nullable|exists:product_brand,id',
+                    'ProductSet.start_at' => 'nullable|date_format:Y-m-d H:i:s',
+                    'ProductSet.end_at' => 'nullable|date_format:Y-m-d H:i:s',
+                    'ProductSet.searchable' => 'required|boolean',
+                    'ProductSet.visible' => 'required|boolean',
+                    'ProductSet.sort' => 'required|integer',
                     'ProductSet.active' => 'required|boolean',
                 ];
             case 'POST':
@@ -56,8 +60,12 @@ class ProductSetRequest extends FormRequest
                     'ProductSet.serial' => 'nullable|string',
                     'ProductSet.title' => 'required|string',
                     'ProductSet.pic' => 'nullable|array',
-                    'ProductSet.details.description' => 'nullable|string',
-                    'ProductSet.details.editor' => 'nullable|string',
+                    'ProductSet.brand_id' => 'nullable|exists:product_brand,id',
+                    'ProductSet.start_at' => 'nullable|date_format:Y-m-d H:i:s',
+                    'ProductSet.end_at' => 'nullable|date_format:Y-m-d H:i:s',
+                    'ProductSet.searchable' => 'required|boolean',
+                    'ProductSet.visible' => 'required|boolean',
+                    'ProductSet.sort' => 'nullable|integer',
                     'ProductSet.active' => 'required|boolean',
                 ];
         }

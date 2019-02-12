@@ -229,7 +229,7 @@ abstract class Presenter
 
         try {
             return view('MinmaxBase::admin.layouts.grid.thumbnail', [
-                    'value' => array_get($value, 'path', ''),
+                    'value' => str_replace(url('/'), '', array_get($value, 'path', '')),
                     'alt' => array_get($value, array_get($options, 'alt', ''), ''),
                     'size' => array_get($options, 'size', 120),
                 ])

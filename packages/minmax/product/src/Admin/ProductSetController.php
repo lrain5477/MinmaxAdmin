@@ -23,7 +23,20 @@ class ProductSetController extends Controller
      */
     protected function getQueryBuilder()
     {
-        return $this->modelRepository->query()->with(['productItems', 'productPackages.productMarkets', 'productCategories']);
+        $query = $this->modelRepository->query()->with(['productItems', 'productPackages.productMarkets', 'productCategories']);
+
+        if ($itemId = request('item')) {
+            $query->whereHas('productItems', function ($query) use ($itemId) {
+                /** @var \Illuminate\Database\Eloquent\Builder $query */
+                $query->where('product_item.id', $itemId);
+            });
+        }
+
+        if ($specGroup = request('spec')) {
+            $query->where('spec_group', $specGroup);
+        }
+
+        return $query;
     }
 
     /**

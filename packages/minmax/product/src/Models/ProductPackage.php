@@ -35,8 +35,6 @@ class ProductPackage extends Model
         'active' => 'boolean',
     ];
 
-    public $incrementing = false;
-
     public function getTitleAttribute()
     {
         return langDB($this->getAttributeFromArray('title'));

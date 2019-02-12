@@ -21,6 +21,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property \Illuminate\Support\Carbon $updated_at
  * @property \Illuminate\Database\Eloquent\Collection|ProductQuantity[] $productQuantities
  * @property \Illuminate\Database\Eloquent\Collection|ProductPackage[] $productPackages
+ * @property \Illuminate\Database\Eloquent\Collection|ProductSet[] $productSets
  * @property integer $qty
  */
 class ProductItem extends Model
@@ -55,6 +56,11 @@ class ProductItem extends Model
     public function productPackages()
     {
         return $this->hasMany(ProductPackage::class, 'item_sku', 'sku');
+    }
+
+    public function productSets()
+    {
+        return $this->belongsToMany(ProductSet::class, 'product_package', 'item_sku', 'set_sku', 'sku', 'sku');
     }
 
     /**

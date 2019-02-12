@@ -60,7 +60,7 @@
                 url: '{{ asset("static/admin/js/lang/" . app()->getLocale() . "/datatables.json") }}'
             },
             ajax: {
-                url: '{{ langRoute("admin.{$pageData->uri}.ajaxDataTable") }}',
+                url: '{{ langRoute("admin.{$pageData->uri}.ajaxDataTable", ['item' => request('item'), 'spec' => request('spec')]) }}',
                 data: function (d) {
                     var searchKeyword = $('#sch_keyword').val();
                     var searchColumn = $('#sch_column').val();

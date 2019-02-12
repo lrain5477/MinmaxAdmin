@@ -23,7 +23,16 @@ class ProductItemController extends Controller
      */
     protected function getQueryBuilder()
     {
-        return $this->modelRepository->query()->with(['productQuantities', 'productPackages']);
+        $query = $this->modelRepository->query()->with(['productQuantities', 'productPackages', 'productSets']);
+
+        if ($set_id = request('set')) {
+            $query->whereHas('productSets', function ($query) use ($set_id) {
+                /** @var \Illuminate\Database\Eloquent\Builder $query */
+                $query->where('product_set.id', $set_id);
+            });
+        }
+
+        return $query;
     }
 
     /**

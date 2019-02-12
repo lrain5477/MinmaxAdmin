@@ -81,7 +81,7 @@ class ProductSetPresenter extends Presenter
     --><small>{$skuLabel}:</small><small class="ml-1">{$skuValue}</small><br /><!--
     --><small>{$serialLabel}:</small><small class="ml-1">{$serialValue}</small><!--
 --></p>
-<small class="text-success float-right">$categories</small>
+<small class="text-success float-right">{$categories}</small>
 HTML;
 
         return $gridHtml;
@@ -99,11 +99,16 @@ HTML;
 
         $itemAmount = $model->productItems->count();
         $packageAmount = $model->productPackages->count();
+        $specificationAmount = $model->newQuery()->whereNotNull('spec_group')->where('spec_group', $model->spec_group)->count();
+
+        $itemUrl = langRoute('admin.product-item.index', ['set' => $model->id]);
+        $packageUrl = langRoute('admin.product-package.index', ['set' => $model->id]);
+        $specificationUrl = $specificationAmount > 0 ? langRoute('admin.product-set.index', ['spec' => $model->spec_group]) : 'javascript:void(0);';
 
         $gridHtml = <<<HTML
-<div class="text-nowrap small">{$itemLabel}：<a href="productPackage.html">{$itemAmount}</a></div>
-<div class="text-nowrap small">{$packageLabel}：<a href="productPackage.html">{$packageAmount}</a></div>
-<div class="text-nowrap small">{$specificationLabel}：<a href="productPackage.html">0</a></div>
+<div class="text-nowrap small">{$itemLabel}：<a href="{$itemUrl}">{$itemAmount}</a></div>
+<div class="text-nowrap small">{$packageLabel}：<a href="{$packageUrl}">{$packageAmount}</a></div>
+<div class="text-nowrap small">{$specificationLabel}：<a href="{$specificationUrl}">{$specificationAmount}</a></div>
 HTML;
 
         return $gridHtml;

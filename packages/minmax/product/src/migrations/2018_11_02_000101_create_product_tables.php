@@ -88,8 +88,8 @@ class CreateProductTables extends Migration
         // 組合 / 商品-品項 (Many-to-Many)
         Schema::create('product_package', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('set_sku');
-            $table->string('item_sku');
+            $table->string('set_sku')->comment('商品貨號');
+            $table->string('item_sku')->comment('品項貨號');
             $table->unsignedInteger('amount')->default(1)->comment('組合數量');
             $table->unsignedInteger('limit')->nullable()->comment('商品限量');
             $table->string('description')->nullable()->comment('簡短說明');
@@ -100,8 +100,6 @@ class CreateProductTables extends Migration
             $table->unsignedInteger('sort')->default(1)->comment('排序');
             $table->boolean('active')->default(true)->comment('啟用狀態');
             $table->timestamps();
-
-            $table->unique(['set_sku', 'item_sku']);
 
             $table->foreign('set_sku')->references('sku')->on('product_set')
                 ->onUpdate('cascade')->onDelete('cascade');

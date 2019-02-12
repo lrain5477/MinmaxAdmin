@@ -105,6 +105,14 @@ class IoConstructController extends Controller
     public function example($id)
     {
         if ($model = $this->modelRepository->find($id)) {
+            if ($model->example == 'controller') {
+                try {
+                    return app()->call($model->controller, [$id], 'example');
+                } catch (\InvalidArgumentException $e) {
+                    return abort(404);
+                }
+            }
+
             if (Storage::exists($model->example)) {
                 return Storage::response($model->example, null, [], 'attachment');
             }

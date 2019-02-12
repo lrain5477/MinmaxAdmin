@@ -39,6 +39,10 @@ return [
                 'specification' => '規格',
             ],
         ],
+        'ProductPackage' => [
+            'all_market' => '所有賣場',
+            'title' => '商品名稱',
+        ],
     ],
 
     'form' => [
@@ -55,6 +59,12 @@ return [
         'ProductSet' => [
             'specification_name' => '規格名稱',
             'specification_value' => '規格內容',
+            'actions' => '動作',
+            'please_select' => '請選擇',
+        ],
+        'ProductPackage' => [
+            'price' => '價格設定',
+            'currency' => '貨幣別',
             'actions' => '動作',
             'please_select' => '請選擇',
         ],

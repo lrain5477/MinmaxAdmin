@@ -105,6 +105,29 @@ HTML;
 
     /**
      * @param  \Minmax\Product\Models\ProductItem $model
+     * @return string
+     */
+    public function getGridRelation($model)
+    {
+        $setLabel = __('MinmaxProduct::admin.grid.ProductItem.relations.set');
+        $packageLabel = __('MinmaxProduct::admin.grid.ProductSet.relations.package');
+
+        $setAmount = $model->productSets->count();
+        $packageAmount = $model->productPackages->count();
+
+        $setUrl = langRoute('admin.product-set.index', ['item' => $model->id]);
+        $packageUrl = langRoute('admin.product-package.index', ['item' => $model->id]);
+
+        $gridHtml = <<<HTML
+<div class="text-nowrap small">{$setLabel}：<a href="{$setUrl}">{$setAmount}</a></div>
+<div class="text-nowrap small">{$packageLabel}：<a href="{$packageUrl}">{$packageAmount}</a></div>
+HTML;
+
+        return $gridHtml;
+    }
+
+    /**
+     * @param  \Minmax\Product\Models\ProductItem $model
      * @param  array $options
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */

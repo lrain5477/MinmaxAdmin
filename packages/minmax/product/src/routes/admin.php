@@ -53,6 +53,20 @@ Route::group([
         Route::patch('product-set/ajax/sort', 'ProductSetController@ajaxSort')->name('product-set.ajaxSort');
 
         /*
+         * ProductPackage 價格組合
+         */
+        Route::get('product-package', 'ProductPackageController@index')->name('product-package.index');
+        Route::post('product-package', 'ProductPackageController@store')->name('product-package.store');
+        Route::get('product-package/create', 'ProductPackageController@create')->name('product-package.create');
+        Route::get('product-package/{id}', 'ProductPackageController@show')->name('product-package.show');
+        Route::put('product-package/{id}', 'ProductPackageController@update')->name('product-package.update');
+        Route::delete('product-package/{id}', 'ProductPackageController@destroy')->name('product-package.destroy');
+        Route::get('product-package/{id}/edit', 'ProductPackageController@edit')->name('product-package.edit');
+        Route::post('product-package/ajax/datatables', 'ProductPackageController@ajaxDataTable')->name('product-package.ajaxDataTable');
+        Route::patch('product-package/ajax/switch', 'ProductPackageController@ajaxSwitch')->name('product-package.ajaxSwitch');
+        Route::patch('product-package/ajax/sort', 'ProductPackageController@ajaxSort')->name('product-package.ajaxSort');
+
+        /*
          * ProductCategory 商品分類
          */
         Route::get('product-category', 'ProductCategoryController@index')->name('product-category.index');

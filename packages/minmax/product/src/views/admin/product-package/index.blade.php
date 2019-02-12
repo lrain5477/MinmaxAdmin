@@ -9,7 +9,7 @@
 
 @section('action-buttons')
     @component('MinmaxBase::admin.layouts.right-links')
-        @if($adminData->can('productItemCreate'))
+        @if($adminData->can('productPackageCreate'))
         <a class="btn btn-sm btn-main" href="{{ langRoute("admin.{$pageData->uri}.create") }}" title="@lang('MinmaxBase::admin.form.create')">
             <i class="icon-plus2"></i><span class="ml-1 d-none d-md-inline-block">@lang('MinmaxBase::admin.form.create')</span>
         </a>
@@ -17,18 +17,16 @@
     @endcomponent
 @endsection
 
-@inject('modelPresenter', 'Minmax\Product\Admin\ProductItemPresenter')
+@inject('modelPresenter', 'Minmax\Product\Admin\ProductPackagePresenter')
 
 @section('grid-filter')
     @component('MinmaxBase::admin.layouts.grid.filter-keyword')
-    <option value="title">@lang('MinmaxProduct::models.ProductItem.title')</option>
-    <option value="sku">@lang('MinmaxProduct::models.ProductItem.sku')</option>
-    <option value="serial">@lang('MinmaxProduct::models.ProductItem.serial')</option>
+    <option value="set_sku">@lang('MinmaxProduct::models.ProductPackage.set_sku')</option>
+    <option value="item_sku">@lang('MinmaxProduct::models.ProductPackage.item_sku')</option>
     @endcomponent
 
     @component('MinmaxBase::admin.layouts.grid.filter-equal')
-    {!! $modelPresenter->getFilterSelection('active', 'searchActive', ['emptyLabel' => __('MinmaxProduct::models.ProductItem.active')]) !!}
-    {!! $modelPresenter->getFilterStatusTag('searchTag', ['emptyLabel' => __('MinmaxProduct::admin.grid.ProductItem.tags.title')]) !!}
+    {!! $modelPresenter->getFilterSelection('active', 'searchActive', ['emptyLabel' => __('MinmaxProduct::models.ProductPackage.active')]) !!}
     @endcomponent
 @endsection
 
@@ -36,13 +34,13 @@
 <table class="table table-responsive-md table-bordered table-striped table-hover table-checkable datatables" id="tableList">
     <thead>
     <tr role="row">
-        <th class="nosort w-5">@lang('MinmaxProduct::models.ProductItem.pic')</th>
-        <th class="nosort">@lang('MinmaxProduct::models.ProductItem.title')</th>
-        <th class="nosort w-5">@lang('MinmaxProduct::models.ProductItem.qty')</th>
-        <th class="nosort w-5">@lang('MinmaxProduct::admin.grid.ProductItem.relation')</th>
-        <th class="w-5">@lang('MinmaxProduct::models.ProductItem.updated_at')</th>
-        <th class="w-5">@lang('MinmaxProduct::models.ProductItem.active')</th>
-        <th class="nosort w-10">@lang('MinmaxBase::admin.grid.title.action')</th>
+        <th class="nosort w-5">@lang('MinmaxProduct::models.ProductSet.pic')</th>
+        <th class="w-50">@lang('MinmaxProduct::admin.grid.ProductPackage.title')</th>
+        <th>@lang('MinmaxProduct::models.ProductPackage.start_at')</th>
+        <th>@lang('MinmaxProduct::models.ProductPackage.price_sell')</th>
+        <th>@lang('MinmaxProduct::models.ProductPackage.sort')</th>
+        <th>@lang('MinmaxProduct::models.ProductPackage.active')</th>
+        <th class="nosort">@lang('MinmaxBase::admin.grid.title.action')</th>
     </tr>
     </thead>
     <tbody>
@@ -65,9 +63,8 @@
                     var searchColumn = $('#sch_column').val();
 
                     d.filter = {
-                        "title": searchKeyword,
-                        "sku": searchKeyword,
-                        "serial": searchKeyword
+                        "set_sku": searchKeyword,
+                        "item_sku": searchKeyword
                     };
 
                     if (searchColumn !== '') {
@@ -79,22 +76,21 @@
                     }
 
                     d.equal = {
-                        "active": $('#searchActive').val(),
-                        "status_tag": $('#searchTag').val()
+                        "active": $('#searchActive').val()
                     };
                 }
             },
             columns: [
                 {data: 'pic', name: 'pic'},
-                {data: 'title', name: 'title'},
-                {data: 'qty', name: 'qty'},
-                {data: 'relation', name: 'relation'},
-                {data: 'updated_at', name: 'updated_at', className: 'text-nowrap'},
+                {data: 'set_sku', name: 'set_sku'},
+                {data: 'start_at', name: 'start_at'},
+                {data: 'price_sell', name: 'price_sell', className: 'text-right text-nowrap'},
+                {data: 'sort', name: 'sort'},
                 {data: 'active', name: 'active'},
                 {data: 'action', name: 'action'}
             ],
             order: [
-                [4, 'desc']
+                [1, 'asc'], [4, 'asc']
             ]
         });
     });

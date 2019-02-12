@@ -81,6 +81,30 @@ return [
         'categories' => '商品分類',
     ],
 
+    'ProductPackage' => [
+        'id' => 'ID',
+        'set_sku' => '商品貨號',
+        'item_sku' => '品項貨號',
+        'amount' => '組合數量',
+        'limit' => '商品限量',
+        'description' => '簡短說明',
+        'price_advice' => '建議售價',
+        'price_sell' => '優惠售價',
+        'start_at' => '發佈時間',
+        'end_at' => '下架時間',
+        'sort' => '排序',
+        'active' => '啟用狀態',
+        'created_at' => '建立時間',
+        'updated_at' => '更新時間',
+        'hint' => [
+            'start_at' => '如果需要在未來期限到後開始應用，請在此設定一個日期。',
+            'end_at' => '如果需要在有效期限過後停止應用，請在此設定一個日期。',
+            'productMarkets' => '若無選擇賣場，則表示應用於所有賣場。',
+        ],
+        'price' => '價格設定',
+        'productMarkets' => '賣場選擇',
+    ],
+
     'ProductMarket' => [
         'id' => 'ID',
         'code' => '賣場代碼',
