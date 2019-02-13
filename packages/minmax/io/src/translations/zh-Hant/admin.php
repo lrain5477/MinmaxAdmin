@@ -24,7 +24,9 @@ return [
         'export' => '匯出',
         'message' => [
             'import_error' => ':title 匯入失敗',
+            'import_success' => ':title 匯入成功',
             'export_error' => ':title 匯出失敗',
+            'export_success' => ':title 匯出成功',
         ],
     ],
 

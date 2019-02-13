@@ -110,6 +110,8 @@ class IoConstructController extends Controller
                     return app()->call($model->controller, [$id], 'example');
                 } catch (\InvalidArgumentException $e) {
                     return abort(404);
+                } catch (\Exception $e) {
+                    return abort(404);
                 }
             }
 
@@ -130,9 +132,12 @@ class IoConstructController extends Controller
     {
         if ($model = $this->modelRepository->find($id)) {
             try {
-                return app()->call($model->controller, [$request, $id], 'import');
+                return app()->call($model->controller, [$id], 'import');
             } catch (\InvalidArgumentException $e) {
-                return redirect(langRoute("admin.io-data.config"))
+                return redirect(langRoute("admin.io-data.config", ['id' => $id]))
+                    ->withErrors([__('MinmaxIo::admin.form.message.import_error', ['title' => $model->title])]);
+            } catch (\Exception $e) {
+                return redirect(langRoute("admin.io-data.config", ['id' => $id]))
                     ->withErrors([__('MinmaxIo::admin.form.message.import_error', ['title' => $model->title])]);
             }
         }
@@ -149,10 +154,13 @@ class IoConstructController extends Controller
     {
         if ($model = $this->modelRepository->find($id)) {
             try {
-                return app()->call($model->controller, [$request, $id], 'export');
+                return app()->call($model->controller, [$id], 'export');
             } catch (\InvalidArgumentException $e) {
-                return redirect(langRoute("admin.io-data.config"))
+                return redirect(langRoute("admin.io-data.config", ['id' => $id]))
                     ->withErrors([__('MinmaxIo::admin.form.message.export_error', ['title' => $model->title])]);
+            } catch (\Exception $e) {
+                return redirect(langRoute("admin.io-data.config", ['id' => $id]))
+                    ->withErrors([__('MinmaxIo::admin.form.message.import_error', ['title' => $model->title])]);
             }
         }
 

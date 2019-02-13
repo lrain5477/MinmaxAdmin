@@ -12,7 +12,7 @@
 @section('content')
     <section class="panel panel-default">
         <header class="panel-heading">
-            <h1 class="h5 float-left font-weight-bold">{{ $pageData->title }} @lang('MinmaxIo::admin.form.config')</h1>
+            <h1 class="h5 float-left font-weight-bold">{{ $formData->title }}</h1>
 
             <div class="float-right">
                 <a class="btn btn-sm btn-light" href="{{ langRoute("admin.{$pageData->uri}.index") }}" title="@lang('MinmaxBase::admin.grid.back')">

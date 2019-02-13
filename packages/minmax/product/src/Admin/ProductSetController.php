@@ -62,7 +62,7 @@ class ProductSetController extends Controller
                             try {
                                 $filterTitle = collect(cache('langMap.' . app()->getLocale(), []))
                                     ->filter(function ($item, $key) use ($value) {
-                                        return preg_match('/^product_item\.title\./', $key) > 0 && strpos($item, $value) !== false;
+                                        return preg_match('/^product_set\.title\./', $key) > 0 && strpos($item, $value) !== false;
                                     })
                                     ->keys()
                                     ->toArray();

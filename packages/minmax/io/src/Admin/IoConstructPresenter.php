@@ -37,12 +37,12 @@ class IoConstructPresenter extends Presenter
                 $result .= view('MinmaxIo::admin.io-data.action-button-config', ['id' => $id, 'uri' => $this->uri])->render();
             }
 
-            if (! is_null($model->example) && $model->example != '' && in_array('I', $this->permissionSet)) {
+            if (! is_null($model->example) && $model->example == 'controller' && in_array('I', $this->permissionSet)) {
+                $result .= view('MinmaxIo::admin.io-data.action-button-example', ['id' => $id, 'uri' => $this->uri])->render();
+            } elseif (! is_null($model->example) && $model->example != '' && in_array('I', $this->permissionSet)) {
                 if (Storage::exists($model->example)) {
                     $result .= view('MinmaxIo::admin.io-data.action-button-example', ['id' => $id, 'uri' => $this->uri])->render();
                 }
-            } elseif (! is_null($model->example) && $model->example == 'controller' && in_array('I', $this->permissionSet)) {
-                $result .= view('MinmaxIo::admin.io-data.action-button-example', ['id' => $id, 'uri' => $this->uri])->render();
             }
         } catch (\Throwable $e) {
             $result = '';

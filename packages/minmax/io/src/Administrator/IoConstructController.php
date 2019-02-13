@@ -83,7 +83,16 @@ class IoConstructController extends Controller
      */
     public function config($id)
     {
-        $this->viewData['formData'] = $this->modelRepository->find($id) ?? abort(404);
+        $formData = $this->modelRepository->find($id) ?? abort(404);
+
+        if (is_string($formData->controller))
+            $formData->controller = str_replace('::admin.', '::administrator.', $formData->controller);
+        if (is_string($formData->import_view))
+            $formData->import_view = str_replace('::admin.', '::administrator.', $formData->import_view);
+        if (is_string($formData->export_view))
+            $formData->export_view = str_replace('::admin.', '::administrator.', $formData->export_view);
+
+        $this->viewData['formData'] = $formData;
 
         $this->buildBreadcrumbsConfig();
 
@@ -97,6 +106,15 @@ class IoConstructController extends Controller
     public function example($id)
     {
         if ($model = $this->modelRepository->find($id)) {
+            if ($model->example == 'controller') {
+                try {
+                    $controller = str_replace('\\Admin\\', '\\Administrator\\', $model->controller);
+                    return app()->call($controller, [$id], 'example');
+                } catch (\InvalidArgumentException $e) {
+                    return abort(404);
+                }
+            }
+
             if (Storage::exists($model->example)) {
                 return Storage::response($model->example, null, [], 'attachment');
             }
@@ -114,7 +132,8 @@ class IoConstructController extends Controller
     {
         if ($model = $this->modelRepository->find($id)) {
             try {
-                return app()->call($model->controller, [$request, $id], 'import');
+                $controller = str_replace('\\Admin\\', '\\Administrator\\', $model->controller);
+                return app()->call($controller, [$request, $id], 'import');
             } catch (\InvalidArgumentException $e) {
                 return redirect(langRoute("administrator.io-construct.config"))
                     ->withErrors([__('MinmaxIo::administrator.form.message.import_error', ['title' => $model->title])]);
