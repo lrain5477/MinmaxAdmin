@@ -46,6 +46,7 @@ return [
     ],
 
     'form' => [
+        'update_qty' => '異動庫存',
         'fieldSet' => [
             'spec' => '規格設定',
             'ecommerce' => '購物車屬性',
@@ -55,6 +56,13 @@ return [
             'currency' => '貨幣別',
             'actions' => '動作',
             'please_select' => '請選擇',
+            'messages' => [
+                'manual_update_qty' => '手動更新庫存。',
+                'qty_success_title' => '更新庫存成功',
+                'qty_success_text' => '您已成功更新庫存。',
+                'qty_nothing_title' => '庫存未更新',
+                'qty_nothing_text' => '沒有任何項目的庫存更新。',
+            ],
         ],
         'ProductSet' => [
             'specification_name' => '規格名稱',

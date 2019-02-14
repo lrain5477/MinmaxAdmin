@@ -156,9 +156,9 @@ class CreateNotifyTables extends Migration
             ->each(function ($group) {
                 DB::table('system_parameter_item')->where('group_id', $group->id)->get()
                     ->each(function ($item) {
-                        DB::table('language_resource')->where('title', 'like', 'system_parameter_item.label.' . $item->id)->delete();
+                        DB::table('language_resource')->where('key', 'system_parameter_item.label.' . $item->id)->delete();
                     });
-                DB::table('language_resource')->where('title', 'like', 'system_parameter_group.title.' . $group->id)->delete();
+                DB::table('language_resource')->where('key', 'system_parameter_group.title.' . $group->id)->delete();
             });
 
         DB::table('system_parameter_group')->whereIn('code', $parameterCodeSet)->delete();

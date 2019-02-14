@@ -107,6 +107,33 @@ HTML;
      * @param  \Minmax\Product\Models\ProductItem $model
      * @return string
      */
+    public function getGridQty($model)
+    {
+        $value = $model->qty_enable ? $model->qty : -1;
+
+        if (in_array('U',  $this->permissionSet) && $value >= 0) {
+            try {
+                return view('MinmaxProduct::admin.product-item.grid-qty', [
+                        'id' => $model->getKey(),
+                        'value' => $value,
+                    ])
+                    ->render();
+            } catch (\Throwable $e) {
+                return '';
+            }
+        } else {
+            if ($model->qty_enable) {
+                return $model->qty;
+            } else {
+                return $this->getGridTextBadge($model, 'qty_enable');
+            }
+        }
+    }
+
+    /**
+     * @param  \Minmax\Product\Models\ProductItem $model
+     * @return string
+     */
     public function getGridRelation($model)
     {
         $setLabel = __('MinmaxProduct::admin.grid.ProductItem.relations.set');

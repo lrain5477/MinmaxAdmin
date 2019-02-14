@@ -192,9 +192,10 @@ abstract class Presenter
 
         if ($subColumn = array_get($options, 'subColumn')) {
             $value = is_array($columnValue) ? array_get($columnValue, $subColumn, '') : '';
+            $value = is_bool($value) ? intval($value) : $value;
             $parameter = array_get($this->parameterSet, "{$column}.{$subColumn}.{$value}");
         } else {
-            $value = $columnValue;
+            $value = is_bool($columnValue) ? intval($columnValue) : $columnValue;
             $parameter = array_get($this->parameterSet, "{$column}.{$value}");
         }
 

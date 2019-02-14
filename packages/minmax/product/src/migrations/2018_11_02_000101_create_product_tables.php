@@ -175,6 +175,9 @@ class CreateProductTables extends Migration
         // 建立網站參數資料
         $this->insertSiteParameters();
 
+        // 建立匯入匯出項目
+        $this->insertIoConstructs();
+
         // 建立商品管理預設資料
         $this->insertProductData();
     }
@@ -186,6 +189,9 @@ class CreateProductTables extends Migration
      */
     public function down()
     {
+        // 刪除匯入匯出項目
+        $this->deleteIoConstructs();
+
         // 刪除網站參數資料
         $this->deleteSiteParameters();
 
@@ -479,6 +485,53 @@ class CreateProductTables extends Migration
     }
 
     /**
+     * Insert IO config setting for product.
+     *
+     * @return void
+     */
+    public function insertIoConstructs()
+    {
+        $timestamp = date('Y-m-d H:i:s');
+        $languageResourceData = [];
+
+        $lastItemId = DB::table('io_construct')->latest('id')->value('id') ?? 0;
+        $startItemId = $lastItemId;
+
+        $ioConfigData = [
+            [
+                'title' => 'io_construct.title.' . ($startItemId + 1),
+                'uri' => 'product-item',
+                'import_enable' => true,
+                'export_enable' => true,
+                'import_view' => 'MinmaxProduct::admin.product-item.import',
+                'export_view' => 'MinmaxProduct::admin.product-item.export',
+                'controller' => 'Minmax\Product\Io\ProductItemController',
+                'example' => 'controller',
+                'filename' => 'io_construct.filename.' . ($startItemId + 1),
+                'sort' => $startItemId + 1, 'active' => true, 'created_at' => $timestamp, 'updated_at' => $timestamp
+            ]
+        ];
+
+        DB::table('io_construct')->insert($ioConfigData);
+
+        // 多語系
+        $languageResourceData = array_merge($languageResourceData, SeederHelper::getLanguageResourceArray('io_construct', [
+            ['title' => '商品管理 - 品項資料', 'filename' => null]
+        ], 1, $startItemId + 1));
+        $languageResourceData = array_merge($languageResourceData, SeederHelper::getLanguageResourceArray('io_construct', [
+            ['title' => '商品管理 - 品项资料', 'filename' => null]
+        ], 2, $startItemId + 1));
+        $languageResourceData = array_merge($languageResourceData, SeederHelper::getLanguageResourceArray('io_construct', [
+            ['title' => '商品管理 - 項目情報', 'filename' => null]
+        ], 3, $startItemId + 1));
+        $languageResourceData = array_merge($languageResourceData, SeederHelper::getLanguageResourceArray('io_construct', [
+            ['title' => 'Product Manage / Item Data', 'filename' => null]
+        ], 4, $startItemId + 1));
+
+        DB::table('language_resource')->insert($languageResourceData);
+    }
+
+    /**
      * Insert product default data.
      *
      * @return void
@@ -529,9 +582,9 @@ class CreateProductTables extends Migration
             ->each(function ($group) {
                 DB::table('system_parameter_item')->where('group_id', $group->id)->get()
                     ->each(function ($item) {
-                        DB::table('language_resource')->where('title', 'like', 'system_parameter_item.label.' . $item->id)->delete();
+                        DB::table('language_resource')->where('key', 'system_parameter_item.label.' . $item->id)->delete();
                     });
-                DB::table('language_resource')->where('title', 'like', 'system_parameter_group.title.' . $group->id)->delete();
+                DB::table('language_resource')->where('key', 'system_parameter_group.title.' . $group->id)->delete();
             });
 
         DB::table('system_parameter_group')->whereIn('code', $parameterCodeSet)->delete();
@@ -554,11 +607,31 @@ class CreateProductTables extends Migration
             ->each(function ($group) {
                 DB::table('site_parameter_item')->where('group_id', $group->id)->get()
                     ->each(function ($item) {
-                        DB::table('language_resource')->where('title', 'like', 'site_parameter_item.label.' . $item->id)->delete();
+                        DB::table('language_resource')->where('key', 'site_parameter_item.label.' . $item->id)->delete();
                     });
-                DB::table('language_resource')->where('title', 'like', 'site_parameter_group.title.' . $group->id)->delete();
+                DB::table('language_resource')->where('key', 'site_parameter_group.title.' . $group->id)->delete();
             });
 
         DB::table('site_parameter_group')->whereIn('code', $parameterCodeSet)->delete();
+    }
+
+    /**
+     * Delete IO constructs for this module.
+     *
+     * @return void
+     */
+    public function deleteIoConstructs()
+    {
+        $ioUriSet = ['product-item'];
+
+        DB::table('io_construct')->whereIn('uri', $ioUriSet)->get()
+            ->each(function ($item) {
+                DB::table('language_resource')
+                    ->where('key', 'io_construct.title.' . $item->id)
+                    ->orWhere('key', 'io_construct.filename.' . $item->id)
+                    ->delete();
+            });
+
+        DB::table('io_construct')->whereIn('uri', $ioUriSet)->delete();
     }
 }

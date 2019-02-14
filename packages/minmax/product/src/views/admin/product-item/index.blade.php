@@ -2,6 +2,8 @@
 /**
  * @var \Minmax\Base\Models\Admin $adminData
  * @var \Minmax\Base\Models\AdminMenu $pageData
+ * @var string $importLink
+ * @var string $exportLink
  */
 ?>
 
@@ -13,6 +15,21 @@
         <a class="btn btn-sm btn-main" href="{{ langRoute("admin.{$pageData->uri}.create") }}" title="@lang('MinmaxBase::admin.form.create')">
             <i class="icon-plus2"></i><span class="ml-1 d-none d-md-inline-block">@lang('MinmaxBase::admin.form.create')</span>
         </a>
+        @endif
+        @if(!is_null($importLink) && $adminData->can('ioDataImport'))
+        <a class="btn btn-sm btn-main" href="{{ $importLink }}" title="@lang('MinmaxBase::admin.form.import')">
+            <i class="icon-upload2"></i><span class="ml-1 d-none d-md-inline-block">@lang('MinmaxBase::admin.form.import')</span>
+        </a>
+        @endif
+        @if(!is_null($exportLink) && $adminData->can('ioDataExport'))
+        <a class="btn btn-sm btn-main" href="{{ $exportLink }}" title="@lang('MinmaxBase::admin.form.export')">
+            <i class="icon-download"></i><span class="ml-1 d-none d-md-inline-block">@lang('MinmaxBase::admin.form.export')</span>
+        </a>
+        @endif
+        @if($adminData->can('productItemEdit'))
+        <button id="update-qty" class="btn btn-sm btn-secondary" type="button" title="@lang('MinmaxProduct::admin.form.update_qty')">
+            <i class="icon-loop2"></i><span class="ml-1 d-none d-md-inline-block">@lang('MinmaxProduct::admin.form.update_qty')</span>
+        </button>
         @endif
     @endcomponent
 @endsection
@@ -87,7 +104,7 @@
             columns: [
                 {data: 'pic', name: 'pic'},
                 {data: 'title', name: 'title'},
-                {data: 'qty', name: 'qty'},
+                {data: 'qty', name: 'qty', className: 'text-center'},
                 {data: 'relation', name: 'relation'},
                 {data: 'updated_at', name: 'updated_at', className: 'text-nowrap'},
                 {data: 'active', name: 'active'},
@@ -96,6 +113,34 @@
             order: [
                 [4, 'desc']
             ]
+        });
+
+        $('#update-qty').on('click', function () {
+            var updateSet = {};
+            $('#tableList .inputQty').each(function () {
+                var $this = $(this);
+                if (parseInt($this.val()) !== parseInt($this.attr('data-qty'))) {
+                    updateSet[$this.attr('data-id')] = $this.val();
+                }
+            });
+
+            if (Object.keys(updateSet).length > 0) {
+                $.ajax({
+                    url: '{{ langRoute('admin.product-item.ajaxMultiQty') }}',
+                    data: {data: updateSet},
+                    type: 'PUT', dataType: 'json',
+                    headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+                    success: function () {
+                        $('#tableList').DataTable().draw(false);
+                        swal("@lang('MinmaxProduct::admin.form.ProductItem.messages.qty_success_title')", "@lang('MinmaxProduct::admin.form.ProductItem.messages.qty_success_text')", "success");
+                    },
+                    error: function () {
+                        swal("@lang('MinmaxProduct::admin.form.ProductItem.messages.qty_nothing_title')", "@lang('MinmaxProduct::admin.form.ProductItem.messages.qty_nothing_text')");
+                    }
+                });
+            } else {
+                swal("@lang('MinmaxProduct::admin.form.ProductItem.messages.qty_nothing_title')", "@lang('MinmaxProduct::admin.form.ProductItem.messages.qty_nothing_text')");
+            }
         });
     });
 })(jQuery);

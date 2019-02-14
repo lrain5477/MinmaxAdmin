@@ -2,7 +2,10 @@
 
 namespace Minmax\Product\Admin;
 
+use Illuminate\Http\Request;
 use Minmax\Base\Admin\Controller;
+use Minmax\Base\Helpers\Log as LogHelper;
+use Minmax\Io\Admin\IoConstructRepository;
 
 /**
  * Class ProductItemController
@@ -121,5 +124,55 @@ class ProductItemController extends Controller
         });
 
         return $datatable;
+    }
+
+    protected function setCustomViewDataIndex()
+    {
+        $ioModel = (new IoConstructRepository)->one('uri', 'product-item');
+        $this->viewData['importLink'] = is_null($ioModel) ? null : langRoute('admin.io-data.config', ['id' => $ioModel->id, 'method' => 'import']);
+        $this->viewData['exportLink'] = is_null($ioModel) ? null : langRoute('admin.io-data.config', ['id' => $ioModel->id, 'method' => 'export']);
+    }
+
+    public function ajaxMultiQty(Request $request)
+    {
+        $this->checkPermissionEdit('ajax');
+
+        $validator = validator($request->input(), [
+            'data' => 'required|array|min:1',
+        ]);
+
+        $updatedSet = $request->input('data', []);
+
+        if (!$validator->fails() && count($updatedSet) > 0) {
+            try {
+                \DB::beginTransaction();
+
+                foreach ($updatedSet as $itemId => $itemQty) {
+                    if ($model = $this->modelRepository->find($itemId)) {
+                        $oriQty = $model->qty;
+                        $model->productQuantities()->create([
+                            'amount' => intval($itemQty) - $oriQty,
+                            'remark' => __('MinmaxProduct::admin.form.ProductItem.messages.manual_update_qty'),
+                            'summary' => $itemQty,
+                        ]);
+                        $model->touch();
+                    } else {
+                        throw new \Exception();
+                    }
+                }
+
+                \DB::commit();
+
+                foreach ($updatedSet as $itemId => $itemQty) {
+                    LogHelper::system('admin', $request->path(), $request->method(), $itemId, $this->adminData->username, 1, __('MinmaxBase::admin.form.message.edit_success'));
+                }
+                return response(['msg' => 'success'], 200, ['Content-Type' => 'application/json']);
+            } catch (\Exception $e) {
+                \DB::rollBack();
+            }
+        }
+
+        LogHelper::system('admin', $request->path(), $request->method(), '', $this->adminData->username, 0, __('MinmaxBase::admin.form.message.edit_error'));
+        return response(['msg' => 'error'], 400, ['Content-Type' => 'application/json']);
     }
 }

@@ -46,7 +46,7 @@ $('#tableList')
                 if (result.hasOwnProperty('oriClass')) $this.removeClass(result.oriClass);
                 if (result.hasOwnProperty('newClass')) $this.addClass(result.newClass);
             },
-            complete:function(){$('#tableList').DataTable().draw();}
+            complete:function(){$('#tableList').DataTable().draw(false);}
         });
         return false;
     })
@@ -100,7 +100,7 @@ function updateSort(column, id) {
         url: url, type: 'PATCH', dataType:'json',
         data: {id:id,column:column,index:index},
         headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
-        success:function(){$('#tableList').DataTable().draw();},
+        success:function(){$('#tableList').DataTable().draw(false);},
         error:function(response){console.log(response);}
     });
 }
@@ -133,7 +133,7 @@ function multiSwitch(url, column, status) {
                     data: {selected:checkedSet,column:column,switchTo:status},
                     headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
                     success:function(result) {
-                        $('#tableList').DataTable().draw();
+                        $('#tableList').DataTable().draw(false);
                         swal.close();
                     },
                     error:function(response) {
@@ -177,7 +177,7 @@ function multiDelete(url) {
                     data: {selected:checkedSet},
                     headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
                     success:function(result){
-                        $('#tableList').DataTable().draw();
+                        $('#tableList').DataTable().draw(false);
                         swal.close();
                     },
                     error:function(response){
