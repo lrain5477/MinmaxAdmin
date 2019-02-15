@@ -25,7 +25,7 @@
 
         {!! $modelPresenter->getFieldText($formData, 'label', ['required' => true]) !!}
 
-        {!! $modelPresenter->getFieldText($formData, 'value', ['required' => true, 'hint' => true]) !!}
+        {!! $modelPresenter->getFieldText($formData, 'value', ['size' => 4, 'hint' => true]) !!}
 
         {!! $modelPresenter->getFieldTextarea($formData, 'details', ['subColumn' => 'description']) !!}
 

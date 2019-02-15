@@ -22,7 +22,7 @@ return [
             'editor' => '詳細內容',
         ],
         'cost' => '成本金額',
-        'price' => '安全單價',
+        'price' => '參考單價',
         'qty_enable' => '庫存管理',
         'qty_safety' => '安全庫存',
         'active' => '啟用狀態',

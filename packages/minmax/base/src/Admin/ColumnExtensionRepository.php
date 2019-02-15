@@ -33,6 +33,11 @@ class ColumnExtensionRepository extends Repository
         return 'column_extension';
     }
 
+    /**
+     * @param  string $table
+     * @param  string $column
+     * @return \Illuminate\Database\Eloquent\Collection|ColumnExtension[]
+     */
     public function getFields($table, $column)
     {
         return $this->query()

@@ -381,9 +381,9 @@ class CreateEcommerceTables extends Migration
         $lastExtensionId = DB::table('column_extension')->latest('id')->value('id') ?? 0;
         $columnExtensionData = [
             ['table_name' => 'product_set', 'column_name' => 'ec_parameters', 'sub_column_name' => 'payment_types', 'sort' => 1, 'active' => true,
-                'title' => 'column_extension.title.' . ($lastExtensionId + 1), 'options' => json_encode(['method' => 'getFieldMultiSelect', 'siteParam' => 'payment_type', 'required' => true])],
+                'title' => 'column_extension.title.' . ($lastExtensionId + 1), 'options' => json_encode(['method' => 'getFieldCheckbox', 'siteParam' => 'payment_type', 'required' => true, 'inline' => true])],
             ['table_name' => 'product_set', 'column_name' => 'ec_parameters', 'sub_column_name' => 'delivery_types', 'sort' => 2, 'active' => true,
-                'title' => 'column_extension.title.' . ($lastExtensionId + 2), 'options' => json_encode(['method' => 'getFieldMultiSelect', 'siteParam' => 'delivery_type', 'required' => true])],
+                'title' => 'column_extension.title.' . ($lastExtensionId + 2), 'options' => json_encode(['method' => 'getFieldCheckbox', 'siteParam' => 'delivery_type', 'required' => true, 'inline' => true])],
             ['table_name' => 'product_set', 'column_name' => 'ec_parameters', 'sub_column_name' => 'billing', 'sort' => 3, 'active' => true,
                 'title' => 'column_extension.title.' . ($lastExtensionId + 3), 'options' => json_encode(['method' => 'getFieldRadio', 'siteParam' => 'billing', 'required' => true, 'inline' => true])],
             ['table_name' => 'product_set', 'column_name' => 'ec_parameters', 'sub_column_name' => 'shipping', 'sort' => 4, 'active' => true,
@@ -404,8 +404,8 @@ class CreateEcommerceTables extends Migration
 
         // 多語系
         $columnExtensionLanguage = [
-            ['title' => '付款說明'], ['title' => '運送說明'], ['title' => '金流類型'],
-            ['title' => '物流類型'], ['title' => '無庫存狀態'], ['title' => '加購限定'],
+            ['title' => '金流類型'], ['title' => '物流類型'], ['title' => '付款說明'],
+            ['title' => '運送說明'], ['title' => '無庫存狀態'], ['title' => '加購限定'],
             ['title' => '額外包裝'], ['title' => '可否退貨'], ['title' => '計算紅利'],
         ];
         $languageResourceData = array_merge($languageResourceData, SeederHelper::getLanguageResourceArray('column_extension', $columnExtensionLanguage, 1, $lastExtensionId + 1));

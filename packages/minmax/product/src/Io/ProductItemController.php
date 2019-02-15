@@ -9,6 +9,7 @@ use Minmax\Io\Abstracts\IoController;
 use Minmax\Io\Admin\IoConstructRepository;
 use Minmax\Io\Models\IoRecord;
 use Minmax\Product\Admin\ProductItemRepository;
+use Minmax\World\Admin\WorldCurrencyRepository;
 
 /**
  * Class ProductItemController
@@ -22,6 +23,8 @@ class ProductItemController extends IoController
         $ioData = (new IoConstructRepository)->find($id) ?? abort(404);
 
         $filename = ($ioData->filename ?? $ioData->title) . ' (Sample)';
+
+        $currenciesSet = (new WorldCurrencyRepository)->getSelectParameters('active', true);
 
         $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
 
@@ -47,13 +50,13 @@ class ProductItemController extends IoController
             ->getColumnDimensionByColumn($titleColumnIndex)->setWidth(12);
         $sheet->setCellValueExplicitByColumnAndRow(++$titleColumnIndex, $titleRowIndex, __('MinmaxProduct::models.ProductItem.price'), 's')
             ->getColumnDimensionByColumn($titleColumnIndex)->setWidth(12);
-        $sheet->setCellValueExplicitByColumnAndRow(++$titleColumnIndex, $titleRowIndex, __('MinmaxProduct::models.ProductItem.qty_enable'), 's')
+        $sheet->setCellValueExplicitByColumnAndRow(++$titleColumnIndex, $titleRowIndex, __('MinmaxProduct::models.ProductItem.qty_enable') . ' *', 's')
             ->getColumnDimensionByColumn($titleColumnIndex)->setWidth(10);
         $sheet->setCellValueExplicitByColumnAndRow(++$titleColumnIndex, $titleRowIndex, __('MinmaxProduct::models.ProductItem.qty_safety'), 's')
             ->getColumnDimensionByColumn($titleColumnIndex)->setWidth(10);
         $sheet->setCellValueExplicitByColumnAndRow(++$titleColumnIndex, $titleRowIndex, __('MinmaxProduct::models.ProductItem.qty'), 's')
             ->getColumnDimensionByColumn($titleColumnIndex)->setWidth(10);
-        $sheet->setCellValueExplicitByColumnAndRow(++$titleColumnIndex, $titleRowIndex, __('MinmaxProduct::models.ProductItem.active'), 's')
+        $sheet->setCellValueExplicitByColumnAndRow(++$titleColumnIndex, $titleRowIndex, __('MinmaxProduct::models.ProductItem.active') . ' *', 's')
             ->getColumnDimensionByColumn($titleColumnIndex)->setWidth(10);
 
         $dataColumnIndex = 0;
@@ -77,6 +80,35 @@ class ProductItemController extends IoController
             'font' => ['bold' => true],
             'fill' => ['fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID, 'startColor' => ['rgb' => 'EFEFEF']]
         ]);
+
+        // Use sheet 1
+        $sheet = $spreadsheet->createSheet(1);
+        $sheet->setTitle(__('MinmaxProduct::admin.form.ProductItem.currency'));
+
+        $titleColumnIndex = 0;
+        $titleRowIndex = 1;
+        $sheet->setCellValueExplicitByColumnAndRow(++$titleColumnIndex, $titleRowIndex, __('MinmaxWorld::models.WorldCurrency.code'), 's')
+            ->getColumnDimensionByColumn($titleColumnIndex)->setWidth(20);
+        $sheet->setCellValueExplicitByColumnAndRow(++$titleColumnIndex, $titleRowIndex, __('MinmaxProduct::admin.form.ProductItem.currency'), 's')
+            ->getColumnDimensionByColumn($titleColumnIndex)->setWidth(50);
+
+        $dataColumnIndex = 0;
+        $dataRowIndex = 1;
+        foreach ($currenciesSet as $currencyCode => $currencyData) {
+            $dataColumnIndex = 0;
+            $dataRowIndex++;
+            $sheet->setCellValueExplicitByColumnAndRow(++$dataColumnIndex, $dataRowIndex, $currencyCode, 's');
+            $sheet->setCellValueExplicitByColumnAndRow(++$dataColumnIndex, $dataRowIndex, array_get($currencyData, 'title', ''), 's');
+        }
+
+        // Set sheet style
+        $this->setSheetStyle($sheet, [1, 1, $dataColumnIndex, $dataRowIndex]);
+        $this->setSheetStyle($sheet, [1, 1, $titleColumnIndex, $titleRowIndex], [
+            'font' => ['bold' => true],
+            'fill' => ['fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID, 'startColor' => ['rgb' => 'EFEFEF']]
+        ]);
+
+        $spreadsheet->setActiveSheetIndex(0);
 
         // 寫入檔案並輸出
         $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
