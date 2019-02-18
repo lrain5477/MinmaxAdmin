@@ -63,6 +63,9 @@ class RoleController extends Controller
             }
         });
 
+        $displayNameLanguageSet = collect(langDBSet('roles.display_name.'))->sort()->keys()->implode("','");
+        $datatable->orderColumn('display_name', "field(display_name,'{$displayNameLanguageSet}') $1");
+
         return $datatable;
     }
 }

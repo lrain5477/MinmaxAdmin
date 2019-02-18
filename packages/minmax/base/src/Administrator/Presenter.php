@@ -1141,6 +1141,8 @@ abstract class Presenter
             $hintPath = $this->packagePrefix . "models.{$modelName}.hint.{$column}";
         }
 
+        $fieldValue = is_array($fieldValue) ? $fieldValue : [];
+
         foreach ($fieldValue as $key => $value) {
             if (is_bool($value)) $fieldValue[$key] = intval($value);
         }
@@ -1154,7 +1156,7 @@ abstract class Presenter
             'language' => in_array($column, $this->languageColumns),
             'label' => $fieldLabel,
             'name' => $fieldName,
-            'value' => $fieldValue,
+            'values' => $fieldValue,
             'required' => array_get($options, 'required', false),
             'inline' => array_get($options, 'inline', false),
             'color' => array_get($options, 'color', ''),

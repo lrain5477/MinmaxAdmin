@@ -34,7 +34,7 @@
 <table class="table table-responsive-md table-bordered table-striped table-hover table-checkable datatables" id="tableList">
     <thead>
     <tr role="row">
-        <th class="nosort">@lang('MinmaxBase::models.SiteParameterGroup.title')</th>
+        <th>@lang('MinmaxBase::models.SiteParameterGroup.title')</th>
         <th>@lang('MinmaxBase::models.SiteParameterGroup.code')</th>
         <th>@lang('MinmaxBase::models.SiteParameterGroup.active')</th>
         <th class="nosort">@lang('MinmaxBase::admin.grid.title.action')</th>

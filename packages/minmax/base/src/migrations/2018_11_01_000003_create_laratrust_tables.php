@@ -111,24 +111,20 @@ class CreateLaratrustTables extends Migration
                 'guard' => 'admin', 'name' => 'systemAdmin', 'display_name' => 'roles.display_name.1',
                 'description' => 'roles.description.1', 'created_at' => $timestamp, 'updated_at' => $timestamp
             ],
-            [
-                'guard' => 'admin', 'name' => 'systemEmail', 'display_name' => 'roles.display_name.2',
-                'description' => 'roles.description.2', 'created_at' => $timestamp, 'updated_at' => $timestamp
-            ],
         ];
         DB::table('roles')->insert($rolesData);
 
         $languageResourceData = array_merge($languageResourceData, SeederHelper::getLanguageResourceArray('roles', [
-            ['display_name' => '系統管理員', 'description' => '系統管理員'], ['display_name' => '信件接收', 'description' => '此群組無特別權限，該群組成員可收到系統信。']
+            ['display_name' => '系統管理員', 'description' => '系統管理員']
         ], 1));
         $languageResourceData = array_merge($languageResourceData, SeederHelper::getLanguageResourceArray('roles', [
-            ['display_name' => '系统管理员', 'description' => '系统管理员'], ['display_name' => '信件接收', 'description' => '此群组无特别权限，该群组成员可收到系统信。']
+            ['display_name' => '系统管理员', 'description' => '系统管理员']
         ], 2));
         $languageResourceData = array_merge($languageResourceData, SeederHelper::getLanguageResourceArray('roles', [
-            ['display_name' => 'システム管理者', 'description' => 'システム管理者'], ['display_name' => 'レター受信', 'description' => 'このグループには特別な権限はなく、このグループのメンバーはシステムレターを受け取ることができます。']
+            ['display_name' => 'システム管理者', 'description' => 'システム管理者']
         ], 3));
         $languageResourceData = array_merge($languageResourceData, SeederHelper::getLanguageResourceArray('roles', [
-            ['display_name' => 'System Admin', 'description' => 'System admin manager'], ['display_name' => 'Mail Receiver', 'description' => 'This group without any special permission, members in this group can receive system email.']
+            ['display_name' => 'System Admin', 'description' => 'System admin manager']
         ], 4));
 
         DB::table('language_resource')->insert($languageResourceData);

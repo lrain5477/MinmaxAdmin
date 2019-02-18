@@ -63,6 +63,9 @@ class SiteParameterItemController extends Controller
             }
         });
 
+        $labelLanguageSet = collect(langDBSet('site_parameter_item.label.'))->sort()->keys()->implode("','");
+        $datatable->orderColumn('label', "field(label,'{$labelLanguageSet}') $1");
+
         return $datatable;
     }
 }

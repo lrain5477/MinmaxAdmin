@@ -509,23 +509,35 @@ class CreateProductTables extends Migration
                 'example' => 'controller',
                 'filename' => 'io_construct.filename.' . ($startItemId + 1),
                 'sort' => $startItemId + 1, 'active' => true, 'created_at' => $timestamp, 'updated_at' => $timestamp
-            ]
+            ],
+            [
+                'title' => 'io_construct.title.' . ($startItemId + 2),
+                'uri' => 'product-set',
+                'import_enable' => true,
+                'export_enable' => true,
+                'import_view' => 'MinmaxProduct::admin.product-set.import',
+                'export_view' => 'MinmaxProduct::admin.product-set.export',
+                'controller' => 'Minmax\Product\Io\ProductSetController',
+                'example' => 'controller',
+                'filename' => 'io_construct.filename.' . ($startItemId + 2),
+                'sort' => $startItemId + 2, 'active' => true, 'created_at' => $timestamp, 'updated_at' => $timestamp
+            ],
         ];
 
         DB::table('io_construct')->insert($ioConfigData);
 
         // 多語系
         $languageResourceData = array_merge($languageResourceData, SeederHelper::getLanguageResourceArray('io_construct', [
-            ['title' => '商品管理 - 品項資料', 'filename' => null]
+            ['title' => '商品管理 - 品項資料', 'filename' => null], ['title' => '商品管理 - 商品資料', 'filename' => null]
         ], 1, $startItemId + 1));
         $languageResourceData = array_merge($languageResourceData, SeederHelper::getLanguageResourceArray('io_construct', [
-            ['title' => '商品管理 - 品项资料', 'filename' => null]
+            ['title' => '商品管理 - 品项资料', 'filename' => null], ['title' => '商品管理 - 商品资料', 'filename' => null]
         ], 2, $startItemId + 1));
         $languageResourceData = array_merge($languageResourceData, SeederHelper::getLanguageResourceArray('io_construct', [
-            ['title' => '商品管理 - 項目情報', 'filename' => null]
+            ['title' => '商品管理 - 項目情報', 'filename' => null], ['title' => '商品管理 - 商品情報', 'filename' => null]
         ], 3, $startItemId + 1));
         $languageResourceData = array_merge($languageResourceData, SeederHelper::getLanguageResourceArray('io_construct', [
-            ['title' => 'Product Manage / Item Data', 'filename' => null]
+            ['title' => 'Product Manage / Item Data', 'filename' => null], ['title' => 'Product Manage / Product Data', 'filename' => null]
         ], 4, $startItemId + 1));
 
         DB::table('language_resource')->insert($languageResourceData);

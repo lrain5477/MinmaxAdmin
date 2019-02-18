@@ -257,8 +257,8 @@ class CreateEcommerceTables extends Migration
         $systemGroupData = [
             ['code' => 'payment_type', 'title' => 'site_parameter_group.title.' . $startGroupId++, 'editable' => true],
             ['code' => 'delivery_type', 'title' => 'site_parameter_group.title.' . $startGroupId++, 'editable' => true],
-            ['code' => 'billing', 'title' => 'system_parameter_group.title.' . $startGroupId++, 'editable' => true],
-            ['code' => 'shipping', 'title' => 'system_parameter_group.title.' . $startGroupId++, 'editable' => true],
+            ['code' => 'billing', 'title' => 'site_parameter_group.title.' . $startGroupId++, 'editable' => true],
+            ['code' => 'shipping', 'title' => 'site_parameter_group.title.' . $startGroupId++, 'editable' => true],
         ];
 
         DB::table('site_parameter_group')->insert($systemGroupData);

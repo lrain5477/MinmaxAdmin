@@ -2,6 +2,8 @@
 
 namespace Minmax\Base\Admin;
 
+use Illuminate\Support\Facades\DB;
+
 /**
  * Class SiteParameterGroupController
  */
@@ -19,7 +21,7 @@ class SiteParameterGroupController extends Controller
     /**
      * Set datatable filter.
      *
-     * @param  mixed $datatable
+     * @param  \Yajra\DataTables\EloquentDataTable $datatable
      * @param  \Illuminate\Http\Request $request
      * @return mixed
      */
@@ -62,6 +64,9 @@ class SiteParameterGroupController extends Controller
                 }
             }
         });
+
+        $titleLanguageSet = collect(langDBSet('site_parameter_group.title.'))->sort()->keys()->implode("','");
+        $datatable->orderColumn('title', "field(title,'{$titleLanguageSet}') $1");
 
         return $datatable;
     }

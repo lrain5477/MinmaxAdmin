@@ -4,7 +4,7 @@
  * @var boolean $language
  * @var string $label
  * @var string $name
- * @var array $value
+ * @var array $values
  * @var array $listData
  *
  * Options
@@ -28,7 +28,7 @@
                    id="{{ $id }}-{{ $listKey }}"
                    name="{{ $name }}"
                    value="{{ $listKey }}"
-                   {{ in_array($listKey, $value) ? 'checked' : '' }}
+                   {{ in_array($listKey, $values) ? 'checked' : '' }}
                    {{ $required === true && $loop->first ? 'required' : '' }} />
             <label class="custom-control-label" for="{{ $id }}-{{ $listKey }}">{{ $listItem['title'] ?? '' }}</label>
         </div>

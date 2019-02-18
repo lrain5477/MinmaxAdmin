@@ -37,7 +37,7 @@
     <tr role="row">
         <th class="w-15">@lang('MinmaxBase::models.Role.guard')</th>
         <th class="w-20">@lang('MinmaxBase::models.Role.name')</th>
-        <th class="w-25 nosort">@lang('MinmaxBase::models.Role.display_name')</th>
+        <th class="w-25">@lang('MinmaxBase::models.Role.display_name')</th>
         <th>@lang('MinmaxBase::models.Role.active')</th>
         <th class="nosort">@lang('MinmaxBase::admin.grid.title.action')</th>
     </tr>

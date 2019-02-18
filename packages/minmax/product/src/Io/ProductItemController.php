@@ -164,7 +164,7 @@ class ProductItemController extends IoController
             }
 
             if (empty($rowData[2] ?? '')) {
-                $errorRecord[] = ['row' => $rowIndex, 'message' => __('validation.required', ['attribute' => __('MinmaxProduct::models.ProductItem.sku')])];
+                $errorRecord[] = ['row' => $rowIndex, 'message' => __('validation.required', ['attribute' => __('MinmaxProduct::models.ProductItem.title')])];
                 $errorCounter++;
             }
 

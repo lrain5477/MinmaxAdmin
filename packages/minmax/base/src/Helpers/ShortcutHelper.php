@@ -60,13 +60,10 @@ if (! function_exists('langId')) {
         /** @var array $langMap */
         $langMap = Cache::rememberForever('langId', function() {
             try {
-                $langTable = DB::table('world_language')
-                    ->where('active', '1')
+                return DB::table('world_language')
+                    ->where('active', 1)
                     ->orderBy('sort')
-                    ->select(['id', 'code'])
-                    ->get();
-                return $langTable
-                    ->mapWithKeys(function ($item) { return [$item->code => $item->id]; })
+                    ->pluck('id', 'code')
                     ->toArray();
             } catch (\Exception $e) {
                 return [];
@@ -95,13 +92,10 @@ if (! function_exists('langDB')) {
         /** @var array $langMap */
         $langMap = Cache::rememberForever("langMap.{$langKey}", function() use ($langKey) {
             try {
-                $langTable = DB::table('language_resource')
+                return DB::table('language_resource')
                     ->where('language_id', langId($langKey))
                     ->orderBy('key')
-                    ->select(['key', 'text'])
-                    ->get();
-                return $langTable
-                    ->mapWithKeys(function ($item) { return [$item->key => $item->text]; })
+                    ->pluck('text', 'key')
                     ->toArray();
             } catch (\Exception $e) {
                 return [];
@@ -109,6 +103,41 @@ if (! function_exists('langDB')) {
         });
 
         return $langMap[$key] ?? ($showKey ? $key : null);
+    }
+}
+
+if (! function_exists('langDBSet')) {
+    /**
+     * Get a local content set from database via key.
+     *
+     * @param  string  $key
+     * @param  string  $langKey
+     * @return array|string[]
+     */
+    function langDBSet($key, $langKey = null)
+    {
+        $langKey = $langKey ?? app()->getLocale();
+
+        if (config('app.env') != 'production') Cache::forget("langMap.{$langKey}");
+
+        /** @var array $langMap */
+        $langMap = Cache::rememberForever("langMap.{$langKey}", function() use ($langKey) {
+            try {
+                return DB::table('language_resource')
+                    ->where('language_id', langId($langKey))
+                    ->orderBy('key')
+                    ->pluck('text', 'key')
+                    ->toArray();
+            } catch (\Exception $e) {
+                return [];
+            }
+        });
+
+        return collect($langMap)
+            ->filter(function ($text, $textKey) use ($key) {
+                return preg_match("/^{$key}/i", $textKey) === 1;
+            })
+            ->toArray();
     }
 }
 

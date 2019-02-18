@@ -36,7 +36,7 @@
     <thead>
     <tr role="row">
         <th>@lang('MinmaxBase::models.SiteParameterItem.group_id')</th>
-        <th class="nosort">@lang('MinmaxBase::models.SiteParameterItem.label')</th>
+        <th>@lang('MinmaxBase::models.SiteParameterItem.label')</th>
         <th>@lang('MinmaxBase::models.SiteParameterItem.value')</th>
         <th>@lang('MinmaxBase::models.SiteParameterItem.sort')</th>
         <th>@lang('MinmaxBase::models.SiteParameterItem.active')</th>
