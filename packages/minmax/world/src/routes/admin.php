@@ -14,11 +14,10 @@
 Route::group([
     'prefix' => LaravelLocalization::setLocale(),
     'middleware' => ['admin', 'localizationRedirect'],
-    'namespace' => 'Minmax\World\Admin',
     'as' => 'admin.' . app()->getLocale() . '.'
 ], function() {
 
-    Route::group(['prefix' => 'siteadmin', 'middleware' => 'auth:admin'], function () {
+    Route::group(['prefix' => 'siteadmin', 'namespace' => 'Minmax\World\Admin', 'middleware' => 'auth:admin'], function () {
         /*
          |--------------------------------------------------------------------------
          | 需要登入的路由。

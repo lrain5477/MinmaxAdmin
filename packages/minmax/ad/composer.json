@@ -1,0 +1,26 @@
+{
+    "name": "minmax/ad",
+    "description": "Advertising management",
+    "type": "library",
+    "authors": [
+        {
+            "name": "Jeffy",
+            "email": "jeffy@e-creative.tw"
+        }
+    ],
+    "require": {
+        "minmax/base": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "Minmax\\Ad\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Minmax\\Ad\\ServiceProvider"
+            ]
+        }
+    }
+}

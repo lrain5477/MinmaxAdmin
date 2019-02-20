@@ -18,6 +18,12 @@
 {{-- * * * bootstrap-sweetalert 彈跳訊息視窗 --}}
 <script src="{{ asset('static/modules/sweetalert/sweetalert.min.js') }}"></script>
 <script src="{{ asset('static/modules/sweetalert/ui-sweetalert.min.js') }}"></script>
+<script>
+var sweetAlertLanguage;
+jQuery.getJSON('{{ asset('static/admin/js/lang/' . app()->getLocale() . '/sweet_alert.json') }}', function(data) {
+    sweetAlertLanguage = data;
+});
+</script>
 {{-- * * * bootstrap-tabdrop 切換tab下拉選單 --}}
 <script src="{{ asset('static/modules/tabdrop/js/bootstrap-tabdrop.js') }}"></script>
 {{-- * / js--}}
@@ -48,7 +54,7 @@
 {{-- * * * inputmask 表單格式 --}}
 <script src="{{ asset('static/modules/inputmask/jquery.inputmask.bundle.min.js') }}"></script>
 {{-- * * * elFinder 檔案管理 --}}
-<script src="{{ asset('static/modules/elFinder/js/elfinder.full.js') }}"></script>
+<script src="{{ asset('static/modules/elFinder/js/elfinder.min.js') }}"></script>
 @switch(app()->getLocale())
     @case('zh-Hant')
     <script src="{{ asset('static/modules/elFinder/js/i18n/elfinder.zh_TW.js') }}"></script>
@@ -68,6 +74,8 @@
 {{-- * * * Jcrop Image Cropping Plugin 圖片座標截圖 --}}
 <script src="{{ asset('static/modules/jcrop/jquery.Jcrop.min.js') }}"></script>
 <script src="{{ asset('static/modules/jcrop/jquery.color.js') }}"></script>
+<!-- * * * bootstrap-tagsinput 標籤-->
+<script src="{{ asset('static/modules/bootstrap-tagsinput/bootstrap4-tagsinput.js') }}"></script>
 {{-- * / layout-js--}}
 
 <script src="{{ asset('static/modules/highlight/highlight.min.js') }}"></script>

@@ -179,6 +179,8 @@ abstract class Presenter
                     'parameter' => $parameter,
                 ])
                 ->render();
+        } catch (\Exception $e) {
+            return '';
         } catch (\Throwable $e) {
             return '';
         }
@@ -209,6 +211,8 @@ abstract class Presenter
                     'size' => array_get($options, 'size', 120),
                 ])
                 ->render();
+        } catch (\Exception $e) {
+            return '';
         } catch (\Throwable $e) {
             return '';
         }
@@ -227,6 +231,8 @@ abstract class Presenter
                     'id' => $id
                 ])
                 ->render();
+        } catch (\Exception $e) {
+            return '';
         } catch (\Throwable $e) {
             return '';
         }
@@ -256,6 +262,8 @@ abstract class Presenter
                     'uri' => $this->uri,
                 ])
                 ->render();
+        } catch (\Exception $e) {
+            return '';
         } catch (\Throwable $e) {
             return '';
         }
@@ -289,6 +297,8 @@ abstract class Presenter
                     'parameter' => $parameter,
                 ])
                 ->render();
+        } catch (\Exception $e) {
+            return '';
         } catch (\Throwable $e) {
             return '';
         }
@@ -315,6 +325,8 @@ abstract class Presenter
             }
 
             $result .= view('MinmaxBase::administrator.layouts.grid.action-button-destroy', ['id' => $id, 'uri' => $this->uri])->render();
+        } catch (\Exception $e) {
+            return '';
         } catch (\Throwable $e) {
             $result = '';
         }
@@ -335,10 +347,12 @@ abstract class Presenter
                     'name' => $name,
                     'column' => $column,
                     'emptyLabel' => array_get($options, 'emptyLabel', 'All'),
-                    'parameters' => array_get($this->parameterSet, $column),
+                    'parameters' => array_get($this->parameterSet, $column, []),
                     'current' => array_get($options, 'current', ''),
                 ])
                 ->render();
+        } catch (\Exception $e) {
+            return '';
         } catch (\Throwable $e) {
             return '';
         }

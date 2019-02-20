@@ -134,6 +134,7 @@ function multiSwitch(url, column, status) {
                     headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
                     success:function(result) {
                         $('#tableList').DataTable().draw(false);
+                        $('#tableList .group-checkable').prop('checked', false);
                         swal.close();
                     },
                     error:function(response) {
@@ -178,6 +179,7 @@ function multiDelete(url) {
                     headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
                     success:function(result){
                         $('#tableList').DataTable().draw(false);
+                        $('#tableList .group-checkable').prop('checked', false);
                         swal.close();
                     },
                     error:function(response){

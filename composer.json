@@ -42,6 +42,7 @@
             "App\\": "app/",
             "Minmax\\Base\\": "packages/minmax/base/src/",
             "Minmax\\Io\\": "packages/minmax/io/src/",
+            "Minmax\\Ad\\": "packages/minmax/ad/src/",
             "Minmax\\World\\": "packages/minmax/world/src/",
             "Minmax\\Notify\\": "packages/minmax/notify/src/",
             "Minmax\\Member\\": "packages/minmax/member/src/",

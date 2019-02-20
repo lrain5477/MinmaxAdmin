@@ -6,6 +6,17 @@
 <div class="float-right">
     {{ $slot }}
 
+    @if(isset($batchActions) && trim($batchActions) != '')
+    <div class="btn-group btn-group-sm dropdown" role="group">
+        <button class="btn dropdown-toggle btn-main" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="@lang('MinmaxBase::administrator.grid.batch')" id="tableAction">
+            <i class="icon-hammer"></i><span class="ml-1 d-none d-md-inline-block">@lang('MinmaxBase::administrator.grid.batch')</span>
+        </button>
+        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="tableAction">
+            {{ $batchActions }}
+        </div>
+    </div>
+    @endif
+
     @if(isset($languageActive) && $languageActive->count() > 1)
     <div class="btn-group btn-group-sm dropdown" role="group">
         <button class="btn dropdown-toggle btn-secondary" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="@lang('MinmaxBase::administrator.form.language')" id="tableLen">

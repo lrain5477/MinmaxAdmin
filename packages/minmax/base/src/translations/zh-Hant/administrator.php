@@ -92,6 +92,7 @@ return [
             'all' => '全部',
         ],
         'back' => '返回',
+        'batch' => '批次',
         'root' => '根列表',
         'next_layer' => '下層列表',
         'click_to_switch' => '點選變更狀態',

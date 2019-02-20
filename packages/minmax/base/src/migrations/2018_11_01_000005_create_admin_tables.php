@@ -86,15 +86,11 @@ class CreateAdminTables extends Migration
 
         // 新增權限角色-帳號對應 (admin)
         if ($adminModel = \Minmax\Base\Models\Admin::query()->where('username', 'admin')->first()) {
-            $adminModel->attachRoles([1, 2]);
+            $adminModel->attachRoles([1]);
         }
 
         // 建立權限物件
         $permissionsData = [];
-        //$permissionsData = array_merge($permissionsData, SeederHelper::getPermissionArray('admin', 'newsletterSchedule', '電子報管理'));
-        //$permissionsData = array_merge($permissionsData, SeederHelper::getPermissionArray('admin', 'newsletterTemplate', '電子報範本'));
-        //$permissionsData = array_merge($permissionsData, SeederHelper::getPermissionArray('admin', 'newsletterSubscribe', '電子報名單', ['R', 'D']));
-        //$permissionsData = array_merge($permissionsData, SeederHelper::getPermissionArray('admin', 'newsletterGroup', '電子報類別'));
         $permissionsData[] = [
             'guard' => 'admin', 'group' => 'system',
             'name' => 'systemUpload', 'label' => '上傳', 'display_name' => '系統操作 [上傳]', 'description' => '系統操作 [上傳]',
