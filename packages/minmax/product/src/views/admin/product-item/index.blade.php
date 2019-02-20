@@ -113,7 +113,29 @@
             order: [
                 [4, 'desc']
             ]
-        });
+        })
+            .on('click', '.update-qty', function () {
+                var $this = $(this);
+                var $input = $this.siblings('.inputQty');
+
+                if (parseInt($input.val()) === parseInt($input.attr('data-qty'))) {
+                    swal("@lang('MinmaxProduct::admin.form.ProductItem.messages.qty_no_change_title')", "@lang('MinmaxProduct::admin.form.ProductItem.messages.qty_no_change_text')");
+                } else {
+                    $.ajax({
+                        url: '{{ langRoute('admin.product-item.ajaxQty') }}',
+                        data: {id: $input.attr('data-id'), qty: parseInt($input.val())},
+                        type: 'PATCH', dataType: 'json',
+                        headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+                        success: function () {
+                            $('#tableList').DataTable().draw(false);
+                            swal("@lang('MinmaxProduct::admin.form.ProductItem.messages.qty_success_title')", "@lang('MinmaxProduct::admin.form.ProductItem.messages.qty_success_text')", "success");
+                        },
+                        error: function () {
+                            swal("@lang('MinmaxProduct::admin.form.ProductItem.messages.qty_nothing_title')", "@lang('MinmaxProduct::admin.form.ProductItem.messages.qty_nothing_text')");
+                        }
+                    });
+                }
+            });
 
         $('#update-qty').on('click', function () {
             var updateSet = {};

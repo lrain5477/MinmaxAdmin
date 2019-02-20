@@ -11,8 +11,8 @@ var width = $(window).width();
 var $mobileW = 1199;
 
 /*--------------------------------------------
-       		卷軸
----------------------------------------------*/
+ 卷軸
+ ---------------------------------------------*/
 $('.nicescroll-bar').each(function() {
     $(this).slimscroll({
         height: '100%',
@@ -24,7 +24,7 @@ $('.nicescroll-bar').each(function() {
     });
 });
 
-/* 行動版本預設選單關閉 */
+/** 行動版本預設選單關閉 **/
 if (width < $mobileW) {
     $wrapper.addClass('slide-nav-close');
 }
@@ -32,7 +32,7 @@ if (width < $mobileW) {
 var minmax = function() {
 
     /*--------------------------------------------
-       		textarea 自動增高
+     Textarea 自動增高
      ---------------------------------------------*/
     $("textarea.autoHeight").each(function() {
         $(this).css("overflow", "hidden").bind("keydown keyup", function() {
@@ -41,7 +41,7 @@ var minmax = function() {
     });
 
     /*--------------------------------------------
-       		內容最小高度
+     內容最小高度
      ---------------------------------------------*/
     var contentBodyH = function() {
         var h = $(window).outerHeight();
@@ -62,15 +62,15 @@ var minmax = function() {
     contentBodyH();
 
     /*--------------------------------------------
-       		左側主選單開閉
+     左側主選單開閉
      ---------------------------------------------*/
-    $(document).on('click', '#toggle_nav_btn', function(e) {
+    $(document).on('click', '#toggle_nav_btn', function() {
         $wrapper.toggleClass('slide-nav-close');
         return false;
     });
 
     /*--------------------------------------------
-       		選單螢幕自動關閉開啟
+     選單螢幕自動關閉開啟
      ---------------------------------------------*/
     var navCloseAuto = function() {
         var width = $(window).width();
@@ -95,30 +95,32 @@ var minmax = function() {
     });
 
     /*--------------------------------------------
-       		側選單自動打開
+     側選單自動打開
      ---------------------------------------------*/
-    $(document).on('click', '.fixed-sidebar-left a[data-toggle="collapse"]', function(e) {
+    $(document).on('click', '.fixed-sidebar-left a[data-toggle="collapse"]', function() {
         if ($(".slide-nav-close").length > 0) {
             $wrapper.removeClass('slide-nav-close');
         }
     });
+
     /*--------------------------------------------
-       		imgLiquid.js  圖片縮圖
+     imgLiquid.js  圖片縮圖
      ---------------------------------------------*/
     $(".imgFill").each(function() {
         $(this).imgLiquid();
     });
+
     /*--------------------------------------------
-       		拖曳排序
+     拖曳排序
      ---------------------------------------------*/
      $(".file-img-list").each(function() {
         $(this).sortable();
         $(this).disableSelection();
     });
+
     /*--------------------------------------------
-       		圖片輪播
+     圖片輪播
      ---------------------------------------------*/
-    
     $(".swiper-fade").each(function() {
         var swiper = new Swiper('.swiper-fade', {
             autoplay: {
@@ -128,26 +130,29 @@ var minmax = function() {
               speed:1000
         });
     });
+
     /*--------------------------------------------
-       		代碼顏色
-    ---------------------------------------------*/
+     代碼顏色
+     ---------------------------------------------*/
     hljs.initHighlightingOnLoad();
+
     /*--------------------------------------------
-       		bootstrap-Tooltips 提示
-    ---------------------------------------------*/
+     bootstrap-tooltips 提示
+     ---------------------------------------------*/
     $('[data-toggle="tooltip"]').each(function () {
         $(this).tooltip();
     });
 
     /*--------------------------------------------
-            bootstrap-popover 提示
-    ---------------------------------------------*/
+     bootstrap-popover 提示
+     ---------------------------------------------*/
     $('[data-toggle="popover"]').each(function () {
         $(this).popover();
     });
+
     /*--------------------------------------------
-            顯示code
-    ---------------------------------------------*/
+     顯示code
+     ---------------------------------------------*/
     $('.highlight').each(function () {
         $(this).hide();
     });

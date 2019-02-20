@@ -43,6 +43,10 @@ return [
             'all_market' => '所有賣場',
             'title' => '商品名稱',
         ],
+        'ProductCategory' => [
+            'set_amount' => '商品數',
+            'sub_amount' => '子類數',
+        ],
     ],
 
     'form' => [
@@ -62,6 +66,8 @@ return [
                 'qty_success_text' => '您已成功更新庫存。',
                 'qty_nothing_title' => '庫存未更新',
                 'qty_nothing_text' => '沒有任何項目的庫存更新。',
+                'qty_no_change_title' => '庫存未更新',
+                'qty_no_change_text' => '您並沒有更動庫存數量，無法更新。',
             ],
         ],
         'ProductSet' => [

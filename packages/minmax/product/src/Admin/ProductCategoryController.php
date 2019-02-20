@@ -48,9 +48,9 @@ class ProductCategoryController extends Controller
     protected function getQueryBuilder()
     {
         if ($parent_id = request('parent')) {
-            return parent::getQueryBuilder()->where('parent_id', $parent_id);
+            return parent::getQueryBuilder()->with(['productSets'])->where('parent_id', $parent_id);
         } else {
-            return parent::getQueryBuilder()->whereNull('parent_id');
+            return parent::getQueryBuilder()->with(['productSets'])->whereNull('parent_id');
         }
     }
 

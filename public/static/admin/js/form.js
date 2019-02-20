@@ -1,33 +1,39 @@
 $(document).ready(function () {
 
     /*--------------------------------------------
-           		Form Bootstrap-Select.js  下拉搜尋
+     Form Bootstrap-Select.js  下拉搜尋
      ---------------------------------------------*/
     $('.bs-select').each(function () {
+        $.fn.selectpicker.defaults = {
+            multipleSeparator: ', ',
+            style:'btn-outline-light',
+            iconBase: '',
+            tickIcon: 'icon-checkmark2',
+        };
         $(this).selectpicker();
     });
 
     /*--------------------------------------------
-           		Form select2.js  下拉搜尋
+     Form select2.js  下拉搜尋
      ---------------------------------------------*/
-    /**基本下拉 */
+    /** 基本下拉 **/
     $('.seclet2').each(function () {
         $(this).select2();
     });
-    /**無搜尋匡 */
+    /** 無搜尋匡 **/
     $('.seclet2-hide-search').each(function () {
         $(this).select2({
             minimumResultsForSearch: 1 / 0
         });
     });
-    /**可清除選取 */
+    /** 可清除選取 **/
     $('.seclet2-placeholder').each(function () {
         $(this).select2({
             placeholder: "Select a state",
             allowClear: !0
         });
     });
-    /**限定數量選取 */
+    /** 限定數量選取 **/
     $('.seclet2-length').each(function () {
         var $num = $(this).attr("size");
         var $text = $(this).attr("title");
@@ -48,10 +54,9 @@ $(document).ready(function () {
     });
 
     /*--------------------------------------------
-              		Form multiselect.js  左右複選
-    ---------------------------------------------*/
+     Form multiselect.js  左右複選
+     --------------------------------------------*/
     $('.multiSelect').each(function () {
-
         $(this).multiSelect({
             selectableOptgroup: true,
             selectableHeader: "<input type='text' class='form-control search-input' autocomplete='off' placeholder='search...'>",
@@ -62,7 +67,6 @@ $(document).ready(function () {
                     $selectionSearch = that.$selectionUl.prev(),
                     selectableSearchString = '#' + that.$container.attr('id') + ' .ms-elem-selectable:not(.ms-selected)',
                     selectionSearchString = '#' + that.$container.attr('id') + ' .ms-elem-selection.ms-selected';
-
                 that.qs1 = $selectableSearch.quicksearch(selectableSearchString)
                     .on('keydown', function (e) {
                         if (e.which === 40) {
@@ -70,15 +74,13 @@ $(document).ready(function () {
                             return false;
                         }
                     });
-
                 that.qs2 = $selectionSearch.quicksearch(selectionSearchString)
                     .on('keydown', function (e) {
-                        if (e.which == 40) {
+                        if (e.which === 40) {
                             that.$selectionUl.focus();
                             return false;
                         }
                     });
-
             },
             afterSelect: function () {
                 this.qs1.cache();
@@ -91,24 +93,26 @@ $(document).ready(function () {
         });
     });
     $('.select-all').click(function () {
-        $thisSelect = $(this).parent().prev().prev();
+        var $thisSelect = $(this).parent().prev().prev();
         $thisSelect.multiSelect('select_all');
         return false;
     });
     $('.deselect-all').click(function () {
-        $thisSelect = $(this).parent().prev().prev();
+        var $thisSelect = $(this).parent().prev().prev();
         $thisSelect.multiSelect('deselect_all');
         return false;
     });
+
     /*--------------------------------------------
-         Form inputmask.bundle.min.js  欄位格式
-    ---------------------------------------------*/
+     Form inputmask.bundle.min.js  欄位格式
+     --------------------------------------------*/
     $(":input[data-inputmask]").each(function () {
         $(this).inputmask();
     });
+
     /*--------------------------------------------
-             Form repeater 欄位增加
-        ---------------------------------------------*/
+     Form repeater 欄位增加
+     --------------------------------------------*/
     $(".repeater").each(function () {
         $(this).repeater({
             show: function () {
@@ -123,9 +127,9 @@ $(document).ready(function () {
     });
 
     /*--------------------------------------------
-                 Form daterangepicker 日期區間
-    ---------------------------------------------*/
-    /**單一日期 */
+     Form daterangepicker 日期區間
+     --------------------------------------------*/
+    /** 單一日期 **/
     $('.datepicker-birthdate').each(function () {
         $(this).daterangepicker({
             singleDatePicker: true,
@@ -145,7 +149,7 @@ $(document).ready(function () {
             $(this).val('');
         });
     });
-    /**單一日期+時間 */
+    /** 單一日期+時間 **/
     $('.datepicker-birthdateTime').each(function () {
         $(this).daterangepicker({
             autoUpdateInput: false,
@@ -166,7 +170,7 @@ $(document).ready(function () {
             $(this).val('');
         });
     });
-    /**常用區間下拉 */
+    /** 常用區間下拉 **/
     $('.datepicker-reportrange').each(function () {
         var start = moment().subtract(29, 'days');
         var end = moment();
@@ -202,7 +206,7 @@ $(document).ready(function () {
             $(this).val('');
         });
     });
-    /**日期區間 */
+    /** 日期區間 **/
     $('.datepicker-datefilter').each(function () {
         $(this).daterangepicker({
             autoUpdateInput: false,
@@ -223,7 +227,7 @@ $(document).ready(function () {
         });
     });
 
-    /**日期區間+時間 */
+    /** 日期區間+時間 **/
     $('.datepicker-timepicker').each(function () {
         $(this).daterangepicker({
             timePicker: true,
@@ -241,7 +245,7 @@ $(document).ready(function () {
             $(this).val('');
         });
     });
-    /**限制區間固定天數 */
+    /** 限制區間固定天數 **/
     $('.datepicker-limit').each(function () {
         var $minDate = $(this).attr("minDate");
         var $maxDate = $(this).attr("maxDate");
@@ -268,10 +272,11 @@ $(document).ready(function () {
             $(this).val('');
         });
     });
+
     /*--------------------------------------------
-           bootstrap-colorpicker 顏色點選
-    ---------------------------------------------*/
-    /**顏色切換 */
+     bootstrap-colorpicker 顏色點選
+     --------------------------------------------*/
+    /** 顏色切換 **/
     $('.colorpicker-component').each(function () {
         $(this).colorpicker({
             format: 'rgba',
@@ -291,7 +296,7 @@ $(document).ready(function () {
         });
     });
 
-    /**更改背景顏色 */
+    /** 更改背景顏色 **/
     $('.colorpicker-changebg').each(function () {
         var $dateName = $(this).attr("dateName");
         $(this).colorpicker({
@@ -315,7 +320,8 @@ $(document).ready(function () {
                 'rgba');
         });
     });
-    /**更改文字顏色 */
+
+    /** 更改文字顏色 **/
     $('.colorpicker-changefont').each(function () {
         var $dateName = $(this).attr("dateName");
         $(this).colorpicker({
@@ -338,9 +344,10 @@ $(document).ready(function () {
             $($dateName)[0].style.color = e.color.toString('rgba');
         });
     });
+
     /*--------------------------------------------
-           nestable 拖曳排序
-    ---------------------------------------------*/
+     nestable 拖曳排序
+     --------------------------------------------*/
     $('.nestable').each(function () {
         $(this).nestable();
     });

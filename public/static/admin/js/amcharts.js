@@ -1,8 +1,7 @@
 /*--------------------------------------------
             訂單統計
 ---------------------------------------------*/
-var chart = AmCharts.makeChart("orderTotal", {
-    "theme": "light",
+var chart1 = AmCharts.makeChart("orderTotal", {
     "type": "serial",
     "theme": "light",
     "titles": [{
@@ -16,9 +15,7 @@ var chart = AmCharts.makeChart("orderTotal", {
         "showErrors": true,
         "noStyles": true,
         "async": true,
-
     },
-
     "valueAxes": [{
         "gridColor": "#878787",
         "gridAlpha": 0.2,
@@ -73,16 +70,12 @@ var chart3 = AmCharts.makeChart("statisticsReview", {
         "bold": true,
         "size": 20,
     }],
-
     "autoMarginOffset": 20,
-
     "dataDateFormat": "YYYY-MM-DD",
     "valueAxes": [{
         "id": "v1",
         "axisAlpha": 0,
-
     }],
-
     "graphs": [{
         "id": "g1",
         "balloon":{
@@ -101,7 +94,6 @@ var chart3 = AmCharts.makeChart("statisticsReview", {
         "valueField": "value",
         "balloonText": "<span style='font-size:18px;'>[[value]]</span>"
     }],
-
     "chartCursor": {
         "pan": true,
         "valueLineEnabled": true,
@@ -112,14 +104,12 @@ var chart3 = AmCharts.makeChart("statisticsReview", {
         "valueLineAlpha":0.2,
 
     },
-
     "categoryField": "date",
     "categoryAxis": {
         "parseDates": true,
         "dashLength": 1,
         "minorGridEnabled": true
     },
-
     "dataLoader": {
         "url": "data/demo-order-review.json",
         "format": "json",
@@ -127,13 +117,11 @@ var chart3 = AmCharts.makeChart("statisticsReview", {
         "noStyles": true,
         "async": true,
     }
-
 });
 /*--------------------------------------------
             客服統計
 ---------------------------------------------*/
 var chart = AmCharts.makeChart("statisticsContact", {
-    "theme": "light",
     "type": "serial",
     "theme": "light",
     "titles": [{
@@ -147,7 +135,6 @@ var chart = AmCharts.makeChart("statisticsContact", {
         "showErrors": true,
         "noStyles": true,
         "async": true,
-
     },
     "valueAxes": [{
         "gridColor": "#878787",
@@ -210,7 +197,6 @@ var chart = AmCharts.makeChart("statisticsContact", {
 //         "showErrors": true,
 //         "noStyles": true,
 //         "async": true,
-//
 //     },
 //     "valueAxes": [{
 //         "position": "left",
@@ -240,7 +226,6 @@ var chart = AmCharts.makeChart("statisticsContact", {
 //     "export": {
 //         "enabled": true
 //     }
-//
 // });
 
 
@@ -255,16 +240,12 @@ var chart4 = AmCharts.makeChart("statisticsNewMembers", {
         "bold": true,
         "size": 20,
     }],
-
     "autoMarginOffset": 20,
-
     "dataDateFormat": "YYYY-MM-DD",
     "valueAxes": [{
         "id": "v1",
         "axisAlpha": 0,
-
     }],
-
     "graphs": [{
         "balloonText": "新增：[[value]]",
         "bullet": "round",
@@ -281,7 +262,6 @@ var chart4 = AmCharts.makeChart("statisticsNewMembers", {
         "fillAlphas": 0,
         "valueField": "orderTotla",
         "valueAxis": "latitudeAxis"
-
     },{
         "id": "g2",
         "balloonText": "首購：[[value]]",
@@ -300,7 +280,6 @@ var chart4 = AmCharts.makeChart("statisticsNewMembers", {
         "valueField": "returnTotla",
         "valueAxis": "latitudeAxis"
     }],
-
     "chartCursor": {
         "pan": true,
         "valueLineEnabled": true,
@@ -311,7 +290,6 @@ var chart4 = AmCharts.makeChart("statisticsNewMembers", {
         "valueLineAlpha":0.2,
 
     },
-
     "categoryField": "month",
     "categoryAxis": {
         "gridPosition": "start",
@@ -327,7 +305,6 @@ var chart4 = AmCharts.makeChart("statisticsNewMembers", {
         "noStyles": true,
         "async": true,
     }
-
 });
 
 /*--------------------------------------------
@@ -347,7 +324,6 @@ var chart4 = AmCharts.makeChart("statisticsNewMembers", {
 //             "showErrors": true,
 //             "noStyles": true,
 //             "async": true,
-
 //         },
 //         "legend": {
 //             "autoMargins": false,
@@ -411,7 +387,6 @@ var chart4 = AmCharts.makeChart("statisticsNewMembers", {
 //         "export": {
 //             "enabled": true
 //          }
-
 // });
 /*--------------------------------------------
             訂單統計 - 分類直條
@@ -431,7 +406,6 @@ var chart4 = AmCharts.makeChart("statisticsNewMembers", {
 //         "showErrors": true,
 //         "noStyles": true,
 //         "async": true,
-//
 //     },
 //     "legend": {
 //         "autoMargins": false,

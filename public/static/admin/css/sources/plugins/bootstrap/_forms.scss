@@ -1,6 +1,28 @@
 select.form-control-sm {
-
     @include media-breakpoint-down(lg) {
       min-width: 80px;
     }
+}
+.col-form-label {
+  @include media-breakpoint-up(sm) {
+    padding-left: 38px;
+  }
+}
+.form-group.len{
+  .col-form-label{
+    position: relative;
+  }
+  .col-form-label::before{
+    font-family: 'icomoon';
+    content: "\e944";
+    opacity: 0.2;
+    position: absolute;
+    left:20px;
+    top:19px;
+    transform: translateX(-50%) translateY(-50%);
+    @include media-breakpoint-down(xs) {
+      left:inherit;
+      right:15px;
+    }
+  }
 }

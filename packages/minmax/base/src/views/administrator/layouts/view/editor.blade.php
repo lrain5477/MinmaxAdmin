@@ -11,11 +11,8 @@
  * @var string $stylesheet
  */
 ?>
-<div class="form-group row">
-    <label class="col-sm-2 col-form-label" for="{{ $id }}">
-        @if($language)<i class="icon-globe"></i>@endif
-        {{ $label }}
-    </label>
+<div class="form-group row {{ $language ? 'len' : '' }}">
+    <label class="col-sm-2 col-form-label" for="{{ $id }}">{{ $label }}</label>
     <div class="col-sm-{{ $size }}">
         <textarea class="form-control" id="{{ $id }}">{{ $value }}</textarea>
     </div>

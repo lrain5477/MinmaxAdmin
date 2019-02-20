@@ -37,6 +37,7 @@ Route::group([
         Route::post('product-item/ajax/datatables', 'ProductItemController@ajaxDataTable')->name('product-item.ajaxDataTable');
         Route::patch('product-item/ajax/switch', 'ProductItemController@ajaxSwitch')->name('product-item.ajaxSwitch');
         Route::patch('product-item/ajax/sort', 'ProductItemController@ajaxSort')->name('product-item.ajaxSort');
+        Route::patch('product-item/ajax/qty', 'ProductItemController@ajaxQty')->name('product-item.ajaxQty');
         Route::put('product-item/ajax/multi/qty', 'ProductItemController@ajaxMultiQty')->name('product-item.ajaxMultiQty');
 
         /*

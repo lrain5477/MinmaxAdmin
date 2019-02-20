@@ -74,7 +74,9 @@ jQuery.getJSON('{{ asset('static/admin/js/lang/' . app()->getLocale() . '/sweet_
 {{-- * * * Jcrop Image Cropping Plugin 圖片座標截圖 --}}
 <script src="{{ asset('static/modules/jcrop/jquery.Jcrop.min.js') }}"></script>
 <script src="{{ asset('static/modules/jcrop/jquery.color.js') }}"></script>
-<!-- * * * bootstrap-tagsinput 標籤-->
+{{-- * * * bootstrap-datepicker 日曆--}}
+<script src="{{ asset('static/modules/bootstrap-datepicker/bootstrap-datepicker.min.js') }}"></script>
+{{-- * * * bootstrap-tagsinput 標籤--}}
 <script src="{{ asset('static/modules/bootstrap-tagsinput/bootstrap4-tagsinput.js') }}"></script>
 {{-- * / layout-js--}}
 

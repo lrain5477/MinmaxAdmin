@@ -23,8 +23,6 @@
   --danger: #e7505a;
   --light: #f8f9fa;
   --dark: #343a40;
-  --main: #e7505a;
-  --default: #e1e5ec;
   --breakpoint-xs: 0;
   --breakpoint-sm: 576px;
   --breakpoint-md: 768px;
@@ -8034,3 +8032,28 @@ a.text-default:hover, a.text-default:focus {
   .input-group-sm > .input-group-prepend > select.btn,
   .input-group-sm > .input-group-append > select.btn {
     min-width: 80px; } }
+
+@media (min-width: 576px) {
+  .col-form-label {
+    padding-left: 38px; } }
+
+.form-group.len .col-form-label {
+  position: relative; }
+
+.form-group.len .col-form-label::before {
+  font-family: 'icomoon';
+  content: "\e944";
+  opacity: 0.2;
+  position: absolute;
+  left: 20px;
+  top: 19px;
+  -webkit-transform: translateX(-50%) translateY(-50%);
+  -ms-transform: translateX(-50%) translateY(-50%);
+  transform: translateX(-50%) translateY(-50%); }
+  @media (max-width: 575.98px) {
+    .form-group.len .col-form-label::before {
+      left: inherit;
+      right: 15px; } }
+
+.page-link {
+  text-decoration: none; }

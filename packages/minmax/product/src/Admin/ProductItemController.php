@@ -133,6 +133,44 @@ class ProductItemController extends Controller
         $this->viewData['exportLink'] = is_null($ioModel) ? null : langRoute('admin.io-data.config', ['id' => $ioModel->id, 'method' => 'export']);
     }
 
+    public function ajaxQty(Request $request)
+    {
+        $this->checkPermissionEdit('ajax');
+
+        $validator = validator($request->input(), [
+            'id' => 'required|exists:product_item,id',
+            'qty' => 'required|integer|min:0',
+        ]);
+
+        $updatedId = $request->input('id');
+        $updatedQty = intval($request->input('qty', -1));
+
+        if (!$validator->fails() && $updatedQty >= 0 && $model = $this->modelRepository->find($updatedId)) {
+            try {
+                \DB::beginTransaction();
+
+                $oriQty = $model->qty;
+                $model->productQuantities()->create([
+                    'amount' => $updatedQty - $oriQty,
+                    'remark' => __('MinmaxProduct::admin.form.ProductItem.messages.manual_update_qty'),
+                    'summary' => $updatedQty,
+                ]);
+                $model->touch();
+
+                \DB::commit();
+
+                LogHelper::system('admin', $request->path(), $request->method(), $updatedId, $this->adminData->username, 1, __('MinmaxBase::admin.form.message.edit_success'));
+
+                return response(['msg' => 'success'], 200, ['Content-Type' => 'application/json']);
+            } catch (\Exception $e) {
+                \DB::rollBack();
+            }
+        }
+
+        LogHelper::system('admin', $request->path(), $request->method(), $updatedId, $this->adminData->username, 0, __('MinmaxBase::admin.form.message.edit_error'));
+        return response(['msg' => 'error'], 400, ['Content-Type' => 'application/json']);
+    }
+
     public function ajaxMultiQty(Request $request)
     {
         $this->checkPermissionEdit('ajax');

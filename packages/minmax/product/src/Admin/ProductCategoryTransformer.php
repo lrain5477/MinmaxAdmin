@@ -48,6 +48,8 @@ class ProductCategoryTransformer extends Transformer
 
         return [
             'title' => $this->presenter->getGridText($model, 'title'),
+            'set_amount' => $this->presenter->getGridSetAmount($model),
+            'sub_amount' => $this->presenter->getGridSubAmount($model, $childrenFlag),
             'sort' => $this->presenter->getGridSort($model, 'sort'),
             'active' => $this->presenter->getGridSwitch($model, 'active'),
             'action' => $this->presenter->getGridActions($model, $childrenFlag

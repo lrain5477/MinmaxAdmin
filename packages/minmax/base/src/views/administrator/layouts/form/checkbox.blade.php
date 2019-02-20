@@ -14,9 +14,8 @@
  * @var string $hint
  */
 ?>
-<div class="form-group row">
+<div class="form-group row {{ $language ? 'len' : '' }}">
     <label class="col-sm-2 col-form-label">
-        @if($language)<i class="icon-globe"></i>@endif
         {{ $label }}<!--
         @if($required)--><span class="text-danger ml-1">*</span><!--@endif
         -->

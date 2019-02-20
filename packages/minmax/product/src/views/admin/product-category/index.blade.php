@@ -41,6 +41,8 @@
     <thead>
     <tr role="row">
         <th class="w-50">@lang('MinmaxProduct::models.ProductCategory.title')</th>
+        <th>@lang('MinmaxProduct::admin.grid.ProductCategory.set_amount')</th>
+        <th>@lang('MinmaxProduct::admin.grid.ProductCategory.sub_amount')</th>
         <th>@lang('MinmaxProduct::models.ProductCategory.sort')</th>
         <th>@lang('MinmaxProduct::models.ProductCategory.active')</th>
         <th class="nosort">@lang('MinmaxBase::admin.grid.title.action')</th>
@@ -84,12 +86,14 @@
             },
             columns: [
                 {data: 'title', name: 'title'},
+                {data: 'set_amount', name: 'set_amount'},
+                {data: 'sub_amount', name: 'sub_amount'},
                 {data: 'sort', name: 'sort'},
                 {data: 'active', name: 'active'},
                 {data: 'action', name: 'action'}
             ],
             order: [
-                [1, 'asc']
+                [3, 'asc']
             ]
         });
     });

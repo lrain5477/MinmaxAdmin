@@ -27,7 +27,7 @@
     @endcomponent
 
     @component('MinmaxBase::admin.layouts.grid.filter-equal')
-    {!! $modelPresenter->getFilterSelection('categories', 'searchCategory', ['emptyLabel' => __('MinmaxProduct::models.ProductSet.categories')]) !!}
+    {!! $modelPresenter->getFilterSelection('categories', 'searchCategory', ['current' => request('category'), 'emptyLabel' => __('MinmaxProduct::models.ProductSet.categories')]) !!}
     {!! $modelPresenter->getFilterSelection('active', 'searchActive', ['emptyLabel' => __('MinmaxProduct::models.ProductSet.active')]) !!}
     @endcomponent
 @endsection

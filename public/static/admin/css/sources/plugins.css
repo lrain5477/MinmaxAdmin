@@ -25,7 +25,7 @@
   max-height: 272px !important; }
 
 .bs-select.bootstrap-select.btn-group .dropdown-menu {
-  margin-top: 0px;
+  margin-top: 0;
   border: 1px solid #eee; }
 
 .bootstrap-select.btn-group .dropdown-menu li.selected a,
