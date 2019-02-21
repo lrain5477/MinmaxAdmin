@@ -93,7 +93,7 @@ class CreateSystemTables extends Migration
             $table->string('contact')->comment('聯絡資訊');                 // {phone, fax, email, address, map, lng, lat}
             $table->json('social')->nullable()->comment('社群連結');        // {facebook, instagram, youtube}
             $table->string('seo')->comment('搜尋引擎');                     // {meta_description, meta_keywords, og_image}
-            $table->json('options')->nullable()->comment('網站設定');       // {head, body, foot}
+            $table->string('options')->nullable()->comment('網站設定');     // {head, body, foot}
             $table->string('offline_text')->comment('網站離線訊息');
             $table->boolean('active')->default(true)->comment('網站狀態');
             $table->timestamps();
