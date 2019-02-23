@@ -37,9 +37,9 @@
     <fieldset class="mt-4" id="advFieldSet">
         <legend class="legend h6 mb-4"><i class="icon-angle-double-down2 mr-2"></i>@lang('MinmaxBase::admin.form.fieldSet.advanced')</legend>
 
-        {!! $modelPresenter->getFieldDatePicker($formData, 'start_at', ['size' => 4, 'type' => 'datetime']) !!}
+        {!! $modelPresenter->getFieldDatePicker($formData, 'start_at', ['size' => 3, 'type' => 'datetime']) !!}
 
-        {!! $modelPresenter->getFieldDatePicker($formData, 'end_at', ['size' => 4, 'type' => 'datetime']) !!}
+        {!! $modelPresenter->getFieldDatePicker($formData, 'end_at', ['size' => 3, 'type' => 'datetime']) !!}
 
         {!! $modelPresenter->getFieldText($formData, 'sort', ['size' => 2]) !!}
 

@@ -9,8 +9,9 @@
  *
  * Options
  * @var boolean $required
- * @var boolean $group
  * @var integer $size
+ * @var integer $limit
+ * @var boolean $search
  * @var string $title
  * @var string $hint
  */
@@ -22,25 +23,32 @@
         -->
     </label>
     <div class="col-sm-{{ $size }}">
-        <select class="multiSelect" id="{{ $id }}" name="{{ $name }}" multiple {{ $required === true ? 'required' : '' }}>
+        <select multiple class="bs-select form-control"
+                id="{{ $id }}"
+                name="{{ $name }}"
+                data-size="6"
+                data-max-options="{{ $limit < 1 ? 'false' : $limit }}"
+                data-live-search="{{ $search ? 'true' : 'false' }}"
+                {!! $required === true ? '' : ('title="' . ($title === '' ? __('MinmaxBase::administrator.form.select_default_title') : $title) . '"') !!}
+                {{ $required === true ? 'required' : '' }}>
         @if($group)
             @foreach($listData as $groupLabel => $listSet)
             <optgroup label="{{ $groupLabel }}">
                 @foreach($listSet as $listKey => $listItem)
-                <option value="{{ $listKey }}" {{ in_array($listKey, old(str_replace(['[', ']'], ['.', ''], $name), $values)) ? 'selected' : '' }}>{{ $listItem['title'] ?? '' }}</option>
+                <option value="{{ $listKey }}"
+                        title="{{ array_get($listItem, 'options.text') }}"
+                        {{ in_array($listKey, old(str_replace(['[', ']'], ['.', ''], $name), $values)) ? 'selected' : '' }}>{{ array_get($listItem, 'title') }}</option>
                 @endforeach
             </optgroup>
             @endforeach
         @else
             @foreach($listData as $listKey => $listItem)
-            <option value="{{ $listKey }}" {{ in_array($listKey, old(str_replace(['[', ']'], ['.', ''], $name), $values)) ? 'selected' : '' }}>{{ $listItem['title'] ?? '' }}</option>
+            <option value="{{ $listKey }}"
+                    title="{{ array_get($listItem, 'options.text') }}"
+                    {{ in_array($listKey, old(str_replace(['[', ']'], ['.', ''], $name), $values)) ? 'selected' : '' }}>{{ array_get($listItem, 'title') }}</option>
             @endforeach
         @endif
         </select>
-        <div class="button-multiselect-box mt-1">
-            <a class="select-all btn btn-secondary btn-sm" href="#">@lang('MinmaxBase::administrator.form.select_all')</a>
-            <a class="deselect-all btn btn-secondary btn-sm" href="#">@lang('MinmaxBase::administrator.form.select_clear')</a>
-        </div>
     </div>
     @if($hint !== '')
     <small class="form-text text-muted ml-sm-auto col-sm-10">{!! $hint !!}</small>

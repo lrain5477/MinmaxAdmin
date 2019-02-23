@@ -137,6 +137,8 @@ return [
 
     'menu_layer_limit' => env('MENU_LAYER_LIMIT', 2),
 
+    'article_layer_limit' => env('ARTICLE_LAYER_LIMIT', 3),
+
     'ecommerce_layer_limit' => env('ECOMMERCE_LAYER_LIMIT', 3),
 
     'thumbnail_size' => env('THUMBNAIL_SIZE', '(80|120|300)'),
@@ -185,6 +187,7 @@ return [
          */
         Minmax\Base\ServiceProvider::class,
         Minmax\Io\ServiceProvider::class,
+        Minmax\Article\ServiceProvider::class,
         Minmax\Ad\ServiceProvider::class,
         Minmax\World\ServiceProvider::class,
         Minmax\Notify\ServiceProvider::class,

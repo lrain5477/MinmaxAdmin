@@ -1,0 +1,27 @@
+{
+    "name": "minmax/article",
+    "description": "Article management",
+    "type": "library",
+    "authors": [
+        {
+            "name": "Jeffy",
+            "email": "jeffy@e-creative.tw"
+        }
+    ],
+    "require": {
+        "minmax/base": "*",
+        "minmax/io": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "Minmax\\Article\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Minmax\\Article\\ServiceProvider"
+            ]
+        }
+    }
+}

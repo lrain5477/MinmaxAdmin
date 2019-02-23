@@ -1125,7 +1125,17 @@ abstract class Presenter
             'listData' => $fieldList,
         ];
 
-        return view('MinmaxBase::administrator.layouts.form.multi-select', $componentData);
+        $type = array_get($options, 'type', 'collect');
+
+        switch ($type) {
+            case 'collect':
+                return view('MinmaxBase::administrator.layouts.form.multi-collect', $componentData);
+            case 'dropdown':
+                $componentData['search'] = array_get($options, 'search', false);
+                return view('MinmaxBase::administrator.layouts.form.multi-select', $componentData);
+            default:
+                return null;
+        }
     }
 
     /**

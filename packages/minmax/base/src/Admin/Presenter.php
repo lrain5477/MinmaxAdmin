@@ -1167,11 +1167,22 @@ abstract class Presenter
             'title' => array_get($options, 'title', ''),
             'group' => array_get($options, 'group', false),
             'size' => array_get($options, 'size', 10),
+            'limit' => array_get($options, 'limit', 0),
             'hint' => $hintValue,
             'listData' => $fieldList,
         ];
 
-        return view('MinmaxBase::admin.layouts.form.multi-select', $componentData);
+        $type = array_get($options, 'type', 'collect');
+
+        switch ($type) {
+            case 'collect':
+                return view('MinmaxBase::admin.layouts.form.multi-collect', $componentData);
+            case 'dropdown':
+                $componentData['search'] = array_get($options, 'search', false);
+                return view('MinmaxBase::admin.layouts.form.multi-select', $componentData);
+            default:
+                return null;
+        }
     }
 
     /**

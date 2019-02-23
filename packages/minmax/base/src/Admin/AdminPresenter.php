@@ -25,7 +25,7 @@ class AdminPresenter extends Presenter
      */
     public function getFieldRolesSelect($model)
     {
-        return view('MinmaxBase::admin.layouts.form.multi-select', [
+        return view('MinmaxBase::admin.layouts.form.multi-collect', [
             'id' => 'Admin-role_id',
             'language' => false,
             'label' => __('MinmaxBase::models.Admin.role_id'),
