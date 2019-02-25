@@ -48,6 +48,7 @@ class AdvertisingRepository extends Repository
                 $query->whereNull('end_at')->orWhere('end_at', '>=', date('Y-m-d H:i:s'));
             })
             ->where('active', true)
+            ->orderBy('sort')
             ->get();
     }
 }
