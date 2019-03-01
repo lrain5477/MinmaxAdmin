@@ -3,6 +3,7 @@
 namespace Minmax\Product\Admin;
 
 use Minmax\Base\Admin\Controller;
+use Minmax\Io\Admin\IoConstructRepository;
 
 /**
  * Class ProductSetController
@@ -95,5 +96,12 @@ class ProductSetController extends Controller
         });
 
         return $datatable;
+    }
+
+    protected function setCustomViewDataIndex()
+    {
+        $ioModel = (new IoConstructRepository)->one(['uri' => 'product-set', 'active' => true]);
+        $this->viewData['importLink'] = is_null($ioModel) ? null : ($ioModel->import_enable ? langRoute('admin.io-data.config', ['id' => $ioModel->id, 'method' => 'import']) : null);
+        $this->viewData['exportLink'] = is_null($ioModel) ? null : ($ioModel->export_enable ? langRoute('admin.io-data.config', ['id' => $ioModel->id, 'method' => 'export']) : null);
     }
 }

@@ -110,6 +110,7 @@ return [
         'record' => '記録',
         'note' => '付記',
         'select_default_title' => '選んでください',
+        'select_nothing_title' => '選ばないで',
         'password_build_auto' => 'デフォルトのパスワードは 123456 です。システムによって設定されます。',
         'select_all' => '全て選択',
         'select_clear' => '選択をクリア',

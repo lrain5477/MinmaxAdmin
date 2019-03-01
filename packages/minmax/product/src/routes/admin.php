@@ -110,22 +110,6 @@ Route::group([
         Route::patch('product-market/ajax/switch', 'ProductMarketController@ajaxSwitch')->name('product-market.ajaxSwitch');
         Route::patch('product-market/ajax/sort', 'ProductMarketController@ajaxSort')->name('product-market.ajaxSort');
 
-        /*
-         * MemberTerm 會員條款
-         */
-//        Route::get('member-term', 'MemberTermController@index')->name('member-term.index');
-//        Route::post('member-term', 'MemberTermController@store')->name('member-term.store');
-//        Route::get('member-term/create', 'MemberTermController@create')->name('member-term.create');
-//        Route::get('member-term/{id}', 'MemberTermController@show')->name('member-term.show');
-//        Route::put('member-term/{id}', 'MemberTermController@update')->name('member-term.update');
-//        Route::delete('member-term/{id}', 'MemberTermController@destroy')->name('member-term.destroy');
-//        Route::get('member-term/{id}/edit', 'MemberTermController@edit')->name('member-term.edit');
-//        Route::post('member-term/ajax/datatables', 'MemberTermController@ajaxDataTable')->name('member-term.ajaxDataTable');
-//        Route::patch('member-term/ajax/switch', 'MemberTermController@ajaxSwitch')->name('member-term.ajaxSwitch');
-//        Route::patch('member-term/ajax/sort', 'MemberTermController@ajaxSort')->name('member-term.ajaxSort');
-//        Route::patch('member-term/ajax/multi/switch', 'MemberTermController@ajaxMultiSwitch')->name('member-term.ajaxMultiSwitch');
-//        Route::delete('member-term/ajax/multi/delete', 'MemberTermController@ajaxMultiDestroy')->name('member-term.ajaxMultiDestroy');
-
     });
 
 });

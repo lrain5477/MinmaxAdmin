@@ -110,6 +110,7 @@ return [
         'record' => '系统纪录',
         'note' => '说明叙述',
         'select_default_title' => '请选择项目',
+        'select_nothing_title' => '不选择',
         'password_build_auto' => '预设密码为 123456，由系统自动设定',
         'select_all' => '选择全部',
         'select_clear' => '清除选取',

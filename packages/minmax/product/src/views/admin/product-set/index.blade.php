@@ -14,6 +14,16 @@
             <i class="icon-plus2"></i><span class="ml-1 d-none d-md-inline-block">@lang('MinmaxBase::admin.form.create')</span>
         </a>
         @endif
+        @if(!is_null($importLink) && $adminData->can('ioDataImport'))
+        <a class="btn btn-sm btn-main" href="{{ $importLink }}" title="@lang('MinmaxBase::admin.form.import')">
+            <i class="icon-upload2"></i><span class="ml-1 d-none d-md-inline-block">@lang('MinmaxBase::admin.form.import')</span>
+        </a>
+        @endif
+        @if(!is_null($exportLink) && $adminData->can('ioDataExport'))
+        <a class="btn btn-sm btn-main" href="{{ $exportLink }}" title="@lang('MinmaxBase::admin.form.export')">
+            <i class="icon-download"></i><span class="ml-1 d-none d-md-inline-block">@lang('MinmaxBase::admin.form.export')</span>
+        </a>
+        @endif
     @endcomponent
 @endsection
 

@@ -28,8 +28,8 @@
                    name="{{ $name }}"
                    value="{{ $listKey }}"
                    {{ in_array($listKey, $values) ? 'checked' : '' }}
-                   {{ $required === true && $loop->first ? 'required' : '' }} />
-            <label class="custom-control-label" for="{{ $id }}-{{ $listKey }}">{{ $listItem['title'] ?? '' }}</label>
+                   {{ $required && $loop->first ? 'required' : '' }} />
+            <label class="custom-control-label" for="{{ $id }}-{{ $listKey }}">{{ array_get($listItem, 'title') }}</label>
         </div>
         @endforeach
     </div>

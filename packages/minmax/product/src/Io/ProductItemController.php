@@ -83,13 +83,13 @@ class ProductItemController extends IoController
 
         // Use sheet 1
         $sheet = $spreadsheet->createSheet(1);
-        $sheet->setTitle(__('MinmaxProduct::admin.form.ProductItem.currency'));
+        $sheet->setTitle(__("MinmaxProduct::{$this->guard}.form.ProductItem.currency"));
 
         $titleColumnIndex = 0;
         $titleRowIndex = 1;
         $sheet->setCellValueExplicitByColumnAndRow(++$titleColumnIndex, $titleRowIndex, __('MinmaxWorld::models.WorldCurrency.code'), 's')
             ->getColumnDimensionByColumn($titleColumnIndex)->setWidth(20);
-        $sheet->setCellValueExplicitByColumnAndRow(++$titleColumnIndex, $titleRowIndex, __('MinmaxProduct::admin.form.ProductItem.currency'), 's')
+        $sheet->setCellValueExplicitByColumnAndRow(++$titleColumnIndex, $titleRowIndex, __("MinmaxProduct::{$this->guard}.form.ProductItem.currency"), 's')
             ->getColumnDimensionByColumn($titleColumnIndex)->setWidth(50);
 
         $dataColumnIndex = 0;
@@ -131,8 +131,8 @@ class ProductItemController extends IoController
         $sheetData = $this->getSheetFromFile($request, $fileField, 'import', 1);
 
         if (is_null($sheetData)) {
-            return redirect(langRoute("admin.io-data.config", ['id' => $id]))
-                ->withErrors([__('MinmaxIo::admin.form.message.import_error', ['title' => $ioData->title])]);
+            return redirect(langRoute("{$this->guard}.{$this->ioUri}.config", ['id' => $id]))
+                ->withErrors([__("MinmaxIo::{$this->guard}.form.message.import_error", ['title' => $ioData->title])]);
         }
 
         // Insert data
@@ -186,7 +186,7 @@ class ProductItemController extends IoController
                 if (boolval($rowData[8] ?? 0)) {
                     $updateQty[$rowData[0]] = [
                         'amount' => intval($rowData[10] ?? 0),
-                        'remark' => __('MinmaxProduct::admin.form.ProductItem.messages.manual_update_qty'),
+                        'remark' => __("MinmaxProduct::{$this->guard}.form.ProductItem.messages.manual_update_qty"),
                         'summary' => intval($rowData[10] ?? 0),
                     ];
                 }
@@ -212,7 +212,7 @@ class ProductItemController extends IoController
                     $insertQty[] = [
                         'item_id' => $rowId,
                         'amount' => intval($rowData[10] ?? 0),
-                        'remark' => __('MinmaxProduct::admin.form.ProductItem.messages.manual_update_qty'),
+                        'remark' => __("MinmaxProduct::{$this->guard}.form.ProductItem.messages.manual_update_qty"),
                         'summary' => intval($rowData[10] ?? 0),
                     ];
                 }
@@ -265,7 +265,7 @@ class ProductItemController extends IoController
                 'file' => $request->file($fileField)->getClientOriginalName(),
             ]);
 
-            return redirect(langRoute("admin.io-data.config", ['id' => $id]))->with('success', __('MinmaxIo::admin.form.message.import_success', ['title' => $ioData->title]));
+            return redirect(langRoute("{$this->guard}.{$this->ioUri}.config", ['id' => $id]))->with('success', __("MinmaxIo::{$this->guard}.form.message.import_success", ['title' => $ioData->title]));
         } catch (\Exception $e) {
             DB::rollBack();
 
@@ -374,7 +374,7 @@ class ProductItemController extends IoController
         }
 
         // Set sheet style
-        $this->setSheetStyle($sheet, [1, 1, $dataColumnIndex, $dataRowIndex]);
+        $this->setSheetStyle($sheet, [1, 1, $dataColumnIndex < 1 ? $titleColumnIndex : $dataColumnIndex, $dataRowIndex]);
         $this->setSheetStyle($sheet, [1, 1, $titleColumnIndex, $titleRowIndex], [
             'font' => ['bold' => true],
             'fill' => ['fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID, 'startColor' => ['rgb' => 'EFEFEF']]
@@ -401,7 +401,7 @@ class ProductItemController extends IoController
             'file' => "{$filename}.xlsx",
         ]);
 
-        session()->flash('success', __('MinmaxIo::admin.form.message.export_success', ['title' => $ioData->title]));
+        session()->flash('success', __("MinmaxIo::{$this->guard}.form.message.export_success", ['title' => $ioData->title]));
 
         return $response;
     }

@@ -25,7 +25,7 @@
                   name="{{ $name }}"
                   rows="{{ $rows }}"
                   placeholder="{{ $placeholder }}"
-                  {{ $required === true ? 'required' : '' }} >{{ old(str_replace(['[', ']'], ['.', ''], $name), $value) }}</textarea>
+                  {{ $required ? 'required' : '' }} >{{ old(str_replace(['[', ']'], ['.', ''], $name), $value) }}</textarea>
     </div>
     @if($hint !== '')
     <small class="form-text text-muted ml-sm-auto col-sm-10">{!! $hint !!}</small>

@@ -36,7 +36,7 @@ class WorldCurrencyRepository extends Repository
 
     public function getSelectParameters()
     {
-        return $this->all()
+        return $this->all(...func_get_args())
             ->mapWithKeys(function ($item) {
                 /** @var WorldCurrency $item */
                 return [$item->id => ['title' => $item->title, 'options' => $item->options]];

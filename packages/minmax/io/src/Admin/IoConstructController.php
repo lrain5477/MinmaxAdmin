@@ -107,7 +107,7 @@ class IoConstructController extends Controller
         if ($model = $this->modelRepository->find($id)) {
             if ($model->example == 'controller') {
                 try {
-                    return app()->call($model->controller, [$id], 'example');
+                    return app($model->controller, ['guard' => 'admin'])->example($id);
                 } catch (\InvalidArgumentException $e) {
                     return abort(404);
                 } catch (\Exception $e) {
@@ -132,7 +132,7 @@ class IoConstructController extends Controller
     {
         if ($model = $this->modelRepository->find($id)) {
             try {
-                return app()->call($model->controller, [$id], 'import');
+                return app($model->controller, ['guard' => 'admin'])->import($request, $id);
             } catch (\InvalidArgumentException $e) {
                 return redirect(langRoute("admin.io-data.config", ['id' => $id]))
                     ->withErrors([__('MinmaxIo::admin.form.message.import_error', ['title' => $model->title])]);
@@ -154,7 +154,7 @@ class IoConstructController extends Controller
     {
         if ($model = $this->modelRepository->find($id)) {
             try {
-                return app()->call($model->controller, [$id], 'export');
+                return app($model->controller, ['guard' => 'admin'])->export($request, $id);
             } catch (\InvalidArgumentException $e) {
                 return redirect(langRoute("admin.io-data.config", ['id' => $id]))
                     ->withErrors([__('MinmaxIo::admin.form.message.export_error', ['title' => $model->title])]);

@@ -20,14 +20,18 @@
         @if($required)--><span class="text-danger ml-1">*</span><!--@endif
         -->
     </label>
-    <div class="col-xl-{{ $size }}">
-            <input type="text" class="form-control datepicker-{{ $type }}" style="padding-left: 32px;"
+    <div class="col-sm-{{ $size }}">
+        <div class="input-group">
+            <div class="input-group-prepend" onclick="$(this).parent().find('input').click();">
+                <span class="input-group-text"><i class="icon-calendar"></i></span>
+            </div>
+            <input type="text" class="form-control datepicker-{{ $type }}"
                    id="{{ $id }}"
                    name="{{ $name }}"
                    value="{{ old(str_replace(['[', ']'], ['.', ''], $name), $value) }}"
                    placeholder="{{ $placeholder }}"
-                   {{ $required === true ? 'required' : '' }} />
-            <i class="icon-calendar" style="position: absolute; bottom: 10px; left: 24px; top: auto; cursor: pointer; pointer-events: visible" onclick="$(this).parent().find('input').click();"></i>
+                   {{ $required ? 'required' : '' }} />
+        </div>
     </div>
     @if($hint !== '')
     <small class="form-text text-muted ml-sm-auto col-sm-10">{!! $hint !!}</small>

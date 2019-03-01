@@ -8,6 +8,7 @@
  *
  * Options
  * @var boolean $required
+ * @var string $type
  * @var integer $size
  * @var string $icon
  * @var string $placeholder
@@ -22,23 +23,23 @@
     </label>
     <div class="col-sm-{{ $size }}">
         @if($icon === '')
-        <input type="text" class="form-control"
+        <input type="{{ $type }}" class="form-control"
                id="{{ $id }}"
                name="{{ $name }}"
                value="{{ old(str_replace(['[', ']'], ['.', ''], $name), $value) }}"
                placeholder="{{ $placeholder }}"
-               {{ $required === true ? 'required' : '' }} />
+               {{ $required ? 'required' : '' }} />
         @else
         <div class="input-group">
             <div class="input-group-prepend">
                 <span class="input-group-text"><i class="{{ $icon }}"></i></span>
             </div>
-            <input type="text" class="form-control"
+            <input type="{{ $type }}" class="form-control"
                    id="{{ $id }}"
                    name="{{ $name }}"
                    value="{{ old(str_replace(['[', ']'], ['.', ''], $name), $value) }}"
                    placeholder="{{ $placeholder }}"
-                   {{ $required === true ? 'required' : '' }} />
+                   {{ $required ? 'required' : '' }} />
         </div>
         @endif
     </div>

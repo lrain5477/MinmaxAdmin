@@ -128,9 +128,9 @@ class ProductItemController extends Controller
 
     protected function setCustomViewDataIndex()
     {
-        $ioModel = (new IoConstructRepository)->one('uri', 'product-item');
-        $this->viewData['importLink'] = is_null($ioModel) ? null : langRoute('admin.io-data.config', ['id' => $ioModel->id, 'method' => 'import']);
-        $this->viewData['exportLink'] = is_null($ioModel) ? null : langRoute('admin.io-data.config', ['id' => $ioModel->id, 'method' => 'export']);
+        $ioModel = (new IoConstructRepository)->one(['uri' => 'product-item', 'active' => true]);
+        $this->viewData['importLink'] = is_null($ioModel) ? null : ($ioModel->import_enable ? langRoute('admin.io-data.config', ['id' => $ioModel->id, 'method' => 'import']) : null);
+        $this->viewData['exportLink'] = is_null($ioModel) ? null : ($ioModel->export_enable ? langRoute('admin.io-data.config', ['id' => $ioModel->id, 'method' => 'export']) : null);
     }
 
     public function ajaxQty(Request $request)

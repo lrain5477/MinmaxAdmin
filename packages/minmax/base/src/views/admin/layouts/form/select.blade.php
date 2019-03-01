@@ -27,15 +27,18 @@
                 data-size="6"
                 name="{{ $name }}"
                 data-live-search="{{ $search ? 'true' : 'false' }}"
-                {!! $required === true ? '' : ('title="' . ($title === '' ? __('MinmaxBase::admin.form.select_default_title') : $title) . '"') !!}
-                {{ $required === true ? 'required' : '' }}>
+                title="{{ $title === '' ? __('MinmaxBase::admin.form.select_default_title') : $title }}"
+                {{ $required ? 'required' : '' }}>
+        @if(! $required)
+            <option value="">@lang('MinmaxBase::admin.form.select_nothing_title')</option>
+        @endif
         @if(array_key_exists($value, $listData))
             @foreach($listData as $listKey => $listItem)
-            <option value="{{ $listKey }}" {{ $listKey == old(str_replace(['[', ']'], ['.', ''], $name), $value) ? 'selected' : '' }}>{{ $listItem['title'] ?? '' }}</option>
+            <option value="{{ $listKey }}" {{ $listKey == old(str_replace(['[', ']'], ['.', ''], $name), $value) ? 'selected' : '' }}>{{ array_get($listItem, 'title') }}</option>
             @endforeach
         @else
             @foreach($listData as $listKey => $listItem)
-            <option value="{{ $listKey }}" {{ $required === true && $loop->first ? 'selected' : '' }}>{{ $listItem['title'] ?? '' }}</option>
+            <option value="{{ $listKey }}" {{ $required && $loop->first ? 'selected' : '' }}>{{ array_get($listItem, 'title') }}</option>
             @endforeach
         @endif
         </select>

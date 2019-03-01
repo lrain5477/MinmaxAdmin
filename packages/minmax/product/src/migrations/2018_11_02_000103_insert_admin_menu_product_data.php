@@ -50,7 +50,7 @@ class InsertAdminMenuProductData extends Migration
         DB::table('permissions')->insert($permissionsData);
 
         // 管理員選單
-        if ($menuClass = DB::table('admin_menu')->where('uri', 'root-module')->first()) {
+        if ($menuClassId = DB::table('admin_menu')->where('uri', 'root-module')->value('id')) {
             $adminMenuData = [
                 [
                     'id' => $menuParentId = uuidl(),
@@ -58,7 +58,7 @@ class InsertAdminMenuProductData extends Migration
                     'uri' => 'control-product',
                     'controller' => null,
                     'model' => null,
-                    'parent_id' => $menuClass->id,
+                    'parent_id' => $menuClassId,
                     'link' => null,
                     'icon' => 'icon-codepen',
                     'permission_key' => null,

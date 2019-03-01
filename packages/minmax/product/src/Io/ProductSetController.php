@@ -424,8 +424,8 @@ class ProductSetController extends IoController
         $sheetData = $this->getSheetFromFile($request, $fileField, 'import', 1);
 
         if (is_null($sheetData)) {
-            return redirect(langRoute("admin.io-data.config", ['id' => $id]))
-                ->withErrors([__('MinmaxIo::admin.form.message.import_error', ['title' => $ioData->title])]);
+            return redirect(langRoute("{$this->guard}.{$this->ioUri}.config", ['id' => $id]))
+                ->withErrors([__("MinmaxIo::{$this->guard}.form.message.import_error", ['title' => $ioData->title])]);
         }
 
         // Insert data
@@ -655,7 +655,7 @@ class ProductSetController extends IoController
                 'file' => $request->file($fileField)->getClientOriginalName(),
             ]);
 
-            return redirect(langRoute("admin.io-data.config", ['id' => $id]))->with('success', __('MinmaxIo::admin.form.message.import_success', ['title' => $ioData->title]));
+            return redirect(langRoute("{$this->guard}.{$this->ioUri}.config", ['id' => $id]))->with('success', __("MinmaxIo::{$this->guard}.form.message.import_success", ['title' => $ioData->title]));
         } catch (\Exception $e) {
             DB::rollBack();
 
@@ -869,7 +869,7 @@ class ProductSetController extends IoController
         }
 
         // Set sheet style
-        $this->setSheetStyle($sheet, [1, 1, $dataColumnIndex, $dataRowIndex]);
+        $this->setSheetStyle($sheet, [1, 1, $dataColumnIndex < 1 ? $titleColumnIndex : $dataColumnIndex, $dataRowIndex]);
         $this->setSheetStyle($sheet, [1, 1, $titleColumnIndex, $titleRowIndex], [
             'font' => ['bold' => true],
             'fill' => ['fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID, 'startColor' => ['rgb' => 'EFEFEF']]
@@ -896,7 +896,7 @@ class ProductSetController extends IoController
             'file' => "{$filename}.xlsx",
         ]);
 
-        session()->flash('success', __('MinmaxIo::admin.form.message.export_success', ['title' => $ioData->title]));
+        session()->flash('success', __("MinmaxIo::{$this->guard}.form.message.export_success", ['title' => $ioData->title]));
 
         return $response;
     }

@@ -111,6 +111,7 @@ return [
         'record' => '系統紀錄',
         'note' => '說明敘述',
         'select_default_title' => '請選擇項目',
+        'select_nothing_title' => '不選擇',
         'password_build_auto' => '預設密碼為 123456，由系統自動設定',
         'select_all' => '選擇全部',
         'select_clear' => '清除選取',

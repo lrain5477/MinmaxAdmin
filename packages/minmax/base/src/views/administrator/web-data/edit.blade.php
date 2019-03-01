@@ -24,7 +24,7 @@
 
         {!! $modelPresenter->getFieldText($formData, 'website_name', ['required' => true]) !!}
 
-        {!! $modelPresenter->getFieldEmail($formData, 'system_email', ['required' => true]) !!}
+        {!! $modelPresenter->getFieldText($formData, 'system_email', ['required' => true, 'type' => 'email']) !!}
 
         {!! $modelPresenter->getFieldText($formData, 'system_url', ['required' => true]) !!}
 

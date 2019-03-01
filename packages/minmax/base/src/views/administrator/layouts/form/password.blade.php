@@ -27,7 +27,7 @@
                value=""
                placeholder="{{ $placeholder }}"
                autocomplete="off"
-               {{ $required === true ? 'required' : '' }} />
+               {{ $required ? 'required' : '' }} />
         @else
         <div class="input-group">
             <div class="input-group-prepend">
@@ -39,7 +39,7 @@
                    value=""
                    placeholder="{{ $placeholder }}"
                    autocomplete="off"
-                   {{ $required === true ? 'required' : '' }} />
+                   {{ $required ? 'required' : '' }} />
         </div>
         @endif
     </div>

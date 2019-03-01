@@ -30,7 +30,7 @@
 
         {!! $modelPresenter->getFieldText($formData, 'name', ['required' => true]) !!}
 
-        {!! $modelPresenter->getFieldEmail($formData, 'email') !!}
+        {!! $modelPresenter->getFieldText($formData, 'email', ['type' => 'email']) !!}
 
     </fieldset>
 

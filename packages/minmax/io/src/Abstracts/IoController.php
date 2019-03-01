@@ -12,8 +12,14 @@ abstract class IoController
     /** @var string $packagePrefix */
     protected $packagePrefix = '';
 
+    /** @var string $guard */
+    protected $guard = '';
+
     /** @var string $uri */
     protected $uri;
+
+    /** @var string $ioUri */
+    protected $ioUri = 'io-data';
 
     /** @var string $uri */
     protected $rootUri = 'siteadmin';
@@ -41,10 +47,22 @@ abstract class IoController
 
     /**
      * IoControllerInterface constructor.
-     * @param Request $request
+     * @param  Request $request
+     * @param  string $guard
      */
-    public function __construct(Request $request)
+    public function __construct(Request $request, $guard)
     {
+        $this->guard = $guard;
+
+        switch ($this->guard) {
+            case 'admin':
+                $this->ioUri = 'io-data';
+                break;
+            case 'administrator':
+                $this->ioUri = 'io-construct';
+                break;
+        }
+
         $this->setAttributes($request->get('controllerAttributes'));
 
         $this->setDefaultViewData();

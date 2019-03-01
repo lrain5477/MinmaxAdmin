@@ -108,8 +108,8 @@ class IoConstructController extends Controller
         if ($model = $this->modelRepository->find($id)) {
             if ($model->example == 'controller') {
                 try {
-                    $controller = str_replace('\\Admin\\', '\\Administrator\\', $model->controller);
-                    return app()->call($controller, [$id], 'example');
+                    $controller = str_replace_first('\\Admin\\', '\\Administrator\\', $model->controller);
+                    return app($controller, ['guard' => 'administrator'])->example($id);
                 } catch (\InvalidArgumentException $e) {
                     return abort(404);
                 }
@@ -132,8 +132,8 @@ class IoConstructController extends Controller
     {
         if ($model = $this->modelRepository->find($id)) {
             try {
-                $controller = str_replace('\\Admin\\', '\\Administrator\\', $model->controller);
-                return app()->call($controller, [$request, $id], 'import');
+                $controller = str_replace_first('\\Admin\\', '\\Administrator\\', $model->controller);
+                return app($controller, ['guard' => 'administrator'])->import($request, $id);
             } catch (\InvalidArgumentException $e) {
                 return redirect(langRoute("administrator.io-construct.config"))
                     ->withErrors([__('MinmaxIo::administrator.form.message.import_error', ['title' => $model->title])]);
@@ -152,7 +152,8 @@ class IoConstructController extends Controller
     {
         if ($model = $this->modelRepository->find($id)) {
             try {
-                return app()->call($model->controller, [$request, $id], 'export');
+                $controller = str_replace_first('\\Admin\\', '\\Administrator\\', $model->controller);
+                return app($controller, ['guard' => 'administrator'])->export($request, $id);
             } catch (\InvalidArgumentException $e) {
                 return redirect(langRoute("administrator.io-construct.config"))
                     ->withErrors([__('MinmaxIo::administrator.form.message.export_error', ['title' => $model->title])]);

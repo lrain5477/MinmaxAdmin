@@ -67,7 +67,6 @@ class AdminRepository extends Repository
     }
 
     /**
-     * @param  string $guard
      * @return array
      */
     public function getSelectParameters()

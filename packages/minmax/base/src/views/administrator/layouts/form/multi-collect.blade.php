@@ -27,19 +27,19 @@
             @foreach($listData as $groupLabel => $listSet)
             <optgroup label="{{ $groupLabel }}">
                 @foreach($listSet as $listKey => $listItem)
-                <option value="{{ $listKey }}" {{ in_array($listKey, old(str_replace(['[', ']'], ['.', ''], $name), $values)) ? 'selected' : '' }}>{{ $listItem['title'] ?? '' }}</option>
+                <option value="{{ $listKey }}" {{ in_array($listKey, old(str_replace(['[', ']'], ['.', ''], $name), $values)) ? 'selected' : '' }}>{{ array_get($listItem, 'title') }}</option>
                 @endforeach
             </optgroup>
             @endforeach
         @else
             @foreach($listData as $listKey => $listItem)
-            <option value="{{ $listKey }}" {{ in_array($listKey, old(str_replace(['[', ']'], ['.', ''], $name), $values)) ? 'selected' : '' }}>{{ $listItem['title'] ?? '' }}</option>
+            <option value="{{ $listKey }}" {{ in_array($listKey, old(str_replace(['[', ']'], ['.', ''], $name), $values)) ? 'selected' : '' }}>{{ array_get($listItem, 'title') }}</option>
             @endforeach
         @endif
         </select>
         <div class="button-multiselect-box mt-1">
-            <a class="select-all btn btn-secondary btn-sm" href="#">@lang('MinmaxBase::admin.form.select_all')</a>
-            <a class="deselect-all btn btn-secondary btn-sm" href="#">@lang('MinmaxBase::admin.form.select_clear')</a>
+            <a class="select-all btn btn-secondary btn-sm" href="#">@lang('MinmaxBase::administrator.form.select_all')</a>
+            <a class="deselect-all btn btn-secondary btn-sm" href="#">@lang('MinmaxBase::administrator.form.select_clear')</a>
         </div>
     </div>
     @if($hint !== '')

@@ -27,13 +27,13 @@
             @foreach($listData as $groupLabel => $listSet)
             <optgroup label="{{ $groupLabel }}">
                 @foreach($listSet as $listKey => $listItem)
-                <option value="{{ $listKey }}" {{ in_array($listKey, old(str_replace(['[', ']'], ['.', ''], $name), $values)) ? 'selected' : '' }}>{{ $listItem['title'] ?? '' }}</option>
+                <option value="{{ $listKey }}" {{ in_array($listKey, old(str_replace(['[', ']'], ['.', ''], $name), $values)) ? 'selected' : '' }}>{{ array_get($listItem, 'title') }}</option>
                 @endforeach
             </optgroup>
             @endforeach
         @else
             @foreach($listData as $listKey => $listItem)
-            <option value="{{ $listKey }}" {{ in_array($listKey, old(str_replace(['[', ']'], ['.', ''], $name), $values)) ? 'selected' : '' }}>{{ $listItem['title'] ?? '' }}</option>
+            <option value="{{ $listKey }}" {{ in_array($listKey, old(str_replace(['[', ']'], ['.', ''], $name), $values)) ? 'selected' : '' }}>{{ array_get($listItem, 'title') }}</option>
             @endforeach
         @endif
         </select>

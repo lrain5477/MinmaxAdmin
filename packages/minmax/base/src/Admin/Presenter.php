@@ -720,6 +720,7 @@ abstract class Presenter
             'name' => $fieldName,
             'value' => $fieldValue,
             'required' => array_get($options, 'required', false),
+            'type' => array_get($options, 'type', 'text'),
             'icon' => array_get($options, 'icon', ''),
             'size' => array_get($options, 'size', 10),
             'placeholder' => array_get($options, 'placeholder', ''),
@@ -727,96 +728,6 @@ abstract class Presenter
         ];
 
         return view('MinmaxBase::admin.layouts.form.text', $componentData);
-    }
-
-    /**
-     * @param  \Illuminate\Database\Eloquent\Model $model
-     * @param  string $column
-     * @param  array $options
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
-     */
-    public function getFieldEmail($model, $column, $options = [])
-    {
-        $modelName = class_basename($model);
-        $columnValue = $this->getModelValue($model, $column) ?? '';
-
-        if ($subColumn = array_get($options, 'subColumn')) {
-            $fieldId = "{$modelName}-{$column}-{$subColumn}";
-            $fieldLabel = array_get($options, 'label', __($this->packagePrefix . "models.{$modelName}.{$column}.{$subColumn}"));
-            $fieldName = array_get($options, 'name', "{$modelName}[{$column}][{$subColumn}]");
-            $fieldValue = array_get($options, 'defaultValue', is_array($columnValue) ? array_get($columnValue, $subColumn, '') : '');
-            $hintPath = $this->packagePrefix . "models.{$modelName}.hint.{$column}.{$subColumn}";
-        } else {
-            $fieldId = "{$modelName}-{$column}";
-            $fieldLabel = array_get($options, 'label', __($this->packagePrefix . "models.{$modelName}.{$column}"));
-            $fieldName = array_get($options, 'name', "{$modelName}[{$column}]");
-            $fieldValue = array_get($options, 'defaultValue', $columnValue);
-            $hintPath = $this->packagePrefix . "models.{$modelName}.hint.{$column}";
-        }
-
-        $hintValue = array_get($options, 'hint', false) === false
-            ? ''
-            : (is_string(array_get($options, 'hint')) ? array_get($options, 'hint') : __($hintPath));
-
-        $componentData = [
-            'id' => $fieldId,
-            'language' => in_array($column, $this->languageColumns),
-            'label' => $fieldLabel,
-            'name' => $fieldName,
-            'value' => $fieldValue,
-            'required' => array_get($options, 'required', false),
-            'icon' => array_get($options, 'icon', ''),
-            'size' => array_get($options, 'size', 10),
-            'placeholder' => array_get($options, 'placeholder', ''),
-            'hint' => $hintValue,
-        ];
-
-        return view('MinmaxBase::admin.layouts.form.email', $componentData);
-    }
-
-    /**
-     * @param  \Illuminate\Database\Eloquent\Model $model
-     * @param  string $column
-     * @param  array $options
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
-     */
-    public function getFieldTel($model, $column, $options = [])
-    {
-        $modelName = class_basename($model);
-        $columnValue = $this->getModelValue($model, $column) ?? '';
-
-        if ($subColumn = array_get($options, 'subColumn')) {
-            $fieldId = "{$modelName}-{$column}-{$subColumn}";
-            $fieldLabel = array_get($options, 'label', __($this->packagePrefix . "models.{$modelName}.{$column}.{$subColumn}"));
-            $fieldName = array_get($options, 'name', "{$modelName}[{$column}][{$subColumn}]");
-            $fieldValue = array_get($options, 'defaultValue', is_array($columnValue) ? array_get($columnValue, $subColumn, '') : '');
-            $hintPath = $this->packagePrefix . "models.{$modelName}.hint.{$column}.{$subColumn}";
-        } else {
-            $fieldId = "{$modelName}-{$column}";
-            $fieldLabel = array_get($options, 'label', __($this->packagePrefix . "models.{$modelName}.{$column}"));
-            $fieldName = array_get($options, 'name', "{$modelName}[{$column}]");
-            $fieldValue = array_get($options, 'defaultValue', $columnValue);
-            $hintPath = $this->packagePrefix . "models.{$modelName}.hint.{$column}";
-        }
-
-        $hintValue = array_get($options, 'hint', false) === false
-            ? ''
-            : (is_string(array_get($options, 'hint')) ? array_get($options, 'hint') : __($hintPath));
-
-        $componentData = [
-            'id' => $fieldId,
-            'language' => in_array($column, $this->languageColumns),
-            'label' => $fieldLabel,
-            'name' => $fieldName,
-            'value' => $fieldValue,
-            'required' => array_get($options, 'required', false),
-            'icon' => array_get($options, 'icon', ''),
-            'size' => array_get($options, 'size', 10),
-            'placeholder' => array_get($options, 'placeholder', ''),
-            'hint' => $hintValue,
-        ];
-
-        return view('MinmaxBase::admin.layouts.form.tel', $componentData);
     }
 
     /**
@@ -1235,7 +1146,7 @@ abstract class Presenter
             'listData' => $fieldList,
         ];
 
-        return view('MinmaxBase::admin.layouts.form.checkbox', $componentData);
+        return view('MinmaxBase::admin.layouts.form.multi-checkbox', $componentData);
     }
 
     /**

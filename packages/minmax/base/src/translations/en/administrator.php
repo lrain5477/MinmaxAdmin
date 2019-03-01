@@ -110,6 +110,7 @@ return [
         'record' => 'System Record',
         'note' => 'Note',
         'select_default_title' => 'Please Select',
+        'select_nothing_title' => 'No Select',
         'password_build_auto' => 'Default password is 123456. It will be set by system.',
         'select_all' => 'Select All',
         'select_clear' => 'Clear Selected',

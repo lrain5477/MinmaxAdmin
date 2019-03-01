@@ -120,4 +120,48 @@ return [
         ],
     ],
 
+    'ProductPackage' => [
+        'import' => [
+            'file_label' => '來源檔案',
+            'override_label' => '覆寫存在檔案',
+            'download_label' => '下載結果報表',
+            'options' => [
+                'override' => [
+                    '1' => '啟用',
+                    '0' => '停用',
+                ],
+                'download' => [
+                    '1' => '啟用',
+                    '0' => '停用',
+                ],
+            ],
+            'hint' => [
+                'file' => '支援上傳 xlsx 檔案格式，請 <a href=":link" target="_blank">點選此處下載</a> 範例檔案',
+                'override' => '覆寫將把 <code>商品貨號</code> (第一欄) 的所有組合清除，並覆蓋為匯入的組合資料。'
+            ],
+        ],
+        'export' => [
+            'set_sku_label' => '商品貨號',
+            'item_sku_label' => '品項貨號',
+            'created_at_label' => '建立日期',
+            'updated_at_label' => '更新日期',
+            'active_label' => '啟用狀態',
+            'options' => [
+                'active' => [
+                    'all' => '全部',
+                    '1' => '啟用',
+                    '0' => '停用',
+                ],
+            ],
+            'comments' => [
+                'set_sku' => '必填。該貨號之商品必須已存在。',
+                'item_sku' => '必填。該貨號之品項必須已存在。',
+                'amount' => '必填。請輸入組合的品項數量。',
+                'start_at' => '請輸入格式為 YYYY-MM-DD HH:ii:ss 的日期時間。空白則系統自動帶入匯入時間。',
+                'end_at' => '請輸入格式為 YYYY-MM-DD HH:ii:ss 的日期時間。',
+                'active' => "必填。\r\n1:啟用\r\n0:停用",
+            ],
+        ],
+    ],
+
 ];
