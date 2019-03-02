@@ -100,7 +100,10 @@ return array(
     |
     */
     'root_options' => [
-        'uploadMaxSize' => '2M'
+        'uploadMaxSize' => '2M',
+        'attributes' => [
+            ['pattern' => '!^/thumbnails!', 'hidden' => true]
+        ]
     ],
 
 );
