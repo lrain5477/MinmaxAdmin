@@ -346,22 +346,22 @@ class CreateEcommerceTables extends Migration
         $languageResourceData = array_merge($languageResourceData, SeederHelper::getLanguageResourceArray('site_parameter_item', [
             ['label' => '現金付款', 'details' => json_encode([])], ['label' => '銀行轉帳', 'details' => json_encode([])], ['label' => '信用卡', 'details' => json_encode([])],
             ['label' => '門市取貨', 'details' => json_encode([])], ['label' => '宅配到府', 'details' => json_encode([])],
-            ['label' => '通用付款說明', 'details' => json_encode([])], ['label' => '通用運送說明', 'details' => json_encode([])]
+            ['label' => '通用付款說明', 'details' => json_encode(['editor' => '<p>通用付款說明</p>'])], ['label' => '通用運送說明', 'details' => json_encode(['editor' => '<p>通用運送說明</p>'])]
         ], 1, $lastItemId + 1));
         $languageResourceData = array_merge($languageResourceData, SeederHelper::getLanguageResourceArray('site_parameter_item', [
             ['label' => '现金付款', 'details' => json_encode([])], ['label' => '银行转帐', 'details' => json_encode([])], ['label' => '信用卡', 'details' => json_encode([])],
             ['label' => '门市取货', 'details' => json_encode([])], ['label' => '配送到府', 'details' => json_encode([])],
-            ['label' => '通用付款说明', 'details' => json_encode([])], ['label' => '通用运送说明', 'details' => json_encode([])]
+            ['label' => '通用付款说明', 'details' => json_encode(['editor' => '<p>通用付款说明</p>'])], ['label' => '通用运送说明', 'details' => json_encode(['editor' => '<p>通用运送说明</p>'])]
         ], 2, $lastItemId + 1));
         $languageResourceData = array_merge($languageResourceData, SeederHelper::getLanguageResourceArray('site_parameter_item', [
             ['label' => '現金払い', 'details' => json_encode([])], ['label' => '銀行振込', 'details' => json_encode([])], ['label' => 'クレジット', 'details' => json_encode([])],
             ['label' => '店で拾う', 'details' => json_encode([])], ['label' => '宅配配達', 'details' => json_encode([])],
-            ['label' => '一般支払い説明', 'details' => json_encode([])], ['label' => '一般発送説明', 'details' => json_encode([])]
+            ['label' => '一般支払い説明', 'details' => json_encode(['editor' => '<p>一般支払い説明</p>'])], ['label' => '一般発送説明', 'details' => json_encode(['editor' => '<p>一般発送説明</p>'])]
         ], 3, $lastItemId + 1));
         $languageResourceData = array_merge($languageResourceData, SeederHelper::getLanguageResourceArray('site_parameter_item', [
             ['label' => 'Cash', 'details' => json_encode([])], ['label' => 'Bank Transfer', 'details' => json_encode([])], ['label' => 'Credit Card', 'details' => json_encode([])],
             ['label' => 'Store Pickup', 'details' => json_encode([])], ['label' => 'Delivery', 'details' => json_encode([])],
-            ['label' => 'General Billing', 'details' => json_encode([])], ['label' => 'General Shipping', 'details' => json_encode([])]
+            ['label' => 'General Billing', 'details' => json_encode(['editor' => '<p>General Billing</p>'])], ['label' => 'General Shipping', 'details' => json_encode(['editor' => '<p>General Shipping</p>'])]
         ], 4, $lastItemId + 1));
 
 
