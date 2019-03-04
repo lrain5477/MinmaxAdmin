@@ -43,7 +43,7 @@ class ArticleNewsRequest extends FormRequest
                         'string',
                         Rule::unique('article_news', 'uri')->ignore($this->route('id'))
                     ],
-                    'ArticleNews.categories' => 'required|array',
+                    'ArticleNews.categories' => 'nullable|array',
                     'ArticleNews.title' => 'required|string',
                     'ArticleNews.description' => 'nullable|string',
                     'ArticleNews.editor' => 'nullable|string',
@@ -57,7 +57,7 @@ class ArticleNewsRequest extends FormRequest
             default:
                 return [
                     'ArticleNews.uri' => 'nullable|string|unique:article_news,uri',
-                    'ArticleNews.categories' => 'required|array',
+                    'ArticleNews.categories' => 'nullable|array',
                     'ArticleNews.title' => 'required|string',
                     'ArticleNews.description' => 'nullable|string',
                     'ArticleNews.editor' => 'nullable|string',
@@ -78,16 +78,16 @@ class ArticleNewsRequest extends FormRequest
     public function attributes()
     {
         return [
-            'ArticleNews.uri' => __('MinmaxAd::models.ArticleNews.uri'),
-            'ArticleNews.categories' => __('MinmaxAd::models.ArticleNews.categories'),
-            'ArticleNews.title' => __('MinmaxAd::models.ArticleNews.title'),
-            'ArticleNews.description' => __('MinmaxAd::models.ArticleNews.description'),
-            'ArticleNews.editor' => __('MinmaxAd::models.ArticleNews.editor'),
-            'ArticleNews.pic' => __('MinmaxAd::models.ArticleNews.pic'),
-            'ArticleNews.start_at' => __('MinmaxAd::models.ArticleNews.start_at'),
-            'ArticleNews.end_at' => __('MinmaxAd::models.ArticleNews.end_at'),
-            'ArticleNews.top' => __('MinmaxAd::models.ArticleNews.top'),
-            'ArticleNews.active' => __('MinmaxAd::models.ArticleNews.active'),
+            'ArticleNews.uri' => __('MinmaxArticle::models.ArticleNews.uri'),
+            'ArticleNews.categories' => __('MinmaxArticle::models.ArticleNews.categories'),
+            'ArticleNews.title' => __('MinmaxArticle::models.ArticleNews.title'),
+            'ArticleNews.description' => __('MinmaxArticle::models.ArticleNews.description'),
+            'ArticleNews.editor' => __('MinmaxArticle::models.ArticleNews.editor'),
+            'ArticleNews.pic' => __('MinmaxArticle::models.ArticleNews.pic'),
+            'ArticleNews.start_at' => __('MinmaxArticle::models.ArticleNews.start_at'),
+            'ArticleNews.end_at' => __('MinmaxArticle::models.ArticleNews.end_at'),
+            'ArticleNews.top' => __('MinmaxArticle::models.ArticleNews.top'),
+            'ArticleNews.active' => __('MinmaxArticle::models.ArticleNews.active'),
         ];
     }
 
