@@ -143,4 +143,44 @@ class ProductSet extends Model
                 return array_get($item->getAttribute("price_{$type}"), $currency, 0);
             });
     }
+
+    public function qty($market = null)
+    {
+        $productItems = $this->productItems;
+
+        if (is_null($market)) {
+            $productPackages = $this->productPackages->where('active', true);
+        } else {
+            $productPackages = $this->productPackages
+                ->filter(function ($item) use ($market) {
+                    /** @var ProductPackage $item */
+                    return $item->active
+                        && ($item->productMarkets->count() == 0 || $item->productMarkets->where('code', $market)->count() > 0);
+                });
+        }
+
+        $quantityAmount = 0;
+
+        /** @var \Illuminate\Database\Eloquent\Collection|ProductPackage[] $productPackages */
+        foreach ($productPackages as $productPackage) {
+            /** @var ProductItem $productItem */
+            $productItem = $productItems->firstWhere('sku', $productPackage->item_sku);
+
+            if (is_null($productItem) || !$productItem->active) {
+                $quantityAmount = 0;
+                break;
+            }
+
+            if ($productItem->qty < $productPackage->amount) {
+                $quantityAmount = 0;
+                break;
+            }
+
+            $thisAmount = floor($productItem->qty / $productPackage->amount);
+
+            $quantityAmount = ($quantityAmount > 0 && $quantityAmount > $thisAmount) ? $thisAmount : $quantityAmount;
+        }
+
+        return $quantityAmount;
+    }
 }
