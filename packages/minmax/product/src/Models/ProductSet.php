@@ -178,7 +178,11 @@ class ProductSet extends Model
 
             $thisAmount = floor($productItem->qty / $productPackage->amount);
 
-            $quantityAmount = ($quantityAmount > 0 && $quantityAmount > $thisAmount) ? $thisAmount : $quantityAmount;
+            if ($quantityAmount < 1) {
+                $quantityAmount = $thisAmount;
+            } else {
+                $quantityAmount = $thisAmount < $quantityAmount ? $thisAmount : $quantityAmount;
+            }
         }
 
         return $quantityAmount;
