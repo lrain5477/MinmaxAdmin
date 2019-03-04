@@ -573,8 +573,6 @@ abstract class Presenter
                 switch (array_pull($subOptions, 'method')) {
                     case 'getFieldNormalText':
                     case 'getFieldText':
-                    case 'getFieldEmail':
-                    case 'getFieldTel':
                     case 'getFieldDatePicker':
                     case 'getFieldTextarea':
                         $subMethod = 'getViewNormalText';
