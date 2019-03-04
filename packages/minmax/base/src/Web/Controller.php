@@ -9,9 +9,9 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as BaseController;
 
 /**
- * Class Controller
+ * Abstract class Controller
  */
-class Controller extends BaseController
+abstract class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 

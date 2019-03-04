@@ -169,6 +169,20 @@ class CreateProductTables extends Migration
                 ->onUpdate('cascade')->onDelete('cascade');
         });
 
+        // 商品瀏覽紀錄
+        Schema::create('product_set_track', function (Blueprint $table) {
+            $table->string('set_id')->index()->comment('商品ID');
+            $table->string('member_id')->nullable()->comment('會員ID');
+            $table->ipAddress('ip')->comment('IP位址');
+            $table->date('click_at')->comment('點擊日期');
+            $table->timestamp('created_at')->useCurrent()->comment('建立時間');
+
+            $table->unique(['set_id', 'member_id', 'ip', 'click_at']);
+
+            $table->foreign('set_id')->references('id')->on('product_set')
+                ->onUpdate('cascade')->onDelete('cascade');
+        });
+
         // 建立系統參數資料
         $this->insertSystemParameters();
 
@@ -198,6 +212,7 @@ class CreateProductTables extends Migration
         // 刪除系統參數資料
         $this->deleteSystemParameters();
 
+        Schema::dropIfExists('product_set_track');
         Schema::dropIfExists('product_category_role');
         Schema::dropIfExists('product_category_set');
         Schema::dropIfExists('product_category');
