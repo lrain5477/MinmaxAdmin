@@ -949,6 +949,7 @@ abstract class Presenter
     {
         $modelName = class_basename($model);
         $columnValue = $this->getModelValue($model, $column) ?? [];
+        $columnValue = is_array($columnValue) ? $columnValue : [];
 
         if ($subColumn = array_get($options, 'subColumn')) {
             $fieldId = "{$modelName}-{$column}-{$subColumn}";

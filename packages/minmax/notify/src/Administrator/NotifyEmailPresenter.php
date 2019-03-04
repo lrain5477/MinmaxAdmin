@@ -2,9 +2,9 @@
 
 namespace Minmax\Notify\Administrator;
 
-use Minmax\Base\Admin\AdminRepository;
-use Minmax\Base\Admin\Presenter;
-use Minmax\Base\Admin\WebDataRepository;
+use Minmax\Base\Administrator\AdminRepository;
+use Minmax\Base\Administrator\Presenter;
+use Minmax\Base\Administrator\WebDataRepository;
 
 /**
  * Class NotifyEmailPresenter
