@@ -31,6 +31,13 @@
 
     </fieldset>
 
+    <fieldset class="mt-4" id="mediaFieldSet">
+        <legend class="legend h6 mb-4"><i class="icon-angle-double-down2 mr-2"></i>@lang('MinmaxBase::admin.form.fieldSet.media')</legend>
+
+        {!! $modelPresenter->getFieldMediaImage($formData, 'pic', ['limit' => 1, 'hint' => true]) !!}
+
+    </fieldset>
+
     <fieldset class="mt-4" id="advFieldSet">
         <legend class="legend h6 mb-4"><i class="icon-angle-double-down2 mr-2"></i>@lang('MinmaxBase::administrator.form.fieldSet.advanced')</legend>
 
