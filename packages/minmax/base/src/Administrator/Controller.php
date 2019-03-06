@@ -172,7 +172,7 @@ abstract class Controller extends BaseController
     {
         try {
             $reflection = new \ReflectionClass(static::class);
-            if (preg_match('/^App\\/', $reflection->getNamespaceName()) == 1) {
+            if (preg_match('/^App\/', $reflection->getNamespaceName()) == 1) {
                 app('App\\Http\\Requests\\Administrator\\' . $this->pageData->getAttribute('model') . 'Request');
             } else {
                 app($reflection->getNamespaceName() . '\\' . $this->pageData->getAttribute('model') . 'Request');
@@ -262,7 +262,7 @@ abstract class Controller extends BaseController
     {
         try {
             $reflection = new \ReflectionClass(static::class);
-            if (preg_match('/^App\\/', $reflection->getNamespaceName()) == 1) {
+            if (preg_match('/^App\/', $reflection->getNamespaceName()) == 1) {
                 $datatable->setTransformer(app('App\\Transformers\\Administrator\\' . $this->pageData->getAttribute('model') . 'Transformer', ['uri' => $this->uri]));
             } else {
                 $datatable->setTransformer(app($reflection->getNamespaceName() . '\\' . $this->pageData->getAttribute('model') . 'Transformer', ['uri' => $this->uri]));
