@@ -52,7 +52,7 @@ class WorldCityRepository extends Repository
             });
 
         return $groupByCounty
-            ? $citySet->groupBy('parent')->toArray()
+            ? $citySet->groupBy('parent', true)->toArray()
             : $citySet->toArray();
     }
 }
