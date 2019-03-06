@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
 
-class CreateSampleTable extends Migration
+class InsertPermissionRoleData extends Migration
 {
     /**
      * Run the migrations.

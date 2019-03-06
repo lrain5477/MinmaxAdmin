@@ -38,4 +38,21 @@ class WorldCityRepository extends Repository
     {
         return "county_id = '{$this->model->county_id}'";
     }
+
+    public function getSelectParameters($groupByCounty = false)
+    {
+        $citySet = $this->query()
+            ->with(['worldCounty'])
+            ->orderBy('sort')
+            ->orderBy('code')
+            ->get()
+            ->mapWithKeys(function ($item) {
+                /** @var WorldCity $item */
+                return [$item->id => ['title' => $item->title, 'options' => [], 'parent' => $item->worldCounty->title]];
+            });
+
+        return $groupByCounty
+            ? $citySet->groupBy('parent')->toArray()
+            : $citySet->toArray();
+    }
 }
