@@ -1,16 +1,16 @@
 <p align="center"><img src="https://raw.githubusercontent.com/pikachujeff/MinmaxAdmin/develop/public/admin/images/logo-b.png" height="48"></p>
 
-<p align="center">Laravel 5.6</p>
+<p align="center">Laravel 5.6.33</p>
 
 ## Project Install
 
 ### Initial project
 
 ```bash
+> composer install
+
 > cp .env.example .env
 > vim .env                          # Change database, analytic view id, and some else.
-
-> composer install
 
 > php artisan key:generate
 > php artisan migrate
@@ -95,7 +95,6 @@ Default with four routes:
 
 * https://laravel.com/docs/5.6
 * https://docs.laravel-dojo.com/laravel/5.5
-* Icon List: /admin/css/fonts/icon/demo.html
 
 ## License
 
