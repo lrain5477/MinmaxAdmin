@@ -13,68 +13,52 @@ class Captcha {
      * @param array $colorSetting ['background' => [<R>, <G>, <B>], 'font' => [<R>, <G>, <B>], 'noise1' => [<R>, <G>, <B>], 'noise2' => [<R>, <G>, <B>]]
      * @return string
      */
-    public static function createCaptcha($name = 'captcha', $length = 4, $seed = null, $imageSetting = [], $colorSetting = []) {
+    public static function createCaptcha($name = 'captcha', $length = 4, $seed = null, $imageSetting = [], $colorSetting = [])
+    {
         $charSet = [
             '1', '2', '3', '4', '5', '6', '7', '8',
-            'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
+            'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'm', 'n', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
         ];
         $verification = static::randCode($length, true, $charSet, $seed);
 
         // 將驗證碼記錄在 Session 中
-        session()->put($name, $verification);
-        session()->save();
+        session()->flash($name, $verification);
 
-        if(ob_get_contents()) ob_clean();
-        ob_start();
+        $imageWidth      = intval(array_get($imageSetting, 'width', 80));           // 圖片寬度
+        $imageHeight     = intval(array_get($imageSetting, 'height', 33));          // 圖片高度
+        $fontSize        = intval(array_get($imageSetting, 'fontSize', 18));        // 文字大小
+        $backgroundColor = array_get($colorSetting, 'background', [255, 255, 255]); // 圖片底色
+        $fontColor       = array_get($colorSetting, 'font', [240, 0, 0]);           // 文字顏色
+        $noise1Color     = array_get($colorSetting, 'noise1', [200, 200, 200]);     // 干擾線條顏色
+        $noise2Color     = array_get($colorSetting, 'noise2', [200, 200, 200]);     // 干擾像素顏色
 
-        header("Content-type:image/png");
-
-        // 圖片寬度
-        $imageWidth  = $imageSetting['width']  ?? 80;
-        // 圖片高度
-        $imageHeight = $imageSetting['height'] ?? 33;
-        // 文字大小
-        $fontSize = $imageSetting['fontSize'] ?? 18;
         // 建立圖片物件
-        $im = @imagecreatetruecolor($imageWidth, $imageHeight)	or die("無法建立圖片！");
-
-        // 圖片底色
-        $backgroundColor = imagecolorallocate($im,
-            $colorSetting['background'][0] ?? 255,
-            $colorSetting['background'][1] ?? 255,
-            $colorSetting['background'][2] ?? 255
-        );
-        // 文字顏色
-        $fontColor = imagecolorallocate($im,
-            $colorSetting['font'][0] ?? 240,
-            $colorSetting['font'][1] ?? 0,
-            $colorSetting['font'][2] ?? 0
-        );
-        // 干擾線條顏色
-        $noiseColor1 = imagecolorallocate($im,
-            $colorSetting['noise1'][0] ?? 200,
-            $colorSetting['noise1'][1] ?? 200,
-            $colorSetting['noise1'][2] ?? 200
-        );
-        // 干擾像素顏色
-        $noiseColor2 = imagecolorallocate($im,
-            $colorSetting['noise2'][0] ?? 200,
-            $colorSetting['noise2'][1] ?? 200,
-            $colorSetting['noise2'][2] ?? 200
-        );
-        // 設定圖片底色
-        imagefill($im, 0, 0, $backgroundColor);
+        $image = \Image::canvas($imageWidth, $imageHeight, $backgroundColor);
         // 底色干擾線條
-        for($i= 0; $i < 25; $i++) imageline($im, rand(0,$imageWidth), rand(0,$imageHeight), rand($imageHeight,$imageWidth), rand(0,$imageHeight), $noiseColor1);
+        for($i= 0; $i < 25; $i++) {
+            $image->line(rand(0,$imageWidth), rand(0,$imageHeight), rand(0,$imageWidth), rand(0,$imageHeight),
+                function ($draw) use ($noise1Color) {
+                    /** @var \Intervention\Image\Gd\Shapes\LineShape $draw */
+                    $draw->color('rgb(' . implode(',', $noise1Color) . ')');
+                });
+        }
         // 繪上文字
-        imagettftext($im, $fontSize, 0, 20, 25, $fontColor, storage_path('app/font/arial.ttf'), $verification);
+        $image->text($verification, floor($imageWidth / 2) + rand(-5, 5), floor($imageHeight / 2) + rand(-2, 2),
+            function ($font) use ($fontSize, $fontColor) {
+                /** @var \Intervention\Image\Gd\Font $font */
+                $font->file(storage_path('app/font/arial.ttf'));
+                $font->size($fontSize);
+                $font->color($fontColor);
+                $font->align('center');
+                $font->valign('middle');
+                $font->angle(rand(-5, 5));
+            });
         // 干擾像素
-        for($i= 0; $i < 90; $i++) imagesetpixel($im, rand()%$imageWidth, rand()%$imageHeight, $noiseColor2);
+        for($i= 0; $i < 90; $i++) {
+            $image->pixel($noise2Color, rand() % $imageWidth, rand() % $imageHeight);
+        }
 
-        imagepng($im);
-        imagedestroy($im);
-
-        return ob_get_clean();
+        return $image->response('png');
     }
 
     /**
