@@ -137,7 +137,7 @@ class ProductPackageController extends IoController
         $setSkuPool = DB::table('product_set')->pluck('sku')->toArray();
         $itemSkuPool = DB::table('product_item')->pluck('sku')->toArray();
         $packageSkuPool = DB::table('product_package')->pluck('set_sku')->toArray();
-        $rowId = $rowStartId = array_get(DB::select("show table status like 'product_package'"), '0.Auto_increment', 1);
+        $rowId = $rowStartId = SeederHelper::getTableNextIncrement('product_package');
         $rowId--;
         $insertData = [];
         $updateSkuSet = [];

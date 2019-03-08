@@ -117,4 +117,21 @@ class Seeder
 
         return $permissionArray;
     }
+
+    /**
+     * @param  string $table
+     * @return integer
+     */
+    public static function getTableNextIncrement($table)
+    {
+        return intval(
+            array_get(
+                json_decode(
+                    json_encode(
+                        \DB::select("show table status like '{$table}'")
+                    ),
+                true),
+            '0.Auto_increment', 1)
+        );
+    }
 }
