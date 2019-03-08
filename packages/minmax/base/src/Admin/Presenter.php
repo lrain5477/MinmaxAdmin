@@ -395,6 +395,7 @@ abstract class Presenter
                     'emptyLabel' => array_get($options, 'emptyLabel', 'All'),
                     'parameters' => array_get($this->parameterSet, $column, []),
                     'current' => array_get($options, 'current', ''),
+                    'search' => boolval(array_get($options, 'search', false)),
                 ])
                 ->render();
         } catch (\Exception $e) {
