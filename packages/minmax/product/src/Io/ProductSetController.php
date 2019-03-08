@@ -483,8 +483,8 @@ class ProductSetController extends IoController
 
                 $rowUpdateData['rank'] = $rowData[++$colIndex] ?? 0;
                 $rowUpdateData['tags'] = explode(',', $rowData[++$colIndex] ?? '');
-                $rowUpdateData['spec_group'] = $rowData[++$colIndex] ?? '';
-                $rowUpdateData['specifications'] = explode(',', $rowData[++$colIndex] ?? '');
+                $rowUpdateData['spec_group'] = $rowData[++$colIndex] ?? null;
+                $rowUpdateData['specifications'] = isset($rowData[++$colIndex]) ? explode(',', $rowData[$colIndex]) : null;
 
                 $rowEcParameters = [];
                 if (in_array(\Minmax\Ecommerce\ServiceProvider::class, config('app.providers'))) {
@@ -563,8 +563,8 @@ class ProductSetController extends IoController
 
                 $rowInsertData['rank'] = $rowData[++$colIndex] ?? 0;
                 $rowInsertData['tags'] = explode(',', $rowData[++$colIndex] ?? '');
-                $rowInsertData['spec_group'] = $rowData[++$colIndex] ?? '';
-                $rowInsertData['specifications'] = explode(',', $rowData[++$colIndex] ?? '');
+                $rowInsertData['spec_group'] = $rowData[++$colIndex] ?? null;
+                $rowInsertData['specifications'] = isset($rowData[++$colIndex]) ? explode(',', $rowData[$colIndex]) : null;
 
                 $rowEcParameters = [];
                 if (in_array(\Minmax\Ecommerce\ServiceProvider::class, config('app.providers'))) {
