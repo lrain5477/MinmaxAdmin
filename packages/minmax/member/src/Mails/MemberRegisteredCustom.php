@@ -7,7 +7,7 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Minmax\Base\Models\WebData;
 use Minmax\Member\Models\Member;
-use Minmax\NotifyEmail\Models\NotifyEmail;
+use Minmax\Notify\Models\NotifyEmail;
 
 class MemberRegisteredCustom extends Mailable
 {
