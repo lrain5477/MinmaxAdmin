@@ -11,7 +11,7 @@
     "require": {
         "minmax/base": "*",
         "minmax/io": "*",
-        "minmax/notify-email": "*"
+        "minmax/notify": "*"
     },
     "autoload": {
         "psr-4": {
