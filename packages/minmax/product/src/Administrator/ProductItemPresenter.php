@@ -90,6 +90,7 @@ HTML;
                     'emptyLabel' => array_get($options, 'emptyLabel', 'All'),
                     'parameters' => $tags,
                     'current' => array_get($options, 'current', ''),
+                    'search' => boolval(array_get($options, 'search', false)),
                 ])
                 ->render();
         } catch (\Throwable $e) {
