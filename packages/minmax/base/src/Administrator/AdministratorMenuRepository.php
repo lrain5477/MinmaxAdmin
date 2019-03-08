@@ -32,6 +32,6 @@ class AdministratorMenuRepository extends Repository
      */
     public function getMenu()
     {
-        return TreeHelper::getMenu($this->all()->sortBy('sort')->toArray());
+        return TreeHelper::getMenu($this->all('active', true)->sortBy('sort')->toArray());
     }
 }
