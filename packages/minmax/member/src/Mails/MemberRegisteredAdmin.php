@@ -50,7 +50,7 @@ class MemberRegisteredAdmin extends Mailable
 
         return $this
             ->subject($this->notify->admin_subject)
-            ->view('MinmaxNotifyEmail::email.layouts.default')
+            ->view('MinmaxNotify::email.layouts.default')
             ->with([
                 'notifyData' => [
                     'subject' => $this->notify->admin_subject,

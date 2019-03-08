@@ -50,7 +50,7 @@ class MemberRegisteredCustom extends Mailable
 
         return $this
             ->subject($this->notify->custom_subject)
-            ->view('MinmaxNotifyEmail::email.layouts.default',[
+            ->view('MinmaxNotify::email.layouts.default',[
                 'notifyData' => [
                     'subject' => $this->notify->custom_subject,
                     'perheader' => $this->notify->custom_preheader,
