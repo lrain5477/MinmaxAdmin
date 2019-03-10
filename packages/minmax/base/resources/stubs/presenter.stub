@@ -2,8 +2,17 @@
 
 namespace DummyNamespace;
 
+use DummyBaseNamespace\Presenter;
+
+/**
+ * Class DummyClass
+ */
 class DummyClass extends Presenter
 {
+    protected $packagePrefix = 'DummyPackageName';
+
+    // protected $languageColumns = [];
+
     public function __construct()
     {
         parent::__construct();

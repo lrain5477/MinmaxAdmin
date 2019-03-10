@@ -2,20 +2,25 @@
 
 namespace DummyNamespace;
 
-use App\Models\DummyModelClass;
+use DummyBaseNamespace\Repository;
+use DummyModelNamespace\DummyModelClass;
 
 /**
  * Class DummyClass
  * @method DummyModelClass find($id)
  * @method DummyModelClass one($column = null, $operator = null, $value = null, $boolean = 'and')
+ * @method DummyModelClass[]|\Illuminate\Database\Eloquent\Collection all($column = null, $operator = null, $value = null, $boolean = 'and')
  * @method DummyModelClass create($attributes)
  * @method DummyModelClass save($model, $attributes)
  * @method DummyModelClass|\Illuminate\Database\Eloquent\Builder query()
- * @method DummyModelClass saveLanguage($model, $columns = [])
  */
 class DummyClass extends Repository
 {
     const MODEL = DummyModelClass::class;
+
+    // protected $sort = 'sort';
+
+    // protected $sorting = true;
 
     // protected $languageColumns = [];
 

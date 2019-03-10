@@ -1,0 +1,44 @@
+<?php
+
+namespace DummyNamespace;
+
+use DummyBaseNamespace\Transformer;
+use DummyModelNamespace\DummyModelClass;
+use DummyPresenterNamespace\DummyPresenterClass;
+
+/**
+ * Class DummyClass
+ */
+class DummyClass extends Transformer
+{
+    protected $permissions = [
+        'R' => 'DummyAuthorizeNameShow',
+        'U' => 'DummyAuthorizeNameEdit',
+        'D' => 'DummyAuthorizeNameDestroy',
+    ];
+
+    /**
+     * Transformer constructor.
+     * @param  DummyPresenterClass $presenter
+     * @param  string $uri
+     */
+    public function __construct(DummyPresenterClass $presenter, $uri)
+    {
+        $this->presenter = $presenter;
+
+        parent::__construct($uri);
+    }
+
+    /**
+     * @param  DummyModelClass $model
+     * @return array
+     * @throws \Throwable
+     */
+    public function transform(DummyModelClass $model)
+    {
+        return [
+            // 'active' => $this->presenter->getGridSwitch($model, 'active'),
+            'action' => $this->presenter->getGridActions($model),
+        ];
+    }
+}

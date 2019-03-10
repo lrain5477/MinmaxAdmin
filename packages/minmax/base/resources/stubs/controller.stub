@@ -1,0 +1,21 @@
+<?php
+
+namespace DummyNamespace;
+
+use DummyRepositoryNamespace\DummyRepositoryClass;
+use DummyBaseNamespace\Controller;
+
+/**
+ * Class DummyClass
+ */
+class DummyClass extends Controller
+{
+    protected $packagePrefix = 'DummyPackageName';
+
+    public function __construct(DummyRepositoryClass $repository)
+    {
+        $this->modelRepository = $repository;
+
+        parent::__construct();
+    }
+}

@@ -2,9 +2,12 @@
 
 namespace DummyNamespace;
 
-use App\Helpers\LogHelper;
 use Illuminate\Foundation\Http\FormRequest;
+use Minmax\Base\Helpers\Log as LogHelper;
 
+/**
+ * Class DummyClass
+ */
 class DummyClass extends FormRequest
 {
     /**
@@ -15,12 +18,12 @@ class DummyClass extends FormRequest
     public function authorize()
     {
         switch ($this->method()) {
-             case 'PUT':
-                 return $this->user('DummyGuardName')->can('DummyAuthorizeNameEdit');
-             case 'POST':
-                 return $this->user('DummyGuardName')->can('DummyAuthorizeNameCreate');
-             default:
-                 return false;
+            case 'PUT':
+                return $this->user('DummyGuardName')->can('DummyAuthorizeNameEdit');
+            case 'POST':
+                return $this->user('DummyGuardName')->can('DummyAuthorizeNameCreate');
+            default:
+                return false;
         }
     }
 
@@ -33,6 +36,9 @@ class DummyClass extends FormRequest
     {
         switch ($this->method()) {
             case 'PUT':
+                return [
+                    // 'DummyModelClass.active' => 'required|in:1,0',
+                ];
             case 'POST':
             default:
                 return [
@@ -49,12 +55,12 @@ class DummyClass extends FormRequest
     public function attributes()
     {
         return [
-            // 'DummyModelClass.active' => __('models.DummyModelClass.active'),
+            // 'DummyModelClass.active' => __('DummyPackageNamemodels.DummyModelClass.active'),
         ];
     }
 
     /**
-     * 設定驗證器實例。
+     * Set up a validator instance.
      *
      * @param  \Illuminate\Validation\Validator $validator
      * @return void

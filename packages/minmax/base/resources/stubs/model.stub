@@ -1,0 +1,21 @@
+<?php
+
+namespace DummyNamespace;
+
+use Illuminate\Database\Eloquent\Model;
+
+/**
+ * Class DummyClass
+ * @property integer $id
+ * @property boolean $active
+ * @property \Illuminate\Support\Carbon $created_at
+ * @property \Illuminate\Support\Carbon $updated_at
+ */
+class DummyClass extends Model
+{
+    protected $table = 'DummyTableName';
+    protected $guarded = [];
+    protected $casts = [
+        'active' => 'boolean',
+    ];
+}
